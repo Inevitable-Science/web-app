@@ -1,0 +1,24 @@
+query Project($projectId: Float!, $chainId: Float!) {
+  project(projectId: $projectId, chainId: $chainId) {
+    projectId
+    metadataUri
+    handle
+    createdAt
+    suckerGroupId
+  }
+}
+
+query Projects($where: projectFilter) {
+  projects(where: $where) {
+    items {
+      projectId
+      metadataUri
+      handle
+      createdAt
+      suckerGroupId
+      participants {
+        totalCount
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+query StoreAutoIssuanceAmountEvents(
+  $where: storeAutoIssuanceAmountEventFilter
+  $orderBy: String
+  $orderDirection: String
+) {
+  storeAutoIssuanceAmountEvents(
+    where: $where
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    items {
+      id
+      projectId
+      beneficiary
+      count
+      stageId
+      caller
+    }
+  }
+}
