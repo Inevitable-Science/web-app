@@ -23,7 +23,6 @@ export function HoldersSection() {
   const chainId = useJBChainId();
 
   const [participantsView, setParticipantsView] = useState<TableView>("all");
-  const [isOpen, setIsOpen] = useState(false);
   const { projectId } = useJBContractContext();
   const { token } = useJBTokenContext();
 
@@ -80,33 +79,9 @@ export function HoldersSection() {
     );
   };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div>
-      {/* Dropdown Header */}
-      <button
-        type="button"
-        onClick={toggleDropdown}
-        className="flex items-center gap-2 text-left text-black-600"
-      >
-        <div className="flex flex-row space-x-2">
-          <h2 className="text-2xl font-semibold">Owners</h2>
-        </div>
-        <span
-          className={`transform transition-transform font-sm ${
-            isOpen ? "rotate-90" : "rotate-0"
-          }`}
-        >
-          ▶
-        </span>
-      </button>
-
-      {/* Dropdown Content */}
-      {isOpen &&
-        <div className="mt-2 text-gray-600 text-md">
+        <div className="text-gray-600 text-md">
           <div className="mb-2">
             {/* View Tabs */}
             <div className="flex flex-row space-x-4 mb-3">
@@ -159,7 +134,6 @@ export function HoldersSection() {
 
           </div>
         </div>
-      }
     </div>
   );
 }
