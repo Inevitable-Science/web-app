@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
+import { geistSans, optima } from "@/components/fonts/fonts";
 
 
 import localFont from "next/font/local";
@@ -41,9 +42,11 @@ export default function RootLayout({
       </head>
       <body
         className={twMerge(
-          simplonNorm.variable,
-          simplonMono.variable,
-          "bg-zinc-25 text-zinc-950 font-sans min-h-screen tracking-[0.015em]"
+          //simplonNorm.variable,
+          //simplonMono.variable,
+          geistSans.variable,
+          optima.variable,
+          "font-sans min-h-screen tracking-[0.015em]"
         )}
       >
           <Providers>

@@ -19,12 +19,44 @@
       border-right: 1px solid theme('colors.zinc.400');
       padding: 0 theme('spacing.7')
     }
+}
+
+@layer base {
+  body {
+    color: var(--foreground);
   }
+}
 
 ::selection {
   background: theme('colors.orange.200');
 }
 
+:root {
+  --radius: 0.625rem;
+  --background: #121212;
+  --foreground: #FFFFFF;
+  --card: #121212;
+  --card-foreground: #FFFFFF;
+  --popover: #121212;
+  --popover-foreground: #FFFFFF;
+  --primary: #FBE8BD;
+  --primary-foreground: #000000;
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: #B4B4B4;
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: #BB4430;
+  --border: #606060;
+  --input: #121212;
+  --ring: oklch(0.708 0 0);
+  --font-simplon-norm: 'Simplon Norm', sans-serif;
+  --font-simplon-mono: 'Simplon Mono', monospace;
+}
+
 body {
-  background-color: white;
+  /*background-color: white;*/
+  background-color: var(--background);
+  color: var(--foreground);
 }

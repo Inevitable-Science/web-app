@@ -7,6 +7,8 @@ import { mainnet } from "viem/chains";
 import { sdk } from "@farcaster/frame-sdk";
 import { use, useEffect, useState } from "react";
 
+import HomeNavbar from "@/components/layout/HomeNavbar";
+
 const RevLink = ({
   network,
   id,
@@ -58,20 +60,13 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="container">
-      {user?.pfp && (
+    <div>
+      {/*{user?.pfp && (
         <div className="flex items-center mb-4">
           <span className="text-lg">Hello {user.userName}!</span>
         </div>
       )}
       <div className="flex flex-col items-left justify-left">
-        {/* <Image
-          src="/assets/img/revnet-full-bw.svg"
-          width={840}
-          height={240}
-          alt="Revnet logo"
-        />
-        <span className="sr-only">Revnet</span> */}
         <div className="text-xl md:text-2xl mt-8 font-medium text-left">
           Fund radical science.
         </div>
@@ -84,7 +79,23 @@ export default function Page() {
             </Link>
           </div>
         </div>
+      </div>*/}
+      <HomeNavbar />
+
+      <div>
+        <div className="bg-[url('/assets/img/landing-image.png')] bg-cover bg-center h-screen px-12 mb-256">
+
+        <div className="flex flex-col gap-4 absolute bottom-[22vh]">
+          <h1 className="font-optima text-6xl">Begin your journey.</h1>
+          <h4 className="font-light text-3xl">Build the future of life—together.</h4>
+          <Button className="rounded-full bg-primary text-primary-foreground px-6 mt-2 w-fit font-medium uppercase hover:bg-primary/90">
+            <Link href="/app" aria-label="Explore Inevitable">
+              Explore Inevitable
+            </Link>
+          </Button>
+        </div>
       </div>
+    </div>
     </div>
   );
 }
