@@ -25,6 +25,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { TvlDatum } from "./TvlDatum";
 import { useMemo } from "react";
+
 export function Header() {
   const { projectId } = useJBContractContext();
   const chainId = useJBChainId();
@@ -70,13 +71,21 @@ export function Header() {
 
   return (
     <header>
-      <div className="flex flex-col sm:flex-row sm:items-center items-start gap-4 sm:mb-6 mb-4">
+      <div className="absolute top-0 w-full h-64 overflow-hidden z-[-10]">
+          <img
+            src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
+            alt="Your image"
+            className="inset-0 w-full h-full object-cover mt-16"
+          />
+      </div>
+      <div className="ctWrapper flex flex-col items-start items-start gap-4 pt-48 sm:pt-40 sm:mb-6 mb-4 mx-8">
+        {/*<img className="absolute w-full z-[-10] max-h-48 top-[64px]" src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" />*/}
         {logoUri ? (
           <>
             <div className="sm:hidden">
               <Image
                 src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border border-zinc-200"
+                className="overflow-hidden block border-[3px] border-background rounded-xl"
                 alt={"revnet logo"}
                 width={120}
                 height={10}
@@ -85,7 +94,7 @@ export function Header() {
             <div className="sm:block hidden">
               <Image
                 src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border border-zinc-200"
+                className="overflow-hidden block border-[4px] border-background rounded-2xl"
                 alt={"revnet logo"}
                 width={144}
                 height={144}
@@ -93,8 +102,14 @@ export function Header() {
             </div>
           </>
         ) : (
-          <div className="rounded bg-zinc-100 h-36 w-36 flex items-center justify-center">
-            <ForwardIcon className="h-5 w-5 text-zinc-700" />
+          <div className="rounded bg-[var(--card)] h-36 w-36 flex items-center justify-center">
+            {/*<ForwardIcon className="h-5 w-5 text-zinc-700" />*/}
+            <Image
+                src="./assets/img/branding/icon.svg"
+                alt={"Inevitable Logo"}
+                width={24}
+                height={24}
+            />
           </div>
         )}
 
@@ -138,7 +153,7 @@ export function Header() {
               <span className="font-medium text-black-500">
                 {contributorsCount ?? 0}
               </span>{" "}
-              <span className="text-zinc-500">
+              <span className="text-muted-foreground">
                 {contributorsCount === 1 ? "owner" : "owners"}
               </span>
             </div>

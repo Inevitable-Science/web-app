@@ -24,8 +24,8 @@ export function AppSpecificProviders({ children }: { children: React.ReactNode }
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <ConnectKitProvider
-          theme="soft"
-          mode="light"
+          theme="auto"
+          mode="dark"
           customTheme={{
             "--ck-font-family": "var(--font-simplon-norm)",
             "--ck-connectbutton-border-radius": "0",

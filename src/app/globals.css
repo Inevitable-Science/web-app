@@ -51,12 +51,20 @@
   --border: #606060;
   --input: #121212;
   --ring: oklch(0.708 0 0);
-  --font-simplon-norm: 'Simplon Norm', sans-serif;
-  --font-simplon-mono: 'Simplon Mono', monospace;
+  /*--font-simplon-norm: 'Simplon Norm', sans-serif;
+  --font-simplon-mono: 'Simplon Mono', monospace;*/
 }
 
 body {
   /*background-color: white;*/
   background-color: var(--background);
   color: var(--foreground);
+}
+
+.ctWrapper {
+  @apply max-w-[1400px] mx-auto px-[24px];
+}
+
+.background-color{
+  @apply bg-[var(--background)]
 }
