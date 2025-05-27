@@ -12,6 +12,7 @@ import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenSymbol } from "@/lib/utils";
 import { ForwardIcon } from "@heroicons/react/24/solid";
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { JB_CHAINS } from "juice-sdk-core";
 import {
   JBChainId,
@@ -113,38 +114,89 @@ export function Header() {
           </div>
         )}
 
-        <div>
-          <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-            <span className="text-3xl font-bold">
-              {token?.data ? (
-                <EtherscanLink value={token.data.address} type="token">
-                  {formatTokenSymbol(token)}
-                </EtherscanLink>
-              ) : null}
-            </span>
-            <div className="text-sm flex gap-2 items-baseline">
-              <h1 className="text-2xl font-medium">{projectName}</h1>
-            </div>
-            <div className="text-sm flex gap-2 items-baseline">
-              {suckers?.map((pair) => {
-                if (!pair) return null;
+        <div className="w-full">
+          <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
+            <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
+              <span className="text-3xl font-bold">
+                {token?.data ? (
+                  <EtherscanLink value={token.data.address} type="token">
+                    {formatTokenSymbol(token)}
+                  </EtherscanLink>
+                ) : null}
+              </span>
+              <div className="text-sm flex gap-2 items-baseline">
+                <h1 className="text-2xl font-medium">{projectName}</h1>
+              </div>
+              <div className="text-sm flex gap-2 items-baseline">
+                {suckers?.map((pair) => {
+                  if (!pair) return null;
 
-                const networkSlug =
-                  JB_CHAINS[pair?.peerChainId as JBChainId].slug;
-                return (
-                  <Link
-                    className="underline"
-                    key={networkSlug}
-                    href={`/${networkSlug}:${pair.projectId}`}
-                  >
-                    <ChainLogo
-                      chainId={pair.peerChainId as JBChainId}
-                      width={18}
-                      height={18}
-                    />
-                  </Link>
-                );
-              })}
+                  const networkSlug =
+                    JB_CHAINS[pair?.peerChainId as JBChainId].slug;
+                  return (
+                    <Link
+                      className="underline"
+                      key={networkSlug}
+                      href={`/${networkSlug}:${pair.projectId}`}
+                    >
+                      <ChainLogo
+                        chainId={pair.peerChainId as JBChainId}
+                        width={18}
+                        height={18}
+                      />
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <a 
+                href="https://x.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Image 
+                  src="/assets/img/logo/socials/x.svg" 
+                  alt="X.com Logo" 
+                  width="16"
+                  height="16"
+                />
+              </a>
+
+              <a 
+                href="https://discord.gg/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Image 
+                  src="/assets/img/logo/socials/discord.svg" 
+                  alt="Discord Logo" 
+                  width="20"
+                  height="20"
+                />
+              </a>
+
+              <a 
+                href="https://telegram.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Image 
+                  src="/assets/img/logo/socials/telegram.svg" 
+                  alt="Discord Logo" 
+                  width="20"
+                  height="20"
+                />
+              </a>
+
+              <a 
+                href="https://example.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <GlobeAltIcon width="20" height="20"/>
+              </a>
             </div>
           </div>
           <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">

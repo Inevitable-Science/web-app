@@ -58,7 +58,7 @@ export function PayForm() {
           withPayOnSelect
           label="Pay"
           type="number"
-          className="border-b border-zinc-200 border-t border-l border-r"
+          className="border border-color"
           onChange={(e) => {
             const valueRaw = e.target.value;
             setAmountA(valueRaw);
@@ -91,7 +91,7 @@ export function PayForm() {
         <PayInput
           label="You get"
           type="number"
-          className="border-r border-l border-zinc-200"
+          className=""
           onChange={(e) => {
             const valueRaw = e.target.value;
             setAmountB(valueRaw);
@@ -115,13 +115,13 @@ export function PayForm() {
           value={amountB}
           currency={formatTokenSymbol(token)}
         />
-        <div className="flex gap-1 p-3 bg-zinc-200 border-r border-l border-zinc-300 w-full text-md text-zinc-700 overflow-x-auto whitespace-nowrap">
+        <div className="flex gap-1 p-3 bg-[var(--primary)] border-color rounded-b border-r border-l w-full text-md text-primary-foreground overflow-x-auto whitespace-nowrap">
           Splits get {amountC || 0} {formatTokenSymbol(tokenB.symbol)}
         </div>
       </div>
 
       <div className="flex flex-row">
-        <Formik
+        {/*<Formik
           initialValues={{ }}
           onSubmit={() => {}}
         >
@@ -136,8 +136,8 @@ export function PayForm() {
             onChange={(e: any) => setMemo?.(e.target.value)}
             placeholder="Leave a note"
           />
-        </Formik>
-        <div className="w-[150px] flex">
+        </Formik>*/}
+        <div className="w-full flex">
           {primaryNativeTerminal?.data ? (
             <PayDialog
               amountA={_amountA}

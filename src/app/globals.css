@@ -66,5 +66,13 @@ body {
 }
 
 .background-color{
-  @apply bg-[var(--background)]
+  @apply bg-[var(--background)];
+}
+
+.border-color{
+  @apply border-[var(--border)];
+}
+
+.text-color{
+  @apply text-foreground;
 }
