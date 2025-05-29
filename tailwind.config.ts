@@ -82,6 +82,16 @@ module.exports = {
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
+
+        // Accent Colors
+        'light-gold': 'var(--light-gold)',
+        'dark-slate-grey': 'var(--dark-slate-grey)',
+        'gunmetal': 'var(--gunmetal)',
+        'cerulean': 'var(--cerulean)',
+        'columbia-blue': 'var(--columbia-blue)',
+
+        // Tone Colors
+        'grey-450': 'var(--grey-450)',
       },
       fontFamily: {
         //sans: ["var(--font-simplon-norm)", ...defaultTheme.fontFamily.sans],

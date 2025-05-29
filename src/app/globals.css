@@ -53,6 +53,16 @@
   --ring: oklch(0.708 0 0);
   /*--font-simplon-norm: 'Simplon Norm', sans-serif;
   --font-simplon-mono: 'Simplon Mono', monospace;*/
+
+  /* Accent Colors */
+  --light-gold: #FBE8BD;
+  --dark-slate-grey: #315659;
+  --gunmetal: #253031;
+  --cerulean: #2978A0;
+  --columbia-blue: #C6E0FF;
+
+  /* Tone Colors */
+  --grey-450: #1F1F1F;
 }
 
 body {

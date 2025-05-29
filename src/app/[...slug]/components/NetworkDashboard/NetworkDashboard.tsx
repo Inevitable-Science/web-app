@@ -47,7 +47,7 @@ export function NetworkDashboard() {
 
   return (
     <>
-      <div className="w-full relative">
+      <div className="w-full relative ctWrapper">
         <Header />
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10">

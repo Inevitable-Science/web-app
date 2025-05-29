@@ -72,62 +72,65 @@ export function Header() {
 
   return (
     <header>
-      <div className="absolute top-0 w-full h-64 overflow-hidden z-[-10]">
+      <div className="relative">
+        <div className="absolute top-0 w-full h-64 overflow-hidden z-[-10] rounded">
           <img
             src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
             alt="Your image"
-            className="inset-0 w-full h-full object-cover mt-16"
+            className="inset-0 w-full h-full object-cover mt-[78px] rounded"
           />
+        </div>
       </div>
-      <div className="ctWrapper flex flex-col items-start items-start gap-4 pt-48 sm:pt-40 sm:mb-6 mb-4 mx-8">
-        {/*<img className="absolute w-full z-[-10] max-h-48 top-[64px]" src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" />*/}
-        {logoUri ? (
-          <>
-            <div className="sm:hidden">
+      <div className="flex flex-col items-start items-start gap-2 pt-[10rem] sm:pt-[9rem] sm:mb-6 mb-4">
+        <div className="mx-4">
+          {logoUri ? (
+            <>
+              <div className="sm:hidden">
+                <Image
+                  src={ipfsUriToGatewayUrl(logoUri)}
+                  className="overflow-hidden block border-[3px] border-background rounded-xl"
+                  alt={"revnet logo"}
+                  width={120}
+                  height={10}
+                />
+              </div>
+              <div className="sm:block hidden">
+                <Image
+                  src={ipfsUriToGatewayUrl(logoUri)}
+                  className="overflow-hidden block border-[4px] border-background rounded-2xl"
+                  alt={"revnet logo"}
+                  width={144}
+                  height={144}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="rounded bg-[var(--card)] h-36 w-36 flex items-center justify-center">
               <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border-[3px] border-background rounded-xl"
-                alt={"revnet logo"}
-                width={120}
-                height={10}
+                  src="./assets/img/branding/icon.svg"
+                  alt={"Inevitable Logo"}
+                  width={24}
+                  height={24}
               />
             </div>
-            <div className="sm:block hidden">
-              <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border-[4px] border-background rounded-2xl"
-                alt={"revnet logo"}
-                width={144}
-                height={144}
-              />
-            </div>
-          </>
-        ) : (
-          <div className="rounded bg-[var(--card)] h-36 w-36 flex items-center justify-center">
-            {/*<ForwardIcon className="h-5 w-5 text-zinc-700" />*/}
-            <Image
-                src="./assets/img/branding/icon.svg"
-                alt={"Inevitable Logo"}
-                width={24}
-                height={24}
-            />
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="w-full">
           <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-              <span className="text-3xl font-bold">
+              {/*<span className="text-3xl font-bold">
                 {token?.data ? (
                   <EtherscanLink value={token.data.address} type="token">
                     {formatTokenSymbol(token)}
                   </EtherscanLink>
                 ) : null}
-              </span>
+              </span>*/}
               <div className="text-sm flex gap-2 items-baseline">
-                <h1 className="text-2xl font-medium">{projectName}</h1>
+                <h1 className="text-3xl font-light">{projectName}</h1>
+                <h5 className="text-cerulean text-base">@dao_handle</h5>
               </div>
-              <div className="text-sm flex gap-2 items-baseline">
+              {/*<div className="text-sm flex gap-2 items-baseline">
                 {suckers?.map((pair) => {
                   if (!pair) return null;
 
@@ -147,60 +150,11 @@ export function Header() {
                     </Link>
                   );
                 })}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <a 
-                href="https://x.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Image 
-                  src="/assets/img/logo/socials/x.svg" 
-                  alt="X.com Logo" 
-                  width="16"
-                  height="16"
-                />
-              </a>
-
-              <a 
-                href="https://discord.gg/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Image 
-                  src="/assets/img/logo/socials/discord.svg" 
-                  alt="Discord Logo" 
-                  width="20"
-                  height="20"
-                />
-              </a>
-
-              <a 
-                href="https://telegram.org/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Image 
-                  src="/assets/img/logo/socials/telegram.svg" 
-                  alt="Discord Logo" 
-                  width="20"
-                  height="20"
-                />
-              </a>
-
-              <a 
-                href="https://example.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <GlobeAltIcon width="20" height="20"/>
-              </a>
+              </div>*/}
             </div>
           </div>
           <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
-            <TvlDatum />
+            {/*<TvlDatum />
             <div className="sm:text-xl text-lg">
               <span className="font-medium text-black-500">
                 {contributorsCount ?? 0}
@@ -208,7 +162,42 @@ export function Header() {
               <span className="text-muted-foreground">
                 {contributorsCount === 1 ? "owner" : "owners"}
               </span>
+            </div>*/}
+
+            <div className="grid grid-cols-5 w-full gap-2">
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <h3 className="text-2xl font-semibold">Ξ1,113.88</h3>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Raised</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <h3 className="text-2xl font-semibold">1276</h3>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Payments</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
+                  +4731%
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Last 7 Days</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <h3 className="text-xl font-light">daohydra.eth</h3>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Owner</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <h3 className="text-xl font-light">09 Dec 2024</h3>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Date Created</p>
+              </div>
             </div>
+
+
+
+
+
+            
             {/* <div className="sm:text-xl text-lg">
               <span className="font-medium text-black-500">
                 {`${prettyNumber(totalSupplyFormatted ?? 0)}`}
