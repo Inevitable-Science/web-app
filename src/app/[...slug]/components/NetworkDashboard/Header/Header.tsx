@@ -76,7 +76,7 @@ export function Header() {
         <div className="absolute top-0 w-full h-64 overflow-hidden z-[-10] rounded">
           <img
             src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
-            alt="Your image"
+            alt="Backdrop URL"
             className="inset-0 w-full h-full object-cover mt-[78px] rounded"
           />
         </div>
@@ -164,14 +164,14 @@ export function Header() {
               </span>
             </div>*/}
 
-            <div className="grid grid-cols-5 w-full gap-2">
+            <div className="grid grid-cols-5 w-full gap-3">
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold">Ξ1,113.88</h3>
+                <h3 className="text-2xl font-semibold tracking-wider">Ξ1,113.88</h3>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Raised</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold">1276</h3>
+                <h3 className="text-2xl font-semibold tracking-wider">1276</h3>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Payments</p>
               </div>
 

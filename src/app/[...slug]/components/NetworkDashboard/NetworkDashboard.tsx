@@ -15,6 +15,8 @@ import { PayCard } from "../PayCard/PayCard";
 import { Header } from "./Header/Header";
 import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
 import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+
 
 export function NetworkDashboard() {
   const { contracts } = useJBContractContext();
@@ -58,20 +60,28 @@ export function NetworkDashboard() {
           </div>
         </aside>*/}
         <aside className="hidden lg:block max-w-54">
-          <div className="flex flex-col items-start mb-6">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setSelectedTab(tab.key)}
-                    className={`pr-4 py-2 -mb-px gap-2 font-medium transition-colors duration-150 focus:outline-none ${
-                      selectedTab === tab.key
-                        ? "underline text-color"
-                        : "text-muted-foreground hover:underline"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+          <div className="flex flex-col gap-2 items-start mb-6">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setSelectedTab(tab.key)}
+                className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
+                  selectedTab === tab.key
+                    ? "bg-gunmetal"
+                    : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+                <span className={ 
+                  selectedTab === tab.key
+                    ? "block"
+                    : "hidden"
+                  }
+                >
+                  <ArrowRightIcon height="18" width="18" />
+                </span>
+              </button>
+            ))}
           </div>
         </aside>
         {/* Column 1 */}

@@ -52,7 +52,7 @@ export function PayForm() {
   }
 
   return (
-    <div>
+    <div className="bg-grey-450 max-w-[400px] p-[8px] rounded-2xl">
       <div className="flex justify-center items-center flex-col">
         <PayInput
           withPayOnSelect

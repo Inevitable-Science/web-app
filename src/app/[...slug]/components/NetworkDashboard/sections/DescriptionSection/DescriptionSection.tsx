@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify"
 import { useJBProjectMetadataContext } from "juice-sdk-react";
+import { DaoData } from "./TreasuryStats";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -22,7 +23,7 @@ const RichPreview = ({ source }: { source: string }) => {
     const purified = DOMPurify.sanitize(source)
     return (
       <div
-        className="break-words [&_a]:underline [&_a]:text-gray-600 [&_a:hover]:text-gray-800"
+        className="break-words [&_a]:text-cerulean [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -40,8 +41,10 @@ export function DescriptionSection() {
   const { description } = metadata?.data ?? {};
 
   return (
-      <div className="mt-2 text-gray-600 text-sm">
+      <div className="mt-2 text-sm">
         <RichPreview source={description || ""} />
+         
+        <DaoData daoName="hydradao" />
       </div>
   );
 }
