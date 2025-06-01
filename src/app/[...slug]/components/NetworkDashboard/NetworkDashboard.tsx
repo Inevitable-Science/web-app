@@ -9,14 +9,14 @@ import {
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { zeroAddress } from "viem";
-import { ActivityFeed } from "../ActivityFeed";
-import { NetworkDetailsTable } from "../NetworkDetailsTable";
+//import { ActivityFeed } from "../ActivityFeed";
+//import { NetworkDetailsTable } from "../NetworkDetailsTable";
 import { PayCard } from "../PayCard/PayCard";
 import { Header } from "./Header/Header";
-import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
-import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
+//import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
+//import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-
+import { TabContent } from "./TabContent";
 
 export function NetworkDashboard() {
   const { contracts } = useJBContractContext();
@@ -49,16 +49,11 @@ export function NetworkDashboard() {
 
   return (
     <>
+      <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover bg-center -z-10"></div>
       <div className="w-full relative ctWrapper">
         <Header />
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10">
-        {/* Column 2, hide on mobile 
-        <aside className="block md:w-[300px] md:hidden">
-          <div className="mt-1 mb-4">
-            <PayCard />
-          </div>
-        </aside>*/}
         <aside className="hidden lg:block max-w-54">
           <div className="flex flex-col gap-2 items-start mb-6">
             {tabs.map((tab) => (
@@ -116,37 +111,16 @@ export function NetworkDashboard() {
               </aside>
               {/* Tab Content */}
               <div>
-                {selectedTab === "activity" && (
-                  <div className="pb-5">
-                    <ActivityFeed />
-                  </div>
-                )}
-                {selectedTab === "terms" && (
-                  <div className="pb-5">
-                    <NetworkDetailsTable />
-                  </div>
-                )}
-                {selectedTab === "owners" && (
-                  <div className="pb-5">
-                    <HoldersSection />
-                  </div>
-                )}
-                {selectedTab === "about" && (
-                  <div className="pb-5">
-                    <DescriptionSection />
-                  </div>
-                )}
+                <TabContent selectedTab={selectedTab} daoName="hydradao" />
               </div>
             </section>
           </div>
           {/* Render Pay and activity after header on mobile */}
         </div>
         <div className="md:block hidden">
-            {/*{selectedTab !== "activity" && (*/}
-              <div className="mt-1 mb-4">
-                <PayCard />
-              </div>
-            {/*})}*/}
+          <div className="mt-1 mb-4">
+            <PayCard />
+          </div>
         </div>
       </div>
     </>

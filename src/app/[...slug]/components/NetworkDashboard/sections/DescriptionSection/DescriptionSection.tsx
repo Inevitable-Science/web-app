@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify"
 import { useJBProjectMetadataContext } from "juice-sdk-react";
-import { DaoData } from "./TreasuryStats";
+import { DaoData } from "./TreasuryPreview";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -35,7 +35,16 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 }
 
-export function DescriptionSection() {
+interface DaoData {
+  treasuryHoldings: string;
+  assetsUnderManagement: string;
+}
+
+interface DescriptionSectionProps {
+  data: DaoData | null; // or undefined if it's not guaranteed to be passed yet
+}
+
+export function DescriptionSection({ data }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
   const { description } = metadata?.data ?? {};
@@ -44,7 +53,7 @@ export function DescriptionSection() {
       <div className="mt-2 text-sm">
         <RichPreview source={description || ""} />
          
-        <DaoData daoName="hydradao" />
+        <DaoData data={data} />
       </div>
   );
 }

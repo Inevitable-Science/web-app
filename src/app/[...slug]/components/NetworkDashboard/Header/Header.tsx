@@ -72,8 +72,8 @@ export function Header() {
 
   return (
     <header>
-      <div className="relative">
-        <div className="absolute top-0 w-full h-64 overflow-hidden z-[-10] rounded">
+      <div className="relative h-[215px]">
+        <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
           <img
             src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
             alt="Backdrop URL"
@@ -81,7 +81,7 @@ export function Header() {
           />
         </div>
       </div>
-      <div className="flex flex-col items-start items-start gap-2 pt-[10rem] sm:pt-[9rem] sm:mb-6 mb-4">
+      <div className="flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
         <div className="mx-4">
           {logoUri ? (
             <>
@@ -119,13 +119,6 @@ export function Header() {
         <div className="w-full">
           <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-              {/*<span className="text-3xl font-bold">
-                {token?.data ? (
-                  <EtherscanLink value={token.data.address} type="token">
-                    {formatTokenSymbol(token)}
-                  </EtherscanLink>
-                ) : null}
-              </span>*/}
               <div className="text-sm flex gap-2 items-baseline">
                 <h1 className="text-3xl font-light">{projectName}</h1>
                 <h5 className="text-cerulean text-base">@dao_handle</h5>
@@ -192,26 +185,6 @@ export function Header() {
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Date Created</p>
               </div>
             </div>
-
-
-
-
-
-            
-            {/* <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {`${prettyNumber(totalSupplyFormatted ?? 0)}`}
-              </span>{" "}
-              <span className="text-zinc-500">{formatTokenSymbol(token)} outstanding</span>
-            </div> */}
-            {/* <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {!cashOutLoading
-                  ? `$${Number(cashOutValue).toFixed(4)}`
-                  : "..."}
-              </span>{" "}
-              <span className="text-zinc-500">cash out value</span>
-            </div> */}
           </div>
         </div>
       </div>
