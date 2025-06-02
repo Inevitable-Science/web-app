@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify"
 import { useJBProjectMetadataContext } from "juice-sdk-react";
-import { DaoData } from "./TreasuryPreview";
+import { DaoData } from "./AnalyticsPreview";
+import { SocialLinks } from "./SocialLinks";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -38,13 +39,19 @@ const RichPreview = ({ source }: { source: string }) => {
 interface DaoData {
   treasuryHoldings: string;
   assetsUnderManagement: string;
+  totalHolders: string;
+  totalSupply: string;
+  latestPrice: number;
+  latestMarketCap: number;
+  tokenName: string;
 }
 
 interface DescriptionSectionProps {
   data: DaoData | null; // or undefined if it's not guaranteed to be passed yet
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DescriptionSection({ data }: DescriptionSectionProps) {
+export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
   const { description } = metadata?.data ?? {};
@@ -53,7 +60,12 @@ export function DescriptionSection({ data }: DescriptionSectionProps) {
       <div className="mt-2 text-sm">
         <RichPreview source={description || ""} />
          
-        <DaoData data={data} />
+        <DaoData data={data} setSelectedTab={setSelectedTab} />
+
+        {/* Dupe For Visual Purposes */}
+        <RichPreview source={description || ""} /> {/* DATA_TODO: Secondary DAO Description */}
+
+        <SocialLinks />
       </div>
   );
 }

@@ -8,12 +8,19 @@ import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 
 interface TabContentProps {
   selectedTab: string;
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
   daoName: string;
+  tokenName: string;
 }
 
 interface DaoData {
   treasuryHoldings: string;
   assetsUnderManagement: string;
+  totalHolders: string;
+  totalSupply: string;
+  latestPrice: number;
+  latestMarketCap: number;
+  tokenName: string;
 }
 
 // Mapping of tab names to their corresponding components
@@ -24,30 +31,53 @@ const tabComponents: Record<string, FC<any>> = {
   about: DescriptionSection,
 };
 
-export const TabContent: FC<TabContentProps> = ({ selectedTab, daoName }) => {
+export const TabContent: FC<TabContentProps> = ({ selectedTab, setSelectedTab, daoName, tokenName }) => {
   const [data, setData] = useState<DaoData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
-        const response = await fetch(`https://api.profiler.bio/api/dao/${daoName}`);
-        
-        if (!response.ok) {
+
+        // TODO: Allow elements to be null rather then whole array
+
+        // Fetch DAO data
+        const daoResponse = await fetch(`https://api.profiler.bio/api/dao/${daoName}`);
+        if (!daoResponse.ok) {
           throw new Error('Failed to fetch DAO data');
         }
-        
-        const result = await response.json();
+        const daoResult = await daoResponse.json();
+
+        // Fetch token data
+        const tokenResponse = await fetch(`https://api.profiler.bio/api/token/${tokenName}`);
+        if (!tokenResponse.ok) {
+          throw new Error('Failed to fetch token data');
+        }
+        const tokenResult = await tokenResponse.json();
+
+        // Fetch market chart data
+        const marketResponse = await fetch(`https://api.profiler.bio/api/market-chart?id=${tokenName}&days=7`);
+        if (!marketResponse.ok) {
+          throw new Error('Failed to fetch market chart data');
+        }
+        const marketResult = await marketResponse.json();
+
+        // Extract latest price and market cap
+        const latestPrice = marketResult.prices[marketResult.prices.length - 1]?.[1] || 0;
+        const latestMarketCap = marketResult.market_caps[marketResult.market_caps.length - 1]?.[1] || 0;
+
+        // Combine all data
         setData({
-          treasuryHoldings: result.treasuryHoldings,
-          assetsUnderManagement: result.assetsUnderManagement,
+          treasuryHoldings: daoResult.treasuryHoldings,
+          assetsUnderManagement: daoResult.assetsUnderManagement,
+          totalHolders: tokenResult.selectedToken.totalHolders,
+          totalSupply: tokenResult.selectedToken.totalSupply,
+          latestPrice,
+          latestMarketCap,
+          tokenName,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -82,7 +112,7 @@ export const TabContent: FC<TabContentProps> = ({ selectedTab, daoName }) => {
       )}
       {selectedTab === "about" && (
         <div className="pb-5">
-          <DescriptionSection data={data} />
+          <DescriptionSection data={data} setSelectedTab={setSelectedTab} />
         </div>
       )}
     </div>

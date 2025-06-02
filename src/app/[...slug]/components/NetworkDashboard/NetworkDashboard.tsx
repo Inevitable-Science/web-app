@@ -9,12 +9,8 @@ import {
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { zeroAddress } from "viem";
-//import { ActivityFeed } from "../ActivityFeed";
-//import { NetworkDetailsTable } from "../NetworkDetailsTable";
 import { PayCard } from "../PayCard/PayCard";
 import { Header } from "./Header/Header";
-//import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
-//import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
 
@@ -50,7 +46,7 @@ export function NetworkDashboard() {
   return (
     <>
       <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover bg-center -z-10"></div>
-      <div className="w-full relative ctWrapper">
+      <div className="w-full relative">
         <Header />
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10">
@@ -111,14 +107,16 @@ export function NetworkDashboard() {
               </aside>
               {/* Tab Content */}
               <div>
-                <TabContent selectedTab={selectedTab} daoName="hydradao" />
+                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName="hydradao" tokenName="hydra" /> {/* DATA_TODO: pass token name and dao name to this component (leave hydradao + hydra in development) */}
               </div>
             </section>
           </div>
           {/* Render Pay and activity after header on mobile */}
         </div>
-        <div className="md:block hidden">
+        <div className="md:block hidden w-[400px]">
           <div className="mt-1 mb-4">
+            {/* */}
+            
             <PayCard />
           </div>
         </div>

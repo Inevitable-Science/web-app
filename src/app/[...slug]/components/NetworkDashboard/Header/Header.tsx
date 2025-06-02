@@ -72,16 +72,21 @@ export function Header() {
 
   return (
     <header>
-      <div className="relative h-[215px]">
-        <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
-          <img
-            src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
-            alt="Backdrop URL"
-            className="inset-0 w-full h-full object-cover mt-[78px] rounded"
-          />
+      <div className="ctWrapper">
+        <div className="relative h-[215px]">
+          <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
+
+            {/* DATA_TODO: Implement Backdrop URL in the src of this image */}
+
+            <img
+              src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
+              alt="Backdrop URL"
+              className="inset-0 w-full h-full object-cover mt-[78px] rounded"
+            />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
+      <div className="ctWrapper flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
         <div className="mx-4">
           {logoUri ? (
             <>
@@ -121,29 +126,8 @@ export function Header() {
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
               <div className="text-sm flex gap-2 items-baseline">
                 <h1 className="text-3xl font-light">{projectName}</h1>
-                <h5 className="text-cerulean text-base">@dao_handle</h5>
+                <h5 className="text-cerulean text-base">@dao_handle</h5> {/* DATA_TODO: DAO Handle */}
               </div>
-              {/*<div className="text-sm flex gap-2 items-baseline">
-                {suckers?.map((pair) => {
-                  if (!pair) return null;
-
-                  const networkSlug =
-                    JB_CHAINS[pair?.peerChainId as JBChainId].slug;
-                  return (
-                    <Link
-                      className="underline"
-                      key={networkSlug}
-                      href={`/${networkSlug}:${pair.projectId}`}
-                    >
-                      <ChainLogo
-                        chainId={pair.peerChainId as JBChainId}
-                        width={18}
-                        height={18}
-                      />
-                    </Link>
-                  );
-                })}
-              </div>*/}
             </div>
           </div>
           <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
@@ -159,35 +143,54 @@ export function Header() {
 
             <div className="grid grid-cols-5 w-full gap-3">
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">Ξ1,113.88</h3>
+                <h3 className="text-2xl font-semibold tracking-wider">Ξ1,113.88</h3> {/* DATA_TODO: ETH Raised */}
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Raised</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">1276</h3>
+                <h3 className="text-2xl font-semibold tracking-wider">1276</h3> {/* DATA_TODO: Payments Made */}
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Payments</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
-                  +4731%
+                  +4731% {/* DATA_TODO: % Return */}
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Last 7 Days</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-xl font-light">daohydra.eth</h3>
+                <h3 className="text-xl font-light">daohydra.eth</h3> {/* DATA_TODO: DAO Owner */}
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Owner</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-xl font-light">09 Dec 2024</h3>
+                <h3 className="text-xl font-light">09 Dec 2024</h3> {/* DATA_TODO: Creation Date */}
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Date Created</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div 
+          className="absolute z-[-10] w-screen flex justify-center items-center overflow-hidden"
+          style={{ transform: "translateY(-60%)" }}
+        >
+          {/* Left cloud - shifted slightly right */}
+          <img 
+            className="z-[-10] select-none w-screen" 
+            src="/assets/img/clouds/dao_cloud_left.png" 
+            style={{ transform: "translateX(-40%)" }}
+          />
+
+          {/* Right cloud - shifted slightly left */}
+          <img 
+            className="z-[-10] select-none w-screen" 
+            src="/assets/img/clouds/dao_cloud_right.png" 
+            style={{ transform: "translateX(40%)" }}
+          />
+        </div>
     </header>
   );
 }
