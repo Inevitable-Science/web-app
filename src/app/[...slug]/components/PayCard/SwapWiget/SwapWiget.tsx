@@ -1,16 +1,29 @@
-/*"use client";
+"use client";
 import { useState } from "react";
-import { CowSwapWidget, TradeType } from "@cowprotocol/widget-react";
+import { CowSwapWidgetParams, CowSwapWidget, CowSwapWidgetPalette, EthereumProvider, TradeType } from "@cowprotocol/widget-react";
 
-export default function ImportTokenModal({ token, tokenList }) {
-  const [provider, setProvider] = useState(null);
+interface TokenState {
+  token: string;
+}
 
-  const cowSwapWidgetParams = {
-    appCode: "ProfilerBIO",
+// DATA_TODO: Add Connect Button Kit Provider along with this dapp provider, view https://widget.cow.fi/
+
+export function SwapWidget({ token } : TokenState) {
+  //const [provider, setProvider] = useState(null);
+  const [provider, setProvider] = useState<EthereumProvider | undefined>(undefined);
+
+  // TODO : Custom Token List
+
+  const params: CowSwapWidgetParams = {
+    appCode: "Inevitable",
     width: "100%",
     height: "582px",
     chainId: 1,
-    tokenLists: ["https://www.profiler.bio/web3/tokenlist.schema.json"],
+    tokenLists: [
+      "https://files.cow.fi/tokens/CowSwap.json",
+      "https://files.cow.fi/tokens/CoinGecko.json",
+      "https://www.profiler.bio/web3/tokenlist.schema.json",
+    ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
     //buy: { asset: "0xf4308b0263723b121056938c2172868e408079d0", amount: "0" },
@@ -21,21 +34,20 @@ export default function ImportTokenModal({ token, tokenList }) {
       primary: "#c4c4c4",
       paper: "#242424",
       text: "#ffffff",
-    },
-    standaloneMode: true,
-    disableToastMessages: false,
+    } as CowSwapWidgetPalette,
+    standaloneMode: false,
+    disableToastMessages: true,
     disableProgressBar: false,
     hideBridgeInfo: false,
     hideOrdersTable: false,
     images: {},
     sounds: {},
-    customTokens: tokenList,
+    customTokens: [], //tokenList,
   };  
 
   return (
     <div className="swapWrapper">
-      <CowSwapWidget params={cowSwapWidgetParams} provider={provider} />
+      <CowSwapWidget params={params} provider={provider} />
     </div>
   );
 }
-*/

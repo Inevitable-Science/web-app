@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
+import { SwapWidget } from "../PayCard/SwapWiget/SwapWiget";
 import { Header } from "./Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
@@ -45,8 +46,8 @@ export function NetworkDashboard() {
 
   return (
     <>
-      <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover bg-center -z-10"></div>
       <div className="w-full relative">
+        <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover w-full bg-center z-[-10]"></div>
         <Header />
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10">
@@ -115,9 +116,10 @@ export function NetworkDashboard() {
         </div>
         <div className="md:block hidden w-[400px]">
           <div className="mt-1 mb-4">
-            {/* */}
-            
-            <PayCard />
+            {/* DATA_TODO: Conditionally Render SwapWidget if the DAO is not in presale & pass it the token address */}
+
+            <SwapWidget token="0xf4308b0263723b121056938c2172868e408079d0" />
+            {/* <PayCard /> */}
           </div>
         </div>
       </div>

@@ -14,14 +14,16 @@ Description/About - web-app/src/app/[...slug]/components/NetworkDashboard/sectio
  - Secondary Description - description below the analytics, refer to figma
 
 Main DAO Content - web-app/src/app/[...slug]/components/NetworkDashboard/NetworkDashboard.tsx
- - DAO Name (pretty much done)
+ - DAO Name (already done I think)
  - Token Name
+ - Conditionally Render SwapWidget if the DAO is not in presale & pass it the token address
 
 DAO Socials Component - web-app/src/app/[...slug]/components/NetworkDashboard/sections/DescriptionSection/SocialLinks.tsx
  - DAO Discord URL
  - DAO X URL
 
-
+Swap Wiget - web-app/src/app/[...slug]/components/PayCard/SwapWiget/SwapWiget.tsx
+ - Pass the eth window provider to the modal, no secondary connect wallet req
 
 Not Required Currently But In Future
 Live auction data (to homepage) : ref to figma
@@ -35,6 +37,10 @@ Live auction data (to homepage) : ref to figma
 
 
 #### Note:
+Please check the build process, I ran `npm install @cowprotocol/widget-react --legacy-peer-deps` hopefully theres no breaking changes, not to familar with the indepth things of NPM.
+
+also
+
 Upon completion please delete the following files
  - web-app/src/app/[...slug]/components/NetworkDashboard/Header/Creation.tsx
  - web-app/src/app/[...slug]/components/NetworkDashboard/Header/TvlDatum.tsx
