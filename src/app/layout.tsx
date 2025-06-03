@@ -1,4 +1,4 @@
-import { Footer } from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";

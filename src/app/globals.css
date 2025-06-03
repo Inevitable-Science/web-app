@@ -104,3 +104,31 @@ body {
     background-position-x: -20%;
   }
 }
+
+/* Home and Nav Styles */
+
+.dGrid > div {
+  @apply bg-cover bg-center p-[20px] flex flex-col justify-between rounded-2xl;
+}
+
+@media (max-width:370px) {
+  .logoNavSvg {
+    display: none;
+  }
+}
+
+@media (min-width:370px) {
+  .iconNavSvg {
+    display: none;
+  }
+}
+
+@media (max-width:880px) and (min-width:769px) {
+  .logoNavSvg {
+    display: none !important;
+  }
+
+  .iconNavSvg {
+    display: block !important;
+  }
+}
