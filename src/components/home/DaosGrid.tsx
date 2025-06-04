@@ -193,7 +193,7 @@ const DaosGrid: React.FC = () => {
         .dGrid-mid {
           padding-left: 6rem;
           padding-right: 8rem;
-          margin: calc(var(--spacing) * 24) 0;
+          margin: 88px auto;
         }
       }
       `}</style>

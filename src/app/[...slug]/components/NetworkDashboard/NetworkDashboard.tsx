@@ -23,9 +23,9 @@ export function NetworkDashboard() {
 
   const tabs = [
     { key: "about", label: "About" },
+    { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
-    { key: "terms", label: "Terms" },
-    { key: "owners", label: "Owners" },
+    { key: "cycles", label: "Cycles" },
   ];
 
   // set title
@@ -114,12 +114,12 @@ export function NetworkDashboard() {
           </div>
           {/* Render Pay and activity after header on mobile */}
         </div>
-        <div className="md:block hidden w-[400px]">
+        <div className="md:block hidden w-full md:w-[340px] lg:w-[400px]">
           <div className="mt-1 mb-4">
             {/* DATA_TODO: Conditionally Render SwapWidget if the DAO is not in presale & pass it the token address */}
 
-            <SwapWidget token="0xf4308b0263723b121056938c2172868e408079d0" />
-            {/* <PayCard /> */}
+            {/*<SwapWidget token="0xf4308b0263723b121056938c2172868e408079d0" />*/}
+            <PayCard />
           </div>
         </div>
       </div>

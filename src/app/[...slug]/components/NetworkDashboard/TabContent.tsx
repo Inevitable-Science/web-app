@@ -26,8 +26,8 @@ interface DaoData {
 // Mapping of tab names to their corresponding components
 const tabComponents: Record<string, FC<any>> = {
   activity: ActivityFeed,
-  terms: NetworkDetailsTable,
-  owners: HoldersSection,
+  cycles: NetworkDetailsTable,
+  tokens: HoldersSection,
   about: DescriptionSection,
 };
 
@@ -100,12 +100,12 @@ export const TabContent: FC<TabContentProps> = ({ selectedTab, setSelectedTab, d
           <ActivityFeed />
         </div>
       )}
-      {selectedTab === "terms" && (
+      {selectedTab === "cycles" && (
         <div className="pb-5">
           <NetworkDetailsTable />
         </div>
       )}
-      {selectedTab === "owners" && (
+      {selectedTab === "tokens" && (
         <div className="pb-5">
           <HoldersSection />
         </div>

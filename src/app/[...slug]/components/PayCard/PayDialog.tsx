@@ -194,7 +194,7 @@ export function PayDialog({
                     <div className="text-xs text-muted-foreground">
                       {amountB.symbol} is only on:
                     </div>
-                    <div className=" flex flex-row items-center gap-2 pl-3 min-w-fit pr-5 py-2 border ring-offset-white">
+                    <div className=" flex flex-row items-center gap-2 pl-3 min-w-fit pr-5 py-2 border rounded-md ring-offset-white">
                       <ChainLogo
                         chainId={selectedSucker.peerChainId as JBChainId}
                       />

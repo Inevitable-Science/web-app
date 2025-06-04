@@ -132,12 +132,12 @@ export default function Page() {
       <div>
         <Nav />
 
-        <div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[125vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">
+        <div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">
 
-          <div className="absolute sm:bottom-[40vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
+          <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
             <div className="sm:w-[1400px] mx-auto px-[24px] flex flex-col gap-4">
               <h1 className="font-optima text-center text-6xl sm:text-left">Begin your journey.</h1>
-              <h4 className="font-light text-2xl text-center sm:text-3xl sm:text-left">Build the future of life—together.</h4>
+              <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">Build the future of life—together.</h4>
               <Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
                   Explore Inevitable
               </Button>
@@ -146,7 +146,7 @@ export default function Page() {
         </div>
 
 
-        <div className="relative sm:top-[-20vh] top-0">
+        <div className="relative sm:top-[-10vh] top-0">
           <div className="ctWrapper flex gap-4 flex-col md:flex-row md:gap-0 mb-16">
             <div className="sm:min-w-[470px] flex flex-col gap-4">
               <h3 className="text-5xl font-extralight">This Is Where The <span className="text-primary">Impossible</span> Begins.</h3>
@@ -156,7 +156,7 @@ export default function Page() {
               </Link>
             </div>
 
-            <div className="lg:text-xl md:text-sm text-base">
+            <div className="lg:text-xl md:text-sm font-light text-base">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </div>
           </div>

@@ -67,9 +67,9 @@ export const Nav: React.FC = () => {
       const currentScrollY = window.scrollY;
       const triggerPoint = window.innerHeight;
 
-      if (pathname === '/') {
+      //if (pathname === '/') {
         setIsPastViewport(currentScrollY >= triggerPoint);
-      }
+      //}
 
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setIsVisible(false);
@@ -83,7 +83,8 @@ export const Nav: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, pathname]);
+  //}, [lastScrollY, pathname]);
+  }, [lastScrollY]);
 
   // Close menu on route change
   useEffect(() => {
@@ -126,8 +127,9 @@ export const Nav: React.FC = () => {
         className={`
           fixed top-0 w-full px-8 pt-6 pb-4 z-50 transition-all duration-300 flex items-center justify-between gap-6
           ${isVisible ? 'translate-y-0' : '-translate-y-full'}
-          ${pathname === '/' && isVisible && isPastViewport ? 'bg-background bg-opacity-60' : pathname === '/' ? 'bg-transparent' : 'bg-background'}
+          ${isVisible && isPastViewport ? 'bg-background bg-opacity-60' : 'bg-transparent'}
         `}
+        // ${pathname === '/' && isVisible && isPastViewport ? 'bg-background bg-opacity-60' : pathname === '/' ? 'bg-transparent' : 'bg-background'}
       >
         <div className="flex items-center gap-6">
           <Link aria-label="Home" href="/">

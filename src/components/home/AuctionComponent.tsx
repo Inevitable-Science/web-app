@@ -33,7 +33,7 @@ const AuctionComponent: React.FC = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
           <Link href="/eth:4" aria-label="View Auction" className="w-fit mt-2 text-base font-medium uppercase hover:underline">
-            <div className="flex gap-3 items-center transition-[gap] duration-150 hover:gap-5">
+            <div className="flex font-normal gap-3 items-center transition-[gap] duration-150 hover:gap-5">
               Go To Auction
               <ArrowRightIcon height={20} width={20} />
             </div>
@@ -42,7 +42,7 @@ const AuctionComponent: React.FC = () => {
 
         <div className="flex flex-col">
           <div className="flex flex-col gap-2 mb-4">
-            <h4 className="font-bold text-3xl">
+            <h4 className="font-semibold text-3xl">
               Ξ 82.29
             </h4>
             <h5>RAISED</h5>
@@ -52,17 +52,17 @@ const AuctionComponent: React.FC = () => {
             <div className="flex flex-col gap-4 ml-2">
               <div className="flex items-center gap-2 md:gap-4">
                 <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-extrabold">27</h3>
+                  <h3 className="text-2xl md:text-4xl font-semibold">27</h3>
                   <p className="text-sm md:text-base font-light">DAYS</p>
                 </div>
                 <h3 className="text-3xl font-bold">:</h3>
                 <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-extrabold">08</h3>
+                  <h3 className="text-2xl md:text-4xl font-semibold">08</h3>
                   <p className="text-sm md:text-base font-light">HRS</p>
                 </div>
                 <h3 className="text-3xl font-bold">:</h3>
                 <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-extrabold">32</h3>
+                  <h3 className="text-2xl md:text-4xl font-semibold">32</h3>
                   <p className="text-sm md:text-base font-light">MINS</p>
                 </div>
               </div>

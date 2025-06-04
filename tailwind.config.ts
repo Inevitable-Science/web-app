@@ -91,6 +91,8 @@ module.exports = {
         'columbia-blue': 'var(--columbia-blue)',
 
         // Tone Colors
+        'grey-50': 'var(--grey-50)',
+        'grey-100': 'var(--grey-100)',
         'grey-450': 'var(--grey-450)',
       },
       fontFamily: {

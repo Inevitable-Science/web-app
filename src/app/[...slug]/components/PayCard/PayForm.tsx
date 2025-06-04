@@ -52,13 +52,12 @@ export function PayForm() {
   }
 
   return (
-    <div className="bg-grey-450 max-w-[400px] p-[8px] rounded-2xl">
+    <div className="bg-grey-450 max-w-[550px] p-[8px] rounded-2xl">
       <div className="flex justify-center items-center flex-col">
         <PayInput
           withPayOnSelect
           label="Pay"
           type="number"
-          className="border border-color"
           onChange={(e) => {
             const valueRaw = e.target.value;
             setAmountA(valueRaw);
@@ -115,7 +114,7 @@ export function PayForm() {
           value={amountB}
           currency={formatTokenSymbol(token)}
         />
-        <div className="flex gap-1 p-3 bg-[var(--primary)] border-color rounded-b border-r border-l w-full text-md text-primary-foreground overflow-x-auto whitespace-nowrap">
+        <div className="flex gap-1 p-3 bg-[var(--primary)] mb-4 border-color rounded-b border-r border-l w-full text-md text-primary-foreground overflow-x-auto whitespace-nowrap">
           Splits get {amountC || 0} {formatTokenSymbol(tokenB.symbol)}
         </div>
       </div>
