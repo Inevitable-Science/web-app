@@ -37,6 +37,7 @@ export function Header() {
     chainId: Number(chainId),
     projectId: Number(projectId),
   });
+
   const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
     id: project.data?.project?.suckerGroupId ?? "",
   });
@@ -62,7 +63,7 @@ export function Header() {
 
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
-  const { name: projectName, logoUri } = metadata?.data ?? {};
+  const { name: projectName, logoUri, twitter } = metadata?.data ?? {};
 
   // const totalSupply = useTotalOutstandingTokens();
   // const totalSupplyFormatted =
@@ -126,7 +127,9 @@ export function Header() {
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
               <div className="text-sm flex gap-2 items-baseline">
                 <h1 className="text-3xl font-light">{projectName}</h1>
-                <h5 className="text-cerulean text-base">@dao_handle</h5> {/* DATA_TODO: DAO Handle */}
+                <h5 className="text-cerulean text-base">
+                  <a href={`https://x.com/@${twitter}`}>@{twitter}</a>
+                </h5>
               </div>
             </div>
           </div>
