@@ -326,6 +326,28 @@ import { useState, useEffect } from "react";
 import { Address } from "viem";
 
 import { Loader2 } from "lucide-react";
+import StaticVolumeChart from "./NetworkDashboard/Components/ActivityGraph";
+
+
+
+type ProjectTimelinePoint = {
+  timestamp: number
+  volume: number
+  balance: number
+  trendingScore: number
+}
+
+const sampleData: ProjectTimelinePoint[] = [
+  { timestamp: Math.floor(Date.now() / 1000) - 30 * 24 * 3600, volume: 5, balance: 10, trendingScore: 200 },
+  { timestamp: Math.floor(Date.now() / 1000) - 25 * 24 * 3600, volume: 7, balance: 12, trendingScore: 250 },
+  { timestamp: Math.floor(Date.now() / 1000) - 20 * 24 * 3600, volume: 10, balance: 15, trendingScore: 300 },
+  { timestamp: Math.floor(Date.now() / 1000) - 15 * 24 * 3600, volume: 8, balance: 13, trendingScore: 280 },
+  { timestamp: Math.floor(Date.now() / 1000) - 10 * 24 * 3600, volume: 12, balance: 18, trendingScore: 320 },
+  { timestamp: Math.floor(Date.now() / 1000) - 5 * 24 * 3600, volume: 15, balance: 20, trendingScore: 350 },
+  { timestamp: Math.floor(Date.now() / 1000), volume: 18, balance: 22, trendingScore: 400 },
+]
+
+
 
 type PayActivityItemData = {
   id: string;
@@ -387,7 +409,7 @@ function PayActivityItem(
   const embedUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
-    <div className="border-b border-color pb-2 mb-1">
+    <div className="border-b border-color pb-2 mb-1 min-h-[80px]">
       <div className="flex items-center justify-between">
         <h3 className="text-grey-50 font-light">PAID</h3>
         <div className="text-md font-light text-grey-50 mb-2">
@@ -396,32 +418,6 @@ function PayActivityItem(
           </EtherscanLink>
         </div>
       </div>
-
-      {/*<div className="flex items-center gap-1">
-          <div className="text-md text-zinc-500 ml-7">
-            {activityItemData.amount.format(6)} ETH{" "}
-            <span className="border border-teal-600 bg-teal-50 text-teal-600 px-1 py-0.5">
-              in
-            </span>{" "}
-            on{" "}
-          </div>
-          <ChainLogo chainId={payEvent.chainId} width={15} height={15} />
-        </div>*/}
-      {/*<div className="flex items-center gap-1 text-md flex-wrap">
-        <FarcasterAvatar
-          address={activityItemData.beneficiary as Address}
-          withAvatar
-          avatarProps={{ size: "sm" }}
-          short
-          chain={chain}
-        />
-        <div className="flex items-center gap-1">
-          <span>
-            got {activityItemData.beneficiaryTokenCount?.format(6)}{" "}
-            {formatTokenSymbol(token.data.symbol)}
-          </span>
-        </div>
-      </div>*/}
 
       <div className="flex justify-between items-center">
         <div className="text-color font-light">
@@ -432,7 +428,6 @@ function PayActivityItem(
           <FarcasterAvatar
             address={activityItemData.beneficiary as Address}
             withAvatar={false}
-            avatarProps={{ size: "sm" }}
             short
             chain={chain}
           />
@@ -511,33 +506,27 @@ function RedeemActivityItem(
     <div className="border-b border-color pb-2 mb-1">
       <div className="flex items-center justify-between">
         <div className="text-md text-zinc-500 mb-2">
-          <EtherscanLink type="tx" value={cashOutEvent.txHash}>
+          <h3 className="text-grey-50 font-light">WITHDREW</h3>
+        </div>
+        <div className="flex items-center gap-1 text-md font-light text-grey-50 mb-2">
+          <EtherscanLink className="hover:underline" type="tx" value={cashOutEvent.txHash}>
             {formattedDate}
           </EtherscanLink>
         </div>
-        <div className="flex items-center gap-1">
-          <div className="text-md text-zinc-500 ml-7">
-            {activityItemData.amount.format(6)} ETH{" "}
-            <span className="border border-orange-500 bg-orange-50 text-orange-500 px-1 py-0.5">
-              out
-            </span>{" "}
-            on{" "}
-          </div>
-          <ChainLogo chainId={cashOutEvent.chainId} width={15} height={15} />
-        </div>
       </div>
-      <div className="flex items-center pb-4 gap-1 text-md flex-wrap">
-        <FarcasterAvatar
-          address={activityItemData.beneficiary as Address}
-          withAvatar
-          avatarProps={{ size: "sm" }}
-          short
-        />
-        <div className="flex items-center gap-1">
-          <span>
-            cashed out {activityItemData.cashOutCount?.format(6)}{" "}
-            {formatTokenSymbol(token.data.symbol)}
-          </span>
+      <div className="flex items-center justify-between pb-4 gap-1 text-md flex-wrap">
+        <div className="flex items-center gap-1 text-color font-light">
+          {activityItemData.cashOutCount?.format(6)}{" "}
+          {formatTokenSymbol(token.data.symbol)}
+        </div>
+
+        <div className="font-light text-grey-100 text-md">
+          <FarcasterAvatar
+            className="hover:underline"
+            address={activityItemData.beneficiary as Address}
+            withAvatar={false}
+            short
+          />
         </div>
       </div>
     </div>
@@ -609,6 +598,15 @@ export function ActivityFeed() {
         ) ?? []
       }
     >
+
+
+
+      <section className="flex flex-col mb-6 bg-grey-450 p-[16px] rounded-2xl">
+        <StaticVolumeChart data={sampleData} />
+      </section>
+
+
+
       {isOpen && (
         <div className="flex flex-col gap-1">
           {isLoading ? (

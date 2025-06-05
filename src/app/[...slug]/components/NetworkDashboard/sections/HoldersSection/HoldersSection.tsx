@@ -13,7 +13,7 @@ import { twJoin } from "tailwind-merge";
 import { DistributeReservedTokensButton } from "../../../DistributeReservedTokensButton";
 import { ParticipantsPieChart } from "../../../ParticipantsPieChart";
 import { ParticipantsTable } from "../../../ParticipantsTable";
-import { UserTokenBalanceCard } from "../../../UserTokenBalanceCard/UserTokenBalanceCard";
+//import { UserTokenBalanceCard } from "../../../UserTokenBalanceCard/UserTokenBalanceCard";
 import { SplitsSection } from "./SplitsSection";
 import { YouSection } from "./YouSection";
 

@@ -5,6 +5,7 @@ import DOMPurify from "dompurify"
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
+import { ChartSection } from "./ChartSection";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -59,7 +60,9 @@ export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionP
   return (
       <div className="mt-2 text-sm">
         <RichPreview source={description || ""} />
-         
+        
+        <ChartSection setSelectedTab={setSelectedTab} />
+
         <DaoData data={data} setSelectedTab={setSelectedTab} />
 
         {/* Dupe For Visual Purposes */}

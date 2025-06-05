@@ -15,6 +15,8 @@ import { Header } from "./Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
 
+import { PayDummy } from "../PayCard/PayDummy"
+
 export function NetworkDashboard() {
   const { contracts } = useJBContractContext();
   const { token } = useJBTokenContext();
@@ -115,11 +117,12 @@ export function NetworkDashboard() {
           {/* Render Pay and activity after header on mobile */}
         </div>
         <div className="md:block hidden w-full md:w-[340px] lg:w-[400px]">
-          <div className="mt-1 mb-4">
+          <div className="mb-4">
             {/* DATA_TODO: Conditionally Render SwapWidget if the DAO is not in presale & pass it the token address */}
 
             {/*<SwapWidget token="0xf4308b0263723b121056938c2172868e408079d0" />*/}
-            <PayCard />
+            {/*<PayCard />*/}
+            <PayDummy />
           </div>
         </div>
       </div>

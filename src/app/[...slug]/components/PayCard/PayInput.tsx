@@ -53,6 +53,7 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 import { PayOnSelect } from "./PayOnSelect";
+import { ChainLogo } from "@/components/ChainLogo";
 
 export interface PayInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -91,7 +92,12 @@ const PayInput = React.forwardRef<HTMLInputElement, PayInputProps>(
             {...props}
           />
           
-          <span className="text-right select-none text-lg">{currency}</span>
+          {/*<span className="text-right select-none text-lg">{currency}</span>*/}
+          <ChainLogo
+            chainId={1}
+            width={24}
+            height={24}
+          />
         </div>
       </div>
     );
