@@ -11,6 +11,15 @@ query Project($projectId: Float!, $chainId: Float!) {
   }
 }
 
+query ParticipantSnapshotsInRange($where: participantSnapshotFilter) {
+  participantSnapshots(where: $where, limit: 1000, orderBy: "timestamp", orderDirection: "asc") {
+    items {
+      volume
+      timestamp
+    }
+  }
+}
+
 query Projects($where: projectFilter) {
   projects(where: $where) {
     items {

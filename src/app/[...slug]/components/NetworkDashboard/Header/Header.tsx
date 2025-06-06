@@ -7,6 +7,7 @@ import {
   ProjectDocument,
   ProjectsDocument,
   SuckerGroupDocument,
+  ParticipantSnapshotsInRangeDocument
 } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 // import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
@@ -26,20 +27,72 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { TvlDatum } from "./TvlDatum";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { formatEther } from "viem";
+import { Loader2 } from 'lucide-react';
 
 export function Header() {
   const { projectId } = useJBContractContext();
   const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
-  const { token } = useJBTokenContext();
 
   const { data: projectData } = useBendystrawQuery(ProjectDocument, {
-      chainId: Number(chainId),
-      projectId: Number(projectId),
+    chainId: Number(chainId),
+    projectId: Number(projectId),
+    skip: !chainId || !projectId
   });
   const project = projectData?.project;
+
+  const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
+  const twoWeeksAgo = useMemo(() => loadTimestamp - 14 * 24 * 60 * 60, [loadTimestamp]);
+  const aWeekAgo = useMemo(() => loadTimestamp - 7 * 24 * 60 * 60, [loadTimestamp]);
+  
+  const prevWindowWhereClause = useMemo(() => ({
+    suckerGroupId: project?.suckerGroupId,
+    timestamp_gt: twoWeeksAgo,
+    timestamp_lt: aWeekAgo,
+  }), [project?.suckerGroupId]);
+
+  const curWindowWhereClause = useMemo(() => ({
+    suckerGroupId: project?.suckerGroupId,
+    timestamp_gt: aWeekAgo,
+  }), [project?.suckerGroupId]);
+
+  const { data: previousVolumeWindow, isLoading: prevLoading } = useBendystrawQuery(
+    ParticipantSnapshotsInRangeDocument,
+    {
+        where: prevWindowWhereClause,
+        skip: !project?.suckerGroupId,
+    }
+  );
+
+  const { data: currentVolumeWindow, isLoading: curLoading } = useBendystrawQuery(
+    ParticipantSnapshotsInRangeDocument,
+    {
+        where: curWindowWhereClause,
+        skip: !project?.suckerGroupId,
+    }
+  );
+
+  const accPrevVolume = useMemo(() => {
+    const items = previousVolumeWindow?.participantSnapshots.items ?? [];
+    return items.reduce((total, snapshot) => total + BigInt(snapshot.volume), 0n);
+  }, [previousVolumeWindow]);
+
+  const accCurVolume = useMemo(() => {
+    const items = currentVolumeWindow?.participantSnapshots.items ?? [];
+    return items.reduce((total, snapshot) => total + BigInt(snapshot.volume), 0n);
+  }, [currentVolumeWindow]);
+  
+  const weeklyVolumeChange = useMemo(() => {
+    if (prevLoading || curLoading) return null;
+    if (accPrevVolume === 0n) return accCurVolume > 0n ? "New" : 0;
+    const difference = accCurVolume - accPrevVolume;
+    const percentage = (Number(difference) * 100) / Number(accPrevVolume);
+    return percentage.toFixed(2);
+  }, [accPrevVolume, accCurVolume, prevLoading, curLoading]);
+
+  const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
   const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
     id: project?.suckerGroupId ?? "",
@@ -53,26 +106,7 @@ export function Header() {
     limit: 1000 // TODO will break once more than 1000 participants exist
   });
 
-  const contributorsCount = useMemo(() => {
-    // de-dupe participants who are on multiple chains
-    const participantWallets = participants?.participants.items.reduce(
-      (acc, curr) =>
-        acc.includes(curr.address) ? acc : [...acc, curr.address],
-      [] as string[]
-    );
-
-    return participantWallets?.length;
-  }, [participants?.participants]);
-
-  const suckersQuery = useSuckers();
-  const suckers = suckersQuery.data;
-  const { name: projectName, logoUri, twitter } = metadata?.data ?? {};
-
-  // const totalSupply = useTotalOutstandingTokens();
-  // const totalSupplyFormatted =
-  //   totalSupply && token?.data
-  //     ? formatUnits(totalSupply, token.data.decimals)
-  //     : null;
+  const suckerGroupData = participants?.participants;
 
   return (
     <header>
@@ -80,13 +114,24 @@ export function Header() {
         <div className="relative h-[215px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
 
-            {/* DATA_TODO: Implement Backdrop URL in the src of this image */}
-
-            <img
-              src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
-              alt="Backdrop URL"
+            {"FE_TODO: You may need to adjust these sizes."}
+            { introImageUri ? (
+            <Image
+              src={ipfsUriToGatewayUrl(introImageUri)}
+              alt={"project header image"}
               className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+              width={600}
+              height={400}
             />
+            ) : (
+              <Image
+              src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" 
+              alt="placeholder header image"
+              className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+              width={600}
+              height={400}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -156,13 +201,15 @@ export function Header() {
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">1276</h3> {/* DATA_TODO: Payments Made */}
+                <h3 className="text-2xl font-semibold tracking-wider">
+                  {suckerGroupData?.totalCount ?? <Loader2 className="animate-spin" size={32} />}
+                  </h3>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Payments</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
-                  +4731% {/* DATA_TODO: % Return */}
+                  { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <Loader2 className="animate-spin" size={32} /> }
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Last 7 Days</p>
               </div>
