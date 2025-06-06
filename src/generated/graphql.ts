@@ -675,6 +675,7 @@ export type ActivityEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  type: Maybe<ActivityEventType>;
   useAllowanceEvent: Maybe<UseAllowanceEvent>;
 };
 
@@ -925,6 +926,10 @@ export type ActivityEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<ActivityEventType>;
+  type_in?: InputMaybe<Array<InputMaybe<ActivityEventType>>>;
+  type_not?: InputMaybe<ActivityEventType>;
+  type_not_in?: InputMaybe<Array<InputMaybe<ActivityEventType>>>;
   useAllowanceEvent?: InputMaybe<Scalars['String']['input']>;
   useAllowanceEvent_contains?: InputMaybe<Scalars['String']['input']>;
   useAllowanceEvent_ends_with?: InputMaybe<Scalars['String']['input']>;
@@ -942,6 +947,28 @@ export type ActivityEventPage = {
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
+
+export enum ActivityEventType {
+  addToBalanceEvent = 'addToBalanceEvent',
+  autoIssueEvent = 'autoIssueEvent',
+  borrowLoanEvent = 'borrowLoanEvent',
+  burnEvent = 'burnEvent',
+  cashOutTokensEvent = 'cashOutTokensEvent',
+  decorateBannyEvent = 'decorateBannyEvent',
+  deployErc20Event = 'deployErc20Event',
+  liquidateLoanEvent = 'liquidateLoanEvent',
+  mintNftEvent = 'mintNftEvent',
+  mintTokensEvent = 'mintTokensEvent',
+  payEvent = 'payEvent',
+  projectCreateEvent = 'projectCreateEvent',
+  reallocateLoanEvent = 'reallocateLoanEvent',
+  repayLoanEvent = 'repayLoanEvent',
+  sendPayoutToSplitEvent = 'sendPayoutToSplitEvent',
+  sendPayoutsEvent = 'sendPayoutsEvent',
+  sendReservedTokensToSplitEvent = 'sendReservedTokensToSplitEvent',
+  sendReservedTokensToSplitsEvent = 'sendReservedTokensToSplitsEvent',
+  useAllowanceEvent = 'useAllowanceEvent'
+}
 
 export type AddToBalanceEvent = {
   amount: Scalars['BigInt']['output'];
@@ -2971,6 +2998,7 @@ export type Participant = {
   createdAt: Scalars['Int']['output'];
   creditBalance: Scalars['BigInt']['output'];
   erc20Balance: Scalars['BigInt']['output'];
+  isRevnet: Maybe<Scalars['Boolean']['output']>;
   lastPaidTimestamp: Scalars['Int']['output'];
   nfts: Maybe<NftPage>;
   paymentsCount: Scalars['Int']['output'];
@@ -3046,6 +3074,10 @@ export type ParticipantFilter = {
   erc20Balance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   erc20Balance_not?: InputMaybe<Scalars['BigInt']['input']>;
   erc20Balance_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  isRevnet?: InputMaybe<Scalars['Boolean']['input']>;
+  isRevnet_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
+  isRevnet_not?: InputMaybe<Scalars['Boolean']['input']>;
+  isRevnet_not_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
   lastPaidTimestamp?: InputMaybe<Scalars['Int']['input']>;
   lastPaidTimestamp_gt?: InputMaybe<Scalars['Int']['input']>;
   lastPaidTimestamp_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -3401,7 +3433,6 @@ export type PermissionHolder = {
   permissions: Maybe<Array<Scalars['Int']['output']>>;
   project: Maybe<Project>;
   projectId: Scalars['Int']['output'];
-  suckerGroupId: Scalars['String']['output'];
 };
 
 export type PermissionHolderFilter = {
@@ -3447,16 +3478,6 @@ export type PermissionHolderFilter = {
   projectId_lte?: InputMaybe<Scalars['Int']['input']>;
   projectId_not?: InputMaybe<Scalars['Int']['input']>;
   projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  suckerGroupId?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_contains?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_ends_with?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  suckerGroupId_not?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_not_contains?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  suckerGroupId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  suckerGroupId_starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PermissionHolderPage = {
@@ -3484,6 +3505,7 @@ export type Project = {
   handle: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   infoUri: Maybe<Scalars['String']['output']>;
+  isRevnet: Maybe<Scalars['Boolean']['output']>;
   logoUri: Maybe<Scalars['String']['output']>;
   metadata: Maybe<Scalars['JSON']['output']>;
   metadataUri: Maybe<Scalars['String']['output']>;
@@ -3930,6 +3952,10 @@ export type ProjectFilter = {
   infoUri_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   infoUri_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   infoUri_starts_with?: InputMaybe<Scalars['String']['input']>;
+  isRevnet?: InputMaybe<Scalars['Boolean']['input']>;
+  isRevnet_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
+  isRevnet_not?: InputMaybe<Scalars['Boolean']['input']>;
+  isRevnet_not_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
   logoUri?: InputMaybe<Scalars['String']['input']>;
   logoUri_contains?: InputMaybe<Scalars['String']['input']>;
   logoUri_ends_with?: InputMaybe<Scalars['String']['input']>;
@@ -6082,7 +6108,7 @@ export type ProjectQueryVariables = Exact<{
 }>;
 
 
-export type ProjectQuery = { project: { projectId: number, metadataUri: string | null, handle: string | null, createdAt: number, suckerGroupId: string } | null };
+export type ProjectQuery = { project: { projectId: number, metadataUri: string | null, handle: string | null, createdAt: number, suckerGroupId: string, owner: string, volume: any, paymentsCount: number } | null };
 
 export type ProjectsQueryVariables = Exact<{
   where?: InputMaybe<ProjectFilter>;
@@ -6129,7 +6155,7 @@ export const LoansByAccountDocument = {"kind":"Document","definitions":[{"kind":
 export const LoansDetailsByAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoansDetailsByAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"owner"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loans"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner"},"value":{"kind":"Variable","name":{"kind":"Name","value":"owner"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"borrowAmount"}},{"kind":"Field","name":{"kind":"Name","value":"collateral"}},{"kind":"Field","name":{"kind":"Name","value":"prepaidDuration"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"terminal"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<LoansDetailsByAccountQuery, LoansDetailsByAccountQueryVariables>;
 export const ParticipantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Participants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"participantFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"lastPaidTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"erc20Balance"}},{"kind":"Field","name":{"kind":"Name","value":"creditBalance"}}]}}]}}]}}]} as unknown as DocumentNode<ParticipantsQuery, ParticipantsQueryVariables>;
 export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"account"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"operator"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionHolder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"account"},"value":{"kind":"Variable","name":{"kind":"Name","value":"account"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}},{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"operator"},"value":{"kind":"Variable","name":{"kind":"Name","value":"operator"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"}}]}}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
-export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;
+export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}},{"kind":"Field","name":{"kind":"Name","value":"owner"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"paymentsCount"}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Projects"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}},{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
 export const ProjectCreateEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectCreateEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectCreateEventFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectCreateEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectCreateEventQuery, ProjectCreateEventQueryVariables>;
 export const StoreAutoIssuanceAmountEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoreAutoIssuanceAmountEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"storeAutoIssuanceAmountEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storeAutoIssuanceAmountEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<StoreAutoIssuanceAmountEventsQuery, StoreAutoIssuanceAmountEventsQueryVariables>;
