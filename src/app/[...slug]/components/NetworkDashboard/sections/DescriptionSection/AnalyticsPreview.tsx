@@ -3,12 +3,13 @@
 import { FC, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { formatNumber } from '@/lib/utils';
 
 interface DaoData {
   treasuryHoldings: string;
-  assetsUnderManagement: string;
+  assetsUnderManagement: string | number;
   totalHolders: string;
-  totalSupply: string;
+  totalSupply: string | number;
   latestPrice: number;
   latestMarketCap: number;
   tokenName: string;
@@ -17,21 +18,6 @@ interface DaoData {
 interface TreasuryPreview {
   data: DaoData | null;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-function formatNumber(num: number): string {
-  if (num === 0) return "0";
-
-  if (Math.abs(num) >= 10) {
-    return Math.round(num).toLocaleString(); // Use commas, no decimals
-  }
-
-  // For numbers < 10, round to 2 significant digits
-  const digits = 2;
-  const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
-  const rounded = Math.round(num * factor) / factor;
-
-  return rounded.toString();
 }
 
 

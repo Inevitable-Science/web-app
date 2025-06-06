@@ -37,11 +37,21 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 }
 
-interface DaoData {
+/*interface DaoData {
   treasuryHoldings: string;
   assetsUnderManagement: string;
   totalHolders: string;
   totalSupply: string;
+  latestPrice: number;
+  latestMarketCap: number;
+  tokenName: string;
+}*/
+
+interface DaoData {
+  treasuryHoldings: string;
+  assetsUnderManagement: string | number;
+  totalHolders: string;
+  totalSupply: string | number;
   latestPrice: number;
   latestMarketCap: number;
   tokenName: string;

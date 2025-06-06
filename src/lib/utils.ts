@@ -39,6 +39,44 @@ export function formatSeconds(seconds: number, precision = 2, compact = false) {
   });
 }
 
+export function truncateAddress(address: Address) {
+  if (address === null) return "-- --";
+  if (address.length <= 10) return address; 
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};  
+
+export function formatNumber(num: number): string {
+  if (num === 0) return "0";
+
+  if (Math.abs(num) >= 10) {
+    return Math.round(num).toLocaleString(); // Use commas, no decimals
+  }
+
+  // For numbers < 10, round to 2 significant digits
+  const digits = 2;
+  const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+  const rounded = Math.round(num * factor) / factor;
+
+  return rounded.toString();
+}
+
+export function formatDate(input?: Date | string | null): string {
+  if (!input) return '--';
+
+  const date = input instanceof Date ? input : new Date(input);
+
+  if (isNaN(date.getTime())) return '--'; // Invalid date
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true,
+  }).format(date);
+}
+
 export function etherscanLink(
   addressOrTxHash: string,
   opts: {

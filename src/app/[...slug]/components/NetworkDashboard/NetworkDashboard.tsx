@@ -28,6 +28,8 @@ export function NetworkDashboard() {
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
+    { key: "analytics", label: "Analytics" },
+    { key: "treasury", label: "Treasury" },
   ];
 
   // set title

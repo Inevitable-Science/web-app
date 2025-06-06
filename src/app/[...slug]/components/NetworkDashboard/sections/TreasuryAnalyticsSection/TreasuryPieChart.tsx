@@ -1,0 +1,313 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+
+// Define the interface for treasury tokens
+interface TreasuryToken {
+  metadata: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  contractAddress: string | null;
+  rawBalance: string;
+  decodedBalance: number;
+  price: number;
+  totalValue: number;
+  _id?: string;
+}
+
+// Define props interface for the component
+interface TreasuryPieChartProps {
+  filteredData: TreasuryToken[];
+}
+
+const MIN_PERCENT = 0.5;
+
+const segmentColors = [
+  '#808080',
+  '#616161',
+  '#424242',
+  '#616161',
+  '#808080',
+  '#424242',
+];
+
+// Define the shape of the data for the PieChart
+interface PieChartData extends TreasuryToken {
+  value: number;
+  percent: string;
+  visualValue: number;
+  fill: string;
+}
+
+// Props for renderActiveShape
+interface ActiveShapeProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  startAngle: number;
+  endAngle: number;
+  fill: string;
+  payload: PieChartData;
+  percent: number;
+  value: number;
+}
+
+const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
+  const RADIAN = Math.PI / 180;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
+  const sin = Math.sin(-RADIAN * midAngle);
+  const cos = Math.cos(-RADIAN * midAngle);
+  const sx = cx + (outerRadius + 10) * cos;
+  const sy = cy + (outerRadius + 10) * sin;
+  const mx = cx + (outerRadius + 30) * cos;
+  const my = cy + (outerRadius + 30) * sin;
+  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  const ey = my;
+  const textAnchor = cos >= 0 ? 'start' : 'end';
+
+  function formatNumber(value: number | string) {
+    if (value === 'N/A') return value;
+    const number = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(number)) {
+      return 'N/A';
+    }
+
+    const fractionDigits = number < 10 ? 2 : 0;
+
+    return number.toLocaleString('en-US', {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    });
+  }
+
+  return (
+    <g>
+      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={'var(--text-color)'}>
+        {payload.contractAddress ? (
+          <a
+            href={`https://etherscan.io/token/${payload.contractAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tpcAtag merriweather-bold"
+          >
+            <tspan x={cx} dy="0">{payload.metadata.symbol}</tspan>
+          </a>
+        ) : (
+          <tspan 
+            x={cx} 
+            dy="0" 
+            className="text-2xl fill: var(--text-color);"
+            style={{ fill: 'var(--text-color)' }}
+          >
+            {payload.metadata.symbol}
+          </tspan>
+        )}
+        <tspan x={cx} dy="1.8em" className="usdPriceFooter">
+          1 {payload.metadata.name} = ${formatNumber(payload.price)} USD
+        </tspan>
+        <tspan x={cx} dy="1.3em" className="tokensHeldFooter">
+          {formatNumber(payload.decodedBalance)} {payload.metadata.symbol}
+        </tspan>
+        <tspan x={cx} dy="1.3em" className="tokensHeldFooter">${formatNumber(payload.totalValue)}</tspan>
+      </text>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+      />
+      <Sector
+        cx={cx}
+        cy={cy}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        innerRadius={outerRadius + 6}
+        outerRadius={outerRadius + 10}
+        fill={fill}
+      />
+    </g>
+  );
+};
+
+const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [radius, setRadius] = useState<{ innerRadius: number; outerRadius: number }>({
+    innerRadius: 120,
+    outerRadius: 150,
+  });
+
+  // Calculate total value with validation
+  const totalValue = filteredData.reduce((sum, token) => {
+    const value = token.totalValue || 0;
+    return sum + (isNaN(value) ? 0 : value);
+  }, 0);
+
+  // Sort tokens by value (descending) and prepare chart data
+  const adjustedData: PieChartData[] = totalValue > 0
+    ? filteredData
+        .map((token) => ({
+          ...token,
+          value: token.totalValue || 0,
+        }))
+        .filter((token) => token.value > 0)
+        .sort((a, b) => b.value - a.value)
+        .map((token, index) => {
+          const percent = (token.value / totalValue) * 100;
+          return {
+            ...token,
+            percent: isNaN(percent) ? '0.00' : percent.toFixed(2),
+            visualValue: isNaN(percent) || percent < MIN_PERCENT ? MIN_PERCENT : percent,
+            fill: segmentColors[index % segmentColors.length],
+          };
+        })
+    : [];
+
+  // Only reset activeIndex when filteredData changes, not adjustedData
+  useEffect(() => {
+    console.log('Filtered Data:', filteredData);
+    console.log('Total Value:', totalValue);
+    console.log('Adjusted Data:', adjustedData);
+    setActiveIndex(0);
+  }, [filteredData]); // Changed dependency from adjustedData to filteredData
+
+  const onPieEnter = (_: any, index: number) => {
+    console.log('Pie Enter:', index); // Debug hover event
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    console.log('Pie Leave: Resetting to 0'); // Debug leave event
+    setActiveIndex(0); // Reset to first segment on mouse leave
+  };
+
+  const adjustRadius = () => {
+    const width = window.innerWidth;
+    if (width < 410) {
+      setRadius({ innerRadius: 100, outerRadius: 120 });
+    } else {
+      setRadius({ innerRadius: 120, outerRadius: 150 });
+    }
+  };
+
+  useEffect(() => {
+    adjustRadius();
+    window.addEventListener('resize', adjustRadius);
+    return () => {
+      window.removeEventListener('resize', adjustRadius);
+    };
+  }, []);
+
+  // Render fallback if no valid data
+  if (!adjustedData.length) {
+    return (
+      <div className="tcpPieContainer">
+        <p>No valid data to display</p>
+        <style>{`
+          .tcpPieContainer {
+            width: 100%;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  return (
+    <div className="tcpPieContainer">
+      <ResponsiveContainer width="100%" height={500}>
+        <PieChart>
+          <Pie
+            activeIndex={activeIndex}
+            isAnimationActive={false}
+            activeShape={renderActiveShape as any}
+            data={adjustedData}
+            cx="50%"
+            cy="50%"
+            innerRadius={radius.innerRadius}
+            outerRadius={radius.outerRadius}
+            stroke="none"
+            dataKey="visualValue"
+            onMouseEnter={onPieEnter}
+            onMouseLeave={onPieLeave} // Added onMouseLeave handler
+          />
+        </PieChart>
+      </ResponsiveContainer>
+
+      <style>{`
+        .tpcAtag,
+        .tContractAddressText {
+          font-weight: 600;
+          font-size: 32px;
+          fill: var(--text-color);
+          text-decoration: none;
+        }
+
+        .tpcAtag:hover {
+          text-decoration: underline;
+        }
+
+        .usdPriceFooter,
+        .tokensHeldFooter {
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .pieChartComposition-treasury {
+          height: 380px;
+          width: 100%;
+          padding: 16px;
+          background-color: var(--secondary-bg);
+          border: 1px solid var(--border-color);
+          border-radius: 10px;
+        }
+
+        .treasuryChartDiv-treasury {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin: 12px 0 48px 0;
+          background-color: var(--secondary-bg);
+          border: 1px solid var(--border-color);
+          padding: 16px;
+          border-radius: 10px;
+        }
+
+        .tcpPieContainer {
+          width: 100%;
+          height: 500px;
+          min-height: 500px;
+        }
+
+        .recharts-pie * {
+          outline: none !important;
+        }
+
+        .recharts-pie-sector:hover {
+          cursor: pointer;
+        }
+
+        .contractAddressText {
+          font-weight: 600;
+          font-size: 16px;
+          fill: var(--text-color);
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default TreasuryPieChart;
