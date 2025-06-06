@@ -5,6 +5,7 @@ import EtherscanLink from "@/components/EtherscanLink";
 import {
   ParticipantsDocument,
   ProjectDocument,
+  ProjectsDocument,
   SuckerGroupDocument,
 } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
@@ -26,6 +27,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { TvlDatum } from "./TvlDatum";
 import { useMemo } from "react";
+import { formatEther } from "viem";
 
 export function Header() {
   const { projectId } = useJBContractContext();
@@ -33,12 +35,14 @@ export function Header() {
   const { metadata } = useJBProjectMetadataContext();
   const { token } = useJBTokenContext();
 
-  const project = useBendystrawQuery(ProjectDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
+  const { data: projectData } = useBendystrawQuery(ProjectDocument, {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
   });
+  const project = projectData?.project;
+
   const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
-    id: project.data?.project?.suckerGroupId ?? "",
+    id: project?.suckerGroupId ?? "",
   });
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
@@ -62,7 +66,7 @@ export function Header() {
 
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
-  const { name: projectName, logoUri } = metadata?.data ?? {};
+  const { name: projectName, logoUri, twitter } = metadata?.data ?? {};
 
   // const totalSupply = useTotalOutstandingTokens();
   // const totalSupplyFormatted =
@@ -126,7 +130,9 @@ export function Header() {
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
               <div className="text-sm flex gap-2 items-baseline">
                 <h1 className="text-3xl font-light">{projectName}</h1>
-                <h5 className="text-cerulean text-base">@dao_handle</h5> {/* DATA_TODO: DAO Handle */}
+                <h5 className="text-cerulean text-base">
+                  <a href={`https://x.com/@${twitter}`}>@{twitter}</a>
+                </h5>
               </div>
             </div>
           </div>
@@ -143,7 +149,9 @@ export function Header() {
 
             <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">Ξ1,113.88</h3> {/* DATA_TODO: ETH Raised */}
+                <h3 className="text-2xl font-semibold tracking-wider">
+                  Ξ{project?.volume ? parseFloat(formatEther(BigInt(project.volume))).toFixed(2) : "0.00"}
+                  </h3>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Raised</p>
               </div>
 
