@@ -192,6 +192,8 @@ export function NetworkDetailsTable() {
 }
 
 
+// DATA_TODO: Add functionality to map the Cycles, Token and Other Rules function
+
 // Define the data types for TypeScript
 interface Cycles {
   duration: string;

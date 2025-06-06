@@ -13,6 +13,8 @@ export interface PayInputProps
   inputClassName?: string;
 }
 
+// DATA_TODO: Add functionality to this pay modal
+
 const PayDummy = React.forwardRef<HTMLInputElement, PayInputProps>(
   ({ className, inputClassName, label, type, currency, withPayOnSelect, ...props }, ref) => {
     return (

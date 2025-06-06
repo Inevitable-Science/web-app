@@ -30,6 +30,8 @@ type ProjectTimelinePoint = {
 type ProjectTimelineView = 'volume' | 'balance' | 'trendingScore'
 type ProjectTimelineRange = 7 | 30 | 365
 
+// DATA_TODO: Add functionality to this graph
+
 // Static chart component
 export default function StaticVolumeChart({
   height = 300,
