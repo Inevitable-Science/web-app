@@ -89,10 +89,16 @@ export function TreasurySection({ data }: DescriptionSectionProps) {
           </div>
         </div>
 
-        {data?.treasuryTokens && (
-          <TreasuryPieChart filteredData={data?.treasuryTokens} />
-        )}
+        <div className="bg-grey-450 h-[400px] flex items-center p-[12px] rounded-2xl">
+          {data?.treasuryTokens && (
+            <TreasuryPieChart filteredData={data?.treasuryTokens} />
+          )}
+        </div>
 
+
+        <div className="bg-grey-450 p-[12px] rounded-2xl">
+          <h3 className="text-grey-50 uppercase text-sm mb-[8px]">Portfolio Peformance</h3>
+        </div>
 
 
         <pre>

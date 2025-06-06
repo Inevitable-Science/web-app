@@ -26,12 +26,11 @@ interface TreasuryPieChartProps {
 const MIN_PERCENT = 0.5;
 
 const segmentColors = [
-  '#808080',
-  '#616161',
-  '#424242',
-  '#616161',
-  '#808080',
-  '#424242',
+  '#315659',
+  '#C6E0FF',
+  '#2978A0',
+  '#253031',
+  '#FBE8BD',
 ];
 
 // Define the shape of the data for the PieChart
@@ -87,33 +86,28 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={'var(--text-color)'}>
+      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={'var(--foreground)'}>
         {payload.contractAddress ? (
           <a
             href={`https://etherscan.io/token/${payload.contractAddress}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="tpcAtag merriweather-bold"
+            className="text-4xl hover:underline"
           >
             <tspan x={cx} dy="0">{payload.metadata.symbol}</tspan>
           </a>
         ) : (
-          <tspan 
-            x={cx} 
-            dy="0" 
-            className="text-2xl fill: var(--text-color);"
-            style={{ fill: 'var(--text-color)' }}
-          >
+          <tspan x={cx} dy="0" className="text-4xl">
             {payload.metadata.symbol}
           </tspan>
         )}
-        <tspan x={cx} dy="1.8em" className="usdPriceFooter">
+        <tspan x={cx} dy="1.8em" className="text-sm">
           1 {payload.metadata.name} = ${formatNumber(payload.price)} USD
         </tspan>
-        <tspan x={cx} dy="1.3em" className="tokensHeldFooter">
+        <tspan x={cx} dy="1.3em" className="text-sm">
           {formatNumber(payload.decodedBalance)} {payload.metadata.symbol}
         </tspan>
-        <tspan x={cx} dy="1.3em" className="tokensHeldFooter">${formatNumber(payload.totalValue)}</tspan>
+        <tspan x={cx} dy="1.3em" className="text-sm">${formatNumber(payload.totalValue)}</tspan>
       </text>
       <Sector
         cx={cx}
@@ -170,22 +164,17 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
         })
     : [];
 
-  // Only reset activeIndex when filteredData changes, not adjustedData
+  // Only reset activeIndex when filteredData changes
   useEffect(() => {
     console.log('Filtered Data:', filteredData);
     console.log('Total Value:', totalValue);
     console.log('Adjusted Data:', adjustedData);
     setActiveIndex(0);
-  }, [filteredData]); // Changed dependency from adjustedData to filteredData
+  }, [filteredData]);
 
   const onPieEnter = (_: any, index: number) => {
     console.log('Pie Enter:', index); // Debug hover event
     setActiveIndex(index);
-  };
-
-  const onPieLeave = () => {
-    console.log('Pie Leave: Resetting to 0'); // Debug leave event
-    setActiveIndex(0); // Reset to first segment on mouse leave
   };
 
   const adjustRadius = () => {
@@ -213,13 +202,10 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
         <style>{`
           .tcpPieContainer {
             width: 100%;
-            height: 500px;
+            height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
           }
         `}</style>
       </div>
@@ -228,7 +214,7 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
 
   return (
     <div className="tcpPieContainer">
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={320}>
         <PieChart>
           <Pie
             activeIndex={activeIndex}
@@ -242,54 +228,15 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
             stroke="none"
             dataKey="visualValue"
             onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave} // Added onMouseLeave handler
+            // Removed onMouseLeave to prevent resetting activeIndex
           />
         </PieChart>
       </ResponsiveContainer>
 
       <style>{`
-        .tpcAtag,
-        .tContractAddressText {
-          font-weight: 600;
-          font-size: 32px;
-          fill: var(--text-color);
-          text-decoration: none;
-        }
-
-        .tpcAtag:hover {
-          text-decoration: underline;
-        }
-
-        .usdPriceFooter,
-        .tokensHeldFooter {
-          font-size: 12px;
-          font-weight: 600;
-        }
-
-        .pieChartComposition-treasury {
-          height: 380px;
-          width: 100%;
-          padding: 16px;
-          background-color: var(--secondary-bg);
-          border: 1px solid var(--border-color);
-          border-radius: 10px;
-        }
-
-        .treasuryChartDiv-treasury {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin: 12px 0 48px 0;
-          background-color: var(--secondary-bg);
-          border: 1px solid var(--border-color);
-          padding: 16px;
-          border-radius: 10px;
-        }
-
         .tcpPieContainer {
           width: 100%;
-          height: 500px;
-          min-height: 500px;
+          height: fit-content;
         }
 
         .recharts-pie * {
@@ -298,12 +245,6 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
 
         .recharts-pie-sector:hover {
           cursor: pointer;
-        }
-
-        .contractAddressText {
-          font-weight: 600;
-          font-size: 16px;
-          fill: var(--text-color);
         }
       `}</style>
     </div>
