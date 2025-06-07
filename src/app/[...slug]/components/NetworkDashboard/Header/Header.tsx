@@ -28,7 +28,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { TvlDatum } from "./TvlDatum";
 import { useMemo, useState } from "react";
-import { Address, formatEther } from "viem";
+import { Address, formatEther, size } from "viem";
 import { Loader2 } from 'lucide-react';
 import { EthereumAddress } from "@/components/EthereumAddress";
 
@@ -104,7 +104,7 @@ export function Header() {
       suckerGroupId: suckerGroup.data?.suckerGroup?.id,
       balance_gt: 0,
     },
-    limit: 1000 // TODO will break once more than 1000 participants exist
+    limit: 1000 // BUG: will break once more than 1000 participants exist
   });
 
   const suckerGroupData = participants?.participants;
@@ -194,53 +194,65 @@ export function Header() {
 
             <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">
-                  Ξ{project?.volume ? parseFloat(formatEther(BigInt(project.volume))).toFixed(2) : "0.00"}
+                <div className="h-14 flex items-center">
+                  <h3 className="text-2xl font-semibold tracking-wider">
+                    Ξ{project?.volume ? parseFloat(formatEther(BigInt(project.volume))).toFixed(2) : "0.00"}
                   </h3>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Raised</p>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Raised</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-2xl font-semibold tracking-wider">
-                  {suckerGroupData?.totalCount ?? <Loader2 className="animate-spin" size={32} />}
+                <div className="h-14 flex items-center">
+                  <h3 className="text-2xl font-semibold tracking-wider">
+                    {suckerGroupData?.totalCount ?? <Loader2 className="animate-spin" size={32} />}
                   </h3>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Payments</p>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Payments</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
-                  { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <Loader2 className="animate-spin" size={32} /> }
+                <div className="h-14 flex items-center">
+                  <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
+                    { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <Loader2 className="animate-spin" size={32} /> }
+                  </div>
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Last 7 Days</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-xl font-light">
-                  {project?.owner ? (
-                  <EthereumAddress
-                    address={project?.owner as Address}
-                    short
-                    withEnsAvatar
-                    withEnsName
-                  />
-                  ) : (
-                    null
-                  )
-                  }
+                <div className="h-14 flex items-center">
+                  <h3>
+                    {project?.owner ? (
+                    <EthereumAddress
+                      address={project?.owner as Address}
+                      short
+                      withEnsAvatar
+                      withEnsName
+                      avatarProps={{ size: "sm" }} 
+                      className="text-xl font-light"
+                    />
+                    ) : (
+                      null
+                    )
+                    }
                   </h3>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Owner</p>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Owner</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-lg font-light">
-                  {project?.createdAt ? (
-                    new Date(project.createdAt * 1000).toLocaleString()
-                  ) : (
-                    null
-                  )
-                  }
-                  </h3> {/* DATA_TODO: Creation Date */}
-                <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Date Created</p>
+                <div className="h-14 flex items-center">
+                  <h3 className="text-xl font-light">
+                    {project?.createdAt ? (
+                      new Date(project.createdAt * 1000).toLocaleString()
+                    ) : (
+                      null
+                    )
+                    }
+                  </h3>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Date Created</p>
               </div>
             </div>
           </div>
