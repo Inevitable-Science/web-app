@@ -26,7 +26,6 @@ Swap Wiget - web-app/src/app/[...slug]/components/PayCard/SwapWiget/SwapWiget.ts
  - Pass the eth window provider to the modal, no secondary connect wallet req
 
 
-
 NEW CHANGES
 
 New Pay Card - web-app/src/app/[...slug]/components/PayCard/PayDummy.tsx
@@ -41,6 +40,13 @@ Activity Feed - web-app/src/app/[...slug]/components/ActivityFeed.tsx
 Cycle/Rules Page - src/app/[...slug]/components/NetworkDetailsTable.tsx
  - Add functionality to map the Cycles, Token and Other Rules function
 
+CHANGES 7th Jun 2025
+
+Tab Content - web-app/src/app/[...slug]/components/NetworkDashboard/TabContent.tsx
+ - Conditionally render the TokenSection and TreasurySection hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live.
+ - web-app/src/app/[...slug]/components/NetworkDashboard/NetworkDashboard.tsx > Conditionally render the TokenSection and TreasurySection TABS hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live.
+
+
 Not Required Currently But In Future
 Live auction data (to homepage) : ref to figma
  - Auction Name
@@ -52,11 +58,7 @@ Live auction data (to homepage) : ref to figma
  - bg url (potentially)
 
 
-#### Note:
-Please check the build process, I ran `npm install @cowprotocol/widget-react --legacy-peer-deps` hopefully theres no breaking changes, not to familar with the indepth things of NPM.
 
-also
-
-Upon completion please delete the following files
+Delete unused files such as:  (...soon)
  - web-app/src/app/[...slug]/components/NetworkDashboard/Header/Creation.tsx
  - web-app/src/app/[...slug]/components/NetworkDashboard/Header/TvlDatum.tsx

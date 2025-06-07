@@ -23,7 +23,12 @@ import { useRulesetData } from "@/hooks/useRulesetData"; // 1. Import your new h
 
 import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
-export function NetworkDetailsTable() {
+interface NetworkDetailsParams {
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
+
   const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const [showRules, setShowRules] = useState<boolean>(true);
 
@@ -175,7 +180,11 @@ export function NetworkDetailsTable() {
             <h3 className="text-xl">daohydra.eth</h3>
             <p className="text-sm">100%</p>
           </div>
-          <Button variant="link" className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3">
+          <Button 
+            onClick={() => setSelectedTab("treasury")}
+            variant="link" 
+            className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+          >
             Treasury Stats
             <ArrowRightIcon height="20" width="20" />
           </Button>

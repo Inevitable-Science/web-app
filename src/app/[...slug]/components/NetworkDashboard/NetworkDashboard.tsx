@@ -27,6 +27,7 @@ export function NetworkDashboard() {
   const [selectedTab, setSelectedTab] = useState("about");
   const chainId = useJBChainId();
 
+  {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection TABS hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
   const tabs = [
     { key: "about", label: "About" },
     { key: "tokens", label: "Tokens" },
@@ -119,7 +120,8 @@ export function NetworkDashboard() {
               {/* Tab Content */}
               <div>
                 {/*<TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? projectName : "Loading"} tokenName={token?.data?.name? token.data.name : "..."} />*/}
-                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? "hydradao" : "Loading"} tokenName={token?.data?.name? "hydra" : "..."} />
+                {/* Dao Name is used for analytics, use static var in development */}
+                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? "hydradao" : "Loading"} tokenName={token?.data?.name? "hydra" : "..."} /> 
               </div>
             </section>
           </div>

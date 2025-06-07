@@ -114,7 +114,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
         </div>
 
         <Button 
-          onClick={() => setSelectedTab("owners")}
+          onClick={() => setSelectedTab("analytics")}
           variant="link" 
           className="h-6 pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >

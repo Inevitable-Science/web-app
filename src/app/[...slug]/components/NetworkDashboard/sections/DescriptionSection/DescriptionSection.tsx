@@ -37,16 +37,6 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 }
 
-/*interface DaoData {
-  treasuryHoldings: string;
-  assetsUnderManagement: string;
-  totalHolders: string;
-  totalSupply: string;
-  latestPrice: number;
-  latestMarketCap: number;
-  tokenName: string;
-}*/
-
 interface DaoData {
   treasuryHoldings: string;
   assetsUnderManagement: string | number;
@@ -68,13 +58,14 @@ export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionP
   const { description, name } = metadata?.data ?? {};
 
   return (
-      <div className="mt-2 text-sm">
+      <div className="text-sm">
         <RichPreview source={description || name || "..."} />
         
         <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
 
         <DaoData data={data} setSelectedTab={setSelectedTab} />
 
+        {/* DATA_TODO: Add a secondary description for below the analytics */}
         {/* Dupe For Visual Purposes */}
         <RichPreview source={description || name || "..."} />
 

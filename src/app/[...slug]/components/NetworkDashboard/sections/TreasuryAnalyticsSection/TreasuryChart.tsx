@@ -108,7 +108,7 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
               rgba(255, 255, 255, 0) 40%,
               #e0e0e0 50%,
               rgba(255, 255, 255, 0) 60%
-            ) #f5f5f5;
+            ) #2b2b2b;
             background-size: 200% 100%;
             background-position-x: 180%;
             animation: 1s loading ease-in-out infinite;
