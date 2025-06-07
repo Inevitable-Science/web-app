@@ -27,10 +27,47 @@ interface DescriptionInterface {
 
 interface DescriptionSectionProps {
   data: TokenResponse | null;
-  descriptionData: DescriptionInterface | null;
 }
 
-export function TokenSection({ data, descriptionData }: DescriptionSectionProps) {
+function calculateRatio(value1: number | null | undefined, value2: number | null | undefined): string {
+  // Handle null/undefined or zero inputs
+  if (!value1 || !value2) {
+    return "-- --";
+  }
+
+  // Handle invalid numbers
+  if (isNaN(value1) || isNaN(value2)) {
+    return "-- ---";
+  }
+
+  const maxValue = Math.max(value1, value2);
+  const normalized1 = (value1 / maxValue) * 10;
+  const normalized2 = (value2 / maxValue) * 10;
+
+  const rounded1 = Math.round(normalized1 * 10) / 10;
+  const rounded2 = Math.round(normalized2 * 10) / 10;
+
+  return `${rounded1} : ${rounded2}`;
+}
+
+function getValuationLabel(aum: number | null, marketCap: number | null): string {
+  if (
+    !aum || !marketCap ||
+    isNaN(aum) || isNaN(marketCap) ||
+    aum <= 0 || marketCap <= 0
+  ) {
+    return "--";
+  }
+
+  const ratio = aum / marketCap;
+
+  if (ratio >= 1.2) return "UNDERVALUED";
+  if (ratio >= 0.8) return "FAIR";
+  if (ratio >= 0.4) return "STRETCHED";
+  return "STRETCHED";
+}
+
+export function TokenSection({ data }: DescriptionSectionProps) {
   const chainId = useJBChainId();
 
   const suckersQuery = useSuckers();
@@ -38,40 +75,54 @@ export function TokenSection({ data, descriptionData }: DescriptionSectionProps)
 
   return (
     <section>
-      <div className="flex flex-col gap-4 w-full">
-        <div className="bg-grey-450 p-[12px] rounded-2xl">
-          <h3 className="text-grey-50 uppercase text-sm mb-[8px] py-1">Top Holders</h3>
-          
-        </div>
-
-        <div className="bg-grey-450 p-[12px] rounded-2xl">
-          <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
-          <div className="text-sm flex gap-2 items-baseline">
-            {suckers?.map((pair) => {
-              if (!pair) return null;
-
-              const networkSlug =
-                JB_CHAINS[pair?.peerChainId as JBChainId].slug;
-              return (
-                <Link
-                  className="underline"
-                  key={networkSlug}
-                  href={`/${networkSlug}:${pair.projectId}`}
-                >
-                  <ChainLogo
-                    chainId={pair.peerChainId as JBChainId}
-                    width={18}
-                    height={18}
-                  />
-                </Link>
-              );
-            })}
+      {data ? (
+        <div className="flex flex-col gap-4 w-full">
+          <div className="bg-grey-450 p-[12px] rounded-2xl">
+            <h3 className="text-grey-50 uppercase text-sm mb-[8px] py-1">Top Holders</h3>
+            
           </div>
+
+          <div className="bg-grey-450 p-[12px] rounded-2xl">
+            <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {calculateRatio(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  {getValuationLabel(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                </p>
+              </div>
+              <div className="background-color p-[16px] rounded-2xl">
+                <div className="flex gap-2 h-[24px] mb-[4px]">
+                  {suckers?.map((pair) => {
+                    if (!pair) return null;
+
+                    const networkSlug =
+                      JB_CHAINS[pair?.peerChainId as JBChainId].slug;
+                    return (
+                      <ChainLogo
+                        chainId={pair.peerChainId as JBChainId}
+                        width={24}
+                        height={24}
+                      />
+                    );
+                  })}
+                </div>
+                <p className="text-muted-foreground font-light uppercase">Networks</p>
+              </div>
+            </div>
+          </div>
+          <pre>
+            <code>{JSON.stringify(data, null, 2)}</code>
+          </pre>
         </div>
-        <pre>
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      </div>
+      ) : (
+        <div className="w-full flex justify-center my-[15vh]">
+          <Loader2 className="animate-spin" size={32} />
+        </div>
+      )}
     </section>
   )
 }
