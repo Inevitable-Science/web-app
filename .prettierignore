@@ -18,3 +18,4 @@ build/
 # Generated files (if any)
 src/graphql/
 src/generated/
+src/app/.well-known/farcaster.json/

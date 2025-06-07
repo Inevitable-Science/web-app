@@ -13,8 +13,8 @@
     "export": "next export",
     "ts:compile": "tsc",
     "generate:gql": "DOTENV_CONFIG_PATH=./.env.local graphql-code-generator --config codegen.yml -r dotenv/config",
-    "format:write": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss}\"",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss}\""
+    "format:write": "prettier --write \"**/*.{jsx,ts,tsx,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
     "@cowprotocol/widget-react": "^0.13.0",
