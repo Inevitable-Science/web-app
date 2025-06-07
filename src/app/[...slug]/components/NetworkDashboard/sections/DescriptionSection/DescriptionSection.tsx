@@ -65,7 +65,7 @@ interface DescriptionSectionProps {
 export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
-  const { description, discord, name } = metadata?.data ?? {};
+  const { description, name } = metadata?.data ?? {};
 
   return (
       <div className="mt-2 text-sm">
