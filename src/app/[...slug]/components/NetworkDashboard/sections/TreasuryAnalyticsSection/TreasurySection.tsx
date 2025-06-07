@@ -98,6 +98,27 @@ export function TreasurySection({ data }: DescriptionSectionProps) {
 
         <div className="bg-grey-450 p-[12px] rounded-2xl">
           <h3 className="text-grey-50 uppercase text-sm mb-[8px]">Portfolio Peformance</h3>
+          <div className="flex flex-col text-sm font-light">
+            {Object.entries(data?.historicalReturns || {}).map(([label, value]) => {
+              const isPositive = !value.percentReturn.startsWith('-');
+              const textColor = isPositive ? 'text-green-500' : 'text-red-500';
+
+              return (
+                <div key={label} className="flex items-center justify-between py-4 border-b border-[#282828] py-1">
+                  <p className="w-12 text-grey-50">{label}</p>
+                  <p className={`w-32 text-right ${textColor}`}>
+                    {isPositive === true  && "+"}
+                    {value.dollarReturn}
+                  </p>
+                  <p className={`w-20 text-right ${textColor}`}>
+                    {isPositive === true  && "+"}
+                    {value.percentReturn}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
         </div>
 
 

@@ -33,11 +33,12 @@ import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { formatUnits } from "viem";
 
-import { ChevronDownIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
+  const [showRules, setShowRules] = useState<boolean>(true);
 
   const {
     projectId,
@@ -100,51 +101,61 @@ export function NetworkDetailsTable() {
             <p className="text-sm text-muted-foreground font-light uppercase">Current Cycle</p>
             <div className="flex items-center justify-between">
               <h3 className="text-xl">Rules</h3>
-              <Button variant={"ghost"} className="w-8 h-8 p-0 rounded">
-                <ChevronDownIcon height="24" width="24" />
+              <Button 
+                variant={"ghost"} 
+                className="w-8 h-8 p-0 rounded"
+                onClick={() => setShowRules(prev => !prev)}
+              >
+                {showRules ? (
+                  <ChevronDownIcon height="24" width="24" />
+                ) : (
+                  <ChevronUpIcon height="24" width="24" />
+                )}
               </Button>
             </div>
           </div>
-
           
-          {/* Cycles Section */}
-          <div className="mb-6">
-            <h2 className="text-grey-50 mt-4">CYCLES</h2>
-            <div>
-              {Object.entries(cyclesData.cycles).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
-                  <span>{formatLabel(key)}</span>
-                  <span>{value}</span>
-                </div>
-              ))}
+          {showRules ? (
+          <>
+            {/* Cycles Section */}
+            <div className="mb-6">
+              <h2 className="text-grey-50 mt-4">CYCLES</h2>
+              <div>
+                {Object.entries(cyclesData.cycles).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <span>{formatLabel(key)}</span>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Token Section */}
-          <div className="mb-6">
-            <h2 className="text-grey-50 mt-4">TOKEN</h2>
-            <div>
-              {Object.entries(tokenData.token).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
-                  <span>{formatLabel(key)}</span>
-                  <span>{value}</span>
-                </div>
-              ))}
+            {/* Token Section */}
+            <div className="mb-6">
+              <h2 className="text-grey-50 mt-4">TOKEN</h2>
+              <div>
+                {Object.entries(tokenData.token).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <span>{formatLabel(key)}</span>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Other Rules Section */}
-          <div>
-            <h2 className="text-grey-50 mt-4">OTHER RULES</h2>
+            {/* Other Rules Section */}
             <div>
-              {Object.entries(otherRulesData.otherRules).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
-                  <span>{formatLabel(key)}</span>
-                  <span>{value}</span>
-                </div>
-              ))}
+              <h2 className="text-grey-50 mt-4">OTHER RULES</h2>
+              <div>
+                {Object.entries(otherRulesData.otherRules).map(([key, value]) => (
+                  <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <span>{formatLabel(key)}</span>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </>) : (<></>)}
         </div>
       </div>
 

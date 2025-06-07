@@ -77,6 +77,20 @@ export function formatDate(input?: Date | string | null): string {
   }).format(date);
 }
 
+export function formatShortDate(input?: Date | string | null): string {
+  if (!input) return '--';
+
+  const date = input instanceof Date ? input : new Date(input);
+
+  if (isNaN(date.getTime())) return '--'; // Invalid date
+
+  return new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(date);
+}
+
 export function etherscanLink(
   addressOrTxHash: string,
   opts: {
