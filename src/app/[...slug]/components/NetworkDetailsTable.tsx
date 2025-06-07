@@ -22,9 +22,10 @@ import {
   useReadJbRulesetsAllOf,
   useReadJbSplitsSplitsOf,
   useJBTokenContext,
-  useJBChainId
+  useJBChainId,
+  useJBRulesetContext
 } from "juice-sdk-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { twJoin } from "tailwind-merge";
 import { PriceSection } from "./NetworkDashboard/sections/PriceSection";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
@@ -32,13 +33,35 @@ import { formatTokenSymbol, rulesetStartDate } from "@/lib/utils";
 import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { formatUnits } from "viem";
+import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 
 import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
-
+import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const [showRules, setShowRules] = useState<boolean>(true);
+
+  const { ruleset, rulesetMetadata } = useJBRulesetContext();
+  const rulesetDataHolder = ruleset?.data;
+  const rulesetMetadataHolder = rulesetMetadata?.data;
+
+  // Memoize the target date for the countdown hook to prevent unnecessary recalculations
+  const targetDateForCountdownHook = useMemo(() => {
+    if (rulesetDataHolder?.start !== undefined && rulesetDataHolder?.duration !== undefined) {
+      const s = Number(rulesetDataHolder.start);
+      const d = Number(rulesetDataHolder.duration);
+      // Ensure start and duration are valid numbers and target time is in the future or present for meaningful countdown
+      if (!isNaN(s) && !isNaN(d) && (s > 0 || d > 0) ) { // s > 0 for valid start, d can be 0 for ongoing
+        return new Date((s + d) * 1000); // Convert seconds to milliseconds for Date constructor
+      }
+    }
+    return undefined; // Hook should handle undefined gracefully (e.g., by returning isPast: true or default values)
+  }, [rulesetDataHolder?.start, rulesetDataHolder?.duration]);
+
+  const countdownOutput = useCountdownToDate(targetDateForCountdownHook);
+
+  const formattedCountdown = useFormatDaysAndHours(countdownOutput? countdownOutput : 0);
 
   const {
     projectId,
@@ -80,18 +103,33 @@ export function NetworkDetailsTable() {
       <div className="bg-grey-450 p-[12px] rounded-2xl mb-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">05</h3>
+            <h3 className="text-xl">
+              {rulesetDataHolder?.cycleNumber}
+            </h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Cycle #</p>
           </div>
 
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">Unlocked</h3>
+            <h3 className="text-xl">
+              {rulesetDataHolder? (
+                rulesetDataHolder.start <= (Date.now() / 1000) ? "Unlocked" : "Locked"
+              ) : (
+                null
+              )
+            }
+            </h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Status</p>
           </div>
 
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">-</h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">Remaining Time</p>
+            <h3 className="text-xl">
+              {countdownOutput? (
+                formattedCountdown
+              ) : (
+                null
+              )}
+            </h3>
+            <p className="text-sm text-muted-foreground font-light uppercase">Time Remaining</p>
           </div>
         </div>
 
@@ -237,7 +275,7 @@ interface DaoInfoProps {}
 // JSON data embedded in the component (you can also import from separate files)
 const cyclesData: { cycles: Cycles } = {
   cycles: {
-    duration: "Not set",
+    duration: "-",
     startTime: "2025-01-06, Monday, 03:00:11 PM UTC",
     payouts: "Unlimited",
     editDeadline: "No deadline",
