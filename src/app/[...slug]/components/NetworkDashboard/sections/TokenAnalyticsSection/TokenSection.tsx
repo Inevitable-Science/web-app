@@ -114,6 +114,50 @@ export function TokenSection({ data }: DescriptionSectionProps) {
               </div>
             </div>
           </div>
+
+
+
+          <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3 py-5">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {formatNumber(data.selectedToken.totalSupply)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  Total Supply
+                </p>
+              </div>
+              <div className="background-color p-[16px] rounded-2xl">
+                <div className="text-xl">
+                  ${formatNumber(data.selectedToken.marketCap)}
+                </div>
+                <p className="text-muted-foreground font-light uppercase">
+                  Market Cap
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {formatNumber(data.selectedToken.averageBal)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  Average Balance
+                </p>
+              </div>
+              <div className="background-color p-[16px] rounded-2xl">
+                <div className="text-xl">
+                  {formatNumber(data.selectedToken.medianBal)}
+                </div>
+                <p className="text-muted-foreground font-light uppercase">
+                  Median Balance
+                </p>
+              </div>
+            </div>
+          </div>
+
+
           <pre>
             <code>{JSON.stringify(data, null, 2)}</code>
           </pre>

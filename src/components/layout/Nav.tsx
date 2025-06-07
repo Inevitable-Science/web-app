@@ -47,9 +47,11 @@ export function Nav() {
 
 'use client';
 
+import { ConnectKitButton } from "@/components/ConnectKitButton";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatEthAddress } from "@/lib/utils";
 import { usePathname } from 'next/navigation';
 import { Button } from '../ui/button';
 import { Menu, X } from 'lucide-react';
@@ -164,7 +166,16 @@ export const Nav: React.FC = () => {
           <Link className="hover:underline" href="/app">
             Contributors
           </Link>
-          <Button variant={"accent"} className="uppercase rounded-full">Log In</Button>
+          {/*<Button variant={"accent"} className="uppercase rounded-full">Log In</Button>*/}
+          <ConnectKitButton.Custom>
+            {({ isConnected, show, address, ensName }) => {
+              return (
+                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px]">
+                  {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
+                </Button>
+              );
+            }}
+          </ConnectKitButton.Custom>
         </div>
 
         {/* Hamburger/Close Button */}
@@ -218,9 +229,15 @@ export const Nav: React.FC = () => {
           >
             Contributors
           </Link>
-          <Button variant={"accent"} className="uppercase rounded-full w-[130px] cursor-pointer" onClick={toggleMenu}>
-            Log In
-          </Button>
+          <ConnectKitButton.Custom>
+            {({ isConnected, show, address, ensName }) => {
+              return (
+                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px]">
+                  {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
+                </Button>
+              );
+            }}
+          </ConnectKitButton.Custom>
         </div>
       </div>
     </>

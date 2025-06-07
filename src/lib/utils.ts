@@ -45,7 +45,9 @@ export function truncateAddress(address: Address) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };  
 
-export function formatNumber(num: number): string {
+export function formatNumber(num: number | null): string {
+  if (num === null) return "--";
+  
   if (num === 0) return "0";
 
   if (Math.abs(num) >= 10) {
