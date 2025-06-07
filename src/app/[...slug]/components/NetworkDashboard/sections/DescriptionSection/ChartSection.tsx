@@ -4,6 +4,9 @@ import { FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StaticVolumeChart from "../../Components/ActivityGraph";
+import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
+import { ProjectDocument } from '@/generated/graphql';
+import { useJBChainId, useJBContractContext } from 'juice-sdk-react';
 
 type ProjectTimelinePoint = {
   timestamp: number
@@ -28,10 +31,21 @@ interface ChartSection {
 }
 
 export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
+  const chainId = useJBChainId();
+  const { projectId } = useJBContractContext();
+
+  const { data: project } = useBendystrawQuery(ProjectDocument, {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
+      skip: !chainId || !projectId,
+    });
+    const suckerGroupId = project?.project?.suckerGroupId;
 
   return (
     <section className="flex flex-col mt-6 bg-grey-450 p-[16px] rounded-2xl">
-      <StaticVolumeChart data={sampleData} />
+      <StaticVolumeChart
+                suckerGroupId={suckerGroupId}
+              />
       
       <Button 
         onClick={() => setSelectedTab("activity")}

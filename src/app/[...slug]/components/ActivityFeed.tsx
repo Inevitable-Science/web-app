@@ -20,11 +20,12 @@ import {
   useJBContractContext,
   useJBTokenContext,
 } from "juice-sdk-react";
-import { useState, useEffect } from "react";
-import { Address } from "viem";
+import { useState, useEffect, useMemo } from "react";
+import { Address, formatEther } from "viem";
 
 import { Loader2 } from "lucide-react";
-import StaticVolumeChart from "./NetworkDashboard/Components/ActivityGraph";
+import StaticVolumeChart, { ProjectTimelineRange, ProjectTimelineView } from "./NetworkDashboard/Components/ActivityGraph";
+import { useVolumeData } from "@/hooks/useVolumeData";
 
 // DATA_TODO: Add functionality to view changes to the project rules
 
@@ -236,30 +237,40 @@ export function ActivityFeed() {
   const chainId = useJBChainId();
   const [isOpen, setIsOpen] = useState(true);
 
+  // --- 1. Manage the chart's state here in the parent ---
+  const [view, setView] = useState<ProjectTimelineView>('volume');
+  const [range, setRange] = useState<ProjectTimelineRange>(30); // Default to 30 days
+
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
+    skip: !chainId || !projectId,
   });
-
   const suckerGroupId = project?.project?.suckerGroupId;
 
-  /*const { data: activityEvents } = useBendystrawQuery(
-    ActivityEventsDocument,
-    {
-      orderBy: "timestamp",
-      orderDirection: "desc",
-      where: suckerGroupId
-        ? {
-            suckerGroupId,
-            OR: [{ payEvent_not: null }, { cashOutTokensEvent_not: null }],
-          }
-        : undefined,
-    },
-    {
-      pollInterval: 5000,
-      enabled: !!suckerGroupId,
-    }
-  );*/
+  // --- 2. Make the data fetching dynamic based on the `range` state ---
+  const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
+  const startTimestamp = useMemo(() => {
+    // Calculate the start timestamp based on the selected range
+    return loadTimestamp - range * 24 * 60 * 60;
+  }, [loadTimestamp, range]);
+
+  const { dailyTotals, isLoading: isChartLoading } = useVolumeData({
+    suckerGroupId,
+    startTimestamp,
+    endTimestamp: loadTimestamp,
+  });
+
+  // --- 3. Format the fetched data for the chart ---
+  const formattedChartData = useMemo(() => {
+    return dailyTotals.map(day => ({
+      timestamp: Math.floor(day.date.getTime() / 1000),
+      volume: Number(formatEther(day.volume)),
+      // You can add logic for these later if needed
+      balance: 0,
+      trendingScore: 0,
+    }));
+  }, [dailyTotals]);
 
   const {
     data: activityEvents,
@@ -300,7 +311,9 @@ export function ActivityFeed() {
 
 
       <section className="flex flex-col mb-6 bg-grey-450 p-[16px] rounded-2xl">
-        <StaticVolumeChart data={sampleData} />
+        <StaticVolumeChart
+          suckerGroupId={suckerGroupId}
+        />
       </section>
 
 

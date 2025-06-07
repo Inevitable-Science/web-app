@@ -31,6 +31,7 @@ import { useMemo, useState } from "react";
 import { Address, formatEther, size } from "viem";
 import { Loader2 } from 'lucide-react';
 import { EthereumAddress } from "@/components/EthereumAddress";
+import { useVolumeData } from "@/hooks/useVolumeData";
 
 export function Header() {
   const { projectId } = useJBContractContext();
@@ -44,54 +45,35 @@ export function Header() {
   });
   const project = projectData?.project;
 
+  // 1. Get data for the last 14 days
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
   const twoWeeksAgo = useMemo(() => loadTimestamp - 14 * 24 * 60 * 60, [loadTimestamp]);
-  const aWeekAgo = useMemo(() => loadTimestamp - 7 * 24 * 60 * 60, [loadTimestamp]);
-  
-  const prevWindowWhereClause = useMemo(() => ({
+  const { dailyTotals, isLoading } = useVolumeData({
     suckerGroupId: project?.suckerGroupId,
-    timestamp_gt: twoWeeksAgo,
-    timestamp_lt: aWeekAgo,
-  }), [project?.suckerGroupId]);
+    startTimestamp: twoWeeksAgo,
+    endTimestamp: loadTimestamp
+  });
 
-  const curWindowWhereClause = useMemo(() => ({
-    suckerGroupId: project?.suckerGroupId,
-    timestamp_gt: aWeekAgo,
-  }), [project?.suckerGroupId]);
-
-  const { data: previousVolumeWindow, isLoading: prevLoading } = useBendystrawQuery(
-    ParticipantSnapshotsInRangeDocument,
-    {
-        where: prevWindowWhereClause,
-        skip: !project?.suckerGroupId,
-    }
-  );
-
-  const { data: currentVolumeWindow, isLoading: curLoading } = useBendystrawQuery(
-    ParticipantSnapshotsInRangeDocument,
-    {
-        where: curWindowWhereClause,
-        skip: !project?.suckerGroupId,
-    }
-  );
-
-  const accPrevVolume = useMemo(() => {
-    const items = previousVolumeWindow?.participantSnapshots.items ?? [];
-    return items.reduce((total, snapshot) => total + BigInt(snapshot.volume), 0n);
-  }, [previousVolumeWindow]);
-
-  const accCurVolume = useMemo(() => {
-    const items = currentVolumeWindow?.participantSnapshots.items ?? [];
-    return items.reduce((total, snapshot) => total + BigInt(snapshot.volume), 0n);
-  }, [currentVolumeWindow]);
-  
+  // 2. Calculate the two weekly totals from the single data array
   const weeklyVolumeChange = useMemo(() => {
-    if (prevLoading || curLoading) return null;
+    if (isLoading) return null;
+
+    const aWeekAgoTimestamp = loadTimestamp - 7 * 24 * 60 * 60;
+
+    const accPrevVolume = dailyTotals
+      .filter(day => day.date.getTime() / 1000 < aWeekAgoTimestamp)
+      .reduce((acc, day) => acc + day.volume, 0n);
+      
+    const accCurVolume = dailyTotals
+      .filter(day => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
+      .reduce((acc, day) => acc + day.volume, 0n);
+
     if (accPrevVolume === 0n) return accCurVolume > 0n ? "New" : 0;
     const difference = accCurVolume - accPrevVolume;
     const percentage = (Number(difference) * 100) / Number(accPrevVolume);
     return percentage.toFixed(2);
-  }, [accPrevVolume, accCurVolume, prevLoading, curLoading]);
+
+  }, [dailyTotals, isLoading, loadTimestamp]);
 
   const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
