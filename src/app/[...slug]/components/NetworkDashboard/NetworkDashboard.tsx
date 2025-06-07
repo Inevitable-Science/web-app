@@ -118,7 +118,8 @@ export function NetworkDashboard() {
               </aside>
               {/* Tab Content */}
               <div>
-                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? projectName : "Loading"} tokenName={token?.data?.name? token.data.name : "..."} />
+                {/*<TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? projectName : "Loading"} tokenName={token?.data?.name? token.data.name : "..."} />*/}
+                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? "hydradao" : "Loading"} tokenName={token?.data?.name? "hydra" : "..."} />
               </div>
             </section>
           </div>
