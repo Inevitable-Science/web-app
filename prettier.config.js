@@ -9,7 +9,7 @@ const config = {
   semi: true,
 
   // Quotes & Brackets
-  singleQuote: true,
+  singleQuote: false,
   quoteProps: "as-needed",
   jsxSingleQuote: false,
   bracketSpacing: true,
