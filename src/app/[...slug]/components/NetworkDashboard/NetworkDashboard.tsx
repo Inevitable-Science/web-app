@@ -2,6 +2,7 @@
 
 import { formatTokenSymbol } from "@/lib/utils";
 import {
+  useJBChainId,
   useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
@@ -16,12 +17,15 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
 
 import { PayDummy } from "../PayCard/PayDummy"
+import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { ProjectDocument } from "@/generated/graphql";
 
 export function NetworkDashboard() {
-  const { contracts } = useJBContractContext();
+  const { projectId, contracts } = useJBContractContext();
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const [selectedTab, setSelectedTab] = useState("about");
+  const chainId = useJBChainId();
 
   const tabs = [
     { key: "about", label: "About" },
@@ -47,6 +51,8 @@ export function NetworkDashboard() {
   if (contracts.controller.data === zeroAddress) {
     notFound();
   }
+
+  const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
   return (
     <>
@@ -112,7 +118,7 @@ export function NetworkDashboard() {
               </aside>
               {/* Tab Content */}
               <div>
-                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName="hydradao" tokenName="hydra" /> {/* DATA_TODO: pass token name and dao name to this component (leave hydradao + hydra in development) */}
+                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? projectName : "Loading"} tokenName={token?.data?.name? token.data.name : "..."} />
               </div>
             </section>
           </div>
