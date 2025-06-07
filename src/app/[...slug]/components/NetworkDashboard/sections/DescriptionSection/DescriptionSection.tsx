@@ -65,20 +65,20 @@ interface DescriptionSectionProps {
 export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
-  const { description } = metadata?.data ?? {};
+  const { description, discord, name } = metadata?.data ?? {};
 
   return (
       <div className="mt-2 text-sm">
-        <RichPreview source={description || ""} />
+        <RichPreview source={description || name || "..."} />
         
-        <ChartSection setSelectedTab={setSelectedTab} />
+        <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
 
         <DaoData data={data} setSelectedTab={setSelectedTab} />
 
         {/* Dupe For Visual Purposes */}
-        <RichPreview source={description || ""} /> {/* DATA_TODO: Secondary DAO Description */}
+        <RichPreview source={description || name || "..."} />
 
-        <SocialLinks />
+        <SocialLinks {...metadata}/>
       </div>
   );
 }
