@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 import { TreasuryResponse } from '@/lib/types/AnalyticTypes'
 import { Address } from "viem";
-import TreasuryPieChart from "./TreasuryPieChart";
 import { LinkIcon } from "@heroicons/react/24/solid";
+
+import TreasuryPieChart from "./TreasuryPieChart";
+import TreasuryChart from "./TreasuryChart";
 
 interface DescriptionSectionProps {
   data: TreasuryResponse | null;
@@ -14,8 +15,7 @@ interface DescriptionSectionProps {
 export function TreasurySection({ data }: DescriptionSectionProps) {
 
   return (
-      <section className="flex flex-col gap-4">
-
+      <section className="flex flex-col gap-4 w-full">
         <div className="grid grid-cols-2 gap-3 bg-grey-450 p-[12px] rounded-2xl">
           <div className="background-color p-[16px] rounded-2xl">
             <h4 className="text-xl mb-0.5 tracking-wider">
@@ -56,7 +56,7 @@ export function TreasurySection({ data }: DescriptionSectionProps) {
             className="mt-2 max-h-[400px] overflow-y-auto scrollbar-hide pb-12"
             style={{
               maskImage: 'linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)',
-              WebkitMaskImage: 'linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)', // For Safari
+              WebkitMaskImage: 'linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)',
             }}
           >
 
@@ -176,9 +176,26 @@ export function TreasurySection({ data }: DescriptionSectionProps) {
           </div>
         )}
 
-        <pre>
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
+        <div className="bg-grey-450 p-[12px] rounded-2xl">
+          <h3 className="text-xl pt-1 pb-3">Historical Asset Value</h3>
+          <TreasuryChart organisation="hydradao" />
+          <div className="flex flex-wrap gap-6 mt-2 text-grey-50 font-light text-sm">
+            <div className="flex gap-2 items-center">
+              <div className="w-4 h-4 bg-[#2978A0] rounded-full"></div>
+              <p>All Assets/Accounts</p>
+            </div>
+
+            <div className="flex gap-2 items-center">
+              <div className="w-4 h-4 bg-[#FBE8BD] rounded-full"></div>
+              <p>Treasury Wallet</p>
+            </div>
+
+            <div className="flex gap-2 items-center">
+              <div className="w-4 h-4 bg-[#BB4430] rounded-full"></div>
+              <p>Assets Under Management</p>
+            </div>
+          </div>
+        </div>
       </section>
   );
 }

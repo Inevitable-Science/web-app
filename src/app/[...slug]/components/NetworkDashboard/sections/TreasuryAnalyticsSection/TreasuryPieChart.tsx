@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
 
-// Define the interface for treasury tokens
 interface TreasuryToken {
   metadata: {
     name: string;
@@ -18,7 +17,6 @@ interface TreasuryToken {
   _id?: string;
 }
 
-// Define props interface for the component
 interface TreasuryPieChartProps {
   filteredData: TreasuryToken[];
 }
@@ -33,7 +31,6 @@ const segmentColors = [
   '#FBE8BD',
 ];
 
-// Define the shape of the data for the PieChart
 interface PieChartData extends TreasuryToken {
   value: number;
   percent: string;
@@ -138,13 +135,13 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
     outerRadius: 150,
   });
 
-  // Calculate total value with validation
+
   const totalValue = filteredData.reduce((sum, token) => {
     const value = token.totalValue || 0;
     return sum + (isNaN(value) ? 0 : value);
   }, 0);
 
-  // Sort tokens by value (descending) and prepare chart data
+
   const adjustedData: PieChartData[] = totalValue > 0
     ? filteredData
         .map((token) => ({
@@ -164,16 +161,12 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
         })
     : [];
 
-  // Only reset activeIndex when filteredData changes
-  useEffect(() => {
-    console.log('Filtered Data:', filteredData);
-    console.log('Total Value:', totalValue);
-    console.log('Adjusted Data:', adjustedData);
+
+    useEffect(() => {
     setActiveIndex(0);
   }, [filteredData]);
 
   const onPieEnter = (_: any, index: number) => {
-    console.log('Pie Enter:', index); // Debug hover event
     setActiveIndex(index);
   };
 
@@ -194,7 +187,7 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
     };
   }, []);
 
-  // Render fallback if no valid data
+
   if (!adjustedData.length) {
     return (
       <div className="tcpPieContainer">
@@ -228,7 +221,6 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
             stroke="none"
             dataKey="visualValue"
             onMouseEnter={onPieEnter}
-            // Removed onMouseLeave to prevent resetting activeIndex
           />
         </PieChart>
       </ResponsiveContainer>
