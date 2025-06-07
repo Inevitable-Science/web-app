@@ -28,8 +28,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { TvlDatum } from "./TvlDatum";
 import { useMemo, useState } from "react";
-import { formatEther } from "viem";
+import { Address, formatEther } from "viem";
 import { Loader2 } from 'lucide-react';
+import { EthereumAddress } from "@/components/EthereumAddress";
 
 export function Header() {
   const { projectId } = useJBContractContext();
@@ -113,8 +114,7 @@ export function Header() {
       <div className="ctWrapper">
         <div className="relative h-[215px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
-
-            {"FE_TODO: You may need to adjust these sizes."}
+            {/* "FE_TODO: You may need to adjust these sizes." */}
             { introImageUri ? (
             <Image
               src={ipfsUriToGatewayUrl(introImageUri)}
@@ -215,12 +215,31 @@ export function Header() {
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-xl font-light">daohydra.eth</h3> {/* DATA_TODO: DAO Owner */}
+                <h3 className="text-xl font-light">
+                  {project?.owner ? (
+                  <EthereumAddress
+                    address={project?.owner as Address}
+                    short
+                    withEnsAvatar
+                    withEnsName
+                  />
+                  ) : (
+                    null
+                  )
+                  }
+                  </h3>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Owner</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <h3 className="text-xl font-light">09 Dec 2024</h3> {/* DATA_TODO: Creation Date */}
+                <h3 className="text-lg font-light">
+                  {project?.createdAt ? (
+                    new Date(project.createdAt * 1000).toLocaleString()
+                  ) : (
+                    null
+                  )
+                  }
+                  </h3> {/* DATA_TODO: Creation Date */}
                 <p className="uppercase text-muted-foreground font-light text-sm mt-0.5">Date Created</p>
               </div>
             </div>
