@@ -47,7 +47,7 @@ export function truncateAddress(address: Address) {
 
 export function formatNumber(num: number | null): string {
   if (num === null) return "--";
-  
+
   if (num === 0) return "0";
 
   if (Math.abs(num) >= 10) {
@@ -60,6 +60,26 @@ export function formatNumber(num: number | null): string {
   const rounded = Math.round(num * factor) / factor;
 
   return rounded.toString();
+}
+
+export function formatCompactNumber(num: number | null): string {
+  if (num === null || isNaN(num)) return "--";
+
+  const absNum = Math.abs(num);
+
+  if (absNum < 1000) {
+    return num.toString();
+  }
+
+  const units = ["", "K", "M", "B", "T"];
+  const unitIndex = Math.floor(Math.log10(absNum) / 3);
+
+  if (unitIndex >= units.length) return num.toExponential(2); // fallback for extremely large numbers
+
+  const shortNum = num / Math.pow(10, unitIndex * 3);
+  const rounded = Math.round(shortNum * 10) / 10; // 1 decimal place
+
+  return `${rounded}${units[unitIndex]}`;
 }
 
 export function formatDate(input?: Date | string | null): string {

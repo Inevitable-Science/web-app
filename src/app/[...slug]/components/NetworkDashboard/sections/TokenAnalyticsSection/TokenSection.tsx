@@ -1,6 +1,6 @@
 "use client";
 
-import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
+import { formatNumber, formatCompactNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
 import { TokenResponse } from '@/lib/types/AnalyticTypes';
 import {
@@ -14,6 +14,8 @@ import Link from "next/link";
 import { Address } from "viem";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { Loader2 } from "lucide-react";
+
+import TokenChart from "./TokenChart";
 
 interface DescriptionInterface {
   treasuryHoldings: string;
@@ -75,12 +77,14 @@ export function TokenSection({ data }: DescriptionSectionProps) {
 
   return (
     <section>
+
+      <div className="bg-grey-450 rounded-2xl h-auto p-[12px] mb-4">
+        <TokenChart organisation="hydradao"/>
+      </div>
+
       {data ? (
         <div className="flex flex-col gap-4 w-full">
-          <div className="bg-grey-450 p-[12px] rounded-2xl">
-            <h3 className="text-grey-50 uppercase text-sm mb-[8px] py-1">Top Holders</h3>
-            
-          </div>
+          
 
           <div className="bg-grey-450 p-[12px] rounded-2xl">
             <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
@@ -158,9 +162,68 @@ export function TokenSection({ data }: DescriptionSectionProps) {
           </div>
 
 
-          <pre>
+          {data.topHolders && (
+            <div className="bg-grey-450 p-[12px] rounded-2xl">
+              <h3 className="text-grey-50 uppercase text-sm py-1">Top Holders</h3>
+              <div>
+                {data.topHolders.slice(0, 5).map((holder, idx) => {
+                  const { address, token_amount } = holder;
+
+                  return (
+                    <div
+                      key={`${address}-${idx}`}
+                      className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
+                    >
+                      <span>{truncateAddress(address as Address)}</span>
+                      <a
+                        href={`https://etherscan.io/address/${address}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border-b border-transparent hover:border-grey-50"
+                      >
+                        {formatCompactNumber(token_amount)}
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+
+          {data.tokenDistribution && (
+            <div className="bg-grey-450 p-[12px] rounded-2xl">
+              <h3 className="text-grey-50 uppercase text-sm pt-1">Holder Distribution</h3>
+
+              <div className="background-color p-[16px] rounded-xl mt-2">
+                <h3 className="text-xl">
+                  {data.selectedToken.totalHolders}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
+              </div>
+
+              <div>
+                {data.tokenDistribution.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-grey-300">{item.range} ({item.accounts} accounts)</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-grey-500">{item.percent_tokens_held?.toFixed(2)}%</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+
+          {/*<pre>
             <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>
+          </pre>*/}
         </div>
       ) : (
         <div className="w-full flex justify-center my-[15vh]">

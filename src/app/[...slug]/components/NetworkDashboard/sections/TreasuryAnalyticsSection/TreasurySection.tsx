@@ -184,7 +184,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
 
               <TreasuryChart organisation={data?.name} />
 
-              <div className="flex flex-wrap gap-x-6 gap-y-1 mt-2 text-grey-50 font-light text-sm">
+              <div className="flex flex-wrap gap-x-6 gap-y-1 mt-2 text-grey-50 text-sm">
                 <div className="flex gap-2 items-center">
                   <div className="w-4 h-4 bg-[#2978A0] rounded-full"></div>
                   <p>All Assets/Accounts</p>
