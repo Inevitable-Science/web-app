@@ -79,13 +79,11 @@ export function WithdrawActionButton({
   };
   
   const buttonContent = useMemo(() => {
-    if (loading) return <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Processing...</>;
+    if (loading) return <>Processing...</>;
     if (isSuccess) return "Success!";
     if (isWriteError || isTxError) return "Error - Try Again";
     return "Withdraw";
   }, [loading, isSuccess, isWriteError, isTxError]);
-
-  const buttonVariant = isSuccess ? "success" : (isWriteError || isTxError) ? "destructive" : "accent";
 
   return (
     <ButtonWithWallet
