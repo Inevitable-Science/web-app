@@ -193,13 +193,6 @@ export function TransactionCard(props: PayCardProps) {
               memo={memo}
               disabled={!amountA || parseFloat(amountA) === 0}
             />
-            <div className="background-color flex flex-col gap-[2px] p-[16px] rounded-xl mt-4">
-        <p className="text-sm font-light">
-        </p>
-        <p className="text-xs text-muted-foreground font-light">
-          Total token supply: {new FixedInt(tokenB.totalSupply.value, tokenB.decimals).format(2)}
-        </p>
-      </div>
           </div>
           
         ) : (
