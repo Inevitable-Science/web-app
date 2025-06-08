@@ -59,8 +59,6 @@ export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionP
 
   return (
       <div className="text-sm">
-        <RichPreview source={description || name || "..."} />
-        
         <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
 
         <DaoData data={data} setSelectedTab={setSelectedTab} />
