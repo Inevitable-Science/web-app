@@ -16,6 +16,7 @@ import { LinkIcon } from "@heroicons/react/24/solid";
 import { Loader2 } from "lucide-react";
 
 import TokenChart from "./TokenChart";
+import TokenStatsChart from "./TokenStatsChart";
 
 interface DescriptionInterface {
   treasuryHoldings: string;
@@ -78,8 +79,8 @@ export function TokenSection({ data }: DescriptionSectionProps) {
   return (
     <section>
 
-      <div className="bg-grey-450 rounded-2xl h-auto p-[12px] mb-4">
-        <TokenChart organisation="hydradao"/>
+      <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
+        <TokenChart organisation="cryodao"/>
       </div>
 
       {data ? (
@@ -107,6 +108,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
                       JB_CHAINS[pair?.peerChainId as JBChainId].slug;
                     return (
                       <ChainLogo
+                        key={pair.peerChainId}
                         chainId={pair.peerChainId as JBChainId}
                         width={24}
                         height={24}
@@ -219,6 +221,11 @@ export function TokenSection({ data }: DescriptionSectionProps) {
               </div>
             </div>
           )}
+          
+          
+          <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
+            <TokenStatsChart organisation="cryodao" tokenName="cryo" />
+          </div>
 
 
           {/*<pre>

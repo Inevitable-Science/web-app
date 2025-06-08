@@ -10,40 +10,79 @@ import {
   LineSeriesOptions,
 } from "lightweight-charts";
 
-interface TokenChartProps {
+interface TokenStatsProps {
   organisation: string;
+  tokenName: string;
 }
 
-interface PriceData {
-  prices: LineData<Time>[];
+interface ChartData {
+  time: Time;
+  value: number;
 }
 
-interface ReturnData {
-  currentPrice: number;
-  returnPercentage: number;
-}
+const cache = new Map<string, { data: ChartData[] | null; timestamp: number }>();
 
-const cache = new Map<string, { data: PriceData; timestamp: number }>();
-
-const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
+const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">("1");
-  const [priceData, setPriceData] = useState<ReturnData | null>(null);
+  const [chartType, setChartType] = useState<"volume" | "holders" | "marketCap">("volume");
   const [dataFound, setDataFound] = useState<boolean>(true);
-  const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);
 
-  useEffect(() => {
-    const fetch24hPrice = async () => {
-      const { prices } = await fetchData("1");
-      if (prices?.length > 0) {
-        const latestPrice = prices[prices.length - 1].value;
-        setLatest24hPrice(latestPrice);
+  const fetchData = async (range: string, type: string): Promise<ChartData[] | null> => {
+    try {
+      const apiUrl =
+        type === "marketCap" || type === "volume"
+          ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
+          : `https://api.profiler.bio/api/holders/${tokenName}`;
+
+      const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
+      const cacheEntry = cache.get(cacheKey);
+      if (cacheEntry && Date.now() - cacheEntry.timestamp < 5 * 60 * 1000) {
+        setDataFound(!!cacheEntry.data);
+        return cacheEntry.data;
       }
-    };
-    fetch24hPrice();
-  }, [organisation]);
+
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        setDataFound(false);
+        return null;
+      }
+
+      setDataFound(true);
+      const data = await response.json();
+
+      const seriesData = (
+        type === "marketCap" ? data?.market_caps : type === "volume" ? data?.total_volumes : data?.holders
+      )?.map(([timestamp, value]: [number, number]) => ({
+        time: Math.floor(timestamp / 1000) as Time,
+        value,
+      })) ?? null;
+
+      cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
+      return seriesData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setDataFound(false);
+      return null;
+    }
+  };
+
+  const updateChart = async (range: string, type: string) => {
+    const prices = await fetchData(range, type);
+
+    if (Array.isArray(prices) && prices.length > 0) {
+      prices.sort((a, b) => (a.time as number) - (b.time as number));
+      const uniquePrices = Array.from(new Map(prices.map((item) => [item.time, item])).values());
+      if (lineSeriesRef.current) {
+        lineSeriesRef.current.setData(uniquePrices);
+        chartRef.current?.timeScale().fitContent();
+      }
+    } else {
+      setDataFound(false);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -54,70 +93,10 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     };
 
     window.addEventListener("resize", handleResize);
+    handleResize(); // Initial resize
+
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const fetchData = async (range: string): Promise<PriceData> => {
-    try {
-      const apiUrl = `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`;
-      const cacheEntry = cache.get(apiUrl);
-      const now = Date.now();
-      if (cacheEntry && now - cacheEntry.timestamp < 5 * 60 * 1000) {
-        return cacheEntry.data;
-      }
-
-      const response = await fetch(apiUrl);
-      if (!response.ok) {
-        setDataFound(false);
-        return { prices: [] };
-      }
-
-      setDataFound(true);
-      const data = await response.json();
-
-      const processedData: PriceData = {
-        prices: data?.prices?.map(([timestamp, value]: [number, number]) => ({
-          time: Math.floor(timestamp / 1000) as Time,
-          value,
-        })) ?? [],
-      };
-
-      cache.set(apiUrl, { data: processedData, timestamp: now });
-      return processedData;
-    } catch (error) {
-      console.error("Error fetching chart data:", error);
-      setDataFound(false);
-      return { prices: [] };
-    }
-  };
-
-  const calculateReturn = (data: LineData<Time>[]): ReturnData | null => {
-    if (!data || data.length < 2) return null;
-
-    const firstPrice = data[0].value;
-    const lastPrice = data[data.length - 1].value;
-    const returnPercentage = ((lastPrice - firstPrice) / firstPrice) * 100;
-
-    return {
-      currentPrice: lastPrice,
-      returnPercentage,
-    };
-  };
-
-  const updateChart = async (range: string) => {
-    const { prices } = await fetchData(range);
-    if (prices?.length > 0) {
-      prices.sort((a, b) => (a.time as number) - (b.time as number));
-      const uniquePrices = Array.from(new Map(prices.map((item) => [item.time, item])).values());
-      if (lineSeriesRef.current) {
-        lineSeriesRef.current.setData(uniquePrices);
-        chartRef.current?.timeScale().fitContent();
-      }
-
-      const returnData = calculateReturn(prices);
-      setPriceData(returnData);
-    }
-  };
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -144,96 +123,81 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
       rightPriceScale: {
         borderColor: "#7B7B7B",
       },
-      timeScale: { 
+      timeScale: {
         borderColor: "#7B7B7B",
         fixLeftEdge: true,
-        fixRightEdge: true,     
-        timeVisible: true, 
-        secondsVisible: true
+        fixRightEdge: true,
+        timeVisible: true,
+        secondsVisible: true,
       },
-      //autoSize: true,
       width: chartContainerRef.current.clientWidth,
       height: 400,
     });
-
     chartRef.current = chart;
-
-    if (lineSeriesRef.current) {
-      lineSeriesRef.current = null;
-    }
 
     const lineSeries = chart.addLineSeries({ color: "#FBE8BD" } as LineSeriesOptions);
     lineSeriesRef.current = lineSeries;
 
-    updateChart(timeRange);
+    updateChart(timeRange, chartType);
 
     return () => {
       chart.remove();
+      chartRef.current = null;
     };
-  }, [organisation]);
+  }, [organisation, tokenName]);
 
   useEffect(() => {
-    updateChart(timeRange);
-  }, [timeRange, organisation]);
-
-  const formatClippedPrice = (value: number | null): string => {
-    if (value === null || isNaN(value)) {
-      return "--";
+    if (chartType === "holders") {
+      setTimeRange("365");
     }
-
-    let clippedValue = Math.floor(value * 100) / 100;
-    if (clippedValue === 0) {
-      clippedValue = Math.floor(value * 10000) / 10000;
-      if (clippedValue === 0) {
-        clippedValue = Math.floor(value * 1000000) / 1000000;
-      }
-    }
-
-    return clippedValue.toFixed(clippedValue < 0.01 ? (clippedValue < 0.0001 ? 6 : 4) : 2);
-  };
+    updateChart(timeRange, chartType);
+  }, [timeRange, chartType, organisation, tokenName]);
 
   return (
     <div>
-      <div className="flex items-center justify-between w-full mb-2">
-        <div>
-          {priceData ? (
-            <div className="flex flex-col justify-center w-fit">
-              <h3 className="text-xl">${latest24hPrice ? formatClippedPrice(latest24hPrice) : "--"}</h3>
-              <p className={`
-                text-sm text-center
-                ${priceData.returnPercentage > 0 ? "text-green-500" : "text-red-500"}
-              `}>
-                {priceData.returnPercentage > 0
-                  ? `+${priceData.returnPercentage.toFixed(2)}`
-                  : priceData.returnPercentage.toFixed(2)}
-                %
-              </p>
-            </div>
-          ) : (
-            <div className="centerTopFlex-token">
-              <h3>$--</h3>
-            </div>
-          )}
+      <div className="flex items-center justify-between w-full mb-4">
+        <div className="flex items-center gap-2">
+          <button
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            onClick={() => setChartType("volume")}
+            disabled={chartType === "volume"}
+          >
+            VOL
+          </button>
+          <button
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            onClick={() => setChartType("holders")}
+            disabled={chartType === "holders"}
+          >
+            HOLDERS
+          </button>
+          <button
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            onClick={() => setChartType("marketCap")}
+            disabled={chartType === "marketCap"}
+          >
+            MARKET CAP
+          </button>
         </div>
         <div className="flex items-center gap-2">
           <button
             className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
             onClick={() => setTimeRange("1")}
-            disabled={timeRange === "1"}
+            disabled={chartType === "holders" || timeRange === "1"}
           >
             24h
           </button>
           <button
             className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
             onClick={() => setTimeRange("7")}
-            disabled={timeRange === "7"}
+            disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
           </button>
           <button
             className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
             onClick={() => setTimeRange("30")}
-            disabled={timeRange === "30"}
+            disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
           </button>
@@ -247,7 +211,7 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
           <button
             className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
             onClick={() => setTimeRange("max")}
-            disabled={timeRange === "max"}
+            disabled={chartType === "holders" || timeRange === "max"}
           >
             MAX
           </button>
@@ -274,4 +238,4 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
   );
 };
 
-export default TokenChart;
+export default TokenStatsChart;

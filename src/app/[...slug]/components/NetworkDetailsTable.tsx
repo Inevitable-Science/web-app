@@ -191,9 +191,9 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
         </div>
       </div>
 
-      <div className="mt-2 text-black text-md max-w-sm sm:max-w-full">
+      {/*<div className="mt-2 text-black text-md max-w-sm sm:max-w-full">
         <PriceSection className="mb-2" />
-      </div>
+      </div>*/}
     </div>
   );
 }

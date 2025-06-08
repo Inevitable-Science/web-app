@@ -62,7 +62,16 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
           labelBackgroundColor: "#2e2e2e",
         },
       },
-      timeScale: { timeVisible: true, secondsVisible: true },
+      rightPriceScale: {
+        borderColor: "#7B7B7B",
+      },
+      timeScale: { 
+        borderColor: "#7B7B7B",
+        fixLeftEdge: true,
+        fixRightEdge: true,     
+        timeVisible: false, 
+        secondsVisible: false,
+      },
       autoSize: true,
     });
     chartRef.current = chart;
