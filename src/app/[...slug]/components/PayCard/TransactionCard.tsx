@@ -181,7 +181,6 @@ export function TransactionCard(props: PayCardProps) {
 
              <input
                   type="text"
-                  /* "bg-transparent max-w-[130px] shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none" */
                   className="w-full background-color p-2 rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none border-none focus:ring-0 focus:outline-none"
                   onChange={(e) => setMemo(e.target.value)}
                   value={memo}
