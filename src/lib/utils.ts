@@ -45,72 +45,65 @@ export function truncateAddress(address: Address) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };  
 
-export function formatNumber(num: number | null): string {
-  if (num === null) return "--";
+export function formatNumber(num: number | null, compact: boolean = false): string {
+  if (num === null || isNaN(num)) return "--";
 
   if (num === 0) return "0";
 
-  if (Math.abs(num) >= 10) {
-    return Math.round(num).toLocaleString(); // Use commas, no decimals
+  if (compact) {
+    const absNum = Math.abs(num);
+
+    if (absNum < 1000) {
+      return num.toString();
+    }
+
+    const units = ["", "K", "M", "B", "T"];
+    const unitIndex = Math.floor(Math.log10(absNum) / 3);
+
+    if (unitIndex >= units.length) return num.toExponential(2); // fallback for very large numbers
+
+    const shortNum = num / Math.pow(10, unitIndex * 3);
+    const rounded = Math.round(shortNum * 10) / 10; // one decimal place
+
+    return `${rounded}${units[unitIndex]}`;
+  } else {
+    if (Math.abs(num) >= 10) {
+      return Math.round(num).toLocaleString(); // Use commas, no decimals
+    }
+
+    const digits = 2;
+    const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+    const rounded = Math.round(num * factor) / factor;
+
+    return rounded.toString();
   }
-
-  // For numbers < 10, round to 2 significant digits
-  const digits = 2;
-  const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
-  const rounded = Math.round(num * factor) / factor;
-
-  return rounded.toString();
 }
 
-export function formatCompactNumber(num: number | null): string {
-  if (num === null || isNaN(num)) return "--";
-
-  const absNum = Math.abs(num);
-
-  if (absNum < 1000) {
-    return num.toString();
-  }
-
-  const units = ["", "K", "M", "B", "T"];
-  const unitIndex = Math.floor(Math.log10(absNum) / 3);
-
-  if (unitIndex >= units.length) return num.toExponential(2); // fallback for extremely large numbers
-
-  const shortNum = num / Math.pow(10, unitIndex * 3);
-  const rounded = Math.round(shortNum * 10) / 10; // 1 decimal place
-
-  return `${rounded}${units[unitIndex]}`;
-}
-
-export function formatDate(input?: Date | string | null): string {
+export function formatDate(
+  input?: Date | string | null,
+  short: boolean = false
+): string {
   if (!input) return '--';
 
   const date = input instanceof Date ? input : new Date(input);
-
   if (isNaN(date.getTime())) return '--'; // Invalid date
 
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-    hour12: true,
-  }).format(date);
-}
+  const options: Intl.DateTimeFormatOptions = short
+    ? {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }
+    : {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      };
 
-export function formatShortDate(input?: Date | string | null): string {
-  if (!input) return '--';
-
-  const date = input instanceof Date ? input : new Date(input);
-
-  if (isNaN(date.getTime())) return '--'; // Invalid date
-
-  return new Intl.DateTimeFormat('en-US', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).format(date);
+  return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
 export function etherscanLink(

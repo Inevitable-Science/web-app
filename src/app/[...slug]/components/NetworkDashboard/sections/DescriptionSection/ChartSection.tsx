@@ -50,7 +50,7 @@ export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
       <Button 
         onClick={() => setSelectedTab("activity")}
         variant="link" 
-        className="h-6 w-fit pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+        className="h-6 mt-2 w-fit pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
       >
         Activity
         <ArrowRightIcon height="20" width="20" />

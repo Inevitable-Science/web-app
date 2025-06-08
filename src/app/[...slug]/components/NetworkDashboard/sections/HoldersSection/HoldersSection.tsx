@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ParticipantsDocument, ProjectDocument } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
-import { formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, truncateAddress } from "@/lib/utils";
 import {
   useJBChainId,
   useJBContractContext,
@@ -11,11 +11,15 @@ import {
 import { useState } from "react";
 import { twJoin } from "tailwind-merge";
 import { DistributeReservedTokensButton } from "../../../DistributeReservedTokensButton";
-import { ParticipantsPieChart } from "../../../ParticipantsPieChart";
-import { ParticipantsTable } from "../../../ParticipantsTable";
+//import { ParticipantsPieChart } from "../../../ParticipantsPieChart";
+//import { ParticipantsTable } from "../../../ParticipantsTable";
+import { ParticipantsTable } from "./ParticipantsTable";
 //import { UserTokenBalanceCard } from "../../../UserTokenBalanceCard/UserTokenBalanceCard";
-import { SplitsSection } from "./SplitsSection";
-import { YouSection } from "./YouSection";
+//import { SplitsSection } from "./SplitsSection";
+//import { YouSection } from "./YouSection";
+import { Address } from "viem";
+import Image from "next/image";
+import { ParticipantsPieChart } from "./ParticipantsPieChart";
 
 type TableView = "you" | "all" | "splits" ;
 
@@ -79,22 +83,22 @@ export function HoldersSection() {
     );
   };
 
-  return (
+  /*return (
     <div>
         <div className="text-color text-md">
           <div className="mb-2">
-            {/* View Tabs */}
+            {/* View Tabs * /}
             <div className="flex flex-row space-x-4 mb-3">
               {ownersTab("all", "All")}
               {ownersTab("you", "You")}
               {ownersTab("splits", "Splits")}
             </div>
 
-            {/* ========================= */}
-            {/* ========= Views ========= */}
-            {/* ========================= */}
+            {/* ========================= * /}
+            {/* ========= Views ========= * /}
+            {/* ========================= * /}
 
-            {/* All Section */}
+            {/* All Section * /}
             <div className={participantsView === "all" ? "" : "hidden"}>
               <div className="space-y-4 p-2 pb-0 sm:pb-2">
                 <p className="text-md font-light italic">
@@ -121,12 +125,12 @@ export function HoldersSection() {
               </div>
             </div>
 
-            {/* You Section */}
+            {/* You Section * /}
             <div className={participantsView === "you" ? "" : "hidden"}>
               <YouSection totalSupply={totalOutstandingTokens} />
             </div>
 
-            {/* Splits Section */}
+            {/* Splits Section * /}
             <div className={participantsView === "splits" ? "" : "hidden"}>
               <SplitsSection />
               <DistributeReservedTokensButton />
@@ -135,5 +139,89 @@ export function HoldersSection() {
           </div>
         </div>
     </div>
+  );*/
+
+  return (
+    <section>
+      <div className="flex flex-col gap-4 w-full">
+        <div className="bg-grey-450 p-[12px] rounded-2xl">
+          <div className="background-color p-[16px] rounded-xl mt-2">
+            <h3 className="text-xl">
+              0 tokens {/* DATA_TODO: Add functionality to view tokens */}
+            </h3>
+            <p className="text-muted-foreground font-light uppercase">
+              Your Balance
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-grey-450 p-[12px] rounded-2xl grid grid-cols-2 gap-3">
+          <div className="background-color p-[16px] rounded-xl">
+            <div className="flex gap-2 items-end">
+              <h3 className="text-xl">
+                HYDRA {/* DATA_TODO: Add functionality to view token name/symbol without $ */}
+              </h3>
+              <p className="text-muted-foreground font-light text-sm">
+                {truncateAddress("0xaF04f0912E793620824F4442b03F4d984Af29853" as Address)} {/* DATA_TODO: Add functionality to view tokens contract address */}
+              </p>
+            </div>
+            <p className="text-muted-foreground font-light uppercase">
+              Project Token
+            </p>
+            <Button 
+              variant="link" 
+              className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+            >
+              Add To Metamask {/* DATA_TODO: Add functionality to add token to metamask */}
+              <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
+            </Button>
+          </div>
+
+          <div className="background-color p-[16px] rounded-xl">
+            <h3 className="text-xl">
+              {formatNumber(18600000, true)} {/* DATA_TODO: Add functionality to fetch token total supply ps. leave the second arg as true, for a sortened output */}
+            </h3>
+            <p className="text-muted-foreground font-light uppercase">
+              Total Supply
+            </p>
+          </div>
+        </div>
+
+
+        <div className="bg-grey-450 p-[12px] rounded-2xl grid grid-cols-2 gap-3">
+          <div className="background-color p-[16px] rounded-xl">
+            <h3 className="text-xl">
+              {formatNumber(0, true)} {/* DATA_TODO: Add functionality to view reserved token amount */}
+            </h3>
+            <p className="text-muted-foreground font-light uppercase">
+              Reserved Token
+            </p>
+          </div>
+
+          <div className="background-color p-[16px] rounded-xl">
+            <h3 className="text-xl">
+              50% {/* DATA_TODO: Add functionality to view reserve rate */}
+            </h3>
+            <p className="text-muted-foreground font-light uppercase">
+              Reserved Rate
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-grey-450 h-[400px] flex items-center p-[12px] rounded-2xl">
+          <ParticipantsPieChart
+            participants={Object.values(participantsDataAggregate)}
+            totalSupply={totalOutstandingTokens}
+            token={token?.data}
+          />
+        </div>
+
+        <ParticipantsTable
+          participants={Object.values(participantsDataAggregate)}
+          token={token?.data}
+          totalSupply={totalOutstandingTokens}
+        />
+      </div>
+    </section>
   );
 }

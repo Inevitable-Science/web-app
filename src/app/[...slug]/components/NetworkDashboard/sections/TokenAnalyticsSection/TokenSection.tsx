@@ -1,6 +1,6 @@
 "use client";
 
-import { formatNumber, formatCompactNumber, truncateAddress } from "@/lib/utils";
+import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
 import { TokenResponse } from '@/lib/types/AnalyticTypes';
 import {
@@ -183,7 +183,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
                         rel="noopener noreferrer"
                         className="border-b border-transparent hover:border-grey-50"
                       >
-                        {formatCompactNumber(token_amount)}
+                        {formatNumber(token_amount, true)}
                       </a>
                     </div>
                   );

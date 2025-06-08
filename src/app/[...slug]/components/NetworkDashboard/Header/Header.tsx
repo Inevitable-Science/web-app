@@ -12,7 +12,7 @@ import {
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 // import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { formatTokenSymbol, formatShortDate } from "@/lib/utils";
+import { formatTokenSymbol, formatDate } from "@/lib/utils";
 import { ForwardIcon } from "@heroicons/react/24/solid";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import { JB_CHAINS } from "juice-sdk-core";
@@ -227,8 +227,7 @@ export function Header() {
                 <div className="h-fit flex items-center">
                   <h3 className="text-xl font-light">
                     {project?.createdAt ? (
-                      // new Date(project.createdAt * 1000).toLocaleString()
-                      formatShortDate(new Date(project.createdAt * 1000))
+                      formatDate(new Date(project.createdAt * 1000), true)
                     ) : (
                       null
                     )
