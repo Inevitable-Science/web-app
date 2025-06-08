@@ -132,8 +132,8 @@ export function NetworkDashboard() {
             {/* DATA_TODO: Conditionally Render SwapWidget if the DAO is not in presale & pass it the token address */}
 
             {/*<SwapWidget token="0xf4308b0263723b121056938c2172868e408079d0" />*/}
-            {/*<PayCard />*/}
-            <PayDummy />
+            <PayCard />
+            {/* <PayDummy /> */}
           </div>
         </div>
       </div>

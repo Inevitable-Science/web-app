@@ -121,7 +121,7 @@ export function PayDialog({
         <Button
           disabled={disabled}
           variant={"accent"}
-          className="w-full"
+          className="w-full rounded-full bg-cerulean hover:bg-cerulean"
         >
           Pay
         </Button>
