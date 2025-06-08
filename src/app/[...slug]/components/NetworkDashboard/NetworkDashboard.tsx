@@ -16,7 +16,6 @@ import { Header } from "./Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
 
-import { PayDummy } from "../PayCard/PayDummy"
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument } from "@/generated/graphql";
 

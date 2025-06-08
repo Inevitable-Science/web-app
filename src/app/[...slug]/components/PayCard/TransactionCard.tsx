@@ -196,19 +196,10 @@ export function TransactionCard(props: PayCardProps) {
             />
             <div className="background-color flex flex-col gap-[2px] p-[16px] rounded-xl mt-4">
         <p className="text-sm font-light">
-          {useFormattedTokenIssuance({
-            weight: ruleset?.weight,
-            reservedPercent: rulesetMetadata?.reservedPercent,
-          })}
         </p>
         <p className="text-xs text-muted-foreground font-light">
           Total token supply: {new FixedInt(tokenB.totalSupply.value, tokenB.decimals).format(2)}
         </p>
-        {/* {rulesetMetadata. &&
-          <p className="text-xs text-muted-foreground font-light">
-            Redemption rate: {ruleset.payoutRedemptionRate.format()}%
-          </p>
-        } */}
       </div>
           </div>
           
