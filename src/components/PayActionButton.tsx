@@ -61,6 +61,7 @@ export function PayActionButton({
   const loading = isWriteLoading || isTxLoading;
 
   // Effect for showing error/success toasts
+  // TODO: Toast errors are replaying on tab changes of networkdash
   useEffect(() => {
     if (isSuccess) {
       toast({
