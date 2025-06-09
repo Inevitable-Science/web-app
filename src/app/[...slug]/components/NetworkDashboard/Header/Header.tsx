@@ -199,7 +199,7 @@ export function Header() {
                     { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <Loader2 className="animate-spin" size={32} /> }
                   </div>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Last 7 Days</p>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Weekly Volume Change</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">

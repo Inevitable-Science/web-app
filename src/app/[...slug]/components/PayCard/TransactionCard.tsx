@@ -1,41 +1,61 @@
-// src/components/PayCard.tsx
+// src/components/PayCard/TransactionCard.tsx
 
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
 import {
+  JBChainId,
   useJBContractContext,
   useJBRulesetContext,
   useJBTokenContext,
+  useSuckers, // 1. Import `useSuckers`
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
+import { getTokenAToBQuote, getTokenBtoAQuote, SuckerPair } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
-import { Loader2 } from "lucide-react"; // For a better loading indicator
-import { useBalance } from "wagmi";
+import { Loader2 } from "lucide-react";
+import { useAccount, useBalance, useSwitchChain } from "wagmi"; // 2. Import Wagmi hooks
 import { PayActionButton } from "@/components/PayActionButton";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
 import { WithdrawCard } from "./WithdrawCard";
+import { ChainSelector } from "@/components/ChainSelector"; // 3. Import `ChainSelector`
+import { useSelectedSucker } from "./SelectedSuckerContext"; // 4. Import the context hook
 
-export interface PayCardProps {}
-
-export function TransactionCard(props: PayCardProps) {
+export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<'buy' | 'withdraw'>('buy');
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [memo, setMemo] = useState("");
 
   const tokenA = useTokenA();
-  const { token: tokenBContext } = useJBTokenContext(); // Renamed to avoid shadowing
+  const { address, chain: activeChain } = useAccount(); // Get user's wallet and chain
+  const { switchChain } = useSwitchChain();
+  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
+
+  const { token: tokenBContext } = useJBTokenContext();
   const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
   const { contracts: { primaryNativeTerminal } } = useJBContractContext();
-  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance();
+  
+  const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
+  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
-  // Load guard
+  // 6. Effect to initialize the context with a default chain
+  useEffect(() => {
+    // Only set default if context has no value and suckers have loaded
+    if (!selectedSucker && suckers && suckers.length > 0) {
+      const defaultSucker = activeChain 
+        ? suckers.find(s => s.peerChainId === activeChain.id) 
+        : undefined;
+      setSelectedSucker(defaultSucker || suckers[0]);
+    }
+  }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
+
+  // Updated Load Guard
   if (
     isBalanceLoading ||
+    areSuckersLoading || // Add sucker loading state
     tokenBContext.isLoading ||
     rulesetContext.isLoading ||
     rulesetMetadataContext.isLoading ||
@@ -56,48 +76,46 @@ export function TransactionCard(props: PayCardProps) {
   const rulesetMetadata = rulesetMetadataContext.data;
   const terminal = primaryNativeTerminal.data;
 
-  // --- 2. CORE LOGIC (CALCULATION HANDLERS) ---
+  // Add this hook call back to the top level
+  const formattedTokenIssuance = useFormattedTokenIssuance({
+    weight: ruleset.weight,
+    reservedPercent: rulesetMetadata.reservedPercent,
+  });
+
+  // --- CORE LOGIC (CALCULATION HANDLERS) ---
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmountA(value);
-
-    if (!value || value === ".") {
-      setAmountB("");
-      return;
-    }
-    
-    const valueBigInt = parseEther(value);
-    const quote = getTokenAToBQuote(new FixedInt(valueBigInt, tokenA.decimals), {
+    if (!value || value === ".") { setAmountB(""); return; }
+    const quote = getTokenAToBQuote(new FixedInt(parseEther(value), tokenA.decimals), {
       weight: ruleset.weight,
       reservedPercent: rulesetMetadata.reservedPercent,
     });
-
     setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
   };
 
   const handleReceiveAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmountB(value);
-
-    if (!value || value === ".") {
-      setAmountA("");
-      return;
-    }
-
-    const valueBigInt = parseUnits(value, tokenB.decimals);
-    const quote = getTokenBtoAQuote(
-      new FixedInt(valueBigInt, tokenB.decimals),
-      tokenA.decimals,
-      {
-        weight: ruleset.weight,
-        reservedPercent: rulesetMetadata.reservedPercent,
-      }
-    );
-
-    setAmountA(formatUnits(quote.value, tokenA.decimals));
+    if (!value || value === ".") { setAmountA(""); return; }
+    const quote = getTokenBtoAQuote(new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals), tokenA.decimals, {
+      weight: ruleset.weight,
+      reservedPercent: rulesetMetadata.reservedPercent,
+    });
+    setAmountA(quote.format()); // Use .format() for safety
   };
 
-  // --- DATA PREPARATION FOR TRANSACTION ---
+  // 7. Handler to update context and switch chain
+  const handleChainChange = (newChainId: JBChainId) => {
+    const newSelectedSucker = suckers?.find(s => s.peerChainId === newChainId);
+    if (newSelectedSucker) {
+      setSelectedSucker(newSelectedSucker);
+    }
+    if (activeChain?.id !== newChainId && switchChain) {
+      switchChain({ chainId: newChainId });
+    }
+  };
+
   const preparedAmountA = {
     amount: new FixedInt(parseEther(amountA || "0"), tokenA.decimals),
     symbol: tokenA.symbol,
@@ -106,10 +124,11 @@ export function TransactionCard(props: PayCardProps) {
     amount: new FixedInt(parseUnits(amountB || "0", tokenB.decimals), tokenB.decimals),
     symbol: formatTokenSymbol(tokenB.symbol),
   };
+  
+  const isChainMismatched = activeChain?.id !== selectedSucker?.peerChainId;
 
   return (
     <div className="bg-grey-450 flex flex-col p-[12px] rounded-xl">
-      {/* ... (Tabs for Buy/Withdraw) ... */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Button
@@ -129,15 +148,20 @@ export function TransactionCard(props: PayCardProps) {
             Withdraw
           </Button>
         </div>
+        
+        {/* 8. Add the ChainSelector to the UI */}
+        <ChainSelector
+          disabled={!suckers || suckers.length <= 1}
+          value={selectedSucker?.peerChainId as JBChainId}
+          onChange={handleChainChange}
+          options={suckers?.map(s => s.peerChainId) ?? []}
+        />
       </div>
 
-
       <div className="my-4">
-        {/* Conditional Rendering of the Active Tab's View */}
         {activeTab === 'buy' ? (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              {/* PAY INPUT */}
               <div className="background-color flex items-center justify-between p-[16px] rounded-xl">
                 <div className="flex flex-col gap-[2px]">
                   <p className="text-sm text-muted-foreground font-light">YOU PAY</p>
@@ -158,17 +182,15 @@ export function TransactionCard(props: PayCardProps) {
                   </p>
                 </div>
               </div>
-
-              {/* RECEIVE INPUT */}
               <div className="background-color flex items-center justify-between p-[16px] rounded-xl">
                 <div className="flex flex-col gap-[2px]">
                   <p className="text-sm text-muted-foreground font-light">YOU RECEIVE</p>
                   <input
                     type="number"
-                    readOnly
                     className="bg-transparent max-w-[130px] shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     value={amountB}
+                    onChange={handleReceiveAmountChange}
                   />
                 </div>
                 <div className="flex flex-col items-end gap-1">
@@ -178,27 +200,39 @@ export function TransactionCard(props: PayCardProps) {
                 </div>
               </div>
             </div>
-
-             <input
-                  type="text"
-                  className="w-full background-color p-2 rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none border-none focus:ring-0 focus:outline-none"
-                  onChange={(e) => setMemo(e.target.value)}
-                  value={memo}
-                  placeholder="Add a note... (optional)"
-                />
-            
+            <input
+              type="text"
+              className="w-full background-color p-2 rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450 transition-shadow"
+              onChange={(e) => setMemo(e.target.value)}
+              value={memo}
+              placeholder="Add a note... (optional)"
+            />
             <PayActionButton
               amountA={preparedAmountA}
               amountB={preparedAmountB}
               memo={memo}
-              disabled={!amountA || parseFloat(amountA) === 0}
+              disabled={!amountA || parseFloat(amountA) === 0 || isChainMismatched}
+              selectedSucker={selectedSucker}
             />
           </div>
-          
         ) : (
-          <WithdrawCard />
+          <WithdrawCard selectedSucker={selectedSucker} />
         )}
       </div>
+
+      {/* <div className="background-color flex flex-col gap-[2px] p-[16px] rounded-xl">
+        <p className="text-sm font-light">
+          {formattedTokenIssuance}
+        </p>
+        <p className="text-xs text-muted-foreground font-light">
+          Total token supply: {new FixedInt(tokenB.totalSupply, tokenB.decimals).format(2)}
+        </p>
+        {ruleset.payoutRedemptionRate && (
+          <p className="text-xs text-muted-foreground font-light">
+            Redemption rate: {ruleset.payoutRedemptionRate.format()}%
+          </p>
+        )}
+      </div> */}
     </div>
   );
 }

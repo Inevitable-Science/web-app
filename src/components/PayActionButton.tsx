@@ -30,11 +30,13 @@ export function PayActionButton({
   amountB,
   memo,
   disabled,
+  selectedSucker
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
   memo: string | undefined;
   disabled?: boolean;
+  selectedSucker?: SuckerPair | undefined;
 }) {
   // --- 1. HOOKS for context, wallet, and transaction ---
   const { contracts: { primaryNativeTerminal } } = useJBContractContext();
@@ -58,19 +60,9 @@ export function PayActionButton({
   
   // Cross-chain sucker logic (kept for compatibility)
   const { data: suckers } = useSuckers();
-  const [selectedSucker, setSelectedSucker] = useState<SuckerPair | undefined>();
 
   // --- 2. STATE & EFFECTS for loading and feedback ---
   const loading = isWriteLoading || isTxLoading;
-
-  // Effect for setting the default sucker (defaults to the current chain)
-  useEffect(() => {
-    if (!suckers || !chainId) return;
-    const defaultSucker = suckers.find((s) => s.peerChainId === chainId);
-    if (defaultSucker) {
-      setSelectedSucker(defaultSucker);
-    }
-  }, [suckers, chainId]);
 
   // Effect for showing error/success toasts
   useEffect(() => {
