@@ -36,7 +36,6 @@ export function TransactionCard() {
 
   const { token: tokenBContext } = useJBTokenContext();
   const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
   
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
@@ -61,8 +60,7 @@ export function TransactionCard() {
     rulesetMetadataContext.isLoading ||
     !tokenBContext.data ||
     !rulesetContext.data ||
-    !rulesetMetadataContext.data ||
-    !primaryNativeTerminal?.data
+    !rulesetMetadataContext.data
   ) {
     return (
       <div className="bg-grey-450 flex flex-col items-center justify-center p-[12px] rounded-xl h-[450px]">
@@ -74,13 +72,6 @@ export function TransactionCard() {
   const tokenB = tokenBContext.data;
   const ruleset = rulesetContext.data;
   const rulesetMetadata = rulesetMetadataContext.data;
-  const terminal = primaryNativeTerminal.data;
-
-  // Add this hook call back to the top level
-  const formattedTokenIssuance = useFormattedTokenIssuance({
-    weight: ruleset.weight,
-    reservedPercent: rulesetMetadata.reservedPercent,
-  });
 
   // --- CORE LOGIC (CALCULATION HANDLERS) ---
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
