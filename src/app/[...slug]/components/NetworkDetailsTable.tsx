@@ -24,10 +24,11 @@ import { useRulesetData } from "@/hooks/useRulesetData"; // 1. Import your new h
 import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 interface NetworkDetailsParams {
+  analyticsError: string | null;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
+export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkDetailsParams) {
 
   const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const [showRules, setShowRules] = useState<boolean>(true);
@@ -160,7 +161,7 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
 
       {/* Treasury section */}
       <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">Ξ1,113.88</h3> {/* DATA_TODO: add total raised value */}
             <p className="text-sm text-muted-foreground font-light uppercase">Total Raised</p>
@@ -180,14 +181,16 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
             <h3 className="text-xl">daohydra.eth</h3> {/* DATA_TODO: add payout wallet */}
             <p className="text-sm">100%</p>
           </div>
-          <Button 
-            onClick={() => setSelectedTab("treasury")}
-            variant="link" 
-            className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-          >
-            Treasury Stats
-            <ArrowRightIcon height="20" width="20" />
-          </Button>
+          {!analyticsError && (
+            <Button 
+              onClick={() => setSelectedTab("treasury")}
+              variant="link" 
+              className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+            >
+              Treasury Stats
+              <ArrowRightIcon height="20" width="20" />
+            </Button>
+          )}
         </div>
       </div>
 

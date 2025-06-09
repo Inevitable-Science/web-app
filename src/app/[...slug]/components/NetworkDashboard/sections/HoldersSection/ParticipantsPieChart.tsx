@@ -54,7 +54,7 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   return (
     <g>
       <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={"var(--foreground)"}>
-        <tspan x={cx} dy="0" className="text-2xl">
+        <tspan x={cx} dy="-0.5em" className="text-2xl">
           <EthereumAddress address={payload.address} short />
         </tspan>
         <tspan x={cx} dy="1.8em" className="text-sm">

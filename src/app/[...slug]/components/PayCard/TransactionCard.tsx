@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
 import {
@@ -168,7 +169,11 @@ export function TransactionCard() {
                   />
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <div className="flex w-fit bg-grey-450 rounded-full py-1 px-3 gap-2 items-center justify-end">
+                  <div className="flex w-fit bg-grey-450 rounded-full py-1 px-2 gap-2 items-center justify-end">
+                    <img 
+                      className="h-[22px] w-[22px]" 
+                      src="/assets/img/logo/mainnet.svg" /* DATA_TODO: Render the token */
+                    />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
                   <p className="text-sm text-muted-foreground font-light text-nowrap">
@@ -187,16 +192,18 @@ export function TransactionCard() {
                     onChange={handleReceiveAmountChange}
                   />
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <div className="flex w-fit bg-grey-450 rounded-full py-1 px-3 gap-2 items-center">
-                    <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
-                  </div>
+                <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
+                  <img
+                    className="h-[22px] w-[22px]" 
+                    src="/assets/img/logo/mainnet.svg" /* DATA_TODO: Render the token */
+                  />
+                  <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
                 </div>
               </div>
             </div>
             <input
               type="text"
-              className="w-full background-color p-2 rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450 transition-shadow"
+              className="w-full background-color p-2 border-none rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450 transition-shadow"
               onChange={(e) => setMemo(e.target.value)}
               value={memo}
               placeholder="Add a note... (optional)"

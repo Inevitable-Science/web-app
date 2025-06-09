@@ -122,7 +122,7 @@ export const TabContent: FC<TabContentProps> = ({
 
   return (
     <div className="pb-10">
-      
+
       {selectedTab === "about" && (
         <DescriptionSection analyticsError={analyticsError} data={descriptionData} setSelectedTab={setSelectedTab} />
       )}
@@ -133,7 +133,7 @@ export const TabContent: FC<TabContentProps> = ({
         <ActivityFeed />
       )}
       {selectedTab === "cycles" && (
-        <NetworkDetailsTable setSelectedTab={setSelectedTab} />
+        <NetworkDetailsTable analyticsError={analyticsError} setSelectedTab={setSelectedTab} />
       )}
 
       {!analyticsError && (

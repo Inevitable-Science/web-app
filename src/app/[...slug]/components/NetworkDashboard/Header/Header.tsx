@@ -93,24 +93,24 @@ export function Header() {
   return (
     <header>
       <div className="ctWrapper">
-        <div className="relative h-[215px]">
+        <div className="relative sm:h-[215px] h-[235px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
             {/* "FE_TODO: You may need to adjust these sizes." */}
             { introImageUri ? (
-            <Image
-              src={ipfsUriToGatewayUrl(introImageUri)}
-              alt={"project header image"}
-              className="inset-0 w-full h-full object-cover mt-[90px] rounded"
-              width={600}
-              height={400}
-            />
+              <Image
+                src={ipfsUriToGatewayUrl(introImageUri)}
+                alt={"project header image"}
+                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                width={600}
+                height={400}
+              />
             ) : (
               <Image
-              src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" 
-              alt="placeholder header image"
-              className="inset-0 w-full h-full object-cover mt-[90px] rounded"
-              width={600}
-              height={400}
+                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" 
+                alt="placeholder header image"
+                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                width={600}
+                height={400}
               />
             )}
           </div>
@@ -154,8 +154,8 @@ export function Header() {
         <div className="w-full">
           <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-              <div className="text-sm flex gap-2 items-baseline">
-                <h1 className="text-3xl font-light">{projectName}</h1>
+              <div className="text-sm flex flex-wrap gap-x-2 items-baseline">
+                <h1 className="text-2xl sm:text-3xl font-light">{projectName}</h1>
                 <h5 className="text-cerulean text-base">
                   <a href={`https://x.com/@${twitter}`}>@{twitter}</a>
                 </h5>
@@ -175,8 +175,8 @@ export function Header() {
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
-                  <h3 className="text-2xl font-semibold tracking-wider">
-                    {suckerGroupData?.totalCount ?? <Loader2 className="animate-spin" size={32} />}
+                  <h3 className="text-2xl font-semibold tracking-wider w-full">
+                    {suckerGroupData?.totalCount ?? <div className="activeSkeleton h-[32px] max-w-[142px] w-full rounded-md"/> }
                   </h3>
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Payments</p>
@@ -185,15 +185,15 @@ export function Header() {
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
                   <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
-                    { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <Loader2 className="animate-spin" size={32} /> }
+                    { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <div className="activeSkeleton h-[24px] w-[64px] !bg-transparent rounded-md"/> }
                   </div>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Weekly Volume Change</p>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Weekly Vol Change</p>
               </div>
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
-                  <h3>
+                  <h3 className="w-full">
                     {project?.owner ? (
                     <EthereumAddress
                       address={project?.owner as Address}
@@ -204,7 +204,7 @@ export function Header() {
                       className="text-xl font-light"
                     />
                     ) : (
-                      null
+                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
                     )
                     }
                   </h3>
@@ -218,7 +218,7 @@ export function Header() {
                     {project?.createdAt ? (
                       formatDate(new Date(project.createdAt * 1000), true)
                     ) : (
-                      null
+                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
                     )
                     }
                   </h3>
