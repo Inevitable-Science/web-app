@@ -6,22 +6,20 @@ import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
 import {
   JBChainId,
-  useJBContractContext,
   useJBRulesetContext,
   useJBTokenContext,
-  useSuckers, // 1. Import `useSuckers`
+  useSuckers,
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote, SuckerPair } from "juice-sdk-core";
+import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useAccount, useBalance, useSwitchChain } from "wagmi"; // 2. Import Wagmi hooks
+import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import { PayActionButton } from "@/components/PayActionButton";
-import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
 import { WithdrawCard } from "./WithdrawCard";
-import { ChainSelector } from "@/components/ChainSelector"; // 3. Import `ChainSelector`
-import { useSelectedSucker } from "./SelectedSuckerContext"; // 4. Import the context hook
+import { ChainSelector } from "@/components/ChainSelector";
+import { useSelectedSucker } from "./SelectedSuckerContext";
 
 export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<'buy' | 'withdraw'>('buy');
@@ -34,10 +32,10 @@ export function TransactionCard() {
   const { switchChain } = useSwitchChain();
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
 
-  const { token: tokenBContext } = useJBTokenContext();
+  const { token: tokenBContext} = useJBTokenContext();
   const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
   
-  const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
+  const { data: suckers, isLoading: areSuckersLoading, isError: isSuckerError } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   // 6. Effect to initialize the context with a default chain
@@ -55,10 +53,8 @@ export function TransactionCard() {
   if (
     isBalanceLoading ||
     areSuckersLoading ||
-    tokenBContext.isLoading ||
     rulesetContext.isLoading ||
     rulesetMetadataContext.isLoading ||
-    !tokenBContext.data ||
     !rulesetContext.data ||
     !rulesetMetadataContext.data
   ) {
@@ -69,7 +65,12 @@ export function TransactionCard() {
     );
   }
 
-  const tokenB = tokenBContext.data;
+  const defaultToken = {
+    symbol: 'TOKENS',
+    decimals: 18,
+  };
+
+  const tokenB = tokenBContext.data || defaultToken;
   const ruleset = rulesetContext.data;
   const rulesetMetadata = rulesetMetadataContext.data;
 
@@ -130,7 +131,8 @@ export function TransactionCard() {
           >
             Buy
           </Button>
-          <Button
+          {rulesetMetadata?.useTotalSurplusForCashOuts && (
+            <Button
             onClick={() => setActiveTab('withdraw')}
             className={`h-[35px] rounded-none font-light bg-transparent hover:bg-transparent border-b-[1.5px] ${
               activeTab === 'withdraw' ? 'border-cerulean text-white' : 'border-transparent text-muted-foreground'
@@ -138,6 +140,7 @@ export function TransactionCard() {
           >
             Withdraw
           </Button>
+          )}
         </div>
         
         {/* 8. Add the ChainSelector to the UI */}
@@ -207,7 +210,7 @@ export function TransactionCard() {
             />
           </div>
         ) : (
-          <WithdrawCard selectedSucker={selectedSucker} />
+            <WithdrawCard selectedSucker={selectedSucker} tokenB={tokenB}/>
         )}
       </div>
 
