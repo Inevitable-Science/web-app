@@ -217,7 +217,7 @@ export function TransactionCard() {
             />
           </div>
         ) : (
-            <WithdrawCard selectedSucker={selectedSucker} tokenB={tokenB}/>
+            <WithdrawCard selectedSucker={selectedSucker}/>
         )}
       </div>
 
