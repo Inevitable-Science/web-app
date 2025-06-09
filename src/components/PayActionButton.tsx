@@ -41,7 +41,6 @@ export function PayActionButton({
   // --- 1. HOOKS for context, wallet, and transaction ---
   const { contracts: { primaryNativeTerminal } } = useJBContractContext();
   const { address } = useAccount();
-  const chainId = useJBChainId();
   const { toast } = useToast();
 
   const {
@@ -57,9 +56,6 @@ export function PayActionButton({
     isSuccess,
     isError: isTxError,
   } = useWaitForTransactionReceipt({ hash: txHash });
-  
-  // Cross-chain sucker logic (kept for compatibility)
-  const { data: suckers } = useSuckers();
 
   // --- 2. STATE & EFFECTS for loading and feedback ---
   const loading = isWriteLoading || isTxLoading;

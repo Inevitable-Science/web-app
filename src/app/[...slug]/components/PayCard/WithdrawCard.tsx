@@ -12,9 +12,11 @@ import {
 } from "juice-sdk-react";
 import { formatUnits, parseUnits } from "viem";
 import { WithdrawActionButton } from "@/components/WithdrawActionButton";
-import { FixedInt } from "fpnum";
+import { SuckerPair } from "juice-sdk-core";
 
-export function WithdrawCard() {
+export function WithdrawCard(
+  { selectedSucker } : {selectedSucker?: SuckerPair | undefined;}
+) {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const chainId = useJBChainId();
   
@@ -80,6 +82,7 @@ export function WithdrawCard() {
       <WithdrawActionButton
         amountToWithdraw={withdrawAmountBN}
         disabled={!withdrawAmount || withdrawAmountBN === 0n || withdrawAmountBN > (balanceOnCurrentChain?.value ?? 0n)}
+        selectedSucker={selectedSucker}
       />
     </div>
   );

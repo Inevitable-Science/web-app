@@ -2,7 +2,7 @@
 
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
-import { DEFAULT_METADATA, NATIVE_TOKEN } from "juice-sdk-core";
+import { DEFAULT_METADATA, NATIVE_TOKEN, SuckerPair } from "juice-sdk-core";
 import {
   JBChainId,
   useJBContractContext,
@@ -23,9 +23,11 @@ const shimmerClasses = `
 export function WithdrawActionButton({
   amountToWithdraw,
   disabled,
+  selectedSucker,
 }: {
   amountToWithdraw: bigint;
   disabled?: boolean;
+  selectedSucker?: SuckerPair | undefined;
 }) {
   const { projectId, contracts: { primaryNativeTerminal } } = useJBContractContext();
   const { address, chainId } = useAccount();
@@ -61,14 +63,14 @@ export function WithdrawActionButton({
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
 
   const handleWithdraw = () => {
-    if (!primaryNativeTerminal?.data || !address || !writeContract || !chainId) return;
+    if (!primaryNativeTerminal?.data || !address || !writeContract || !selectedSucker || !chainId) return;
 
     writeContract({
-      chainId,
+      chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
       args: [
         address, // holder of tokens
-        projectId,
+        selectedSucker.projectId,
         amountToWithdraw,
         NATIVE_TOKEN, // The token to receive back (ETH)
         0n, // minTokensReclaimed (for slippage, 0 for now)
@@ -87,8 +89,8 @@ export function WithdrawActionButton({
 
   return (
     <ButtonWithWallet
-      targetChainId={chainId as JBChainId | undefined}
-      disabled={disabled || loading}
+      targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
+      disabled={false}
       loading={loading}
       onClick={handleWithdraw}
       className={twMerge(
