@@ -50,7 +50,7 @@ export default function ActivityGraph({
   const [range, setRange] = useState<ProjectTimelineRange>(30);
 
   // 3. Internal data fetching logic
-  const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
+  const loadTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [range]); // Recalculate when range changes to force refetch
   const startTimestamp = useMemo(() => loadTimestamp - range * 24 * 60 * 60, [loadTimestamp, range]);
 
   const { dailyTotals, isLoading } = useVolumeData({
@@ -59,15 +59,44 @@ export default function ActivityGraph({
     endTimestamp: loadTimestamp,
   });
 
-  // 4. Internal data formatting for the chart
+  // --- FIX: Replace this data formatting logic ---
   const data = useMemo(() => {
-    return dailyTotals.map(day => ({
-      timestamp: Math.floor(day.date.getTime() / 1000),
-      volume: Number(formatEther(day.volume)),
-      balance: 0, // Placeholder
-      trendingScore: 0, // Placeholder
-    }));
-  }, [dailyTotals]);
+    // 1. Create a lookup map from the sparse data for efficient access.
+    // The key will be a 'YYYY-MM-DD' string.
+    const volumeMap = new Map<string, number>();
+    dailyTotals.forEach(day => {
+      // Normalize the date to a string key to avoid timezone issues.
+      const dateKey = day.date.toISOString().split('T')[0];
+      volumeMap.set(dateKey, Number(formatEther(day.volume)));
+    });
+
+    const fullData: ProjectTimelinePoint[] = [];
+    
+    // 2. Loop through every day in the selected date range.
+    for (let i = 0; i <= range; i++) {
+      const currentDate = new Date(startTimestamp * 1000);
+      currentDate.setUTCDate(currentDate.getUTCDate() + i);
+
+      // Ensure we don't generate points for future dates
+      if (currentDate.getTime() > loadTimestamp * 1000) {
+        break;
+      }
+
+      const dateKey = currentDate.toISOString().split('T')[0];
+      
+      // 3. Get the volume from our map, or default to 0 if it doesn't exist.
+      const volume = volumeMap.get(dateKey) || 0;
+
+      fullData.push({
+        timestamp: Math.floor(currentDate.getTime() / 1000),
+        volume: volume,
+        balance: 0, // Placeholder
+        trendingScore: 0, // Placeholder
+      });
+    }
+
+    return fullData;
+  }, [dailyTotals, range, startTimestamp, loadTimestamp]);
 
 
   // --- All chart rendering logic from here down is mostly unchanged ---
@@ -81,7 +110,7 @@ export default function ActivityGraph({
   const stroke = colors.grey[400];
   const color = colors.grey[400];
   const bg = 'var(--grey-450)';
-  const fontSize = '0.75rem';
+  const fontSize = '0.65rem';
   const highTrendingScore = 1000;
 
   const defaultYDomain = useMemo((): [number, number] => {
@@ -168,7 +197,7 @@ export default function ActivityGraph({
               </div>
             </div>
           ) : (
-            <LineChart margin={{ top: -1, right: 0, bottom: 0, left: 1 }} data={data}>
+            <LineChart margin={{ top: 5, right: 20, bottom: 5, left: 20 }} data={data}>
               <CartesianGrid stroke={stroke} strokeDasharray="1 2" vertical={false} />
               <YAxis
                 stroke={stroke}
@@ -187,6 +216,8 @@ export default function ActivityGraph({
                         fill={bg}
                       />
                       <text
+                        x={-4} 
+                        y={-8}
                         fontSize={fontSize}
                         fill={color}
                         transform={`translate(${props.x + 4},${props.y + 4})`}
@@ -232,7 +263,7 @@ export default function ActivityGraph({
                 <Line
                   dot={false}
                   stroke={colors.primary[400]}
-                  strokeWidth={4}
+                  strokeWidth={2}
                   type="monotone"
                   dataKey={view}
                   activeDot={{ r: 6, fill: colors.primary[400], stroke: undefined }}
