@@ -54,7 +54,7 @@ export function TransactionCard() {
   // Updated Load Guard
   if (
     isBalanceLoading ||
-    areSuckersLoading || // Add sucker loading state
+    areSuckersLoading ||
     tokenBContext.isLoading ||
     rulesetContext.isLoading ||
     rulesetMetadataContext.isLoading ||

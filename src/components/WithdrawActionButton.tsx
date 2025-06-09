@@ -57,7 +57,7 @@ export function WithdrawActionButton({
       toast({
         variant: "destructive",
         title: "Withdraw Failed",
-        description: writeError?.message || "An unknown error occurred.",
+        description: writeError?.name || "An unknown error occurred.",
       });
     }
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
@@ -83,7 +83,7 @@ export function WithdrawActionButton({
   const buttonContent = useMemo(() => {
     if (loading) return <>Processing...</>;
     if (isSuccess) return "Success!";
-    if (isWriteError || isTxError) return "Error - Try Again";
+    /* if (isWriteError || isTxError) return "Error - Try Again"; */
     return "Withdraw";
   }, [loading, isSuccess, isWriteError, isTxError]);
 
