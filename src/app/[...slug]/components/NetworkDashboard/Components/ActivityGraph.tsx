@@ -180,7 +180,7 @@ export default function ActivityGraph({
           <SelectTrigger className="w-[5.6rem] h-fit rounded border-none background-color rounded-full px-2 text-xs uppercase text-muted-foreground hover:text-foreground">
             <SelectValue placeholder="Select range" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent align="end">
             <SelectItem value="7">7 days</SelectItem>
             <SelectItem value="30">30 days</SelectItem>
             <SelectItem value="365">1 year</SelectItem>
