@@ -27,7 +27,6 @@ export function NetworkDashboard() {
   const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const chainId = useJBChainId();
 
-  {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection TABS hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
   {/*const tabs = [
     { key: "about", label: "About" },
     { key: "tokens", label: "Tokens" },
@@ -102,12 +101,11 @@ export function NetworkDashboard() {
         </aside>
         {/* Column 1 */}
         <div className="flex-1">
-
-        <div className="md:hidden block">
-          <div className="mt-1 mb-4">
-            <PayCard />
+          <div className="md:hidden block">
+            <div className="mt-1 mb-4">
+              <PayCard />
+            </div>
           </div>
-        </div>
 
 
           <div className="max-w-4xl mx-auto">
@@ -119,10 +117,10 @@ export function NetworkDashboard() {
                         <button
                           key={tab.key}
                           onClick={() => setSelectedTab(tab.key)}
-                          className={`pr-4 py-2 -mb-px gap-2 font-medium transition-colors duration-150 focus:outline-none ${
+                          className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
                             selectedTab === tab.key
-                              ? "underline text-color"
-                              : "text-muted-foreground hover:underline"
+                              ? "bg-gunmetal"
+                              : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
                           }`}
                         >
                           {tab.label}

@@ -163,19 +163,19 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
         <div className="grid grid-cols-2 gap-3">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">Ξ1,113.88</h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">TREASURY BALANCE</p>
+            <p className="text-sm text-muted-foreground font-light uppercase">Total Raised</p>
           </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">None</h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">OVERFLOW</p>
+            <p className="text-sm text-muted-foreground font-light uppercase">Overflow</p>
           </div>
         </div>
         <div className="background-color p-[16px] rounded-xl">
           <h3 className="text-xl">Ξ0</h3>
-          <p className="text-sm text-muted-foreground font-light uppercase">AVAILABLE TO PAYOUT</p>
+          <p className="text-sm text-muted-foreground font-light uppercase">Available To Payout</p>
         </div>
         <div className="background-color p-[16px] rounded-xl">
-          <p className="text-sm text-muted-foreground font-light uppercase">AVAILABLE TO PAYOUT</p>
+          <p className="text-sm text-muted-foreground font-light uppercase">Payout Wallet</p>
           <div className="flex items-center justify-between my-1">
             <h3 className="text-xl">daohydra.eth</h3>
             <p className="text-sm">100%</p>

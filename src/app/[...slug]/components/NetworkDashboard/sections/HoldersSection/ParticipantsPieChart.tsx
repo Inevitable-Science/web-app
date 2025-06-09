@@ -9,6 +9,7 @@ import { Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import { Address } from "viem";
 import { UseTokenReturnType } from "wagmi";
 import { formatNumber } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
 
@@ -155,7 +156,7 @@ export function ParticipantsPieChart({
   if (totalBalance === 0n || !pieChartData?.length) {
     return (
       <div className="tcpPieContainer">
-        <p>No valid data to display</p>
+        <Loader2 className="animate-spin" size={32} />
         <style>{`
           .tcpPieContainer {
             width: 100%;

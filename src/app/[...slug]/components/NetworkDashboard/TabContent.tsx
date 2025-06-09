@@ -138,7 +138,6 @@ export const TabContent: FC<TabContentProps> = ({
 
       {!analyticsError && (
         <>
-          {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
           {selectedTab === "analytics" && (
             <TokenSection data={tokenData} />
           )}

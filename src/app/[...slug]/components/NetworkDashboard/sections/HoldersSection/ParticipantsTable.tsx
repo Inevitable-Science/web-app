@@ -6,6 +6,7 @@ import { Participant } from "@/generated/graphql";
 import { JBChainId } from "juice-sdk-react";
 import { Address } from "viem";
 import { UseTokenReturnType } from "wagmi";
+import { Loader2 } from "lucide-react";
 
 export function ParticipantsTable({
   participants,
@@ -17,8 +18,8 @@ export function ParticipantsTable({
   totalSupply: bigint;
 }) {
   if (participants.length === 0) return (
-    <div className="text-center text-muted-foreground">
-      No owners yet. Pay in to become an owner.
+   <div className="w-full flex justify-center my-[15vh]">
+      <Loader2 className="h-8 w-8 animate-spin" />
     </div>
   );
 

@@ -94,7 +94,7 @@ export function Header() {
     <header>
       <div className="ctWrapper">
         <div className="relative h-[215px]">
-          <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-10] rounded">
+          <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
             {/* "FE_TODO: You may need to adjust these sizes." */}
             { introImageUri ? (
             <Image
