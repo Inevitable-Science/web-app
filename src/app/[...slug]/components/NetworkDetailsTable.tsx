@@ -162,22 +162,22 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
       <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
         <div className="grid grid-cols-2 gap-3">
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">Ξ1,113.88</h3>
+            <h3 className="text-xl">Ξ1,113.88</h3> {/* DATA_TODO: add total raised value */}
             <p className="text-sm text-muted-foreground font-light uppercase">Total Raised</p>
           </div>
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">None</h3>
+            <h3 className="text-xl">None</h3> {/* DATA_TODO: add overflow true/false value */}
             <p className="text-sm text-muted-foreground font-light uppercase">Overflow</p>
           </div>
         </div>
         <div className="background-color p-[16px] rounded-xl">
-          <h3 className="text-xl">Ξ0</h3>
+          <h3 className="text-xl">Ξ0</h3> {/* DATA_TODO: add available to payout */}
           <p className="text-sm text-muted-foreground font-light uppercase">Available To Payout</p>
         </div>
         <div className="background-color p-[16px] rounded-xl">
           <p className="text-sm text-muted-foreground font-light uppercase">Payout Wallet</p>
           <div className="flex items-center justify-between my-1">
-            <h3 className="text-xl">daohydra.eth</h3>
+            <h3 className="text-xl">daohydra.eth</h3> {/* DATA_TODO: add payout wallet */}
             <p className="text-sm">100%</p>
           </div>
           <Button 
