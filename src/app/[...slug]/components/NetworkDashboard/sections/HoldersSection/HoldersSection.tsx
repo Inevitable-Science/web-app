@@ -155,7 +155,7 @@ export function HoldersSection() {
           </div>
         </div>
 
-        <div className="bg-grey-450 p-[12px] rounded-2xl grid grid-cols-2 gap-3">
+        <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <div className="flex gap-2 items-end">
               <h3 className="text-xl">

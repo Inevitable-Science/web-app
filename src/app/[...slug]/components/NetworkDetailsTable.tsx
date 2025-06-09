@@ -83,7 +83,7 @@ export function NetworkDetailsTable({ setSelectedTab }: NetworkDetailsParams) {
     <div>
       <div className="bg-grey-450 p-[12px] rounded-2xl mb-4">
         {/* Top grid with cycle #, status, etc. */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">{rulesetDataHolder?.cycleNumber ?? '-'}</h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Cycle #</p>

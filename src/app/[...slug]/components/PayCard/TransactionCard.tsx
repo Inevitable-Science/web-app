@@ -156,12 +156,12 @@ export function TransactionCard() {
         {activeTab === 'buy' ? (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <div className="background-color flex items-center justify-between p-[16px] rounded-xl">
+              <div className="background-color flex items-center justify-between gap-2 p-[16px] rounded-xl">
                 <div className="flex flex-col gap-[2px]">
                   <p className="text-sm text-muted-foreground font-light">YOU PAY</p>
                   <input
                     type="number"
-                    className="bg-transparent max-w-[130px] shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+                    className="bg-transparent w-full shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     value={amountA}
                     onChange={handlePayAmountChange}
@@ -171,17 +171,17 @@ export function TransactionCard() {
                   <div className="flex w-fit bg-grey-450 rounded-full py-1 px-3 gap-2 items-center justify-end">
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground font-light">
+                  <p className="text-sm text-muted-foreground font-light text-nowrap">
                     Balance: {walletBalance ? parseFloat(formatUnits(walletBalance.value, tokenA.decimals)).toFixed(4) : "0.00"}
                   </p>
                 </div>
               </div>
-              <div className="background-color flex items-center justify-between p-[16px] rounded-xl">
+              <div className="background-color flex items-center justify-between gap-2 p-[16px] rounded-xl">
                 <div className="flex flex-col gap-[2px]">
                   <p className="text-sm text-muted-foreground font-light">YOU RECEIVE</p>
                   <input
                     type="number"
-                    className="bg-transparent max-w-[130px] shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+                    className="bg-transparent w-full shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
                     placeholder="0.00"
                     value={amountB}
                     onChange={handleReceiveAmountChange}

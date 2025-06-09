@@ -122,18 +122,18 @@ export const TabContent: FC<TabContentProps> = ({
 
   return (
     <div className="pb-10">
-      {/* Render the selected component, passing data only if the tab is 'about' */}
+      
+      {selectedTab === "about" && (
+        <DescriptionSection analyticsError={analyticsError} data={descriptionData} setSelectedTab={setSelectedTab} />
+      )}
+      {selectedTab === "tokens" && (
+        <HoldersSection />
+      )}
       {selectedTab === "activity" && (
         <ActivityFeed />
       )}
       {selectedTab === "cycles" && (
         <NetworkDetailsTable setSelectedTab={setSelectedTab} />
-      )}
-      {selectedTab === "tokens" && (
-        <HoldersSection />
-      )}
-      {selectedTab === "about" && (
-        <DescriptionSection analyticsError={analyticsError} data={descriptionData} setSelectedTab={setSelectedTab} />
       )}
 
       {!analyticsError && (
