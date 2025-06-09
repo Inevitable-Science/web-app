@@ -24,16 +24,30 @@ export function NetworkDashboard() {
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const [selectedTab, setSelectedTab] = useState("about");
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
   const chainId = useJBChainId();
 
   {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection TABS hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
-  const tabs = [
+  {/*const tabs = [
     { key: "about", label: "About" },
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
     { key: "analytics", label: "Analytics" },
     { key: "treasury", label: "Treasury" },
+  ];*/}
+  const tabs = [
+    { key: "about", label: "About" },
+    { key: "tokens", label: "Tokens" },
+    { key: "activity", label: "Activity" },
+    { key: "cycles", label: "Cycles" },
+    // Only include these tabs if there's no analyticsError
+    ...(analyticsError === null
+      ? [
+          { key: "analytics", label: "Analytics" },
+          { key: "treasury", label: "Treasury" },
+        ]
+      : []),
   ];
 
   // set title
@@ -118,9 +132,24 @@ export function NetworkDashboard() {
               </aside>
               {/* Tab Content */}
               <div>
-                {/*<TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? projectName : "Loading"} tokenName={token?.data?.name? token.data.name : "..."} />*/}
-                {/* Dao Name is used for analytics, use static var in development */}
-                <TabContent selectedTab={selectedTab} setSelectedTab={setSelectedTab} daoName={projectName? "hydradao" : "Loading"} tokenName={token?.data?.name? "hydra" : "..."} /> 
+                <TabContent
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
+                  analyticsError={analyticsError}
+                  setAnalyticsError={setAnalyticsError}
+                  daoName={projectName? projectName : "Loading"}
+                  tokenName={token?.data?.name? token.data.name : "..."}
+                />
+
+                {/* Dao Name is used for analytics, use static var in development 
+                <TabContent 
+                  selectedTab={selectedTab} 
+                  setSelectedTab={setSelectedTab} 
+                  analyticsError={analyticsError} 
+                  setAnalyticsError={setAnalyticsError}
+                  daoName="hydradao"
+                  tokenName="hydra"
+                /> */}
               </div>
             </section>
           </div>

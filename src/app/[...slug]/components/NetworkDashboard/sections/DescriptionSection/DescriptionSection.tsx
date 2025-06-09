@@ -48,24 +48,31 @@ interface DaoData {
 }
 
 interface DescriptionSectionProps {
+  analyticsError: string | null;
   data: DaoData | null; // or undefined if it's not guaranteed to be passed yet
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DescriptionSection({ data, setSelectedTab }: DescriptionSectionProps) {
+export function DescriptionSection({ analyticsError, data, setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
+
+  useEffect(() => {
+    console.log(analyticsError);
+  }, [analyticsError])
 
   const { description, name } = metadata?.data ?? {};
 
   return (
       <div className="text-sm">
         <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
+      
+        {!analyticsError && data && (
+          <DaoData data={data} setSelectedTab={setSelectedTab} />
+        )}
 
-        <DaoData data={data} setSelectedTab={setSelectedTab} />
-
-        {/* DATA_TODO: Add a secondary description for below the analytics */}
-        {/* Dupe For Visual Purposes */}
-        <RichPreview source={description || name || "..."} />
+        <div className="mt-6">
+          <RichPreview source={description || name || "..."} />
+        </div>
 
         <SocialLinks {...metadata}/>
       </div>

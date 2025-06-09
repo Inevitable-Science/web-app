@@ -28,7 +28,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
   //if (!data) return <div>No data available</div>;
 
   return (
-    <section className="flex flex-col gap-6 my-6">
+    <section className="flex flex-col gap-6 mt-6">
       <div className="bg-grey-450 p-[12px] rounded-2xl">
         <div className="grid grid-cols-2 gap-3 mb-2">
           <div className="background-color p-[16px] rounded-2xl">

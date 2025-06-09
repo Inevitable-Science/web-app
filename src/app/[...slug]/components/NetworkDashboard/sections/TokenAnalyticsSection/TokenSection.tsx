@@ -85,8 +85,6 @@ export function TokenSection({ data }: DescriptionSectionProps) {
 
       {data ? (
         <div className="flex flex-col gap-4 w-full">
-          
-
           <div className="bg-grey-450 p-[12px] rounded-2xl">
             <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
 

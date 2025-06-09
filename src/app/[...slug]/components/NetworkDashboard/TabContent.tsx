@@ -13,6 +13,8 @@ import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } fro
 interface TabContentProps {
   selectedTab: string;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+  analyticsError: string | null;
+  setAnalyticsError: React.Dispatch<React.SetStateAction<string | null>>;
   daoName: string;
   tokenName: string;
 }
@@ -37,14 +39,20 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export const TabContent: FC<TabContentProps> = ({ selectedTab, setSelectedTab, daoName, tokenName }) => {
+export const TabContent: FC<TabContentProps> = ({ 
+  selectedTab, 
+  setSelectedTab, 
+  analyticsError, 
+  setAnalyticsError, 
+  daoName, 
+  tokenName 
+}) => {
 
   // Define separate state variables for each response
   const [tokenData, setTokenData] = useState<TokenResponse | null>(null);
   const [daoData, setDaoData] = useState<DaoResponse | null>(null);
   const [treasuryData, setTreasuryData] = useState<TreasuryResponse | null>(null);
   const [marketData, setMarketData] = useState<MarketChartResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -83,7 +91,7 @@ export const TabContent: FC<TabContentProps> = ({ selectedTab, setSelectedTab, d
         setMarketData(marketResult);
 
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setAnalyticsError(err instanceof Error ? err.message : 'An error occurred');
       }
     };
 
@@ -125,15 +133,19 @@ export const TabContent: FC<TabContentProps> = ({ selectedTab, setSelectedTab, d
         <HoldersSection />
       )}
       {selectedTab === "about" && (
-        <DescriptionSection data={descriptionData} setSelectedTab={setSelectedTab} />
+        <DescriptionSection analyticsError={analyticsError} data={descriptionData} setSelectedTab={setSelectedTab} />
       )}
 
-      {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
-      {selectedTab === "analytics" && (
-        <TokenSection data={tokenData} />
-      )}
-      {selectedTab === "treasury" && (
-        <TreasurySection data={treasuryData} />
+      {!analyticsError && (
+        <>
+          {/* DATA_TODO: Conditionally render the TokenSection and TreasurySection hiding it if the dao is currently not a "live" dao/is currently fundraising. allow admins to select if its live. */}
+          {selectedTab === "analytics" && (
+            <TokenSection data={tokenData} />
+          )}
+          {selectedTab === "treasury" && (
+            <TreasurySection data={treasuryData} />
+          )}
+        </>
       )}
     </div>
   );

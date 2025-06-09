@@ -26,7 +26,6 @@ import {
 } from "juice-sdk-react";
 import Image from "next/image";
 import Link from "next/link";
-import { TvlDatum } from "./TvlDatum";
 import { useMemo, useState } from "react";
 import { Address, formatEther, size } from "viem";
 import { Loader2 } from 'lucide-react';
@@ -164,16 +163,6 @@ export function Header() {
             </div>
           </div>
           <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
-            {/*<TvlDatum />
-            <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {contributorsCount ?? 0}
-              </span>{" "}
-              <span className="text-muted-foreground">
-                {contributorsCount === 1 ? "owner" : "owners"}
-              </span>
-            </div>*/}
-
             <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">

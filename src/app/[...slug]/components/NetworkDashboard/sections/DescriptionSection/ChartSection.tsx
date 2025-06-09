@@ -42,10 +42,10 @@ export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
     const suckerGroupId = project?.project?.suckerGroupId;
 
   return (
-    <section className="flex flex-col mt-6 bg-grey-450 p-[16px] rounded-2xl">
+    <section className="flex flex-col bg-grey-450 p-[16px] rounded-2xl">
       <StaticVolumeChart
-                suckerGroupId={suckerGroupId}
-              />
+        suckerGroupId={suckerGroupId}
+      />
       
       <Button 
         onClick={() => setSelectedTab("activity")}
