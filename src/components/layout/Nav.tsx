@@ -154,17 +154,17 @@ export const Nav: React.FC = () => {
 
         {/* Desktop Menu */}
         <div className="items-center gap-12 uppercase font-extralight select-none hidden md:flex">
-          <Link className="hover:underline" href="/app">
-            Auctions
+          <Link className="hover:underline" href="/projects">
+            Projects
           </Link>
-          <Link className="hover:underline" href="/app">
-            Articles
-          </Link>
-          <Link className="hover:underline" href="/app">
+          <Link className="hover:underline" href="/vision">
             Vision
           </Link>
-          <Link className="hover:underline" href="/app">
-            Contributors
+          <Link className="hover:underline" href="/team">
+            Team
+          </Link>
+          <Link className="hover:underline" href="/articles">
+            Articles
           </Link>
           {/*<Button variant={"accent"} className="uppercase rounded-full">Log In</Button>*/}
           <ConnectKitButton.Custom>
@@ -203,31 +203,31 @@ export const Nav: React.FC = () => {
         <div className="flex flex-col gap-2 uppercase font-extralight text-lg">
           <Link
             className="hover:underline w-fit py-2"
-            href="/app"
+            href="/projects"
             onClick={toggleMenu}
           >
-            Auctions
+            Projects
           </Link>
           <Link
             className="hover:underline w-fit py-2"
-            href="/app"
-            onClick={toggleMenu}
-          >
-            Articles
-          </Link>
-          <Link
-            className="hover:underline w-fit py-2"
-            href="/app"
+            href="/vision"
             onClick={toggleMenu}
           >
             Vision
           </Link>
           <Link
             className="hover:underline w-fit py-2"
-            href="/app"
+            href="/team"
             onClick={toggleMenu}
           >
-            Contributors
+            Team
+          </Link>
+          <Link
+            className="hover:underline w-fit py-2"
+            href="/articles"
+            onClick={toggleMenu}
+          >
+            Articles
           </Link>
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
