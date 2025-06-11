@@ -125,7 +125,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))}
+                  ))} {/* DATA_TODO: Only render Start time in this section */} 
                 </div>
               </div>
 
@@ -138,7 +138,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))}
+                  ))} {/* DATA_TODO: here only show: Total issuance rate, Payer issuance rate, Reserved rate, DAO token minting */}
                 </div>
               </div>
 
@@ -151,7 +151,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))}
+                  ))} {/* DATA_TODO: here only show: Payments to this project */}
                 </div>
               </div>
             </>

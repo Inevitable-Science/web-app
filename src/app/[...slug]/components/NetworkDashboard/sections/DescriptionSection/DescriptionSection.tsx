@@ -25,7 +25,7 @@ const RichPreview = ({ source }: { source: string }) => {
     const purified = DOMPurify.sanitize(source)
     return (
       <div
-        className="break-words [&_a]:text-cerulean [&_a:hover]:underline"
+        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:text-cerulean [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}

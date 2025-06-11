@@ -113,19 +113,19 @@ export function NetworkDashboard() {
               {/* Tabs */}
               <aside className="block lg:hidden">
                 <div className="flex flex-wrap mb-6 gap-2">
-                      {tabs.map((tab) => (
-                        <button
-                          key={tab.key}
-                          onClick={() => setSelectedTab(tab.key)}
-                          className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
-                            selectedTab === tab.key
-                              ? "bg-gunmetal"
-                              : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
-                          }`}
-                        >
-                          {tab.label}
-                        </button>
-                      ))}
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setSelectedTab(tab.key)}
+                      className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
+                        selectedTab === tab.key
+                          ? "bg-gunmetal"
+                          : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
                 </div>
               </aside>
               {/* Tab Content */}
