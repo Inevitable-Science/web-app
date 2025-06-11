@@ -88,7 +88,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
           <div className="bg-grey-450 p-[12px] rounded-2xl">
             <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
               <div className="background-color p-[16px] rounded-xl">
                 <h3 className="text-xl">
                   {calculateRatio(data.assetsUnderManagement, data.selectedToken.marketCap)}
@@ -122,7 +122,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
 
 
           <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3 py-5">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
               <div className="background-color p-[16px] rounded-xl">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.totalSupply)}
@@ -141,7 +141,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
               <div className="background-color p-[16px] rounded-xl">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.averageBal)}
@@ -164,6 +164,13 @@ export function TokenSection({ data }: DescriptionSectionProps) {
 
           {data.topHolders && (
             <div className="bg-grey-450 p-[12px] rounded-2xl">
+              <div className="background-color p-[16px] rounded-xl mb-2">
+                <h3 className="text-xl">
+                  {data.selectedToken.totalHolders}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
+              </div>
+
               <h3 className="text-grey-50 uppercase text-sm py-1">Top Holders</h3>
               <div>
                 {data.topHolders.slice(0, 5).map((holder, idx) => {
@@ -191,7 +198,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
           )}
 
 
-          {data.tokenDistribution && (
+          {/*{data.tokenDistribution && (
             <div className="bg-grey-450 p-[12px] rounded-2xl">
               <h3 className="text-grey-50 uppercase text-sm pt-1">Holder Distribution</h3>
 
@@ -218,7 +225,7 @@ export function TokenSection({ data }: DescriptionSectionProps) {
                 ))}
               </div>
             </div>
-          )}
+          )}*/}
           
           
           <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
