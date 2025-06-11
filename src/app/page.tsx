@@ -168,7 +168,7 @@ export default function Page() {
 
           <div className="relative">
             <img 
-              className="sm-translate-up absolute -translate-x-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none" 
+              className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up" 
               src="/assets/img/fog_bg.png"
             />
 
@@ -230,13 +230,13 @@ export default function Page() {
         <style>{`
         @media (min-width: 640px) {
           .sm-translate-up {
-            transform: translateY(-60%);
+            transform: translate(-50%, -60%);
           }
         }
-        
-        @media (max-width:640px){
+
+        @media (max-width: 640px) {
           .sm-translate-up {
-            transform: translateY(-38%);
+            transform: translate(-50%, -38%);
           }
         }
         `}</style>
