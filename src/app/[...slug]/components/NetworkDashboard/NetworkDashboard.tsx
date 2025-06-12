@@ -44,7 +44,7 @@ function DashboardContent() {
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    ...(analyticsError === null
+    ...(analyticsData?.daoData === null
       ? [
           { key: "analytics", label: "Analytics" },
           { key: "treasury", label: "Treasury" },
@@ -130,8 +130,6 @@ function DashboardContent() {
                   ))}
                 </div>
               </aside>
-
-              {/* Tab Content */}
               <div className="sm:min-h-[700px]">
                 <TabContent 
                   selectedTab={selectedTab} 

@@ -79,7 +79,7 @@ export const TabContent: FC<TabContentProps> = ({
         <NetworkDetailsTable analyticsError={analyticsError} setSelectedTab={setSelectedTab} />
       )}
 
-      {!analyticsError &&  analyticsData && (
+      {!analyticsError && analyticsData?.tokenData && analyticsData?.treasuryData && (
         <>
           {selectedTab === "analytics" && (
             <TokenSection data={analyticsData?.tokenData} />
