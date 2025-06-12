@@ -31,48 +31,31 @@ import { Address, formatEther, size } from "viem";
 import { Loader2 } from 'lucide-react';
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useVolumeData } from "@/hooks/useVolumeData";
+import { useNetworkData } from "../NetworkDataContext";
 
 export function Header() {
-  const { projectId } = useJBContractContext();
-  const chainId = useJBChainId();
-  const { metadata } = useJBProjectMetadataContext();
+  const { project, dailyTotals } = useNetworkData();
+  const { metadata } = useJBProjectMetadataContext(); // Still needed for UI metadata
 
-  const { data: projectData } = useBendystrawQuery(ProjectDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
-    skip: !chainId || !projectId
-  });
-  const project = projectData?.project;
-
-  // 1. Get data for the last 14 days
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
-  const twoWeeksAgo = useMemo(() => loadTimestamp - 14 * 24 * 60 * 60, [loadTimestamp]);
-  const { dailyTotals, isLoading } = useVolumeData({
-    suckerGroupId: project?.suckerGroupId,
-    startTimestamp: twoWeeksAgo,
-    endTimestamp: loadTimestamp
-  });
 
-  // 2. Calculate the two weekly totals from the single data array
   const weeklyVolumeChange = useMemo(() => {
-    if (isLoading) return null;
-
     const aWeekAgoTimestamp = loadTimestamp - 7 * 24 * 60 * 60;
 
     const accPrevVolume = dailyTotals
-      .filter(day => day.date.getTime() / 1000 < aWeekAgoTimestamp)
+      .filter((day) => day.date.getTime() / 1000 < aWeekAgoTimestamp)
       .reduce((acc, day) => acc + day.volume, 0n);
-      
+
     const accCurVolume = dailyTotals
-      .filter(day => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
+      .filter((day) => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
       .reduce((acc, day) => acc + day.volume, 0n);
 
     if (accPrevVolume === 0n) return accCurVolume > 0n ? "New" : 0;
+
     const difference = accCurVolume - accPrevVolume;
     const percentage = (Number(difference) * 100) / Number(accPrevVolume);
     return percentage.toFixed(2);
-
-  }, [dailyTotals, isLoading, loadTimestamp]);
+  }, [dailyTotals, loadTimestamp]);
 
   const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
