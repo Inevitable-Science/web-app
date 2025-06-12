@@ -80,7 +80,7 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
             {slides.map((slide, index) => (
               <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
                 <div
-                  className="flex flex-col items-start justify-between h-full min-h-[370px] p-4 bg-background border border-color rounded-2xl select-none bg-cover bg-center"
+                  className="flex flex-col items-start justify-between h-full min-h-[370px] p-4 bg-background rounded-2xl select-none bg-cover bg-center"
                   style={{ backgroundImage: `url(${slide.img})` }}
                 >
                   <div />
