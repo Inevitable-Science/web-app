@@ -9,7 +9,7 @@ import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
-import { SwapWidget } from "../PayCard/SwapWiget/SwapWiget";
+// import { SwapWidget } from "../PayCard/SwapWiget/SwapWiget";
 import { Header } from "./Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
@@ -23,21 +23,21 @@ import { NetworkDataProvider, useNetworkData } from "./NetworkDataContext";
  * making the shared data available to all children.
  */
 export function NetworkDashboard() {
+  const { token } = useJBTokenContext();
   return (
-    <NetworkDataProvider>
+    <NetworkDataProvider token={token}>
       <DashboardContent />
     </NetworkDataProvider>
   );
 }
 
 function DashboardContent() {
-  const { contracts } = useNetworkData();
-  const { token } = useJBTokenContext();
+  const { contracts, token, analyticsData, isAnalyticsLoading, analyticsError } = useNetworkData();
+
   const { metadata } = useJBProjectMetadataContext();
 
   // UI-specific state remains in this component.
   const [selectedTab, setSelectedTab] = useState("about");
-  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
 
   const tabs = [
     { key: "about", label: "About" },
@@ -70,7 +70,6 @@ function DashboardContent() {
 
   const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
-  // No changes to the JSX structure or styling are needed.
   return (
     <>
       <div className="w-full relative">
@@ -134,14 +133,11 @@ function DashboardContent() {
 
               {/* Tab Content */}
               <div className="sm:min-h-[700px]">
-                {/* 4. Prop drilling is no longer needed. `TabContent` can get this data itself. */}
                 <TabContent 
                   selectedTab={selectedTab} 
                   setSelectedTab={setSelectedTab} 
-                  analyticsError={analyticsError} 
-                  setAnalyticsError={setAnalyticsError}
-                  daoName={projectName || ""}
-                  tokenName={token.data?.name || ""}
+                  analyticsError={analyticsError}
+                  analyticsData={analyticsData}
                 />
               </div>
             </section>

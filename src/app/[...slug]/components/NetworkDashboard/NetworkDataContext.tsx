@@ -1,10 +1,11 @@
-import { createContext, useContext, ReactNode, useMemo, useState } from 'react';
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
 import { useAccount, useBalance } from 'wagmi';
 import {
   useJBRulesetContext,
   useSuckers,
   useJBContractContext,
   useJBChainId,
+  useJBProjectMetadataContext,
 } from 'juice-sdk-react';
 import { Loader2 } from 'lucide-react';
 import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectToken } from 'juice-sdk-core';
@@ -13,6 +14,17 @@ import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
 import { ProjectDocument, ProjectQuery } from '@/generated/graphql';
 import { useVolumeData, DailyVolume } from '@/hooks/useVolumeData';
 import { notFound } from 'next/navigation';
+import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes';
+import { JBTokenContextData } from 'juice-sdk-react';
+import { AsyncData } from 'juice-sdk-react/dist/contexts/types';
+import { type GetTokenReturnType } from '@wagmi/core'
+
+export interface AnalyticsData {
+  tokenData: TokenResponse | null;
+  daoData: DaoResponse | null;
+  treasuryData: TreasuryResponse | null;
+  marketData: MarketChartResponse | null;
+}
 
 interface NetworkDataContextType {
   suckers: SuckerPair[];
@@ -22,16 +34,21 @@ interface NetworkDataContextType {
   contracts: JBContractContextData;
   project: NonNullable<ProjectQuery['project']>;
   dailyTotals: DailyVolume[];
-  isRefetching: boolean; // Flag for background data fetches (e.g., on chain change)
+  isRefetching: boolean;
+  analyticsData: AnalyticsData | null;
+  isAnalyticsLoading: boolean;
+  analyticsError: string | null;
+  token: AsyncData<GetTokenReturnType | undefined>;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(undefined);
 
-export const NetworkDataProvider = ({ children }: { children: ReactNode }) => {
+export const NetworkDataProvider = ({ children, token }: { children: ReactNode, token: AsyncData<GetTokenReturnType | undefined> }) => {
   // Foundational Hooks
   const { address } = useAccount();
   const chainId = useJBChainId();
   const { projectId, contracts: jbContracts } = useJBContractContext();
+  const { metadata } = useJBProjectMetadataContext();
 
   // Primary Data Fetching Hooks
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
@@ -57,6 +74,57 @@ export const NetworkDataProvider = ({ children }: { children: ReactNode }) => {
     endTimestamp: loadTimestamp,
   });
 
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [isAnalyticsLoading, setIsAnalyticsLoading] = useState<boolean>(false);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Only fetch if we have the necessary project details and are not already fetching.
+    const daoName = metadata.data?.name;
+    const tokenName = token.data?.name; // Assuming token symbol is used as the ID. Adjust if needed.
+
+    if (!daoName || !tokenName) {
+      return;
+    }
+
+    const fetchAnalyticsData = async () => {
+      setIsAnalyticsLoading(true);
+      setAnalyticsError(null);
+      try {
+        // Use Promise.all to fetch data in parallel for better performance
+        const responses = await Promise.all([
+          fetch(`https://api.profiler.bio/api/dao/${daoName}`),
+          fetch(`https://api.profiler.bio/api/token/${tokenName}`),
+          fetch(`https://api.profiler.bio/api/treasury/${daoName}`),
+          fetch(`https://api.profiler.bio/api/market-chart?id=${tokenName}&days=7`)
+        ]);
+
+        // Check if all responses are OK
+        for (const response of responses) {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch analytics data (status: ${response.status})`);
+          }
+        }
+
+        const [daoResult, tokenResult, treasuryResult, marketResult] = await Promise.all(responses.map(res => res.json()));
+
+        setAnalyticsData({
+          daoData: daoResult,
+          tokenData: tokenResult,
+          treasuryData: treasuryResult,
+          marketData: marketResult
+        });
+
+      } catch (err) {
+        setAnalyticsError(err instanceof Error ? err.message : 'An unknown error occurred');
+      } finally {
+        setIsAnalyticsLoading(false);
+      }
+    };
+
+    fetchAnalyticsData();
+  }, [metadata.data?.name, token.data?.symbol]);
+
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =
     isBalanceLoading ||
@@ -81,6 +149,10 @@ export const NetworkDataProvider = ({ children }: { children: ReactNode }) => {
       project,
       dailyTotals,
       isRefetching,
+      analyticsData,
+      isAnalyticsLoading,
+      analyticsError,
+      token
     };
   }, [
     suckers,
@@ -92,6 +164,10 @@ export const NetworkDataProvider = ({ children }: { children: ReactNode }) => {
     project,
     dailyTotals,
     isRefetching,
+    analyticsData,
+    isAnalyticsLoading,
+    analyticsError,
+    token
   ]);
 
 

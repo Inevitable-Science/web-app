@@ -22,7 +22,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
             <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))] bg-grey-450 p-[12px] rounded-2xl">
               <div className="background-color p-[16px] rounded-2xl">
                 <h4 className="text-xl mb-0.5 tracking-wider">
-                  ${formatNumber(Number(data?.assetsUnderManagement))}
+                  ${formatNumber(Number(data.assetsUnderManagement))}
                 </h4>
                 <p className="text-muted-foreground font-light uppercase">Assets Manged</p>
               </div>
@@ -42,14 +42,14 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                 <div className="background-color p-[16px] rounded-2xl">
                   <a className="text-xl mb-0.5 tracking-wider underline">
-                    {data?.treasury.ens_name}
+                    {data.treasury.ens_name}
                   </a>
                   <p className="text-muted-foreground font-light uppercase">Treasury Wallet</p>
                 </div>
 
                 <div className="background-color p-[16px] rounded-2xl">
                   <h4 className="text-xl mb-0.5 tracking-wider">
-                    ${formatNumber(Number(data?.treasuryValue))}
+                    ${formatNumber(Number(data.treasuryValue))}
                   </h4>
                   <p className="text-muted-foreground font-light uppercase">Total Holdings</p>
                 </div>
@@ -95,7 +95,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
 
             <div className="bg-grey-450 h-[400px] flex items-center p-[12px] rounded-2xl">
               {data?.treasuryTokens && (
-                <TreasuryPieChart filteredData={data?.treasuryTokens} />
+                <TreasuryPieChart filteredData={data.treasuryTokens} />
               )}
             </div>
 
@@ -104,7 +104,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               <div className="bg-grey-450 p-[12px] rounded-2xl">
                 <h3 className="text-grey-50 uppercase text-sm py-1">Portfolio Peformance</h3>
                 <div className="flex flex-col text-sm font-light">
-                  {Object.entries(data?.historicalReturns || {}).map(([label, value]) => {
+                  {Object.entries(data.historicalReturns || {}).map(([label, value]) => {
                     const isPositive = !value.percentReturn.startsWith('-');
                     const textColor = isPositive ? 'text-green-500' : 'text-red-500';
 
@@ -130,7 +130,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               <div className="bg-grey-450 p-[12px] rounded-2xl">
                 <h3 className="text-grey-50 uppercase text-sm py-1">Accounts Manged</h3>
                 <div className="flex flex-col text-sm font-light">
-                  {Object.entries(data?.managed_accounts).map(([address, data]) => (
+                  {Object.entries(data.managed_accounts).map(([address, data]) => (
                     <div
                       key={address}
                       className="flex justify-between items-center text-sm py-3 border-b border-[#282828] text-grey-50 font-light"
@@ -148,7 +148,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               </div>
             )}
 
-            {data?.signers && (
+            {data.signers && (
               <div className="bg-grey-450 p-[12px] rounded-2xl text-sm text-grey-50">
                 <h3 className="uppercase py-1">Account Info</h3>
                 {/* Required/Total Signers */}
@@ -158,7 +158,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
                 </div>
 
                 {/* Signer List */}
-                {data?.signers.signers.map((address, idx) => {
+                {data.signers.signers.map((address, idx) => {
                   return (
                     <div
                       key={`${address}-${idx}`}
@@ -182,7 +182,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
             <div className="bg-grey-450 p-[12px] rounded-2xl max-w-full">
               <h3 className="text-xl pt-1 pb-3">Historical Asset Value</h3>
 
-              <TreasuryChart organisation={data?.name} />
+              <TreasuryChart organisation={data.name} />
 
               <div className="flex flex-wrap gap-x-6 gap-y-1 mt-2 text-grey-50 text-sm">
                 <div className="flex gap-2 items-center">

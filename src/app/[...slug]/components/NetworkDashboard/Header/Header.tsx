@@ -1,36 +1,19 @@
 "use client";
 
-import { ChainLogo } from "@/components/ChainLogo";
-import EtherscanLink from "@/components/EtherscanLink";
 import {
   ParticipantsDocument,
-  ProjectDocument,
-  ProjectsDocument,
   SuckerGroupDocument,
-  ParticipantSnapshotsInRangeDocument
 } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
-// import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { formatTokenSymbol, formatDate } from "@/lib/utils";
-import { ForwardIcon } from "@heroicons/react/24/solid";
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
-import { JB_CHAINS } from "juice-sdk-core";
+import { formatDate } from "@/lib/utils";
 import {
-  JBChainId,
-  useJBChainId,
-  useJBContractContext,
   useJBProjectMetadataContext,
-  useJBTokenContext,
-  useSuckers,
 } from "juice-sdk-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Address, formatEther, size } from "viem";
-import { Loader2 } from 'lucide-react';
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useVolumeData } from "@/hooks/useVolumeData";
 import { useNetworkData } from "../NetworkDataContext";
 
 export function Header() {

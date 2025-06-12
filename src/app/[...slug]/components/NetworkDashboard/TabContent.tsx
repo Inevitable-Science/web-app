@@ -9,14 +9,13 @@ import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 import { TreasurySection } from './sections/TreasuryAnalyticsSection/TreasurySection';
 import { TokenSection } from './sections/TokenAnalyticsSection/TokenSection';
 import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes'
+import { AnalyticsData } from './NetworkDataContext';
 
 interface TabContentProps {
   selectedTab: string;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+  analyticsData: AnalyticsData | null;
   analyticsError: string | null;
-  setAnalyticsError: React.Dispatch<React.SetStateAction<string | null>>;
-  daoName: string;
-  tokenName: string;
 }
 
 interface DescriptionInterface {
@@ -41,78 +40,32 @@ const tabComponents: Record<string, FC<any>> = {
 
 export const TabContent: FC<TabContentProps> = ({ 
   selectedTab, 
-  setSelectedTab, 
-  analyticsError, 
-  setAnalyticsError, 
-  daoName, 
-  tokenName 
+  setSelectedTab,
+  analyticsData,
+  analyticsError,
 }) => {
 
-  // Define separate state variables for each response
+  /* // Define separate state variables for each response
   const [tokenData, setTokenData] = useState<TokenResponse | null>(null);
   const [daoData, setDaoData] = useState<DaoResponse | null>(null);
   const [treasuryData, setTreasuryData] = useState<TreasuryResponse | null>(null);
-  const [marketData, setMarketData] = useState<MarketChartResponse | null>(null);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch DAO data
-        const daoResponse = await fetch(`https://api.profiler.bio/api/dao/${daoName}`);
-        if (!daoResponse.ok) {
-          throw new Error('Failed to fetch DAO data');
-        }
-        const daoResult: DaoResponse = await daoResponse.json();
-        setDaoData(daoResult);
-
-        // Fetch token data
-        const tokenResponse = await fetch(`https://api.profiler.bio/api/token/${tokenName}`);
-        if (!tokenResponse.ok) {
-          throw new Error('Failed to fetch token data');
-        }
-        const tokenResult: TokenResponse = await tokenResponse.json();
-        setTokenData(tokenResult);
-
-        // Fetch treasury data
-        const treasuryResponse = await fetch(`https://api.profiler.bio/api/treasury/${daoName}`);
-        if (!treasuryResponse.ok) {
-          throw new Error('Failed to fetch treasury data');
-        }
-        const treasuryResult: TreasuryResponse = await treasuryResponse.json();
-        setTreasuryData(treasuryResult);
-
-        // Fetch market chart data
-        const marketResponse = await fetch(`https://api.profiler.bio/api/market-chart?id=${tokenName}&days=7`);
-        if (!marketResponse.ok) {
-          throw new Error('Failed to fetch market chart data');
-        }
-        const marketResult: MarketChartResponse = await marketResponse.json();
-        setMarketData(marketResult);
-
-      } catch (err) {
-        setAnalyticsError(err instanceof Error ? err.message : 'An error occurred');
-      }
-    };
-
-    fetchData();
-  }, [daoName, tokenName]);
+  const [marketData, setMarketData] = useState<MarketChartResponse | null>(null); */
 
   // Find the component to render based on the selectedTab
   const SelectedComponent = tabComponents[selectedTab];
 
 
-  const latestPrice = marketData?.prices[marketData.prices.length - 1]?.[1] || 0;
-  const latestMarketCap = marketData?.market_caps[marketData.market_caps.length - 1]?.[1] || 0;
+  const latestPrice = analyticsData?.marketData?.prices[analyticsData.marketData.prices.length - 1]?.[1] || 0;
+  const latestMarketCap = analyticsData?.marketData?.market_caps[analyticsData.marketData.market_caps.length - 1]?.[1] || 0;
 
   const descriptionData: DescriptionInterface = {
-    treasuryHoldings: daoData?.treasuryHoldings ?? '',
-    assetsUnderManagement: daoData?.assetsUnderManagement ?? '',
-    totalHolders: tokenData?.selectedToken.totalHolders ?? '',
-    totalSupply: tokenData?.selectedToken.totalSupply ?? '',
+    treasuryHoldings: analyticsData?.treasuryData?.treasuryValue.toString() ?? '',
+    assetsUnderManagement: analyticsData?.treasuryData?.assetsUnderManagement ?? '',
+    totalHolders: analyticsData?.daoData?.nativeToken.totalHolders ?? '',
+    totalSupply: analyticsData?.daoData?.nativeToken.totalSupply ?? '',
     latestPrice: latestPrice ?? 0,
     latestMarketCap: latestMarketCap ?? 0,
-    tokenName: tokenData?.name ?? '',
+    tokenName: analyticsData?.tokenData?.name ?? '',
   };
 
   // If no matching component is found, render nothing or a fallback
@@ -136,13 +89,13 @@ export const TabContent: FC<TabContentProps> = ({
         <NetworkDetailsTable analyticsError={analyticsError} setSelectedTab={setSelectedTab} />
       )}
 
-      {!analyticsError && (
+      {!analyticsError &&  analyticsData && (
         <>
           {selectedTab === "analytics" && (
-            <TokenSection data={tokenData} />
+            <TokenSection data={analyticsData?.tokenData} />
           )}
           {selectedTab === "treasury" && (
-            <TreasurySection data={treasuryData} />
+            <TreasurySection data={analyticsData?.treasuryData} />
           )}
         </>
       )}
