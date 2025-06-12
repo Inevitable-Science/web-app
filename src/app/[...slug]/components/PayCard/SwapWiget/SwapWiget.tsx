@@ -6,7 +6,7 @@ interface TokenState {
   token: string;
 }
 
-// DATA_TODO: Add Connect Button Kit Provider along with this dapp provider, view https://widget.cow.fi/
+// DATA_TODO: Make this web3 component work with the provider, view https://widget.cow.fi/
 
 export function SwapWidget({ token } : TokenState) {
   //const [provider, setProvider] = useState(null);
