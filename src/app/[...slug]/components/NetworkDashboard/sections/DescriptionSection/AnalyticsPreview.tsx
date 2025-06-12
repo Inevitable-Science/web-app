@@ -30,7 +30,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
   return (
     <section className="flex flex-col gap-6 mt-6">
       <div className="bg-grey-450 p-[12px] rounded-2xl">
-        <div className="grid grid-cols-2 gap-3 mb-2">
+        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))] mb-2">
           <div className="background-color p-[16px] rounded-2xl">
             {data ? (
             <h4 className="text-xl mb-0.5 tracking-wider">
@@ -66,7 +66,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
 
       <div className="bg-grey-450 p-[12px] rounded-2xl">
         <div className="flex flex-col gap-2 mb-2">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
             <div className="background-color p-[16px] rounded-2xl">
               {data ? (
               <h4 className="text-xl mb-0.5 tracking-wider">
@@ -89,7 +89,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
             <div className="background-color p-[16px] rounded-2xl">
               {data ? (
               <h4 className="text-xl mb-0.5 tracking-wider">

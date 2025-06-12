@@ -19,7 +19,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
       <section>
         {data ? (
           <div className="flex flex-col gap-4 w-full">
-            <div className="grid grid-cols-2 gap-3 bg-grey-450 p-[12px] rounded-2xl">
+            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))] bg-grey-450 p-[12px] rounded-2xl">
               <div className="background-color p-[16px] rounded-2xl">
                 <h4 className="text-xl mb-0.5 tracking-wider">
                   ${formatNumber(Number(data?.assetsUnderManagement))}
@@ -39,7 +39,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
 
             <div className="bg-grey-450 p-[12px] rounded-2xl">
               <h3 className="text-grey-50 uppercase text-sm mb-[8px] py-1">Treasury Holdings</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
                 <div className="background-color p-[16px] rounded-2xl">
                   <a className="text-xl mb-0.5 tracking-wider underline">
                     {data?.treasury.ens_name}
@@ -110,12 +110,12 @@ export function TreasurySection({ data }: TreasurySectionProps) {
 
                     return (
                       <div key={label} className="flex items-center justify-between py-4 border-b border-[#282828] py-1">
-                        <p className="w-12 text-grey-50">{label}</p>
-                        <p className={`w-32 text-right ${textColor}`}>
+                        <p className="w-8 text-grey-50">{label}</p>
+                        <p className={`min-w-24 text-center ${textColor}`}>
                           {isPositive === true  && "+"}
                           {value.dollarReturn}
                         </p>
-                        <p className={`w-20 text-right ${textColor}`}>
+                        <p className={`min-w-16 text-right ${textColor}`}>
                           {isPositive === true  && "+"}
                           {value.percentReturn}
                         </p>
@@ -179,7 +179,7 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               </div>
             )}
 
-            <div className="bg-grey-450 p-[12px] rounded-2xl">
+            <div className="bg-grey-450 p-[12px] rounded-2xl max-w-full">
               <h3 className="text-xl pt-1 pb-3">Historical Asset Value</h3>
 
               <TreasuryChart organisation={data?.name} />
