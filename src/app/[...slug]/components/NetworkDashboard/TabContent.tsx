@@ -44,17 +44,7 @@ export const TabContent: FC<TabContentProps> = ({
   analyticsData,
   analyticsError,
 }) => {
-
-  /* // Define separate state variables for each response
-  const [tokenData, setTokenData] = useState<TokenResponse | null>(null);
-  const [daoData, setDaoData] = useState<DaoResponse | null>(null);
-  const [treasuryData, setTreasuryData] = useState<TreasuryResponse | null>(null);
-  const [marketData, setMarketData] = useState<MarketChartResponse | null>(null); */
-
-  // Find the component to render based on the selectedTab
   const SelectedComponent = tabComponents[selectedTab];
-
-
   const latestPrice = analyticsData?.marketData?.prices[analyticsData.marketData.prices.length - 1]?.[1] || 0;
   const latestMarketCap = analyticsData?.marketData?.market_caps[analyticsData.marketData.market_caps.length - 1]?.[1] || 0;
 
