@@ -19,6 +19,8 @@ import { TabContent } from "./TabContent";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument } from "@/generated/graphql";
 
+import OtherDaosCarousel from "./Components/OtherDaosCarousel";
+
 export function NetworkDashboard() {
   const { projectId, contracts } = useJBContractContext();
   const { token } = useJBTokenContext();
@@ -73,7 +75,7 @@ export function NetworkDashboard() {
         <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover w-full bg-center z-[-10]"></div>
         <Header />
       </div>
-      <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10">
+      <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10 sm:mb-24">
         <aside className="hidden lg:block max-w-54">
           <div className="flex flex-col gap-2 items-start mb-6">
             {tabs.map((tab) => (
@@ -129,7 +131,7 @@ export function NetworkDashboard() {
                 </div>
               </aside>
               {/* Tab Content */}
-              <div>
+              <div className="sm:min-h-[700px]">
                 <TabContent
                   selectedTab={selectedTab}
                   setSelectedTab={setSelectedTab}
@@ -163,6 +165,8 @@ export function NetworkDashboard() {
           </div>
         </div>
       </div>
+
+      <OtherDaosCarousel />
     </>
   );
 }
