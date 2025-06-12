@@ -11,15 +11,14 @@ import {
   WeightCutPercent,
 } from "juice-sdk-core";
 import {
-  useJBContractContext,
   useReadJbRulesetsAllOf,
-  useJBRulesetContext,
 } from "juice-sdk-react";
 import { useMemo, useState } from "react";
 import { PriceSection } from "./NetworkDashboard/sections/PriceSection";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
-import { useRulesetData } from "@/hooks/useRulesetData"; // 1. Import your new hook
+import { useRulesetData } from "@/hooks/useRulesetData";
+import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
 import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
@@ -34,13 +33,13 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
   const [showRules, setShowRules] = useState<boolean>(true);
 
   // Get raw data from the context
-  const { ruleset, rulesetMetadata } = useJBRulesetContext();
-  const rulesetDataHolder = ruleset?.data;
+  const {ruleset, rulesetMetadata, project} = useNetworkData();
+  const rulesetDataHolder = ruleset;
 
   // 2. Call your custom hook to get all the formatted data in one place
   const { cyclesData, tokenData, otherRulesData } = useRulesetData({
-    ruleset: ruleset?.data as  JBRulesetData,
-    metadata: rulesetMetadata?.data as JBRulesetMetadata,
+    ruleset: ruleset as  JBRulesetData,
+    metadata: rulesetMetadata as JBRulesetMetadata,
   });
 
   // --- Logic that remains component-specific (like countdowns) stays here ---
@@ -59,9 +58,8 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
   const formattedCountdown = useFormatDaysAndHours(countdownOutput? countdownOutput : 0);
 
   // --- Logic for selecting different historical stages (rulesets) also stays ---
-  const { projectId } = useJBContractContext();
   const { data: rulesets } = useReadJbRulesetsAllOf({
-    args: [projectId, 0n, BigInt(MAX_RULESET_COUNT)],
+    args: [BigInt(project.projectId), 0n, BigInt(MAX_RULESET_COUNT)],
     query: {
       select(data) {
         return data.map((rs) => ({
@@ -159,7 +157,6 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
         </div>
       </div>
 
-      {/* Treasury section */}
       <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
         <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
