@@ -17,6 +17,7 @@ import { TabContent } from "./TabContent";
 import OtherDaosCarousel from "./Components/OtherDaosCarousel";
 
 import { NetworkDataProvider, useNetworkData } from "./NetworkDataContext";
+import { SelectedSuckerProvider } from "../PayCard/SelectedSuckerContext";
 
 /**
  * The top-level component. Its ONLY job is to render the provider,
@@ -25,16 +26,16 @@ import { NetworkDataProvider, useNetworkData } from "./NetworkDataContext";
 export function NetworkDashboard() {
   const { token } = useJBTokenContext();
   return (
+    <SelectedSuckerProvider>
     <NetworkDataProvider token={token}>
       <DashboardContent />
     </NetworkDataProvider>
+    </SelectedSuckerProvider>
   );
 }
 
 function DashboardContent() {
   const { contracts, token, analyticsData, isAnalyticsLoading, analyticsError } = useNetworkData();
-
-  const { metadata } = useJBProjectMetadataContext();
 
   // UI-specific state remains in this component.
   const [selectedTab, setSelectedTab] = useState("about");
@@ -59,16 +60,9 @@ function DashboardContent() {
     document.title = `${formatTokenSymbol(token)} | REVNET`;
   }, [token]);
 
-  const pageLoading = metadata.isLoading && contracts.contracts.controller.isLoading;
-  if (pageLoading) {
-    return null;
-  }
-
   if (contracts.contracts.controller.data === zeroAddress) {
     notFound();
   }
-
-  const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
 
   return (
     <>
@@ -131,7 +125,7 @@ function DashboardContent() {
                 </div>
               </aside>
               <div className="sm:min-h-[700px]">
-                <TabContent 
+                <TabContent
                   selectedTab={selectedTab} 
                   setSelectedTab={setSelectedTab} 
                   analyticsError={analyticsError}

@@ -1,17 +1,11 @@
 // src/components/NetworkDetailsTable.tsx
-
-import {
-  MAX_RULESET_COUNT,
-} from "@/app/constants";
 import { Button } from "@/components/ui/button";
 import {
   JBRulesetData,
   JBRulesetMetadata,
-  RulesetWeight,
-  WeightCutPercent,
 } from "juice-sdk-core";
 import {
-  useReadJbRulesetsAllOf,
+  useNativeTokenSurplus,
 } from "juice-sdk-react";
 import { useMemo, useState } from "react";
 import { PriceSection } from "./NetworkDashboard/sections/PriceSection";
@@ -21,6 +15,8 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
 import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { formatEther } from "viem";
+import { SplitsSection } from "./NetworkDashboard/sections/HoldersSection/SplitsSection";
 
 interface NetworkDetailsParams {
   analyticsError: string | null;
@@ -28,12 +24,12 @@ interface NetworkDetailsParams {
 }
 
 export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkDetailsParams) {
-
   const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const [showRules, setShowRules] = useState<boolean>(true);
 
   // Get raw data from the context
-  const {ruleset, rulesetMetadata, project} = useNetworkData();
+  const {ruleset, rulesetMetadata, project, suckers} = useNetworkData();
+  const { data: nativeTokenSurplus } = useNativeTokenSurplus();
   const rulesetDataHolder = ruleset;
 
   // 2. Call your custom hook to get all the formatted data in one place
@@ -57,22 +53,31 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
   const countdownOutput = useCountdownToDate(targetDateForCountdownHook);
   const formattedCountdown = useFormatDaysAndHours(countdownOutput? countdownOutput : 0);
 
-  // --- Logic for selecting different historical stages (rulesets) also stays ---
-  const { data: rulesets } = useReadJbRulesetsAllOf({
-    args: [BigInt(project.projectId), 0n, BigInt(MAX_RULESET_COUNT)],
-    query: {
-      select(data) {
-        return data.map((rs) => ({
-          ...rs,
-          weight: new RulesetWeight(rs.weight),
-          weightCutPercent: new WeightCutPercent(rs.weightCutPercent),
-        })).reverse();
-      },
-    },
-  });
+  const availableToPayout = useMemo(() => {
+    // If there's no surplus or the reserved rate isn't available yet, return 0.
+    if (!nativeTokenSurplus || !tokenData?.reservedRate) {
+      return 0;
+    }
 
-  const selectedStage = rulesets?.[selectedStageIdx];
-  if (!selectedStage) return null;
+    // 1. Get the total surplus in Ether as a number.
+    const surplusInEther = parseFloat(formatEther(nativeTokenSurplus));
+
+    // 2. Parse the reservedRate string ("20%") into a number (20).
+    const reservedRateNumber = parseFloat(tokenData.reservedRate.replace('%', ''));
+
+    // 3. If parsing fails, return 0 to be safe.
+    if (isNaN(reservedRateNumber)) {
+      return 0;
+    }
+
+    // 4. Calculate the multiplier for the non-reserved portion.
+    // e.g., if reservedRate is 20%, the payoutMultiplier is (1 - 20/100) = 0.80
+    const payoutMultiplier = 1 - (reservedRateNumber / 100);
+
+    // 5. Calculate the final amount available for payout.
+    return surplusInEther * payoutMultiplier;
+
+  }, [nativeTokenSurplus, tokenData?.reservedRate]); // Dependencies for the memo
 
   const formatLabel = (key: string) => {
     return key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()).trim();
@@ -123,7 +128,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))} {/* DATA_TODO: Only render Start time in this section */} 
+                  ))}
                 </div>
               </div>
 
@@ -136,7 +141,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))} {/* DATA_TODO: here only show: Total issuance rate, Payer issuance rate, Reserved rate, DAO token minting */}
+                  ))}
                 </div>
               </div>
 
@@ -149,7 +154,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
-                  ))} {/* DATA_TODO: here only show: Payments to this project */}
+                  ))}
                 </div>
               </div>
             </>
@@ -160,24 +165,17 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
       <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
         <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">Ξ1,113.88</h3> {/* DATA_TODO: add total raised value */}
+            <h3 className="text-xl">Ξ{parseFloat(formatEther(project.volume)).toFixed(2)}</h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Total Raised</p>
           </div>
           <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">None</h3> {/* DATA_TODO: add overflow true/false value */}
+            <h3 className="text-xl">Ξ{availableToPayout.toFixed(2)}</h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Overflow</p>
           </div>
         </div>
         <div className="background-color p-[16px] rounded-xl">
-          <h3 className="text-xl">Ξ0</h3> {/* DATA_TODO: add available to payout */}
-          <p className="text-sm text-muted-foreground font-light uppercase">Available To Payout</p>
-        </div>
-        <div className="background-color p-[16px] rounded-xl">
-          <p className="text-sm text-muted-foreground font-light uppercase">Payout Wallet</p>
-          <div className="flex items-center justify-between my-1">
-            <h3 className="text-xl">daohydra.eth</h3> {/* DATA_TODO: add payout wallet */}
-            <p className="text-sm">100%</p>
-          </div>
+          <p className="text-sm text-muted-foreground font-light uppercase">Payouts</p>
+            <SplitsSection/>
           {!analyticsError && (
             <Button 
               onClick={() => setSelectedTab("treasury")}

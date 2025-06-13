@@ -93,11 +93,6 @@ export function SplitsSection() {
 
   return (
     <>
-      <div className="flex space-y-4 pb-0 sm:pb-2">
-        <p className="text-md text-black font-light italic">
-          Splits can be adjusted by the Operator at any time, within the permanent split limit of a stage.
-        </p>
-      </div>
       {suckers && suckers.length > 1 && (
         <div className="mt-2 mb-4">
           <div className="text-sm text-zinc-500">See splits on</div>
@@ -127,15 +122,6 @@ export function SplitsSection() {
               ))}
             </SelectContent>
           </Select>
-          <div className="text-sm font-medium text-zinc-500 mt-4 border-l border-zinc-300 pl-2 py-1 px-1">
-            Operator is currently{" "}
-            <EtherscanLink
-              value={boostRecipient}
-              type="address"
-              chain={chainId ? JB_CHAINS[chainId].chain : undefined}
-              truncateTo={6}
-            />
-          </div>
           <div className="flex gap-4 my-2">
             {selectedSuckerRulesets?.map((ruleset, idx) => {
               return (
@@ -156,19 +142,16 @@ export function SplitsSection() {
               );
             })}
           </div>
-          <div className="text-sm font-medium text-zinc-500 mt-4">
-            The split limit for this stage is {splitLimit}%
-          </div>
         </div>
       )}
-      <div className="max-h-96 overflow-auto bg-zinc-50 border-zinc-200 border mb-4">
-        <div className="flex flex-col p-2">
-          <Table>
+      <div className="max-h-96 mb-4">
+        <div className="background-color flex flex-col p-2">
+          <Table className="background-color">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-auto md:w-1/2">Account</TableHead>
-                <TableHead>Percentage</TableHead>
-                <TableHead>Pending Splits</TableHead>
+                <TableHead className="text-sm text-muted-foreground font-light uppercase">Percentage</TableHead>
+                <TableHead className="text-sm text-muted-foreground font-light uppercase">Pending Splits</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -243,6 +226,20 @@ export function SplitsSection() {
             </TableBody>
           </Table>
         </div>
+      </div>
+      <div className="flex space-y-4 pb-0 sm:pb-2">
+        <p className="text-sm text-muted-foreground text-muted-foreground font-light uppercasefont-light italic">
+          Splits can be adjusted by the Operator at any time, within the permanent split limit of a stage.
+          <p className="text-sm text-muted-foreground text-muted-foreground font-light uppercasefont-light italic">
+          Operator is currently{" "}
+            <EtherscanLink
+              value={boostRecipient}
+              type="address"
+              chain={chainId ? JB_CHAINS[chainId].chain : undefined}
+              truncateTo={6}
+            />
+            </p>
+        </p>
       </div>
     </>
   );

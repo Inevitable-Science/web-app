@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 import { useFormattedTokenIssuance } from './useFormattedTokenIssuance';
 import { JBRulesetData, JBRulesetMetadata } from 'juice-sdk-core';
 import { format } from 'date-fns';
-import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
-import { EthereumAddress } from "@/components/EthereumAddress";
+import { useBoostRecipient } from './useBoostRecipient';
+// import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 
 // Define the shape of the data our hook will receive
 type UseRulesetDataProps = {
@@ -29,13 +29,13 @@ export function useRulesetData({ ruleset, metadata }: UseRulesetDataProps) {
   });
 
   const start = ruleset?.start ? Number(ruleset.start) * 1000 : 0;
-  const duration = ruleset?.duration ? Number(ruleset.duration) : 0;
-  const formattedTime = useFormatDaysAndHours(duration? duration : 0);
+  // const duration = ruleset?.duration ? Number(ruleset.duration) : 0;
+  /* const formattedTime = useFormatDaysAndHours(duration? duration : 0); */
 
   // Memoize the formatted cycles data
   const cyclesData = useMemo(() => {
     return {
-      totalDuration: duration > 0 ? formattedTime : 'Continuous',
+      /* totalDuration: duration > 0 ? formattedTime : 'Continuous', */
       startTime: start > 0 ? format(start, 'yyyy-MM-dd, EEE, p zzz') : '-',
       /* payouts: 'Unlimited', // Placeholder - logic can be added here
       editDeadline: 'No deadline', // Placeholder - logic can be added here */
@@ -47,12 +47,12 @@ export function useRulesetData({ ruleset, metadata }: UseRulesetDataProps) {
     return {
       payerIssuanceRate: formattedTokenIssuance,
       redemptionRate: metadata?.cashOutTaxRate ? `~${(BigInt(10_000) -metadata.cashOutTaxRate.value) / BigInt(100)}%` : '-',
-      cashOutTax: metadata?.cashOutTaxRate ? `${metadata.cashOutTaxRate.value / BigInt(100)}%` : '-',
+      /* cashOutTax: metadata?.cashOutTaxRate ? `${metadata.cashOutTaxRate.value / BigInt(100)}%` : '-', */
       reservedRate: metadata?.reservedPercent ? `${metadata.reservedPercent.value / BigInt(100)}%` : '-',
-      issuanceReductionRate: ruleset?.weightCutPercent ? `${ruleset.weightCutPercent.value / BigInt(1e7)}%` : '-',
+      /* issuanceReductionRate: ruleset?.weightCutPercent ? `${ruleset.weightCutPercent.value / BigInt(1e7)}%` : '-', */
       ownerTokenMinting: metadata?.allowOwnerMinting ? 'Enabled' : 'Disabled',
-      creditTransfers: metadata?.pauseCreditTransfers ? 'Enabled' : 'Disabled',
-      useTotalSurplusForCashouts: metadata?.useTotalSurplusForCashOuts ? 'Enabled' : 'Disabled',
+      /* creditTransfers: metadata?.pauseCreditTransfers ? 'Enabled' : 'Disabled', */
+      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts ? 'Enabled' : 'Disabled',
     };
   }, [formattedTokenIssuance, metadata, ruleset]);
 
@@ -61,7 +61,7 @@ export function useRulesetData({ ruleset, metadata }: UseRulesetDataProps) {
     const formatBool = (val: boolean | undefined) => (val ? 'Yes' : 'No');
     return {
       paysHalted: formatBool(metadata?.pausePay),
-      holdFees: formatBool(metadata?.holdFees),
+/*       holdFees: formatBool(metadata?.holdFees),
       canAddAccountingContexts: formatBool(metadata?.allowAddAccountingContext),
       ownerMustSendPayouts: formatBool(metadata?.ownerMustSendPayouts),
       canAddPriceFeed: formatBool(metadata?.allowAddPriceFeed),
@@ -71,7 +71,7 @@ export function useRulesetData({ ruleset, metadata }: UseRulesetDataProps) {
       useDataHookForPay: formatBool(metadata?.useDataHookForPay),
       setPaymentTerminals: formatBool(metadata?.allowSetTerminals),
       migratePaymentTerminal: formatBool(metadata?.allowTerminalMigration),
-      migrateController: formatBool(metadata?.allowSetController),
+      migrateController: formatBool(metadata?.allowSetController), */
     };
   }, [metadata]);
 

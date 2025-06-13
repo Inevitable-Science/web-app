@@ -6,18 +6,20 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
+  useReadJbSplitsSplitsOf,
+  JBChainId,
 } from 'juice-sdk-react';
 import { Loader2 } from 'lucide-react';
-import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectToken } from 'juice-sdk-core';
+import { SuckerPair, JBRulesetData, JBRulesetMetadata } from 'juice-sdk-core';
 import { JBContractContextData } from 'juice-sdk-react';
 import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
 import { ProjectDocument, ProjectQuery } from '@/generated/graphql';
 import { useVolumeData, DailyVolume } from '@/hooks/useVolumeData';
 import { notFound } from 'next/navigation';
 import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes';
-import { JBTokenContextData } from 'juice-sdk-react';
 import { AsyncData } from 'juice-sdk-react/dist/contexts/types';
 import { type GetTokenReturnType } from '@wagmi/core'
+import { useBoostRecipient } from '@/hooks/useBoostRecipient';
 
 export interface AnalyticsData {
   tokenData: TokenResponse | null;
@@ -39,6 +41,8 @@ interface NetworkDataContextType {
   isAnalyticsLoading: boolean;
   analyticsError: string | null;
   token: AsyncData<GetTokenReturnType | undefined>;
+  chainId: 1 | 10 | 8453 | 42161 | 84532 | 421614 | 11155111 | 11155420 | undefined;
+  payoutWallet: `0x${string}` | undefined;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(undefined);
@@ -46,9 +50,10 @@ const NetworkDataContext = createContext<NetworkDataContextType | undefined>(und
 export const NetworkDataProvider = ({ children, token }: { children: ReactNode, token: AsyncData<GetTokenReturnType | undefined> }) => {
   // Foundational Hooks
   const { address } = useAccount();
-  const chainId = useJBChainId();
   const { projectId, contracts: jbContracts } = useJBContractContext();
+  const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
+  const payoutWallet = useBoostRecipient();
 
   // Primary Data Fetching Hooks
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
@@ -152,7 +157,8 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       analyticsData,
       isAnalyticsLoading,
       analyticsError,
-      token
+      token,
+      payoutWallet,
     };
   }, [
     suckers,
