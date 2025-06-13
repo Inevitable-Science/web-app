@@ -10,7 +10,7 @@ import {
   JBChainId,
 } from 'juice-sdk-react';
 import { Loader2 } from 'lucide-react';
-import { SuckerPair, JBRulesetData, JBRulesetMetadata } from 'juice-sdk-core';
+import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectMetadata } from 'juice-sdk-core';
 import { JBContractContextData } from 'juice-sdk-react';
 import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
 import { ProjectDocument, ProjectQuery } from '@/generated/graphql';
@@ -43,6 +43,7 @@ interface NetworkDataContextType {
   token: AsyncData<GetTokenReturnType | undefined>;
   chainId: 1 | 10 | 8453 | 42161 | 84532 | 421614 | 11155111 | 11155420 | undefined;
   payoutWallet: `0x${string}` | undefined;
+  metadata: AsyncData<JBProjectMetadata>;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(undefined);
@@ -159,6 +160,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       analyticsError,
       token,
       payoutWallet,
+      metadata
     };
   }, [
     suckers,

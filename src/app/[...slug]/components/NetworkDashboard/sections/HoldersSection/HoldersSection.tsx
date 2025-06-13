@@ -1,47 +1,53 @@
 import { Button } from "@/components/ui/button";
-import { ParticipantsDocument, ProjectDocument } from "@/generated/graphql";
+import { ParticipantsDocument } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
-import { formatNumber, truncateAddress } from "@/lib/utils";
-import {
-  useJBChainId,
-  useJBContractContext,
-  useJBTokenContext,
-} from "juice-sdk-react";
+import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
 import { useState } from "react";
 import { twJoin } from "tailwind-merge";
-import { DistributeReservedTokensButton } from "../../../DistributeReservedTokensButton";
-//import { ParticipantsPieChart } from "../../../ParticipantsPieChart";
-//import { ParticipantsTable } from "../../../ParticipantsTable";
 import { ParticipantsTable } from "./ParticipantsTable";
-//import { UserTokenBalanceCard } from "../../../UserTokenBalanceCard/UserTokenBalanceCard";
-//import { SplitsSection } from "./SplitsSection";
-//import { YouSection } from "./YouSection";
-import { Address } from "viem";
+import { Address, formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
+import { useNetworkData } from "../../NetworkDataContext";
+import {
+  useReadJbSplitsSplitsOf,
+  useSuckersUserTokenBalance
+} from "juice-sdk-react";
+import { JBProjectToken, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
+import { useWatchAsset } from "wagmi";
+import { useRulesetData } from "@/hooks/useRulesetData";
+import { useBoostRecipient } from "@/hooks/useBoostRecipient";
+import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
+import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 
 type TableView = "you" | "all" | "splits" ;
 
 export function HoldersSection() {
-  const chainId = useJBChainId();
+  const {project, token, metadata, ruleset, rulesetMetadata, chainId} = useNetworkData();
+  const { tokenData: rulesetData } = useRulesetData({
+      ruleset: ruleset as  JBRulesetData,
+      metadata: rulesetMetadata as JBRulesetMetadata,
+    });
 
   const [participantsView, setParticipantsView] = useState<TableView>("all");
-  const { projectId } = useJBContractContext();
-  const { token } = useJBTokenContext();
 
   const totalOutstandingTokens = useTotalOutstandingTokens();
 
-  const project = useBendystrawQuery(ProjectDocument, {
-    projectId: Number(projectId),
-    chainId: Number(chainId),
-  });
+  const balanceQuery = useSuckersUserTokenBalance();
+    const balances = balanceQuery?.data;
+    const totalBalance = new JBProjectToken(
+      balances?.reduce((acc, curr) => {
+        return acc + curr.balance.value;
+      }, 0n) ?? 0n
+    );
+    const tokenSymbol = formatTokenSymbol(token);
 
   const participantsQuery = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",
     orderDirection: "desc",
     where: {
-      suckerGroupId: project.data?.project?.suckerGroupId,
+      suckerGroupId: project.suckerGroupId,
       balance_gt: 0,
     },
   });
@@ -68,6 +74,28 @@ export function HoldersSection() {
       };
     }, {} as Record<string, any>) ?? {};
 
+    const { watchAsset, isSuccess, isPending } = useWatchAsset();
+
+  const handleAddToken = () => {
+    // Make sure token.data and necessary properties exist
+    if (!token.data?.address || !token.data?.symbol || !token.data?.decimals) {
+      console.error("Token information is incomplete.");
+      return;
+    }
+    
+    watchAsset({
+      type: 'ERC20',
+      options: {
+        address: token.data.address as Address,
+        symbol: token.data.symbol,
+        decimals: token.data.decimals,
+        image: metadata.data?.logoUri, 
+      },
+    });
+  };
+
+  const reservedTokens = useAutoIssuances();
+  console.log("cycle", ruleset.cycleNumber)
   const ownersTab = (view: TableView, label: string) => {
     return (
       <Button
@@ -147,39 +175,46 @@ export function HoldersSection() {
         <div className="bg-grey-450 p-[12px] rounded-2xl">
           <div className="background-color p-[16px] rounded-xl mt-2">
             <h3 className="text-xl">
-              0 tokens {/* DATA_TODO: Add functionality to view tokens */}
+              {parseFloat(totalBalance.value.toString()).toFixed(4)}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
-              Your Balance
+              {tokenSymbol!= "$TOKEN" ? `Your ${tokenSymbol}` : "Your Balance"}
             </p>
           </div>
         </div>
 
         <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
-            <div className="flex gap-2 items-end">
-              <h3 className="text-xl">
-                HYDRA {/* DATA_TODO: Add functionality to view token name/symbol without $ */}
-              </h3>
+          <div className="flex gap-2 items-end">
+            {/* This h3 is already correctly handling a potential lack of token.data */}
+            <h3 className="text-xl">
+              {token.data?.name ? token.data.name : metadata.data?.name}
+            </h3>
+            {token.data && (
               <p className="text-muted-foreground font-light text-sm">
-                {truncateAddress("0xaF04f0912E793620824F4442b03F4d984Af29853" as Address)} {/* DATA_TODO: Add functionality to view tokens contract address */}
+                {/* Use the actual token address from your data */}
+                {truncateAddress(token.data.address as Address)}
               </p>
-            </div>
-            <p className="text-muted-foreground font-light uppercase">
-              Project Token
-            </p>
-            <Button 
-              variant="link" 
-              className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
-            >
-              Add To Metamask {/* DATA_TODO: Add functionality to add token to metamask */}
-              <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
-            </Button>
+            )}
           </div>
-
+          <p className="text-muted-foreground font-light uppercase">
+            Project Token
+          </p>
+      {token.data && (
+        <Button
+          variant="link"
+          className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+          onClick={handleAddToken}
+          disabled={isPending} // Disable the button while processing
+        >
+          {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+          <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
+        </Button>
+      )}
+        </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {formatNumber(18600000, true)} {/* DATA_TODO: Add functionality to fetch token total supply ps. leave the second arg as true, for a sortened output */}
+              {token.data && formatNumber(Number(formatUnits(totalOutstandingTokens, token.data?.decimals)), false)}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               Total Supply
@@ -191,16 +226,16 @@ export function HoldersSection() {
         <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {formatNumber(0, true)} {/* DATA_TODO: Add functionality to view reserved token amount */}
+              {reservedTokens && ruleset.cycleNumber && token?.data?.decimals && formatNumber(Number(formatUnits(reservedTokens[ruleset.cycleNumber - 1].count, token.data?.decimals)))}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
-              Reserved Token
+              Reserved Tokens This Cycle
             </p>
           </div>
 
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              50% {/* DATA_TODO: Add functionality to view reserve rate */}
+              {rulesetData && rulesetData.reservedRate}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               Reserved Rate
