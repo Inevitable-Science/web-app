@@ -35,7 +35,7 @@ export function NetworkDashboard() {
 }
 
 function DashboardContent() {
-  const { contracts, token, analyticsData, isAnalyticsLoading, analyticsError } = useNetworkData();
+  const { contracts, token, analyticsData, isAnalyticsLoading, analyticsError, metadata } = useNetworkData();
 
   // UI-specific state remains in this component.
   const [selectedTab, setSelectedTab] = useState("about");
@@ -55,11 +55,12 @@ function DashboardContent() {
 
   // set title
   // TODO, hacky, probably eventually a next-idiomatic way to do this. 
-  // DATA_TODO: would it be possible to do this in layout
+  // I think it best we leave this here, but ive made it more robust.
   useEffect(() => {
-    if (!token?.data?.symbol) return;
+    console.log("token symbol", token?.data?.symbol)
+    if (token?.data?.symbol === undefined) document.title = `${metadata.data?.name} | REVNET`; else
     document.title = `${formatTokenSymbol(token)} | REVNET`;
-  }, [token]);
+  }, [token, metadata]);
 
   if (contracts.contracts.controller.data === zeroAddress) {
     notFound();
