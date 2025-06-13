@@ -1,4 +1,4 @@
-/*"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { Nav } from "@/components/layout/Nav";
 import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
@@ -68,56 +68,14 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
         {notFound ? "Not found" : "Loading..."}
       </div>
     );
-  }* /
+  }*/
 
   if (initialized && chainId && projectId) {
     return (
       <Providers chainId={chainId} projectId={projectId}>
         <Nav />
-        {user?.pfp && (
-          <div className="flex items-center mb-4">
-            <span className="px-4 text-lg">Hello {user.userName}!</span>
-          </div>
-        )}
         <NetworkDashboard />
       </Providers>
     );
   }
-}
-*/
-import { jbUrn, JB_CHAINS, JBChainId } from "juice-sdk-core";
-import { notFound } from "next/navigation";
-import ClientComponent from "./ClientComponent";
-
-export default async function Page({ params }: { params: { slug?: string[] } }) {
-  let projectId: bigint | undefined;
-  let chainId: JBChainId | undefined;
-  let error = false;
-
-  try {
-    const raw = params.slug?.[0];
-    if (!raw || typeof raw !== "string") {
-      throw new Error("Missing or invalid slug");
-    }
-
-    const sanitizedSlug = raw.split("?")[0].trim();
-    const decoded = decodeURIComponent(sanitizedSlug);
-    const urn = jbUrn(decoded);
-
-    if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
-      throw new Error("Invalid URN format or unknown chain");
-    }
-
-    projectId = urn.projectId;
-    chainId = urn.chainId;
-  } catch (e) {
-    console.warn("URN decoding error:", e);
-    error = true;
-  }
-
-  if (error || !projectId || !chainId) {
-    notFound();
-  }
-
-  return <ClientComponent chainId={chainId} projectId={projectId} />;
 }
