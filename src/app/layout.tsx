@@ -27,7 +27,48 @@ const simplonMono = localFont({
   variable: "--font-simplon-mono",
 });*/
 
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers();
+  const host = headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const origin = `${proto}://${host}`;
 
+  const fullPath = "/";
+  const url = new URL(fullPath, origin);
+
+  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
+
+  return {
+    title: "Inevitable Protocol | Home", 
+    description: "Begin your journey. Build the future of life—together.",
+    alternates: {
+      canonical: url, 
+    },
+    openGraph: {
+      title: "Inevitable Protocol | Home", 
+      description: "Begin your journey. Build the future of life—together.", 
+      siteName: "Inevitable Protocol", 
+      images: [
+        {
+          url: imgUrl, 
+          width: 700,
+          height: 370,
+          alt: "Inevitable preview image",
+        },
+      ],
+      url: url,
+      type: "website",
+    },
+    twitter: {
+      title: "Inevitable Protocol | Home",
+      description: "Begin your journey. Build the future of life—together.",
+      card: "summary_large_image",
+      images: [imgUrl],
+    },
+    manifest: "/manifest/manifest.json",
+    keywords: "Inevitable, Inevitable Protocol", 
+  };
+}
 
 export const revalidate = 300;
 
@@ -39,8 +80,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/assets/img/small-bw.svg" />
-        <link rel="apple-touch-icon" href="/assets/img/small-bw.svg" />
+        {/*<link rel="apple-touch-icon" href="/assets/img/small-bw.svg" />*/}
+        {/* Light theme favicon */}
+        <link
+          rel="icon"
+          href="/assets/img/branding/favicon-light.ico"
+          media="(prefers-color-scheme: light)"
+        />
+        {/* Dark theme favicon */}
+        <link
+          rel="icon"
+          href="/assets/img/branding/favicon-dark.ico"
+          media="(prefers-color-scheme: dark)"
+        />
       </head>
       <body
         className={twMerge(
@@ -60,60 +112,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
-
-
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
-
-  // For the root layout, our fullPath is '/'
-  const fullPath = "/";
-  const url = new URL(fullPath, origin);
-
-  const imgUrl = `${origin}/assets/img/anachronistic1-1.png`;
-
-  const frame = {
-    version: "next",
-    imageUrl: imgUrl,
-    button: {
-      title: "Discover revenue tokens",
-      action: {
-        type: "launch_frame",
-        name: "Revnet",
-        url: url.href,
-        splashImageUrl: `${origin}/assets/img/small-bw-200x200.png`,
-        splashBackgroundColor: "#ffffff",
-      },
-    },
-  };
-
-  return {
-    title: "Revnet",
-    openGraph: {
-      title: "Revnet",
-      description: "Explore onchain revenue networks",
-      url: url.href,
-      images: [
-        {
-          url: imgUrl,
-          width: 1200,
-          height: 800,
-          alt: "Revnet preview image",
-        },
-      ],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Revnet",
-      description: "Explore onchain revenue networks",
-      images: [imgUrl],
-    },
-    other: {
-      "fc:frame": JSON.stringify(frame),
-    },
-  };
 }
