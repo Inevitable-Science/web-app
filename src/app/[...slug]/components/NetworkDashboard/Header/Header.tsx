@@ -12,13 +12,13 @@ import {
 } from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { Address, formatEther, size } from "viem";
+import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useNetworkData } from "../NetworkDataContext";
 
 export function Header() {
   const { project, dailyTotals } = useNetworkData();
-  const { metadata } = useJBProjectMetadataContext(); // Still needed for UI metadata
+  const { metadata } = useJBProjectMetadataContext();
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -33,7 +33,10 @@ export function Header() {
       .filter((day) => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
       .reduce((acc, day) => acc + day.volume, 0n);
 
-    if (accPrevVolume === 0n) return accCurVolume > 0n ? "New" : 0;
+    if (accPrevVolume === 0n) {
+    const percentage = accCurVolume > 0n ? 100 : 0;
+    return percentage.toFixed(2);
+    }
 
     const difference = accCurVolume - accPrevVolume;
     const percentage = (Number(difference) * 100) / Number(accPrevVolume);
