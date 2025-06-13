@@ -54,7 +54,8 @@ function DashboardContent() {
   ];
 
   // set title
-  // TODO, hacky, probably eventually a next-idiomatic way to do this.
+  // TODO, hacky, probably eventually a next-idiomatic way to do this. 
+  // DATA_TODO: would it be possible to do this in layout
   useEffect(() => {
     if (!token?.data?.symbol) return;
     document.title = `${formatTokenSymbol(token)} | REVNET`;

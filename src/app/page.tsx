@@ -39,7 +39,6 @@ export default function Page() {
       <Nav />
 
       <div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">
-
         <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
           <div className="sm:w-[1400px] mx-auto px-[24px] flex flex-col gap-4">
             <h1 className="font-optima text-center text-6xl sm:text-left">Begin your journey.</h1>

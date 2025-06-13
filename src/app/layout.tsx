@@ -7,26 +7,6 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { geistSans, optima } from "@/components/fonts/fonts";
 
-
-/*import localFont from "next/font/local";
-
-const simplonNorm = localFont({
-  src: [
-    { path: "../../public/fonts/SimplonNorm-Light.otf", weight: "400" },
-    { path: "../../public/fonts/SimplonNorm-Regular.otf", weight: "500" },
-    { path: "../../public/fonts/SimplonNorm-Bold.otf", weight: "700" },
-  ],
-  variable: "--font-simplon-norm",
-});
-const simplonMono = localFont({
-  src: [
-    { path: "../../public/fonts/SimplonMono-Light.otf", weight: "400" },
-    { path: "../../public/fonts/SimplonMono-Regular.otf", weight: "500" },
-    { path: "../../public/fonts/SimplonMono-Bold.otf", weight: "700" },
-  ],
-  variable: "--font-simplon-mono",
-});*/
-
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = headers();
   const host = headersList.get("host");
