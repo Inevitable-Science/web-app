@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import { geistSans, optima } from "@/components/fonts/fonts";
 
 
-import localFont from "next/font/local";
+/*import localFont from "next/font/local";
 
 const simplonNorm = localFont({
   src: [
@@ -25,7 +25,9 @@ const simplonMono = localFont({
     { path: "../../public/fonts/SimplonMono-Bold.otf", weight: "700" },
   ],
   variable: "--font-simplon-mono",
-});
+});*/
+
+
 
 export const revalidate = 300;
 
