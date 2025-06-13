@@ -13,12 +13,16 @@ import {
 import { formatUnits, parseUnits } from "viem";
 import { WithdrawActionButton } from "@/components/WithdrawActionButton";
 import { SuckerPair } from "juice-sdk-core";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
 
 export function WithdrawCard(
   { selectedSucker } : {selectedSucker?: SuckerPair | undefined;}
 ) {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const chainId = useJBChainId();
+
+  const { metadata } = useNetworkData();
   
   const tokenA = useTokenA();
   const { token: tokenB } = useJBTokenContext();
@@ -49,14 +53,18 @@ export function WithdrawCard(
               onChange={(e) => setWithdrawAmount(e.target.value)}
             />
           </div>
-          <div className="flex flex-col items-end gap-1">
-            <div className="flex w-fit bg-grey-450 rounded-full py-1 px-3 gap-2 items-center">
-              <p className="text-lg font-light">{formatTokenSymbol(tokenB.data?.symbol)}</p>
+          <div className="flex flex-col gap-[2px]">
+            <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
+              <img
+                className="h-[22px] w-[22px]" 
+                src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
+              />
+              <p className="text-lg font-light">{formatTokenSymbol(tokenB?.data?.symbol)}</p>
             </div>
-            <p className="text-sm text-muted-foreground font-light text-nowrap">
+          <p className="text-sm text-muted-foreground font-light text-nowrap">
               Balance: {balanceOnCurrentChain?.format(4) ?? "0.00"}
             </p>
-          </div>
+            </div>
         </div>
 
         {/* RECEIVE INPUT */}

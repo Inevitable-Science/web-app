@@ -9,7 +9,7 @@ import {
   JBChainId,
   useJBRulesetContext,
   useJBTokenContext,
-  useSuckers,
+  useSuckers
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
@@ -21,6 +21,8 @@ import { PayActionButton } from "@/components/PayActionButton";
 import { WithdrawCard } from "./WithdrawCard";
 import { ChainSelector } from "@/components/ChainSelector";
 import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 
 export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<'buy' | 'withdraw'>('buy');
@@ -38,6 +40,7 @@ export function TransactionCard() {
   
   const { data: suckers, isLoading: areSuckersLoading, isError: isSuckerError } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+  const { metadata } = useNetworkData();
 
   // 6. Effect to initialize the context with a default chain
   useEffect(() => {
@@ -172,7 +175,7 @@ export function TransactionCard() {
                   <div className="flex w-fit bg-grey-450 rounded-full py-1 px-2 gap-2 items-center justify-end">
                     <img 
                       className="h-[22px] w-[22px]" 
-                      src="/assets/img/logo/mainnet.svg" /* DATA_TODO: Render the token */
+                      src="/assets/img/logo/mainnet.svg"
                     />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
@@ -195,7 +198,7 @@ export function TransactionCard() {
                 <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
                   <img
                     className="h-[22px] w-[22px]" 
-                    src="/assets/img/logo/mainnet.svg" /* DATA_TODO: Render the token */
+                    src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
                   />
                   <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
                 </div>
