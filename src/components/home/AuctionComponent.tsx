@@ -25,7 +25,7 @@ const AuctionComponent: React.FC = () => {
 
   return (
     <section className="bg-[url('/assets/img/auction_bg.png')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
-      <div className="bg-background rounded-2xl sm:p-[32px] p-[16px] flex flex-col justify-between gap-[112px] w-full md:w-[40%] md:min-w-[490px]">
+      <div className="bg-background rounded-2xl sm:min-h-[650px] sm:p-[32px] p-[16px] flex flex-col justify-between gap-[112px] w-full md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
           <img className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.png" />
           <h3 className="font-optima text-3xl uppercase">Stasis</h3>
@@ -40,37 +40,36 @@ const AuctionComponent: React.FC = () => {
           </Link>
         </div>
 
-        <div className="flex flex-col">
-          <div className="flex flex-col gap-2 mb-4">
-            <h4 className="font-semibold text-3xl">
-              Ξ 82.29
-            </h4>
-            <h5>RAISED</h5>
+          
+
+        <div className="bg-[#1F1F1F] p-[12px] rounded-2xl flex justify-between items-center">
+          <div className="flex flex-col gap-4 ml-2">
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="flex flex-col items-center">
+                <h3 className="text-2xl md:text-4xl font-semibold">27</h3>
+                <p className="text-sm md:text-base font-light">DAYS</p>
+              </div>
+              <h3 className="text-3xl font-bold">:</h3>
+              <div className="flex flex-col items-center">
+                <h3 className="text-2xl md:text-4xl font-semibold">08</h3>
+                <p className="text-sm md:text-base font-light">HRS</p>
+              </div>
+              <h3 className="text-3xl font-bold">:</h3>
+              <div className="flex flex-col items-center">
+                <h3 className="text-2xl md:text-4xl font-semibold">32</h3>
+                <p className="text-sm md:text-base font-light">MINS</p>
+              </div>
+            </div>
+            <p>left till auction closes</p>
           </div>
 
-          <div className="bg-[#1F1F1F] p-[12px] rounded-2xl flex justify-between items-center">
-            <div className="flex flex-col gap-4 ml-2">
-              <div className="flex items-center gap-2 md:gap-4">
-                <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-semibold">27</h3>
-                  <p className="text-sm md:text-base font-light">DAYS</p>
-                </div>
-                <h3 className="text-3xl font-bold">:</h3>
-                <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-semibold">08</h3>
-                  <p className="text-sm md:text-base font-light">HRS</p>
-                </div>
-                <h3 className="text-3xl font-bold">:</h3>
-                <div className="flex flex-col items-center">
-                  <h3 className="text-2xl md:text-4xl font-semibold">32</h3>
-                  <p className="text-sm md:text-base font-light">MINS</p>
-                </div>
-              </div>
-              <p>left till auction closes</p>
-            </div>
-
-            <div className="bg-[#253031] rounded-2xl sm:h-[140px] sm:w-[140px] h-[110px] w-[110px] justify-center items-center flex">
-              <CircularGauge percentage={76} size={gaugeSize} strokeWidth={10} label="Funded" />
+          <div className="bg-[#253031] rounded-2xl sm:h-[140px] sm:w-[140px] h-[110px] w-[110px] justify-center items-center flex">
+            {/*<CircularGauge percentage={76} size={gaugeSize} strokeWidth={10} label="Funded" />*/}
+            <div className="flex flex-col items-center gap-1 text-center">
+              <h4 className="font-semibold text-xl sm:text-3xl">
+                Ξ 82.29
+              </h4>
+              <h5>RAISED</h5>
             </div>
           </div>
         </div>
