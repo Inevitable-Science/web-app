@@ -28,6 +28,7 @@ export function HoldersSection() {
   const { tokenData: rulesetData } = useRulesetData({
       ruleset: ruleset as  JBRulesetData,
       metadata: rulesetMetadata as JBRulesetMetadata,
+      projectId: project.projectId
     });
 
   const [participantsView, setParticipantsView] = useState<TableView>("all");
