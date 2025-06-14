@@ -197,7 +197,7 @@ export function TransactionCard() {
                 </div>
                 <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
                   <img
-                    className="h-[22px] w-[22px]" 
+                    className="h-[22px] w-[22px] rounded-full" 
                     src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
                   />
                   <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
