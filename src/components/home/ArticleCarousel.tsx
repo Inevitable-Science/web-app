@@ -69,7 +69,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
                   />
                   <div>
                     <h4 className="text-xl font-optima mt-2">{slide.title}</h4>
-                    <p className="text-sm line-clamp-2">{slide.description}</p>
+                    <p className="text-sm font-light line-clamp-2">{slide.description}</p>
                   </div>
                 </div>
               </div>

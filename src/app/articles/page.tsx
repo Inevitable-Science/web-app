@@ -1,4 +1,3 @@
-"use client"
 import { Button } from "@/components/ui/button";
 import SearchBar from "./SearchComponent";
 import DynamicArticleCarousel from "./ArticleCarousel";
@@ -40,13 +39,13 @@ export default function Articles() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-12 mt-16 mb-8">
+      <section className="flex flex-col gap-12 mt-16 mb-8">
         <DynamicArticleCarousel category="Trending" />
 
         <DynamicArticleCarousel />
 
         <DynamicArticleCarousel />
-      </div>
+      </section>
     </div>
   );
 }
