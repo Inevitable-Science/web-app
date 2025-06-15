@@ -56,23 +56,22 @@ export function IpfsImageUploader({
 
   return (
     <div className="mb-5">
+      <label
+        htmlFor="file_input"
+        className="inline-flex cursor-pointer h-9 rounded-lg items-center justify-center font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-11 px-8 text-base bg-primary text-primary-foreground hover:bg-primary"
+      >
+        Upload File
+      </label>
+
       <input
-        className={twMerge(
-          "text-md block w-full rounded border border-solid border-zinc-300 bg-clip-padding px-3 py-[0.32rem]\
-          font-normal text-zinc-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden\
-          file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-zinc-100 file:px-3 file:py-[0.32rem]\
-          file:text-zinc-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px]\
-          file:[margin-inline-end:0.75rem] hover:file:bg-zinc-200 focus:border-primary\
-          focus:text-zinc-700 focus:shadow-te-primary focus:outline-none dark:border-zinc-600 dark:text-zinc-200\
-          dark:file:bg-zinc-700 dark:file:text-zinc-100 dark:focus:border-primary",
-          (disabled || uploadFile.isPending) && "file:bg-zinc-100 file:text-zinc-400 hover:file:bg-zinc-100 cursor-not-allowed")}
         id="file_input"
         type="file"
+        className="hidden"
         disabled={disabled || uploadFile.isPending}
         onChange={handleFileChange}
       />
       {uploadFile.isPending && (
-        <div className="text-md text-gray-500">Uploading...</div>
+        <div className="text-md text-muted-foreground">Uploading...</div>
       )}
       {uploadFile.error && (
         <div className="text-md text-red-500">
@@ -80,9 +79,10 @@ export function IpfsImageUploader({
         </div>
       )}
       {uploadFile.data && (
-        <div className="overflow-hidden mt-3">
+        <div className="overflow-hidden mt-3 max-h-[200px]">
           <Image
             src={ipfsGatewayUrl(uploadFile.data.Hash)}
+            className="rounded"
             alt="Uploaded file"
             width={80}
             height={200}

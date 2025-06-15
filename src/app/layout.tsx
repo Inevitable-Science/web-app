@@ -76,8 +76,6 @@ export default function RootLayout({
       </head>
       <body
         className={twMerge(
-          //simplonNorm.variable,
-          //simplonMono.variable,
           geistSans.variable,
           optima.variable,
           "font-sans min-h-screen tracking-[0.015em]"
