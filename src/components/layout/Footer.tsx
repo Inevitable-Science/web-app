@@ -9,10 +9,10 @@ const Footer: React.FC = () => {
         <Image src="/assets/img/branding/icon.svg" alt="Icon Logo" height="70" width="38" />
         
         <div className="uppercase flex flex-wrap sm:flex-row flex-col items-center justify-center gap-8">
-          <Link href="/auctions" aria-label="Auctions" className="hover:underline">Auctions</Link>
-          <Link href="/articles" aria-label="Articles" className="hover:underline">Articles</Link>
+          <Link href="/projects" aria-label="Auctions" className="hover:underline">Projects</Link>
           <Link href="/vision" aria-label="Vision" className="hover:underline">Vision</Link>
-          <Link href="/contributors" aria-label="Contributors" className="hover:underline">Contributors</Link>
+          <Link href="/team" aria-label="Team" className="hover:underline">Team</Link>
+          <Link href="/articles" aria-label="Articles" className="hover:underline">Articles</Link>
           <Link href="/login" aria-label="Log In" className="hover:underline">Log In</Link>
         </div>
       </div>
