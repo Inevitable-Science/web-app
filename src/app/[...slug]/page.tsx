@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Nav } from "@/components/layout/Nav";
 import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
@@ -73,7 +72,6 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
   if (initialized && chainId && projectId) {
     return (
       <Providers chainId={chainId} projectId={projectId}>
-        <Nav />
         <NetworkDashboard />
       </Providers>
     );

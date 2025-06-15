@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Nav } from "@/components/layout/Nav";
 import ArticleCarousel from "@/components/home/ArticleCarousel";
 import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
@@ -36,8 +35,6 @@ export default function Page() {
 
   return (
     <div>
-      <Nav />
-
       {/*<div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
       <div className="relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">
         {/* Background Video */}

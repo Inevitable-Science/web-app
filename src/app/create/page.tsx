@@ -102,7 +102,12 @@ export default function Page() {
 
   return (
     <>
-      <Nav />
+      <Nav /> 
+      {/* 
+        DATA_TODO: Weird behaviour, 
+        please remove this as it's served from the layout 
+        however states it requires when removed idk why
+      */}
       <Formik
         initialValues={DEFAULT_FORM_DATA}
         onSubmit={(formData: RevnetFormData) => {

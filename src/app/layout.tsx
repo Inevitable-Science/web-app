@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { geistSans, optima } from "@/components/fonts/fonts";
+import { Nav } from "@/components/layout/Nav";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = headers();
@@ -82,6 +83,7 @@ export default function RootLayout({
         )}
       >
           <Providers>
+            <Nav />
           <main className="min-h-screen">{children}</main>
           <Footer />
           </Providers>
