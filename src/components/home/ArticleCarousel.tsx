@@ -19,22 +19,22 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: '/assets/article_1.png',
+    img: '/assets/img/articles/article_1.png',
     title: 'Article Title 1',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/article_2.png',
+    img: '/assets/img/articles/article_2.png',
     title: 'Article Title 2',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/article_3.png',
+    img: '/assets/img/articles/article_3.png',
     title: 'Article Title 3',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/article_4.png',
+    img: '/assets/img/articles/article_4.png',
     title: 'Article Title 4',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
@@ -50,8 +50,8 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
     <section className="w-full mx-auto">
 
       <div className="ctWrapper">
-        <div className="flex justify-between items-center">
-          <h3 className="sm:text-4xl text-2xl font-extralight mb-4">Trending articles</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="sm:text-4xl text-2xl font-extralight">Trending articles</h3>
           <div className="flex gap-4 items-center">
             <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
             <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
@@ -61,7 +61,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
           <div className="flex touch-pan-y -ml-4">
             {slides.map((slide, index) => (
               <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
-                <div className="flex flex-col items-start justify-between h-full p-4 bg-background border border-color rounded-2xl select-none">
+                <div className="flex flex-col items-start justify-between h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
                   <img
                     src={slide.img}
                     alt={slide.title}

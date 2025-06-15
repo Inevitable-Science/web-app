@@ -170,7 +170,7 @@ export const Nav: React.FC = () => {
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
               return (
-                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px]">
+                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px] max-w-[125px] truncate overflow-hidden text-ellipsis">
                   {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
                 </Button>
               );
@@ -232,7 +232,7 @@ export const Nav: React.FC = () => {
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
               return (
-                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px]">
+                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px] max-w-[125px] truncate overflow-hidden text-ellipsis">
                   {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
                 </Button>
               );

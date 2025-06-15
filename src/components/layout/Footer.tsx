@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* BOTTOM SECTION */}
-      <div className="w-full flex md:flex-row md:gap-0 gap-4 md:mb-2 mb-8 flex-col-reverse justify-between items-center text-sm">
+      <div className="w-full flex md:flex-row md:gap-0 gap-4 text-center md:mb-2 mb-8 flex-col-reverse justify-between items-center text-sm">
         <p>All rights reserved Inevitable 2025</p>
         <div className="flex gap-4 items-center">
           <Image src="/assets/img/logo/socials/x.svg" alt="X Logo" height={16} width={16} />

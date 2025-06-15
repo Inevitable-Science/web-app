@@ -94,10 +94,9 @@ module.exports = {
         'grey-50': 'var(--grey-50)',
         'grey-100': 'var(--grey-100)',
         'grey-450': 'var(--grey-450)',
+        'grey-500': 'var(--grey-500)',
       },
       fontFamily: {
-        //sans: ["var(--font-simplon-norm)", ...defaultTheme.fontFamily.sans],
-        //mono: ["var(--font-simplon-mono)", ...defaultTheme.fontFamily.mono],
         sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
         optima: ['var(--font-optima)', 'sans-serif'],
       },
