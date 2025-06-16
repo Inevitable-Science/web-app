@@ -106,7 +106,6 @@ export const metadata = generateMetadata({
   path: "/articles",
 });
 
-// Server component for initial render
 export default function Articles() {
   // Sort articles by date (latest first) on server
   const sortedArticles = [...articleSchema.articles].sort(
@@ -122,12 +121,10 @@ export default function Articles() {
       description: article.overview,
     }));
 
-  // Get unique categories and limit to max 14 (for 15 total carousels including Trending)
   const uniqueCategories = Array.from(
     new Set(sortedArticles.flatMap((article) => article.category))
   ).slice(0, 14); // Limit to 14 categories
 
-  // Map articles to slides by category
   const categorySlides = uniqueCategories.map((category) => ({
     category,
     slides: sortedArticles

@@ -15,8 +15,8 @@ const DaosGrid: React.FC = () => {
       if (cloudTopRef.current) {
         // Top clouds: slight movement for each cloud
         const clouds = cloudTopRef.current.querySelectorAll('img');
-        clouds[0].style.transform = `translateX(25%) translateY(${scrollY * 0.09}px)`; // Left cloud
-        clouds[1].style.transform = `translateX(10%) translateY(${scrollY * 0.06}px)`; // Center cloud
+        clouds[0].style.transform = `translateX(25%) translateY(${scrollY * 0.06}px)`; // Left cloud
+        clouds[1].style.transform = `translateX(10%) translateY(${scrollY * 0.03}px)`; // Center cloud
         clouds[2].style.transform = `translateX(-25%) translateY(${scrollY * 0.08}px)`; // Right cloud
       }
 
@@ -24,7 +24,7 @@ const DaosGrid: React.FC = () => {
         // Middle cloud: moderate movement
         const cloud = cloudMidRef.current.querySelector('img');
         if (cloud) {
-          cloud.style.transform = `translateX(30%) translateY(${scrollY * 0.09}px)`;
+          cloud.style.transform = `translateX(30%) translateY(${scrollY * 0.04}px)`;
         }
       }
 

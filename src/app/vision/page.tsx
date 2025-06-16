@@ -1,0 +1,83 @@
+import { generateMetadata } from "@/lib/metadata";
+import { Button } from "@/components/ui/button";
+
+export const metadata = generateMetadata({
+  title: "Vision | Inevitable Protocol",
+  path: "/vision",
+});
+
+export default function Vision() {
+  return (
+    <div>
+      <div className="
+        bg-[url('/assets/img/vision_hero_scene.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[100vh] sm:min-h-[700px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]
+        flex sm:items-end items-center justify-center
+      ">
+        <div className="ctWrapper relative top-[15px] flex flex-col items-center">
+          <div className="text-center flex flex-col items-center mb-8 font-optima">
+            <p className="uppercase text-lg">It Is Inevitable</p>
+            <h2 className="sm:text-7xl text-4xl font-light">
+              The Future Is Not Found. <br/>
+              <span className="text-primary">It&rsquo;s Built.</span>
+            </h2>
+          </div>
+
+          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.png" />
+        </div>
+      </div>
+
+      <section className="mt-24">
+        <h4 className="ctWrapper text-xl md:text-3xl">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </h4>
+        
+        <div
+          className="s absolute z-[-10] w-screen hidden sm:flex justify-center items-center gap-[70vw] overflow-hidden"
+          style={{ transform: 'translateY(-50%)' }}
+        >
+          {/* Left cloud */}
+          <img
+            className="z-[-10] select-none w-[100vw]"
+            src="/assets/img/clouds/cloud_bg_1.png"
+            style={{ transform: 'translateX(25%)' }}
+          />
+
+          {/* Right cloud */}
+          <img
+            className="z-[-10] select-none w-[100vw]"
+            src="/assets/img/clouds/cloud_bg_3.png"
+            style={{ transform: 'translateX(-25%)' }}
+          />
+        </div>
+
+        <div className="ctWrapper">
+          <div className="flex gap-4 flex-col md:flex-row md:gap-12 my-24">
+            <div className="sm:min-w-[470px] flex flex-col gap-4">
+              <h3 className="text-5xl font-extralight">
+                This Is Where The 
+                <span className="text-primary"> Impossible </span> 
+                Begins.
+              </h3>
+            </div>
+
+            <div className="lg:text-2xl md:text-sm font-light text-base">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+          </div>
+
+          <div className="mb-24 grid gap-6 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+            <div className="">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div className="">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+            <div className="">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
