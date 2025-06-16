@@ -1,5 +1,4 @@
 import { generateMetadata } from "@/lib/metadata";
-import { Button } from "@/components/ui/button";
 
 export const metadata = generateMetadata({
   title: "Vision | Inevitable Protocol",
