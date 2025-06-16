@@ -1,3 +1,8 @@
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Page Not Found | Inevitable Protocol",
+});
 
 export default function NotFound() {
   return (

@@ -1,5 +1,11 @@
 import TeamCarousel from "./TeamCarousel";
 import PartnersComponent from "@/components/home/PartnersComponent";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Team | Inevitable Protocol",
+  path: "/team",
+});
 
 export default function Team() {
   return (

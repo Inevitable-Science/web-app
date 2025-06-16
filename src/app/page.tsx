@@ -8,6 +8,13 @@ import AuctionComponent from "@/components/home/AuctionComponent";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Inevitable Protocol | Home",
+  path: "/",
+});
+
 const SLIDES = [
   {
     img: '/assets/img/articles/article_1.png',

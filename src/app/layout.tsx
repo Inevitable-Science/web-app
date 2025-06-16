@@ -1,12 +1,13 @@
+import { Nav } from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "./providers";
+import { geistSans, optima } from "@/components/fonts/fonts";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
-import { Providers } from "./providers";
-import { headers } from "next/headers";
+
+/*import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { geistSans, optima } from "@/components/fonts/fonts";
-import { Nav } from "@/components/layout/Nav";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = headers();
@@ -49,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
     manifest: "/manifest/manifest.json",
     keywords: "Inevitable, Inevitable Protocol", 
   };
-}
+}*/
 
 export const revalidate = 300;
 
@@ -84,8 +85,8 @@ export default function RootLayout({
       >
           <Providers>
             <Nav />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
           </Providers>
 
         <Toaster />

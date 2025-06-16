@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import SearchBar from "./SearchComponent";
 import DynamicArticleCarousel from "./ArticleCarousel";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata({
+  title: "Articles | Inevitable Protocol",
+  path: "/articles",
+});
 
 export default function Articles() {
   return (
