@@ -98,7 +98,7 @@ export default function Articles() {
 }*/
 
 import { generateMetadata } from "@/lib/metadata";
-import articleSchema, { Article } from "./Articles"; // Adjust path as needed
+import articleSchema, { Article } from "./Articles";
 import ArticlesClient from "./ArticlesClient";
 
 export const metadata = generateMetadata({
