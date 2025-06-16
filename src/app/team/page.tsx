@@ -1,4 +1,5 @@
 import TeamCarousel from "./TeamCarousel";
+import TeamComponent from "./TeamComponent";
 import PartnersComponent from "@/components/home/PartnersComponent";
 import { generateMetadata } from "@/lib/metadata";
 
@@ -22,7 +23,8 @@ export default function Team() {
           </div>
         </div>
 
-        <TeamCarousel />
+        {/*<TeamCarousel />*/}
+        <TeamComponent />
 
         <div className="my-48">
           <PartnersComponent />

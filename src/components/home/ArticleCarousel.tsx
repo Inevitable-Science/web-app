@@ -61,7 +61,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
           <div className="flex touch-pan-y -ml-4">
             {slides.map((slide, index) => (
               <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
-                <div className="flex flex-col items-start justify-between h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
+                <div className="flex flex-col items-start h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
                   <img
                     src={slide.img}
                     alt={slide.title}

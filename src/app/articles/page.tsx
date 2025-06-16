@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
+/*import { Button } from "@/components/ui/button";
 import SearchBar from "./SearchComponent";
 import DynamicArticleCarousel from "./ArticleCarousel";
 import { generateMetadata } from "@/lib/metadata";
+import articleSchema, { Article } from "./Articles";
 
 export const metadata = generateMetadata({
   title: "Articles | Inevitable Protocol",
@@ -9,6 +10,44 @@ export const metadata = generateMetadata({
 });
 
 export default function Articles() {
+
+  // Sort articles by date (latest first)
+  const sortedArticles = [...articleSchema.articles].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  // Get trending slides (latest 3 articles)
+  const trendingSlides = sortedArticles
+    .slice(0, 3)
+    .map((article: Article) => ({
+      img: article.image,
+      title: article.title,
+      description: article.overview,
+    }));
+
+  // Get unique categories and limit to max 14 (for 15 total carousels including Trending)
+  const uniqueCategories = Array.from(
+    new Set(sortedArticles.flatMap((article) => article.category))
+  ).slice(0, 14); // Limit to 14 categories
+
+  // Map articles to slides by category
+  const categorySlides = uniqueCategories.map((category) => ({
+    category,
+    slides: sortedArticles
+      .filter((article) => article.category.includes(category))
+      .map((article: Article) => ({
+        img: article.image,
+        title: article.title,
+        description: article.overview,
+      })),
+  }));
+
+  // Combine Trending and Category carousels (max 15)
+  const carousels = [
+    { category: "Trending", slides: trendingSlides },
+    ...categorySlides,
+  ].slice(0, 15); // Limit to 15 carousels
+
   return (
     <div className="ctWrapper">
       <div className="flex items-center justify-between mt-28">
@@ -46,12 +85,73 @@ export default function Articles() {
       </div>
 
       <section className="flex flex-col gap-12 mt-16 mb-8">
-        <DynamicArticleCarousel category="Trending" />
-
-        <DynamicArticleCarousel />
-
-        <DynamicArticleCarousel />
+        {carousels.map(({ category, slides }, index) => (
+          <DynamicArticleCarousel
+            key={index}
+            category={category}
+            slides={slides}
+          />
+        ))}
       </section>
+    </div>
+  );
+}*/
+
+import { generateMetadata } from "@/lib/metadata";
+import articleSchema, { Article } from "./Articles"; // Adjust path as needed
+import ArticlesClient from "./ArticlesClient";
+
+export const metadata = generateMetadata({
+  title: "Articles | Inevitable Protocol",
+  path: "/articles",
+});
+
+// Server component for initial render
+export default function Articles() {
+  // Sort articles by date (latest first) on server
+  const sortedArticles = [...articleSchema.articles].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  // Get trending slides (latest 3 articles)
+  const trendingSlides = sortedArticles
+    .slice(0, 3)
+    .map((article: Article) => ({
+      img: article.image,
+      title: article.title,
+      description: article.overview,
+    }));
+
+  // Get unique categories and limit to max 14 (for 15 total carousels including Trending)
+  const uniqueCategories = Array.from(
+    new Set(sortedArticles.flatMap((article) => article.category))
+  ).slice(0, 14); // Limit to 14 categories
+
+  // Map articles to slides by category
+  const categorySlides = uniqueCategories.map((category) => ({
+    category,
+    slides: sortedArticles
+      .filter((article) => article.category.includes(category))
+      .map((article: Article) => ({
+        img: article.image,
+        title: article.title,
+        description: article.overview,
+      })),
+  }));
+
+  // Combine Trending and Category carousels (max 15)
+  const carousels = [
+    { category: "Trending", slides: trendingSlides },
+    ...categorySlides,
+  ].slice(0, 15); // Limit to 15 carousels
+
+  return (
+    <div className="ctWrapper">
+      <ArticlesClient
+        initialCarousels={carousels}
+        initialCategories={uniqueCategories}
+        initialArticles={sortedArticles}
+      />
     </div>
   );
 }

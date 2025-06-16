@@ -42,6 +42,9 @@ const DEFAULT_SLIDES: SlideType[] = [
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: 'start' };
 
+const createSlug = (title: string) =>
+    title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "");
+
 const DynamicArticleCarousel: React.FC<PropType> = ({ category = "Category", slides = DEFAULT_SLIDES, options = DEFAULT_OPTIONS }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
@@ -60,8 +63,8 @@ const DynamicArticleCarousel: React.FC<PropType> = ({ category = "Category", sli
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex touch-pan-y -ml-4">
           {slides.map((slide, index) => (
-            <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
-              <div className="flex flex-col items-start justify-between h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
+            <a key={index} href={`/articles/${createSlug(slide.title)}`} className="flex min-w-[280px] sm:min-w-[440px] max-w-[520px] pl-4">
+              <div className="flex flex-col items-start h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
                 <img
                   src={slide.img}
                   alt={slide.title}
@@ -72,7 +75,7 @@ const DynamicArticleCarousel: React.FC<PropType> = ({ category = "Category", sli
                   <p className="text-sm font-light line-clamp-2">{slide.description}</p>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
