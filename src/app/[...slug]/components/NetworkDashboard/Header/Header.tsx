@@ -1,42 +1,52 @@
 "use client";
 
-import { ChainLogo } from "@/components/ChainLogo";
-import EtherscanLink from "@/components/EtherscanLink";
 import {
   ParticipantsDocument,
-  ProjectDocument,
   SuckerGroupDocument,
 } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
-// import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { formatTokenSymbol } from "@/lib/utils";
-import { ForwardIcon } from "@heroicons/react/24/solid";
-import { JB_CHAINS } from "juice-sdk-core";
+import { formatDate } from "@/lib/utils";
 import {
-  JBChainId,
-  useJBChainId,
-  useJBContractContext,
   useJBProjectMetadataContext,
-  useJBTokenContext,
-  useSuckers,
 } from "juice-sdk-react";
 import Image from "next/image";
-import Link from "next/link";
-import { TvlDatum } from "./TvlDatum";
-import { useMemo } from "react";
-export function Header() {
-  const { projectId } = useJBContractContext();
-  const chainId = useJBChainId();
-  const { metadata } = useJBProjectMetadataContext();
-  const { token } = useJBTokenContext();
+import { useMemo, useState } from "react";
+import { Address, formatEther } from "viem";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { useNetworkData } from "../NetworkDataContext";
 
-  const project = useBendystrawQuery(ProjectDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
-  });
+export function Header() {
+  const { project, dailyTotals } = useNetworkData();
+  const { metadata } = useJBProjectMetadataContext();
+
+  const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
+
+  const weeklyVolumeChange = useMemo(() => {
+    const aWeekAgoTimestamp = loadTimestamp - 7 * 24 * 60 * 60;
+
+    const accPrevVolume = dailyTotals
+      .filter((day) => day.date.getTime() / 1000 < aWeekAgoTimestamp)
+      .reduce((acc, day) => acc + day.volume, 0n);
+
+    const accCurVolume = dailyTotals
+      .filter((day) => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
+      .reduce((acc, day) => acc + day.volume, 0n);
+
+    if (accPrevVolume === 0n) {
+    const percentage = accCurVolume > 0n ? 100 : 0;
+    return percentage.toFixed(2);
+    }
+
+    const difference = accCurVolume - accPrevVolume;
+    const percentage = (Number(difference) * 100) / Number(accPrevVolume);
+    return percentage.toFixed(2);
+  }, [dailyTotals, loadTimestamp]);
+
+  const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
+
   const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
-    id: project.data?.project?.suckerGroupId ?? "",
+    id: project?.suckerGroupId ?? "",
   });
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
@@ -44,121 +54,169 @@ export function Header() {
       suckerGroupId: suckerGroup.data?.suckerGroup?.id,
       balance_gt: 0,
     },
-    limit: 1000 // TODO will break once more than 1000 participants exist
+    limit: 1000 // BUG: will break once more than 1000 participants exist
   });
 
-  const contributorsCount = useMemo(() => {
-    // de-dupe participants who are on multiple chains
-    const participantWallets = participants?.participants.items.reduce(
-      (acc, curr) =>
-        acc.includes(curr.address) ? acc : [...acc, curr.address],
-      [] as string[]
-    );
-
-    return participantWallets?.length;
-  }, [participants?.participants]);
-
-  const suckersQuery = useSuckers();
-  const suckers = suckersQuery.data;
-  const { name: projectName, logoUri } = metadata?.data ?? {};
-
-  // const totalSupply = useTotalOutstandingTokens();
-  // const totalSupplyFormatted =
-  //   totalSupply && token?.data
-  //     ? formatUnits(totalSupply, token.data.decimals)
-  //     : null;
+  const suckerGroupData = participants?.participants;
 
   return (
     <header>
-      <div className="flex flex-col sm:flex-row sm:items-center items-start gap-4 sm:mb-6 mb-4">
-        {logoUri ? (
-          <>
-            <div className="sm:hidden">
+      <div className="ctWrapper">
+        <div className="relative sm:h-[215px] h-[235px]">
+          <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
+            {/* "FE_TODO: You may need to adjust these sizes." */}
+            { introImageUri ? (
               <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border border-zinc-200"
-                alt={"revnet logo"}
-                width={120}
-                height={10}
+                src={ipfsUriToGatewayUrl(introImageUri)}
+                alt={"project header image"}
+                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                width={600}
+                height={400}
               />
-            </div>
-            <div className="sm:block hidden">
+            ) : (
               <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="overflow-hidden block border border-zinc-200"
-                alt={"revnet logo"}
-                width={144}
-                height={144}
+                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" 
+                alt="placeholder header image"
+                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                width={600}
+                height={400}
               />
-            </div>
-          </>
-        ) : (
-          <div className="rounded bg-zinc-100 h-36 w-36 flex items-center justify-center">
-            <ForwardIcon className="h-5 w-5 text-zinc-700" />
-          </div>
-        )}
-
-        <div>
-          <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-            <span className="text-3xl font-bold">
-              {token?.data ? (
-                <EtherscanLink value={token.data.address} type="token">
-                  {formatTokenSymbol(token)}
-                </EtherscanLink>
-              ) : null}
-            </span>
-            <div className="text-sm flex gap-2 items-baseline">
-              <h1 className="text-2xl font-medium">{projectName}</h1>
-            </div>
-            <div className="text-sm flex gap-2 items-baseline">
-              {suckers?.map((pair) => {
-                if (!pair) return null;
-
-                const networkSlug =
-                  JB_CHAINS[pair?.peerChainId as JBChainId].slug;
-                return (
-                  <Link
-                    className="underline"
-                    key={networkSlug}
-                    href={`/${networkSlug}:${pair.projectId}`}
-                  >
-                    <ChainLogo
-                      chainId={pair.peerChainId as JBChainId}
-                      width={18}
-                      height={18}
-                    />
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-          <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
-            <TvlDatum />
-            <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {contributorsCount ?? 0}
-              </span>{" "}
-              <span className="text-zinc-500">
-                {contributorsCount === 1 ? "owner" : "owners"}
-              </span>
-            </div>
-            {/* <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {`${prettyNumber(totalSupplyFormatted ?? 0)}`}
-              </span>{" "}
-              <span className="text-zinc-500">{formatTokenSymbol(token)} outstanding</span>
-            </div> */}
-            {/* <div className="sm:text-xl text-lg">
-              <span className="font-medium text-black-500">
-                {!cashOutLoading
-                  ? `$${Number(cashOutValue).toFixed(4)}`
-                  : "..."}
-              </span>{" "}
-              <span className="text-zinc-500">cash out value</span>
-            </div> */}
+            )}
           </div>
         </div>
       </div>
+      <div className="ctWrapper flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
+        <div className="mx-4">
+          {logoUri ? (
+            <>
+              <div className="sm:hidden">
+                <Image
+                  src={ipfsUriToGatewayUrl(logoUri)}
+                  className="overflow-hidden block border-[3px] border-background rounded-xl"
+                  alt={"revnet logo"}
+                  width={120}
+                  height={10}
+                />
+              </div>
+              <div className="sm:block hidden">
+                <Image
+                  src={ipfsUriToGatewayUrl(logoUri)}
+                  className="overflow-hidden block border-[4px] border-background rounded-2xl"
+                  alt={"revnet logo"}
+                  width={144}
+                  height={144}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="rounded bg-[var(--card)] h-36 w-36 flex items-center justify-center">
+              <Image
+                  src="./assets/img/branding/icon.svg"
+                  alt={"Inevitable Logo"}
+                  width={24}
+                  height={24}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="w-full">
+          <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
+            <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
+              <div className="text-sm flex flex-wrap gap-x-2 items-baseline">
+                <h1 className="text-2xl sm:text-3xl font-light">{projectName}</h1>
+                <h5 className="text-cerulean text-base">
+                  <a href={`https://x.com/@${twitter}`}>@{twitter}</a>
+                </h5>
+              </div>
+            </div>
+          </div>
+          <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
+            <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="h-fit flex items-center">
+                  <h3 className="text-2xl font-semibold tracking-wider">
+                    Ξ{project?.volume ? parseFloat(formatEther(BigInt(project.volume))).toFixed(2) : "0.00"}
+                  </h3>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Raised</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="h-fit flex items-center">
+                  <h3 className="text-2xl font-semibold tracking-wider w-full">
+                    {suckerGroupData?.totalCount ?? <div className="activeSkeleton h-[32px] max-w-[142px] w-full rounded-md"/> }
+                  </h3>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Payments</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="h-fit flex items-center">
+                  <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
+                    { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <div className="activeSkeleton h-[24px] w-[64px] !bg-transparent rounded-md"/> }
+                  </div>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Weekly Vol Change</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="h-fit flex items-center">
+                  <h3 className="w-full">
+                    {project?.owner ? (
+                    <EthereumAddress
+                      address={project?.owner as Address}
+                      short
+                      withEnsAvatar={false}
+                      withEnsName
+                      avatarProps={{ size: "sm" }} 
+                      className="text-xl font-light"
+                    />
+                    ) : (
+                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
+                    )
+                    }
+                  </h3>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Owner</p>
+              </div>
+
+              <div className="bg-grey-450 p-[20px] rounded-2xl">
+                <div className="h-fit flex items-center">
+                  <h3 className="text-xl font-light">
+                    {project?.createdAt ? (
+                      formatDate(new Date(project.createdAt * 1000), true)
+                    ) : (
+                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
+                    )
+                    }
+                  </h3>
+                </div>
+                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Date Created</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div 
+          className="absolute z-[-10] w-screen flex justify-center items-center overflow-hidden"
+          style={{ transform: "translateY(-60%)" }}
+        >
+          {/* Left cloud - shifted slightly right */}
+          <img 
+            className="z-[-10] select-none w-screen" 
+            src="/assets/img/clouds/dao_cloud_left.png" 
+            style={{ transform: "translateX(-40%)" }}
+          />
+
+          {/* Right cloud - shifted slightly left */}
+          <img 
+            className="z-[-10] select-none w-screen" 
+            src="/assets/img/clouds/dao_cloud_right.png" 
+            style={{ transform: "translateX(40%)" }}
+          />
+        </div>
     </header>
   );
 }

@@ -22,7 +22,7 @@ export function DetailsPage({
 
   return (
     <>
-      <h1 className="mb-16 text-2xl md:col-span-3 font-semibold">
+      <h1 className="mb-2 text-3xl md:col-span-3 font-semibold">
         Design and deploy a fundraise
       </h1>
       <div className="md:col-span-1">
@@ -30,7 +30,7 @@ export function DetailsPage({
       </div>
       <div className="md:col-span-2">
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] sm:gap-6">
-          <FieldGroup id="name" name="name" label="Name" disabled={disabled} />
+          <FieldGroup id="name" placeholder="Project Name" name="name" label="Name" disabled={disabled} />
           <FieldGroup
             id="tokenSymbol"
             name="tokenSymbol"
@@ -45,7 +45,7 @@ export function DetailsPage({
           />
           <div>
             <label
-              className="block mb-1 text-md font-semibold text-gray-900 dark:text-white"
+              className="block mb-1 text-md font-semibold dark:text-white"
               htmlFor="file_input"
             >
               Logo
@@ -63,8 +63,8 @@ export function DetailsPage({
           name="description"
           label="About"
           component="textarea"
-          rows={2}
-          className="max-w-lg"
+          rows={4}
+          className="max-w-lg resize-none"
           placeholder="What is the gist?"
           disabled={disabled}
         />

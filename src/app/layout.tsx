@@ -1,30 +1,56 @@
-import { Footer } from "@/components/layout/Footer";
+import { Nav } from "@/components/layout/Nav";
+import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "./providers";
+import { geistSans, optima } from "@/components/fonts/fonts";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
-import { Providers } from "./providers";
-import { headers } from "next/headers";
+
+/*import { headers } from "next/headers";
 import type { Metadata } from "next";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers();
+  const host = headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const origin = `${proto}://${host}`;
 
-import localFont from "next/font/local";
+  const fullPath = "/";
+  const url = new URL(fullPath, origin);
 
-const simplonNorm = localFont({
-  src: [
-    { path: "../../public/fonts/SimplonNorm-Light.otf", weight: "400" },
-    { path: "../../public/fonts/SimplonNorm-Regular.otf", weight: "500" },
-    { path: "../../public/fonts/SimplonNorm-Bold.otf", weight: "700" },
-  ],
-  variable: "--font-simplon-norm",
-});
-const simplonMono = localFont({
-  src: [
-    { path: "../../public/fonts/SimplonMono-Light.otf", weight: "400" },
-    { path: "../../public/fonts/SimplonMono-Regular.otf", weight: "500" },
-    { path: "../../public/fonts/SimplonMono-Bold.otf", weight: "700" },
-  ],
-  variable: "--font-simplon-mono",
-});
+  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
+
+  return {
+    title: "Inevitable Protocol | Home", 
+    description: "Begin your journey. Build the future of life—together.",
+    alternates: {
+      canonical: url, 
+    },
+    openGraph: {
+      title: "Inevitable Protocol | Home", 
+      description: "Begin your journey. Build the future of life—together.", 
+      siteName: "Inevitable Protocol", 
+      images: [
+        {
+          url: imgUrl, 
+          width: 700,
+          height: 370,
+          alt: "Inevitable preview image",
+        },
+      ],
+      url: url,
+      type: "website",
+    },
+    twitter: {
+      title: "Inevitable Protocol | Home",
+      description: "Begin your journey. Build the future of life—together.",
+      card: "summary_large_image",
+      images: [imgUrl],
+    },
+    manifest: "/manifest/manifest.json",
+    keywords: "Inevitable, Inevitable Protocol", 
+  };
+}*/
 
 export const revalidate = 300;
 
@@ -36,79 +62,35 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/assets/img/small-bw.svg" />
-        <link rel="apple-touch-icon" href="/assets/img/small-bw.svg" />
+        {/*<link rel="apple-touch-icon" href="/assets/img/small-bw.svg" />*/}
+        {/* Light theme favicon */}
+        <link
+          rel="icon"
+          href="/assets/img/branding/favicon-light.ico"
+          media="(prefers-color-scheme: light)"
+        />
+        {/* Dark theme favicon */}
+        <link
+          rel="icon"
+          href="/assets/img/branding/favicon-dark.ico"
+          media="(prefers-color-scheme: dark)"
+        />
       </head>
       <body
         className={twMerge(
-          simplonNorm.variable,
-          simplonMono.variable,
-          "bg-zinc-25 text-zinc-950 font-sans min-h-screen tracking-[0.015em]"
+          geistSans.variable,
+          optima.variable,
+          "font-sans min-h-screen tracking-[0.015em]"
         )}
       >
           <Providers>
-          <main className="min-h-screen">{children}</main>
-          <Footer />
+            <Nav />
+            <main className="min-h-screen">{children}</main>
+            <Footer />
           </Providers>
 
         <Toaster />
       </body>
     </html>
   );
-}
-
-
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
-
-  // For the root layout, our fullPath is '/'
-  const fullPath = "/";
-  const url = new URL(fullPath, origin);
-
-  const imgUrl = `${origin}/assets/img/anachronistic1-1.png`;
-
-  const frame = {
-    version: "next",
-    imageUrl: imgUrl,
-    button: {
-      title: "Discover revenue tokens",
-      action: {
-        type: "launch_frame",
-        name: "Revnet",
-        url: url.href,
-        splashImageUrl: `${origin}/assets/img/small-bw-200x200.png`,
-        splashBackgroundColor: "#ffffff",
-      },
-    },
-  };
-
-  return {
-    title: "Revnet",
-    openGraph: {
-      title: "Revnet",
-      description: "Explore onchain revenue networks",
-      url: url.href,
-      images: [
-        {
-          url: imgUrl,
-          width: 1200,
-          height: 800,
-          alt: "Revnet preview image",
-        },
-      ],
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Revnet",
-      description: "Explore onchain revenue networks",
-      images: [imgUrl],
-    },
-    other: {
-      "fc:frame": JSON.stringify(frame),
-    },
-  };
 }

@@ -16,22 +16,16 @@ interface ProjectsQueryResult {
 
 export const revalidate = 300;
 
-function truncate(str: string, max = 32): string {
-  return str.length > max ? str.slice(0, max - 1) + "…" : str;
-}
-
 function buildMetadata({
   title,
   description,
   imageUrl,
   url,
-  frame,
 }: {
   title: string;
   description: string;
   imageUrl: string;
   url: string;
-  frame?: object;
 }): Metadata {
   return {
     title,
@@ -48,7 +42,6 @@ function buildMetadata({
       description,
       images: [imageUrl],
     },
-    other: frame ? { "fc:frame": JSON.stringify(frame) } : {},
   };
 }
 
@@ -145,24 +138,11 @@ export async function generateMetadata({
 
   if (!slugPath.includes(":")) {
     const url = new URL(`/${slugPath}`, origin);
-    const title = "Revnet";
-    const description = "Explore onchain revenue networks";
-    const imageUrl = `${origin}/assets/img/anachronistic1-1.png`;
-    const frame = {
-      version: "next",
-      imageUrl,
-      button: {
-        title: "Support project",
-        action: {
-          type: "launch_frame",
-          name: "Revnet",
-          url: url.href,
-          splashImageUrl: `${origin}/assets/img/small-bw-200x200.png`,
-          splashBackgroundColor: "#ffffff",
-        },
-      },
-    };
-    return buildMetadata({ title, description, imageUrl, url: url.href, frame });
+    const title = "Inevitable Protocol";
+    const description = "Begin your journey. Build the future of life—together.";
+    const imageUrl = `${origin}/assets/img/branding/seo_banner.png`;
+    
+    return buildMetadata({ title, description, imageUrl, url: url.href });
   }
 
   const fullPath = `/${slugPath}`;
@@ -172,29 +152,13 @@ export async function generateMetadata({
   const project = slugPath ? await getProjectMetadata(slugPath) : null;
   const projectName = project ? project.handle : "project";
 
-  let imgUrl = project?.logoUri || `${origin}/assets/img/anachronistic1-1.png`;
-
-  const frame = {
-    version: "next",
-    imageUrl: imgUrl,
-    button: {
-      title: truncate(`Support ${projectName}`),
-      action: {
-        type: "launch_frame",
-        name: "Revnet",
-        url: url.href,
-        splashImageUrl: `${origin}/assets/img/small-bw-200x200.png`,
-        splashBackgroundColor: "#ffffff",
-      },
-    },
-  };
+  let imgUrl = project?.logoUri || `${origin}/assets/img/branding/seo_banner.png`;
 
   return buildMetadata({
-    title: "Revnet",
-    description: "Explore onchain revenue networks",
+    title: "Inevitable Protocol",
+    description: "Begin your journey. Build the future of life—together.",
     imageUrl: imgUrl,
     url: url.href,
-    frame,
   });
 }
 

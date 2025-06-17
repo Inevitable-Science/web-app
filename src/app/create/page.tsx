@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 
 import { Nav } from "@/components/layout/Nav";
 import { useToast } from "@/components/ui/use-toast";
@@ -102,7 +102,7 @@ export default function Page() {
 
   return (
     <>
-      <Nav />
+      <Nav /> 
       <Formik
         initialValues={DEFAULT_FORM_DATA}
         onSubmit={(formData: RevnetFormData) => {
@@ -123,4 +123,59 @@ export default function Page() {
       </Formik>
     </>
   );
+}
+*/
+
+// app/create/page.tsx
+import CreateFundraiser from "./CreateFundraiser";
+
+import { headers } from "next/headers";
+import type { Metadata } from "next";
+import { metadata } from "@/lib/metadata"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers();
+  const host = headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const origin = `${proto}://${host}`;
+
+  const fullPath = "/";
+  const url = new URL(fullPath, origin);
+
+  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
+
+  return {
+    title: "Create Fundraiser | Inevitable Protocol", 
+    description: metadata.description,
+    alternates: {
+      canonical: url, 
+    },
+    openGraph: {
+      title: "Create Fundraiser | Inevitable Protocol", 
+      description: metadata.description, 
+      siteName: metadata.siteName, 
+      images: [
+        {
+          url: imgUrl, 
+          width: 700,
+          height: 370,
+          alt: "Inevitable preview image",
+        },
+      ],
+      url: url,
+      type: "website",
+    },
+    twitter: {
+      title: "Create Fundraiser | Inevitable Protocol",
+      description: metadata.description,
+      card: "summary_large_image",
+      images: [imgUrl],
+    },
+    manifest: metadata.manifest,
+    keywords: metadata.keywords, 
+  };
+}
+
+export default function Page() {
+  return <CreateFundraiser />;
 }

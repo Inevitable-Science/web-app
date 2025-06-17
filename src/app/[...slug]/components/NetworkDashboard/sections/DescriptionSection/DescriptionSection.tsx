@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify"
 import { useJBProjectMetadataContext } from "juice-sdk-react";
+import { DaoData } from "./AnalyticsPreview";
+import { SocialLinks } from "./SocialLinks";
+import { ChartSection } from "./ChartSection";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -22,7 +25,7 @@ const RichPreview = ({ source }: { source: string }) => {
     const purified = DOMPurify.sanitize(source)
     return (
       <div
-        className="break-words [&_a]:underline [&_a]:text-gray-600 [&_a:hover]:text-gray-800"
+        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:text-cerulean [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -34,14 +37,45 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 }
 
-export function DescriptionSection() {
+interface DaoData {
+  treasuryHoldings: string;
+  assetsUnderManagement: string | number;
+  totalHolders: string;
+  totalSupply: string | number;
+  latestPrice: number;
+  latestMarketCap: number;
+  tokenName: string;
+}
+
+interface DescriptionSectionProps {
+  analyticsError: string | null;
+  data: DaoData | null; // or undefined if it's not guaranteed to be passed yet
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export function DescriptionSection({ analyticsError, data, setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
-  const { description } = metadata?.data ?? {};
+  useEffect(() => {
+    console.log(analyticsError);
+  }, [analyticsError])
+
+  const { description, name } = metadata?.data ?? {};
 
   return (
-      <div className="mt-2 text-gray-600 text-sm">
-        <RichPreview source={description || ""} />
+      <div className="text-sm">
+        <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
+      
+        {/* TODO: No idea why this is showing a "0" when not loading. */}
+        {/* {!analyticsError && data?.latestMarketCap && (
+          <DaoData data={data} setSelectedTab={setSelectedTab} />
+        )} */}
+
+        <div className="mt-6">
+          <RichPreview source={description || name || "..."} />
+        </div>
+
+        <SocialLinks {...metadata}/>
       </div>
   );
 }

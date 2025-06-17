@@ -23,24 +23,24 @@ export function ChainOperator({ disabled = false }: { disabled?: boolean }) {
         name="operator"
         render={() => (
           <div className="mb-8">
-            <div className="text-sm text-zinc-500">
+            <div className="text-sm text-muted-foreground">
               Confirm the operator's address for each chain.
             </div>
-            <div className="text-sm text-zinc-500">
+            <div className="text-sm text-muted-foreground">
               Operators can re-route splits within the split limit of each stage and edit the name, logo, and description of the revnet.
             </div>
-            <div className="text-sm text-zinc-500 mb-4">
+            <div className="text-sm text-muted-foreground mb-4">
               If the operator is the same address that initially deploys the revnet now, it can deploy the revnet to new chains later on.
             </div>
-            <div className="flex mb-2 text-sm font-semibold text-zinc-500">
+            <div className="flex mb-2 text-sm font-semibold">
               <div className="w-48">Chain</div>
               <div>Address</div>
             </div>
             {sortChains(values.chainIds).map((chain, chainIndex) => (
-              <div key={chainIndex} className="flex items-center text-md text-zinc-600 mt-4">
+              <div key={chainIndex} className="flex items-center text-md mt-4">
                 <div className="flex gap-2 items-center w-48 text-sm">
                   <ChainLogo chainId={chain} width={25} height={25} />
-                  <div className="text-zinc-400">{JB_CHAINS[chain].name}</div>
+                  <div className="text-white">{JB_CHAINS[chain].name}</div>
                 </div>
                 <Field
                   id={`operator.${chainIndex}.address`}

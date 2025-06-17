@@ -11,7 +11,7 @@ export function Field({ address, width, ...props }: FieldAttributes<any> & { add
       <div className={twMerge("relative", width ?? "w-full")}>
         {props.prefix ? (
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <span className="text-zinc-500 sm:text-md">{props.prefix}</span>
+            <span className="text-white sm:text-md">{props.prefix}</span>
           </div>
         ) : null}
         <FormikField
@@ -19,7 +19,7 @@ export function Field({ address, width, ...props }: FieldAttributes<any> & { add
           pattern={address ? "^0x[a-fA-F0-9]{40}$" : undefined}
           onWheel={(e: any) => e.target.blur()} // Prevents scrolling on number input
           className={twMerge(
-            "flex w-full border border-zinc-200 bg-white px-3 py-1.5 text-md ring-offset-white file:border-0 file:bg-transparent file:text-md file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300",
+            "flex w-full rounded background-color border border-color px-3 py-1.5 text-md ring-offset-white file:border-0 file:bg-transparent file:text-md file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300",
             props.prefix ? "pl-6" : "",
             props.className
           )}
@@ -30,7 +30,7 @@ export function Field({ address, width, ...props }: FieldAttributes<any> & { add
               "pointer-events-none absolute inset-y-0 right-0 flex items-center px-3"
             )}
           >
-            <span className="text-zinc-500 sm:text-md">{props.suffix}</span>
+            <span className="text-white sm:text-md">{props.suffix}</span>
           </div>
         ) : null}
       </div>
@@ -41,7 +41,7 @@ export function Field({ address, width, ...props }: FieldAttributes<any> & { add
       {...props}
       pattern={address ? "^0x[a-fA-F0-9]{40}$" : undefined}
       className={twMerge(
-        "flex border border-zinc-200 bg-white px-3 py-1.5 text-md ring-offset-white file:border-0 file:bg-transparent file:text-md file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300",
+        "flex background-color border border-color px-3 py-1.5 text-md ring-offset-white rounded file:border-0 file:bg-transparent file:text-md file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300",
         width ?? "w-full",
         props.className
       )}
@@ -66,7 +66,7 @@ export function FieldGroup(
         {props.label}
       </label>
       {props.description ? (
-        <p className="text-md text-zinc-600 mb-3">{props.description}</p>
+        <p className="text-md mb-3">{props.description}</p>
       ) : null}
       <Field {...props} />
     </div>

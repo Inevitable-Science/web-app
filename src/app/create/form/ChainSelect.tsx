@@ -76,16 +76,16 @@ export function ChainSelect({
     <>
       <div className="md:col-span-1">
         <h2 className="font-bold text-lg mb-2">2. Deploy</h2>
-        <p className="text-zinc-600 text-lg">
+        <p className="text-muted-foreground text-lg">
           Pick which chains your revnet will accept money on and issue{" "}
           {revnetTokenSymbol} from.
         </p>
-        <p className="text-zinc-600 text-lg mt-2">
+        <p className="text-muted-foreground text-lg mt-2">
           Holders of {revnetTokenSymbol} can cash out on any of the selected
           chains, and can move their {revnetTokenSymbol} between chains at any
           time.
         </p>
-        <p className="text-zinc-600 text-lg mt-2">
+        <p className="text-muted-foreground text-lg mt-2">
           The Operator you set in your revnet's terms will also be able to add
           new chains to the revnet later.
         </p>

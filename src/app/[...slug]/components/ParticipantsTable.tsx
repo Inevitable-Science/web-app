@@ -27,7 +27,7 @@ export function ParticipantsTable({
 }) {
 
   if (participants.length === 0) return (
-    <div className="text-center text-zinc-400">
+    <div className="text-center text-muted-foreground">
       No owners yet. Pay in to become an owner.
     </div>
   );

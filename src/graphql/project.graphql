@@ -5,6 +5,18 @@ query Project($projectId: Float!, $chainId: Float!) {
     handle
     createdAt
     suckerGroupId
+    owner
+    volume
+    paymentsCount
+  }
+}
+
+query ParticipantSnapshotsInRange($where: participantSnapshotFilter) {
+  participantSnapshots(where: $where, limit: 1000, orderBy: "timestamp", orderDirection: "asc") {
+    items {
+      volume
+      timestamp
+    }
   }
 }
 

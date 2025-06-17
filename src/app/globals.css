@@ -19,12 +19,117 @@
       border-right: 1px solid theme('colors.zinc.400');
       padding: 0 theme('spacing.7')
     }
+}
+
+@layer base {
+  body {
+    color: var(--foreground);
   }
+}
 
 ::selection {
   background: theme('colors.orange.200');
 }
 
+:root {
+  --radius: 0.625rem;
+  --background: #121212;
+  --foreground: #FFFFFF;
+  --card: #121212;
+  --card-foreground: #FFFFFF;
+  --popover: #121212;
+  --popover-foreground: #FFFFFF;
+  --primary: #FBE8BD;
+  --primary-foreground: #000000;
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: #B4B4B4;
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: #BB4430;
+  --border: #606060;
+  --input: #121212;
+  --ring: oklch(0.708 0 0);
+
+  /* Accent Colors */
+  --light-gold: #FBE8BD;
+  --dark-slate-grey: #315659;
+  --gunmetal: #253031;
+  --cerulean: #2978A0;
+  --columbia-blue: #C6E0FF;
+
+  /* Tone Colors */
+  --grey-50: #B4B4B4;
+  --grey-100: #7B7B7B;
+  --grey-450: #1F1F1F;
+  --grey-500: #303030;
+}
+
 body {
-  background-color: white;
+  /*background-color: white;*/
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.ctWrapper {
+  @apply max-w-[1400px] mx-auto px-[24px];
+}
+
+.background-color{
+  @apply bg-[var(--background)];
+}
+
+.border-color{
+  @apply border-[var(--border)];
+}
+
+.text-color{
+  @apply text-foreground;
+}
+
+.activeSkeleton{
+  background: linear-gradient(
+    100deg,
+    rgba(152, 130, 130, 0) 40%,
+    var(--border) 50%,
+    rgba(106, 96, 96, 0) 60%
+  ) var(--grey-450);
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 1s skeletonAnimation ease-in-out infinite;
+}
+
+@keyframes skeletonAnimation {
+  to {
+    background-position-x: -20%;
+  }
+}
+
+/* Home and Nav Styles */
+
+.dGrid > div {
+  @apply bg-cover bg-center p-[20px] flex flex-col justify-between rounded-2xl;
+}
+
+@media (max-width:370px) {
+  .logoNavSvg {
+    display: none;
+  }
+}
+
+@media (min-width:370px) {
+  .iconNavSvg {
+    display: none;
+  }
+}
+
+@media (max-width:880px) and (min-width:769px) {
+  .logoNavSvg {
+    display: none !important;
+  }
+
+  .iconNavSvg {
+    display: block !important;
+  }
 }

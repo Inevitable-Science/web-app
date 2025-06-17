@@ -1,15 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Nav } from "@/components/layout/Nav";
 import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
 import { sdk } from "@farcaster/frame-sdk";
+import { notFound as triggerNotFound } from 'next/navigation';
 
 export default function Page({ params }: { params: { slug?: string[] } }) {
   const [projectId, setProjectId] = useState<bigint | undefined>(undefined);
   const [chainId, setChainId] = useState<JBChainId | undefined>(undefined);
   const [notFound, setNotFound] = useState(false);
+  
+  const [initialized, setInitialized] = useState(false);
 
   const [user, setUser] = useState<{ fid: number; pfp: string; userName: string } | null>(null);
 
@@ -50,26 +52,28 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
       setNotFound(true);
       setProjectId(undefined);
       setChainId(undefined);
-    }
+    } finally {
+    setInitialized(true);
+  }
   }, [params.slug]);
 
-  if (notFound || !projectId || !chainId) {
+  if (initialized && (notFound || !projectId || !chainId)) {
+    triggerNotFound();
+  }
+
+  /*if (notFound || !projectId || !chainId) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
         {notFound ? "Not found" : "Loading..."}
       </div>
     );
-  }
+  }*/
 
-  return (
-    <Providers chainId={chainId} projectId={projectId}>
-      <Nav />
-      {user?.pfp && (
-        <div className="flex items-center mb-4">
-          <span className="px-4 text-lg">Hello {user.userName}!</span>
-        </div>
-      )}
-      <NetworkDashboard />
-    </Providers>
-  );
+  if (initialized && chainId && projectId) {
+    return (
+      <Providers chainId={chainId} projectId={projectId}>
+        <NetworkDashboard />
+      </Providers>
+    );
+  }
 }

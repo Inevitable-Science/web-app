@@ -39,6 +39,73 @@ export function formatSeconds(seconds: number, precision = 2, compact = false) {
   });
 }
 
+export function truncateAddress(address: Address) {
+  if (address === null) return "-- --";
+  if (address.length <= 10) return address; 
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};  
+
+export function formatNumber(num: number | null, compact: boolean = false): string {
+  if (num === null || isNaN(num)) return "--";
+
+  if (num === 0) return "0";
+
+  if (compact) {
+    const absNum = Math.abs(num);
+
+    if (absNum < 1000) {
+      return num.toString();
+    }
+
+    const units = ["", "K", "M", "B", "T"];
+    const unitIndex = Math.floor(Math.log10(absNum) / 3);
+
+    if (unitIndex >= units.length) return num.toExponential(2); // fallback for very large numbers
+
+    const shortNum = num / Math.pow(10, unitIndex * 3);
+    const rounded = Math.round(shortNum * 10) / 10; // one decimal place
+
+    return `${rounded}${units[unitIndex]}`;
+  } else {
+    if (Math.abs(num) >= 10) {
+      return Math.round(num).toLocaleString(); // Use commas, no decimals
+    }
+
+    const digits = 2;
+    const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+    const rounded = Math.round(num * factor) / factor;
+
+    return rounded.toString();
+  }
+}
+
+export function formatDate(
+  input?: Date | string | null,
+  short: boolean = false
+): string {
+  if (!input) return '--';
+
+  const date = input instanceof Date ? input : new Date(input);
+  if (isNaN(date.getTime())) return '--'; // Invalid date
+
+  const options: Intl.DateTimeFormatOptions = short
+    ? {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }
+    : {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: true,
+      };
+
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
 export function etherscanLink(
   addressOrTxHash: string,
   opts: {
