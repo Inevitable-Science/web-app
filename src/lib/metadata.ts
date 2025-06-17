@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+/*import { headers } from "next/headers";
 import type { Metadata } from "next";
 
 interface MetadataProps {
@@ -17,7 +17,7 @@ export const metadata = generateMetadata({
   imageUrl: "/assets/img/branding/about_banner.png",
   keywords: ["Inevitable Protocol", "About", "Mission"],
 });
-*/
+* /
 
 export async function generateMetadata({
   title = "Inevitable Protocol",
@@ -71,4 +71,11 @@ export async function generateMetadata({
     manifest: "/manifest/manifest.json",
     keywords,
   };
-}
+}*/
+
+export const metadata = {
+  keywords: "Inevitable, Inevitable Protocol, Inevitable Sciences",
+  manifest: "/manifest/manifest.json",
+  description: "Begin your journey. Build the future of life—together.",
+  siteName: "Inevitable Protocol",
+};

@@ -97,14 +97,55 @@ export default function Articles() {
   );
 }*/
 
-import { generateMetadata } from "@/lib/metadata";
 import articleSchema, { Article } from "./Articles";
 import ArticlesClient from "./ArticlesClient";
 
-export const metadata = generateMetadata({
-  title: "Articles | Inevitable Protocol",
-  path: "/articles",
-});
+import { headers } from "next/headers";
+import type { Metadata } from "next";
+import { metadata } from "@/lib/metadata"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers();
+  const host = headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const origin = `${proto}://${host}`;
+
+  const fullPath = "/";
+  const url = new URL(fullPath, origin);
+
+  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
+
+  return {
+    title: "Articles | Inevitable Protocol", 
+    description: metadata.description,
+    alternates: {
+      canonical: url, 
+    },
+    openGraph: {
+      title: "Articles | Inevitable Protocol", 
+      description: metadata.description, 
+      siteName: metadata.siteName, 
+      images: [
+        {
+          url: imgUrl, 
+          width: 700,
+          height: 370,
+          alt: "Inevitable preview image",
+        },
+      ],
+      url: url,
+      type: "website",
+    },
+    twitter: {
+      title: "Articles | Inevitable Protocol",
+      description: metadata.description,
+      card: "summary_large_image",
+      images: [imgUrl],
+    },
+    manifest: metadata.manifest,
+    keywords: metadata.keywords, 
+  };
+}
 
 export default function Articles() {
   // Sort articles by date (latest first) on server
