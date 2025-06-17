@@ -182,7 +182,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
   if (isInitialLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin h-12 w-12" />
+        <Loader2 className="animate-spin h-10 w-10" />
       </div>
     );
   }

@@ -110,7 +110,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
 
     // Case 1: Continuous cycle. Highest priority.
     if (duration === 0) {
-      return 'Continuous';
+      return 'Unlocked';
     }
 
     // Case 2: Cycle has already ended.
@@ -249,20 +249,21 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
             <p className="text-sm text-muted-foreground font-light uppercase">Overflow</p>
           </div>
         </div>
-        <div className="background-color p-[16px] rounded-xl">
+        {/*<div className="background-color p-[16px] rounded-xl">
           <p className="text-sm text-muted-foreground font-light uppercase">Payouts</p>
             <SplitsSection/>
-          {!analyticsError && (
-            <Button 
-              onClick={() => setSelectedTab("treasury")}
-              variant="link" 
-              className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-            >
-              Treasury Stats
-              <ArrowRightIcon height="20" width="20" />
-            </Button>
-          )}
-        </div>
+
+            {!analyticsError && (
+              <Button 
+                onClick={() => setSelectedTab("treasury")}
+                variant="link" 
+                className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+              >
+                Treasury Stats
+                <ArrowRightIcon height="20" width="20" />
+              </Button>
+            )}
+        </div>*/}
       </div>
     </div>
   );

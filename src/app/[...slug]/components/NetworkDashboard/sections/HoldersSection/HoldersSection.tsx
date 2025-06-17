@@ -176,7 +176,8 @@ export function HoldersSection() {
         <div className="bg-grey-450 p-[12px] rounded-2xl">
           <div className="background-color p-[16px] rounded-xl mt-2">
             <h3 className="text-xl">
-              {parseFloat(totalBalance.value.toString()).toFixed(4)}
+              {/*{parseFloat(totalBalance.value.toString()).toFixed(4)}*/}
+              {formatNumber(Number(totalBalance.value), false)}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               {tokenSymbol!= "$TOKEN" ? `Your ${tokenSymbol}` : "Your Balance"}

@@ -75,7 +75,7 @@ export async function generateMetadata({
 
 export const metadata = {
   keywords: "Inevitable, Inevitable Protocol, Inevitable Sciences",
-  manifest: "/manifest/manifest.json",
+  manifest: "/manifest.json",
   description: "Begin your journey. Build the future of life—together.",
   siteName: "Inevitable Protocol",
 };
