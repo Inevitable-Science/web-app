@@ -1,24 +1,70 @@
-[![revnet badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapp.revnet.eth.sucks%2Fapi%2Fdata%2Fshields%3FprojectId%3D3%26chainId%3D1&query=%24.message&label=Revnet%20Network&cacheSeconds=3600)](https://app.revnet.eth.sucks/base:3)
+# Inevitable Protocol
 
+**Inevitable Protocol** is a decentralized web application (dApp) built for the emerging field of DeSci (Decentralized Science). It enables scientific projects and organizations fundraise, transparently and credibly onchain.
 
-This is a [wagmi](https://wagmi.sh) + [ConnectKit](https://docs.family.co/connectkit) + [Next.js](https://nextjs.org) + Tailwind + [Juicebox](https://juicebox.money) project.
+---
 
-# Getting Started
+## ✨ Tech Stack
 
-1. Create a `.env` file and set environment variables (use `.env.example` as a starting point).
-1. Install dependencies:
+- [**wagmi**](https://wagmi.sh) — React hooks for Ethereum
+- [**ConnectKit**](https://docs.family.co/connectkit) — Wallet connector UI
+- [**Next.js**](https://nextjs.org) — React framework for SSR and routing
+- [**Tailwind CSS**](https://tailwindcss.com) — Utility-first CSS
+- [**Juicebox Protocol**](https://juicebox.money) — Smart Contract Provider
 
-   ```
-   npm install
-   ```
+---
 
-1. Run the app:
+## 🚀 Getting Started
 
-   ```
-   npm run dev
-   ```
+### 1. Set up your environment
 
-## Resource
+Copy the example environment config and adjust as needed:
 
-- Revnet deployer: https://github.com/rev-net/revnet-contracts/blob/main/broadcast/Deploy.s.sol/11155111/run-latest.json
-- JBv4 https://github.com/Bananapus/juice-contracts-v4/blob/main/broadcast/Deploy.s.sol/11155111/run-latest.json
+```bash
+cp .env.example .env
+```
+Fill in required values in `.env`, such as API keys, contract addresses, and chain configuration.
+
+### 2. Install dependencies
+
+`npm install` 
+
+### 3. Run the development server
+
+`npm run dev` 
+
+Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+
+----------
+
+## 📦 Contracts & Deployments
+
+-   **Revnet deployer output:**  
+    [`revnet-contracts/run-latest.json`](https://github.com/rev-net/revnet-contracts/blob/main/broadcast/Deploy.s.sol/11155111/run-latest.json)
+    
+-   **Juicebox v4 deployer:**  
+    [`juice-contracts-v4/run-latest.json`](https://github.com/Bananapus/juice-contracts-v4/blob/main/broadcast/Deploy.s.sol/11155111/run-latest.json)
+    
+
+----------
+
+## 🤝 Acknowledgements
+
+-   Forked from the [**Revnet**](https://github.com/rev-net) ecosystem — a protocol for decentralized omnichain fundraising.
+    
+-   Built with help from the [**Juicebox Protocol**](https://juicebox.money) — enabling flexible onchain project funding.
+    
+-   Made possible by the open-source Ethereum, wagmi, and web3 communities.
+    
+
+----------
+
+## 🧪 What is Inevitable Protocol?
+
+> Inevitable Protocol is a modular, composable framework for **decentralized science funding** — enabling open, credible, and unstoppable science.
+
+----------
+
+## 📄 License
+
+MIT © [Inevitable Protocol](https://inevitable.science)
