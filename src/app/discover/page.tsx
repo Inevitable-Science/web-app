@@ -138,7 +138,7 @@ export default function Page() {
       )}
       <div className="flex flex-col items-left justify-left">
         <Image
-          src="/assets/img/revnet-full-bw.svg"
+          src="/assets/img/branding/logo.svg"
           width={840}
           height={240}
           alt="Revnet logo"

@@ -25,7 +25,7 @@ export async function GET() {
         "homeUrl": `${externalBaseUrl}`,
         "imageUrl": `${externalBaseUrl}/assets/img/anachronistic1-1.png`,
         "buttonTitle": "Discover Revenue Tokens",
-        "splashImageUrl": `${externalBaseUrl}/assets/img/small-bw-200x200.png`,
+        "splashImageUrl": `${externalBaseUrl}/assets/img/branding/manifest/android-chrome-192x192.png`,
         "splashBackgroundColor": "#ffffff",
         "webhookUrl": `https://webhooks.pingem.xyz/f/41ium`,
       }
