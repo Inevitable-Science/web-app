@@ -19,8 +19,8 @@
   "dependencies": {
     "@cowprotocol/widget-react": "^0.13.0",
     "@farcaster/frame-node": "^0.0.20",
-    "@farcaster/frame-sdk": "^0.0.45",
-    "@farcaster/frame-wagmi-connector": "^0.0.22",
+    "@farcaster/frame-sdk": "^0.0.64",
+    "@farcaster/frame-wagmi-connector": "^0.0.53",
     "@heroicons/react": "^2.0.18",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-dialog": "^1.0.5",
