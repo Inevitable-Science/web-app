@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
 import {
   JBChainId,
+  useJBChainId,
   useJBRulesetContext,
   useJBTokenContext,
   useSuckers
@@ -31,7 +32,8 @@ export function TransactionCard() {
   const [memo, setMemo] = useState("");
 
   const tokenA = useTokenA();
-  const { address, chain: activeChain } = useAccount(); // Get user's wallet and chain
+  const { address } = useAccount(); // Get user's wallet and chain
+  const activeChain = useJBChainId();
   const { switchChain } = useSwitchChain();
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
 
@@ -47,7 +49,7 @@ export function TransactionCard() {
     // Only set default if context has no value and suckers have loaded
     if (!selectedSucker && suckers && suckers.length > 0) {
       const defaultSucker = activeChain 
-        ? suckers.find(s => s.peerChainId === activeChain.id) 
+        ? suckers.find(s => s.peerChainId === activeChain) 
         : undefined;
       setSelectedSucker(defaultSucker || suckers[0]);
     }
@@ -107,7 +109,7 @@ export function TransactionCard() {
     if (newSelectedSucker) {
       setSelectedSucker(newSelectedSucker);
     }
-    if (activeChain?.id !== newChainId && switchChain) {
+    if (activeChain !== newChainId && switchChain) {
       switchChain({ chainId: newChainId });
     }
   };
@@ -121,7 +123,7 @@ export function TransactionCard() {
     symbol: formatTokenSymbol(tokenB.symbol),
   };
   
-  const isChainMismatched = activeChain?.id !== selectedSucker?.peerChainId;
+  const isChainMismatched = activeChain !== selectedSucker?.peerChainId;
 
   return (
     <div className="bg-grey-450 flex flex-col p-[12px] rounded-xl">
