@@ -11,20 +11,25 @@ import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
 import { useNetworkData } from "../../NetworkDataContext";
 import {
-  useReadJbSplitsSplitsOf,
-  useSuckersUserTokenBalance
+  JBChainId,
+  useReadJbControllerPendingReservedTokenBalanceOf,
+  useSuckersUserTokenBalance,
+  jbControllerAbi,
+  useJBContractContext,
+  useReadJbSplitsSplitsOf
 } from "juice-sdk-react";
-import { JBProjectToken, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
+import { jbProjectDeploymentAddresses, JBProjectToken, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
 import { useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useBoostRecipient } from "@/hooks/useBoostRecipient";
+import { useSelectedSucker } from "../../../PayCard/SelectedSuckerContext";
+import { useFetchProjectRulesets } from "@/hooks/useFetchProjectRulesets";
 import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
-import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 
 type TableView = "you" | "all" | "splits" ;
 
 export function HoldersSection() {
-  const {project, token, metadata, ruleset, rulesetMetadata, chainId} = useNetworkData();
+  const {project, token, metadata, ruleset, rulesetMetadata, chainId, selectedSucker, suckers} = useNetworkData();
+  const { projectId } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
       ruleset: ruleset as  JBRulesetData,
       metadata: rulesetMetadata as JBRulesetMetadata,
@@ -95,9 +100,18 @@ export function HoldersSection() {
     });
   };
 
-  const reservedTokens = useAutoIssuances();
-  console.log("cycle", ruleset.cycleNumber)
-  const ownersTab = (view: TableView, label: string) => {
+  const { data: pendingReserveTokenBalance } =
+    useReadJbControllerPendingReservedTokenBalanceOf({
+      chainId: selectedSucker?.peerChainId,
+      address: selectedSucker?.peerChainId
+        ? (jbProjectDeploymentAddresses.JBController[
+            selectedSucker.peerChainId as JBChainId
+          ] as Address)
+        : undefined,
+      args: ruleset && selectedSucker ? [projectId] : undefined,
+    });
+      
+  /* const ownersTab = (view: TableView, label: string) => {
     return (
       <Button
         variant={participantsView === view ? "tab-selected" : "bottomline"}
@@ -110,7 +124,7 @@ export function HoldersSection() {
         {label}
       </Button>
     );
-  };
+  }; */
 
   /*return (
     <div>
@@ -216,7 +230,7 @@ export function HoldersSection() {
         </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {token.data && formatNumber(Number(formatUnits(totalOutstandingTokens, token.data?.decimals)), false)}
+              {project.tokenSupply ? formatNumber(Number(formatUnits(project.tokenSupply, 18))) : "Token Error"}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               Total Supply
@@ -228,10 +242,10 @@ export function HoldersSection() {
         <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {reservedTokens && ruleset.cycleNumber && token?.data?.decimals && formatNumber(Number(formatUnits(reservedTokens[ruleset.cycleNumber - 1].count, token.data?.decimals)))}
+              {pendingReserveTokenBalance && token.data?.decimals ? formatNumber(Number(formatUnits(pendingReserveTokenBalance, token.data?.decimals)), true) : 0}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
-              Reserved Tokens This Cycle
+              Pending Reserved Tokens
             </p>
           </div>
 
