@@ -2,6 +2,7 @@
 
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs";
 import { JBProjectProvider, JBChainId } from "juice-sdk-react";
+import { SelectedSuckerProvider } from "./components/PayCard/SelectedSuckerContext";
 
 export function Providers({
   children,
@@ -20,7 +21,9 @@ export function Providers({
         metadata: { ipfsGatewayHostname: OPEN_IPFS_GATEWAY_HOSTNAME },
       }}
     >
+      <SelectedSuckerProvider>
       {children}
+      </SelectedSuckerProvider>
     </JBProjectProvider>
   );
 }

@@ -26,11 +26,9 @@ import { SelectedSuckerProvider } from "../PayCard/SelectedSuckerContext";
 export function NetworkDashboard() {
   const { token } = useJBTokenContext();
   return (
-    <SelectedSuckerProvider>
     <NetworkDataProvider token={token}>
       <DashboardContent />
     </NetworkDataProvider>
-    </SelectedSuckerProvider>
   );
 }
 

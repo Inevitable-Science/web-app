@@ -6,8 +6,7 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
-  useReadJbSplitsSplitsOf,
-  JBChainId,
+  useReadJbRulesetsAllOf
 } from 'juice-sdk-react';
 import { Loader2 } from 'lucide-react';
 import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectMetadata } from 'juice-sdk-core';
@@ -20,6 +19,7 @@ import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } fro
 import { AsyncData } from 'juice-sdk-react/dist/contexts/types';
 import { type GetTokenReturnType } from '@wagmi/core'
 import { useBoostRecipient } from '@/hooks/useBoostRecipient';
+import { SelectedSuckerContextType, useSelectedSucker } from '../PayCard/SelectedSuckerContext';
 
 export interface AnalyticsData {
   tokenData: TokenResponse | null;
@@ -44,6 +44,7 @@ interface NetworkDataContextType {
   chainId: 1 | 10 | 8453 | 42161 | 84532 | 421614 | 11155111 | 11155420 | undefined;
   payoutWallet: `0x${string}` | undefined;
   metadata: AsyncData<JBProjectMetadata>;
+  selectedSucker: SelectedSuckerContextType;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(undefined);
@@ -55,6 +56,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
   const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
   const payoutWallet = useBoostRecipient();
+  const selectedSucker = useSelectedSucker();
 
   // Primary Data Fetching Hooks
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
@@ -160,7 +162,8 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       analyticsError,
       token,
       payoutWallet,
-      metadata
+      metadata,
+      selectedSucker
     };
   }, [
     suckers,
@@ -182,7 +185,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
   if (isInitialLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin h-10 w-10" />
+        <Loader2 className="animate-spin h-12 w-12" />
       </div>
     );
   }
