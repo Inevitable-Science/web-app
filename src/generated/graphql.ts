@@ -32,6 +32,8 @@ export type PageInfo = {
 
 export type Query = {
   _meta: Maybe<Meta>;
+  _sucker: Maybe<_Sucker>;
+  _suckers: _SuckerPage;
   activityEvent: Maybe<ActivityEvent>;
   activityEvents: ActivityEventPage;
   addToBalanceEvent: Maybe<AddToBalanceEvent>;
@@ -88,20 +90,33 @@ export type Query = {
   sendReservedTokensToSplitEvents: SendReservedTokensToSplitEventPage;
   sendReservedTokensToSplitsEvent: Maybe<SendReservedTokensToSplitsEvent>;
   sendReservedTokensToSplitsEvents: SendReservedTokensToSplitsEventPage;
-  stats: Maybe<Stats>;
-  statss: StatsPage;
   storeAutoIssuanceAmountEvent: Maybe<StoreAutoIssuanceAmountEvent>;
   storeAutoIssuanceAmountEvents: StoreAutoIssuanceAmountEventPage;
-  sucker: Maybe<Sucker>;
   suckerGroup: Maybe<SuckerGroup>;
   suckerGroupMoment: Maybe<SuckerGroupMoment>;
   suckerGroupMoments: SuckerGroupMomentPage;
   suckerGroups: SuckerGroupPage;
-  suckers: SuckerPage;
   useAllowanceEvent: Maybe<UseAllowanceEvent>;
   useAllowanceEvents: UseAllowanceEventPage;
   wallet: Maybe<Wallet>;
   wallets: WalletPage;
+};
+
+
+export type Query_SuckerArgs = {
+  address: Scalars['String']['input'];
+  chainId: Scalars['Float']['input'];
+  projectId: Scalars['Float']['input'];
+};
+
+
+export type Query_SuckersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<_SuckerFilter>;
 };
 
 
@@ -541,21 +556,6 @@ export type QuerySendReservedTokensToSplitsEventsArgs = {
 };
 
 
-export type QueryStatsArgs = {
-  chainId: Scalars['Int']['input'];
-};
-
-
-export type QueryStatssArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Scalars['String']['input']>;
-  orderDirection?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<StatsFilter>;
-};
-
-
 export type QueryStoreAutoIssuanceAmountEventArgs = {
   id: Scalars['String']['input'];
 };
@@ -568,13 +568,6 @@ export type QueryStoreAutoIssuanceAmountEventsArgs = {
   orderBy?: InputMaybe<Scalars['String']['input']>;
   orderDirection?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<StoreAutoIssuanceAmountEventFilter>;
-};
-
-
-export type QuerySuckerArgs = {
-  address: Scalars['String']['input'];
-  chainId: Scalars['Float']['input'];
-  projectId: Scalars['Float']['input'];
 };
 
 
@@ -609,16 +602,6 @@ export type QuerySuckerGroupsArgs = {
 };
 
 
-export type QuerySuckersArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Scalars['String']['input']>;
-  orderDirection?: InputMaybe<Scalars['String']['input']>;
-  where?: InputMaybe<SuckerFilter>;
-};
-
-
 export type QueryUseAllowanceEventArgs = {
   id: Scalars['String']['input'];
 };
@@ -646,6 +629,50 @@ export type QueryWalletsArgs = {
   orderBy?: InputMaybe<Scalars['String']['input']>;
   orderDirection?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<WalletFilter>;
+};
+
+export type _Sucker = {
+  address: Scalars['String']['output'];
+  chainId: Scalars['Int']['output'];
+  project: Maybe<Project>;
+  projectId: Scalars['Int']['output'];
+};
+
+export type _SuckerFilter = {
+  AND?: InputMaybe<Array<InputMaybe<_SuckerFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<_SuckerFilter>>>;
+  address?: InputMaybe<Scalars['String']['input']>;
+  address_contains?: InputMaybe<Scalars['String']['input']>;
+  address_ends_with?: InputMaybe<Scalars['String']['input']>;
+  address_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  address_not?: InputMaybe<Scalars['String']['input']>;
+  address_not_contains?: InputMaybe<Scalars['String']['input']>;
+  address_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  address_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  address_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  address_starts_with?: InputMaybe<Scalars['String']['input']>;
+  chainId?: InputMaybe<Scalars['Int']['input']>;
+  chainId_gt?: InputMaybe<Scalars['Int']['input']>;
+  chainId_gte?: InputMaybe<Scalars['Int']['input']>;
+  chainId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  chainId_lt?: InputMaybe<Scalars['Int']['input']>;
+  chainId_lte?: InputMaybe<Scalars['Int']['input']>;
+  chainId_not?: InputMaybe<Scalars['Int']['input']>;
+  chainId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  projectId?: InputMaybe<Scalars['Int']['input']>;
+  projectId_gt?: InputMaybe<Scalars['Int']['input']>;
+  projectId_gte?: InputMaybe<Scalars['Int']['input']>;
+  projectId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  projectId_lt?: InputMaybe<Scalars['Int']['input']>;
+  projectId_lte?: InputMaybe<Scalars['Int']['input']>;
+  projectId_not?: InputMaybe<Scalars['Int']['input']>;
+  projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+};
+
+export type _SuckerPage = {
+  items: Array<_Sucker>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type ActivityEvent = {
@@ -4538,7 +4565,7 @@ export type SendPayoutToSplitEvent = {
   group: Scalars['BigInt']['output'];
   hook: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  lockedUntil: Scalars['Int']['output'];
+  lockedUntil: Scalars['BigInt']['output'];
   logIndex: Scalars['Int']['output'];
   netAmount: Scalars['BigInt']['output'];
   percent: Scalars['Int']['output'];
@@ -4637,14 +4664,14 @@ export type SendPayoutToSplitEventFilter = {
   id_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   id_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   id_starts_with?: InputMaybe<Scalars['String']['input']>;
-  lockedUntil?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_gt?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_gte?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  lockedUntil_lt?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_lte?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_not?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  lockedUntil?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  lockedUntil_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   logIndex?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gt?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -4928,7 +4955,7 @@ export type SendReservedTokensToSplitEvent = {
   groupId: Scalars['BigInt']['output'];
   hook: Scalars['String']['output'];
   id: Scalars['String']['output'];
-  lockedUntil: Scalars['Int']['output'];
+  lockedUntil: Scalars['BigInt']['output'];
   logIndex: Scalars['Int']['output'];
   percent: Scalars['Int']['output'];
   preferAddToBalance: Scalars['Boolean']['output'];
@@ -5011,14 +5038,14 @@ export type SendReservedTokensToSplitEventFilter = {
   id_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   id_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   id_starts_with?: InputMaybe<Scalars['String']['input']>;
-  lockedUntil?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_gt?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_gte?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  lockedUntil_lt?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_lte?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_not?: InputMaybe<Scalars['Int']['input']>;
-  lockedUntil_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  lockedUntil?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  lockedUntil_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_not?: InputMaybe<Scalars['BigInt']['input']>;
+  lockedUntil_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   logIndex?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gt?: InputMaybe<Scalars['Int']['input']>;
   logIndex_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -5260,47 +5287,6 @@ export type SendReservedTokensToSplitsEventPage = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type Stats = {
-  chainId: Scalars['Int']['output'];
-  volume: Scalars['BigInt']['output'];
-  volumeUsd: Scalars['BigInt']['output'];
-};
-
-export type StatsFilter = {
-  AND?: InputMaybe<Array<InputMaybe<StatsFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<StatsFilter>>>;
-  chainId?: InputMaybe<Scalars['Int']['input']>;
-  chainId_gt?: InputMaybe<Scalars['Int']['input']>;
-  chainId_gte?: InputMaybe<Scalars['Int']['input']>;
-  chainId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  chainId_lt?: InputMaybe<Scalars['Int']['input']>;
-  chainId_lte?: InputMaybe<Scalars['Int']['input']>;
-  chainId_not?: InputMaybe<Scalars['Int']['input']>;
-  chainId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  volume?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  volumeUsd_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_not?: InputMaybe<Scalars['BigInt']['input']>;
-  volumeUsd_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  volume_gt?: InputMaybe<Scalars['BigInt']['input']>;
-  volume_gte?: InputMaybe<Scalars['BigInt']['input']>;
-  volume_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  volume_lt?: InputMaybe<Scalars['BigInt']['input']>;
-  volume_lte?: InputMaybe<Scalars['BigInt']['input']>;
-  volume_not?: InputMaybe<Scalars['BigInt']['input']>;
-  volume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-};
-
-export type StatsPage = {
-  items: Array<Stats>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
 export type StoreAutoIssuanceAmountEvent = {
   beneficiary: Scalars['String']['output'];
   caller: Scalars['String']['output'];
@@ -5423,44 +5409,6 @@ export type StoreAutoIssuanceAmountEventPage = {
   items: Array<StoreAutoIssuanceAmountEvent>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
-};
-
-export type Sucker = {
-  address: Scalars['String']['output'];
-  chainId: Scalars['Int']['output'];
-  project: Maybe<Project>;
-  projectId: Scalars['Int']['output'];
-};
-
-export type SuckerFilter = {
-  AND?: InputMaybe<Array<InputMaybe<SuckerFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<SuckerFilter>>>;
-  address?: InputMaybe<Scalars['String']['input']>;
-  address_contains?: InputMaybe<Scalars['String']['input']>;
-  address_ends_with?: InputMaybe<Scalars['String']['input']>;
-  address_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  address_not?: InputMaybe<Scalars['String']['input']>;
-  address_not_contains?: InputMaybe<Scalars['String']['input']>;
-  address_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  address_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  address_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  address_starts_with?: InputMaybe<Scalars['String']['input']>;
-  chainId?: InputMaybe<Scalars['Int']['input']>;
-  chainId_gt?: InputMaybe<Scalars['Int']['input']>;
-  chainId_gte?: InputMaybe<Scalars['Int']['input']>;
-  chainId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  chainId_lt?: InputMaybe<Scalars['Int']['input']>;
-  chainId_lte?: InputMaybe<Scalars['Int']['input']>;
-  chainId_not?: InputMaybe<Scalars['Int']['input']>;
-  chainId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  projectId?: InputMaybe<Scalars['Int']['input']>;
-  projectId_gt?: InputMaybe<Scalars['Int']['input']>;
-  projectId_gte?: InputMaybe<Scalars['Int']['input']>;
-  projectId_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  projectId_lt?: InputMaybe<Scalars['Int']['input']>;
-  projectId_lte?: InputMaybe<Scalars['Int']['input']>;
-  projectId_not?: InputMaybe<Scalars['Int']['input']>;
-  projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type SuckerGroup = {
@@ -5790,12 +5738,6 @@ export type SuckerGroupMomentPage = {
 
 export type SuckerGroupPage = {
   items: Array<SuckerGroup>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type SuckerPage = {
-  items: Array<Sucker>;
   pageInfo: PageInfo;
   totalCount: Scalars['Int']['output'];
 };
@@ -6154,7 +6096,7 @@ export type SuckerGroupQueryVariables = Exact<{
 }>;
 
 
-export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any } | null };
+export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any, volume: any } | null };
 
 
 export const ActivityEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ActivityEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"activityEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activityEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1000"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"payEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"memo"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"feeFromProject"}},{"kind":"Field","name":{"kind":"Name","value":"newlyIssuedTokenCount"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"amountUsd"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}},{"kind":"Field","name":{"kind":"Name","value":"distributionFromProjectId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cashOutTokensEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"reclaimAmount"}},{"kind":"Field","name":{"kind":"Name","value":"cashOutCount"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ActivityEventsQuery, ActivityEventsQueryVariables>;
@@ -6168,4 +6110,4 @@ export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"Opera
 export const ProjectCreateEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectCreateEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectCreateEventFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectCreateEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectCreateEventQuery, ProjectCreateEventQueryVariables>;
 export const StoreAutoIssuanceAmountEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoreAutoIssuanceAmountEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"storeAutoIssuanceAmountEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storeAutoIssuanceAmountEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<StoreAutoIssuanceAmountEventsQuery, StoreAutoIssuanceAmountEventsQueryVariables>;
 export const AutoIssueEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AutoIssueEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"autoIssueEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"autoIssueEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<AutoIssueEventsQuery, AutoIssueEventsQueryVariables>;
-export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;
+export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;

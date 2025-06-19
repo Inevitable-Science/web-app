@@ -2,5 +2,6 @@ query SuckerGroup($id: String!) {
   suckerGroup(id: $id) {
     id
     tokenSupply
+    volume
   }
 }

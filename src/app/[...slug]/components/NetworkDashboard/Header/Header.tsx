@@ -136,7 +136,7 @@ export function Header() {
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
-                    Ξ{project?.volume ? parseFloat(formatEther(BigInt(project.volume))).toFixed(2) : "0.00"}
+                    Ξ{suckerGroup.data?.suckerGroup?.volume ? parseFloat(formatEther(BigInt(suckerGroup.data.suckerGroup.volume))).toFixed(2) : "0.00"}
                   </h3>
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Raised</p>
