@@ -217,7 +217,7 @@ export function TransactionCard() {
               amountA={preparedAmountA}
               amountB={preparedAmountB}
               memo={memo}
-              disabled={!amountA || parseFloat(amountA) === 0 || isChainMismatched}
+              disabled={!amountA || parseFloat(amountA) === 0}
               selectedSucker={selectedSucker}
             />
           </div>
