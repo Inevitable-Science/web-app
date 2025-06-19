@@ -173,7 +173,7 @@ export function PayActionButton({
               <p className="whitespace-pre-wrap font-semibold text-gray-900">{metadata.data.payDisclosure}</p>
               </>
             ) : (
-              <p className="text-gray-700">You acknowledge that all transactions on the blockchain are final and irreversible. You are responsible for the security of your own wallet and confirming the validity of your transaction. This platform provides tools to interact with decentralized protocols, but does not guarantee outcomes or provide investment advice.</p>
+              null
             )}
           </div>
           <div className="mt-4 flex items-center space-x-3">
