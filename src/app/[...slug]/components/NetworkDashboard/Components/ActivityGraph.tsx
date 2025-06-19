@@ -71,6 +71,10 @@ export default function ActivityGraph({
     });
 
     const fullData: ProjectTimelinePoint[] = [];
+
+    let initialCumulativeVolume = dailyTotals
+    .filter(day => day.date.getTime() < startTimestamp)
+    .reduce((sum, day) => sum + Number(formatEther(day.volume)), 0);
     
     // 2. Loop through every day in the selected date range.
     for (let i = 0; i <= range; i++) {
@@ -87,9 +91,11 @@ export default function ActivityGraph({
       // 3. Get the volume from our map, or default to 0 if it doesn't exist.
       const volume = volumeMap.get(dateKey) || 0;
 
+      initialCumulativeVolume += volume;
+
       fullData.push({
         timestamp: Math.floor(currentDate.getTime() / 1000),
-        volume: volume,
+        volume: initialCumulativeVolume,
         balance: 0, // Placeholder
         trendingScore: 0, // Placeholder
       });
