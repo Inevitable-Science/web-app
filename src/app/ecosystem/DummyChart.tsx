@@ -131,7 +131,7 @@ export default function ActivityGraph({
 
   return (
     <div>
-      <div className="mb-4 flex items-baseline justify-between activityGraphHeader">
+      <div className="mb-4 flex items-baseline justify-between activityGraphHeader select-none">
         <div className="flex gap-3">
           {['volume', 'trendingScore'].map((v) => (
             <div

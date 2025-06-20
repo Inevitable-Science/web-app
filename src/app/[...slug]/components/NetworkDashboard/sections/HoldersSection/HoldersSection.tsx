@@ -215,17 +215,17 @@ export function HoldersSection() {
           <p className="text-muted-foreground font-light uppercase">
             Project Token
           </p>
-      {token.data && (
-        <Button
-          variant="link"
-          className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
-          onClick={handleAddToken}
-          disabled={isPending} // Disable the button while processing
-        >
-          {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
-          <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
-        </Button>
-      )}
+          {token.data && (
+            <Button
+              variant="link"
+              className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+              onClick={handleAddToken}
+              disabled={isPending} // Disable the button while processing
+            >
+              {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+              <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
+            </Button>
+          )}
         </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
