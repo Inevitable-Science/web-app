@@ -72,7 +72,7 @@ function DashboardContent() {
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10 sm:mb-24">
         <aside className="hidden lg:block max-w-54">
-          <div className="flex flex-col gap-2 items-start mb-6">
+          <div className="flex flex-col gap-2 items-start mb-6 min-w-[110px]">
             {tabs.map((tab) => (
               <button
                 key={tab.key}

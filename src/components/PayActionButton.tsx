@@ -159,18 +159,20 @@ export function PayActionButton({
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
-          <Dialog.Title className="text-lg font-semibold text-gray-900">
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+        
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+          <Dialog.Title className="text-lg font-semibold">
             Before you continue...
           </Dialog.Title>
-          <Dialog.Description className="mt-2 text-sm text-gray-600">
+          <Dialog.Description className="mt-2 text-sm text-muted-foreground">
             Please review and agree to the project's terms before proceeding.
           </Dialog.Description>
           
-          <div className="my-4 max-h-48 overflow-y-auto rounded-lg border bg-gray-50 p-4 text-xs">
+          <div className="my-4 max-h-48 overflow-y-auto rounded-xl background-color p-4 text-xs">
             {metadata.data?.payDisclosure ? (
               <>
-              <p className="whitespace-pre-wrap font-semibold text-gray-900">{metadata.data.payDisclosure}</p>
+              <p className="whitespace-pre-wrap font-semibold">{metadata.data.payDisclosure}</p>
               </>
             ) : (
               null
@@ -185,21 +187,21 @@ export function PayActionButton({
             >
               <Checkbox.Indicator className="flex items-center justify-center text-current"><Check className="h-4 w-4" /></Checkbox.Indicator>
             </Checkbox.Root>
-            <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-semibold text-gray-900">
+            <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-semibold">
               I have read and agree to the terms.
             </label>
           </div>
 
-          <div className="mt-6 flex justify-end space-x-4">
+          <div className="mt-6 flex justify-end space-x-2">
             <Dialog.Close asChild>
-              <Button className="rounded-md">Cancel</Button>
+              <Button className="rounded-md background-color hover:background-color">Cancel</Button>
             </Dialog.Close>
             <ButtonWithWallet
               targetChainId={targetChainId}
               disabled={!agreedToTerms || loading}
               loading={loading}
               onClick={handlePay}
-              className="inline-flex items-center justify-center rounded-md bg-cerulean px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-slate-300 disabled:text-slate-500"
+              className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors !bg-cerulean focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:!bg-gunmetal disabled:text-grey-100"
             >
               {actionButtonContent}
             </ButtonWithWallet>

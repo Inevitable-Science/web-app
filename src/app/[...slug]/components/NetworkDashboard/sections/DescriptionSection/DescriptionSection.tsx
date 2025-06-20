@@ -7,7 +7,8 @@ import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 
-const RichPreview = ({ source }: { source: string }) => {
+{/*const RichPreview = ({ source }: { source: string }) => {
+  console.log(source)
   useEffect(() => {
     DOMPurify.addHook("afterSanitizeAttributes", function(node) {
       if (node.tagName === "A") {
@@ -25,7 +26,7 @@ const RichPreview = ({ source }: { source: string }) => {
     const purified = DOMPurify.sanitize(source)
     return (
       <div
-        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:text-cerulean [&_a:hover]:underline"
+        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:break-all [&_a]:text-cerulean [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -35,7 +36,45 @@ const RichPreview = ({ source }: { source: string }) => {
     console.error("HTML sanitization failed:", error)
     return <div className="break-words">{source}</div>
   }
-}
+}*/}
+const RichPreview = ({ source }: { source: string }) => {
+  useEffect(() => {
+    DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+      if (node.tagName === "A") {
+        node.setAttribute("target", "_blank");
+        node.setAttribute("rel", "noopener noreferrer");
+      }
+    });
+  }, []);
+
+  if (!source?.trim()) {
+    return null;
+  }
+
+  try {
+    // Convert markdown links [text](url) → <a href="url">text</a>
+    const withLinks = source.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2">$1</a>'
+    );
+
+    // Sanitize the generated HTML
+    const purified = DOMPurify.sanitize(withLinks);
+
+    return (
+      <div
+        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:break-all [&_a]:text-cerulean [&_a:hover]:underline"
+        dangerouslySetInnerHTML={{
+          __html: purified,
+        }}
+      />
+    );
+  } catch (error) {
+    console.error("HTML sanitization failed:", error);
+    return <div className="break-words">{source}</div>;
+  }
+};
+
 
 interface DaoData {
   treasuryHoldings: string;
