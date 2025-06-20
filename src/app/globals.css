@@ -124,7 +124,7 @@ body {
   }
 }
 
-@media (max-width:880px) and (min-width:769px) {
+@media (max-width:1000px) and (min-width:769px) {
   .logoNavSvg {
     display: none !important;
   }

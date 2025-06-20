@@ -96,8 +96,8 @@ export const Nav: React.FC = () => {
   // Manage body scrolling and viewport width changes
   useEffect(() => {
     const handleResize = () => {
-      // Check if viewport width is >= md breakpoint (768px)
-      if (window.innerWidth >= 768) {
+      // Check if viewport width is >= md breakpoint (825px)
+      if (window.innerWidth >= 825) {
         setIsMenuOpen(false); // Close mobile menu on desktop view
       }
     };
@@ -111,10 +111,10 @@ export const Nav: React.FC = () => {
 
     // Add resize listener to handle viewport width changes
     window.addEventListener('resize', handleResize);
-    handleResize(); // Run on mount to check initial width
+    handleResize();
 
     return () => {
-      document.body.style.overflow = ''; // Cleanup
+      document.body.style.overflow = '';
       window.removeEventListener('resize', handleResize);
     };
   }, [isMenuOpen]);
@@ -134,7 +134,10 @@ export const Nav: React.FC = () => {
         // ${pathname === '/' && isVisible && isPastViewport ? 'bg-background bg-opacity-60' : pathname === '/' ? 'bg-transparent' : 'bg-background'}
       >
         <div className="flex items-center gap-6">
-          <Link aria-label="Home" href="/">
+          <Link 
+            aria-label="Home" 
+            href="/"
+          >
             <Image
               src="/assets/img/branding/icon.svg"
               width={26}
@@ -153,17 +156,40 @@ export const Nav: React.FC = () => {
         </div>
 
         {/* Desktop Menu */}
-        <div className="items-center gap-12 uppercase font-extralight select-none hidden md:flex">
-          <Link className="hover:underline" href="/projects">
+        <div className="items-center gap-12 uppercase font-extralight select-none navMinMD">
+          <Link 
+            className={`${pathname === '/' && "text-light-gold"} hover:underline`} 
+            href="/projects"
+            aria-label="Projects"
+          >
             Projects
           </Link>
-          <Link className="hover:underline" href="/vision">
+          <Link 
+            className={`${pathname === '/ecosystem' && "text-light-gold"} hover:underline`} 
+            href="/ecosystem"
+            aria-label="Ecosystem"
+          >
+            Ecosystem
+          </Link>
+          <Link 
+            className={`${pathname === '/vision' && "text-light-gold"} hover:underline`}
+            href="/vision"
+            aria-label="Vision"
+          >
             Vision
           </Link>
-          <Link className="hover:underline" href="/team">
+          <Link 
+            className={`${pathname === '/team' && "text-light-gold"} hover:underline`} 
+            href="/team"
+            aria-label="Team"
+          >
             Team
           </Link>
-          <Link className="hover:underline" href="/articles">
+          <Link 
+            className={`${pathname.startsWith('/articles') && "text-light-gold"} hover:underline`} 
+            href="/articles"
+            aria-label="Articles"
+          >
             Articles
           </Link>
           {/*<Button variant={"accent"} className="uppercase rounded-full">Log In</Button>*/}
@@ -180,7 +206,7 @@ export const Nav: React.FC = () => {
 
         {/* Hamburger/Close Button */}
         <button
-          className="md:hidden z-50 cursor-pointer text-primary"
+          className="navMaxMD z-50 cursor-pointer text-primary"
           onClick={toggleMenu}
           aria-label="Toggle Menu"
           aria-expanded={isMenuOpen}
@@ -197,34 +223,45 @@ export const Nav: React.FC = () => {
           ctWrapper
           fixed inset-0 bg-background bg-opacity-90 z-40 flex flex-col pt-[110px] transition-transform duration-500 ease-in-out
           ${isMenuOpen ? 'translate-y-0' : 'translate-y-full'}
-          md:hidden
+          navMaxMD
         `}
       >
         <div className="flex flex-col gap-2 uppercase font-extralight text-lg">
           <Link
-            className="hover:underline w-fit py-2"
+            className={`${pathname === '/' && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/projects"
+            aria-label="Projects"
             onClick={toggleMenu}
           >
             Projects
           </Link>
+          <Link 
+            className={`${pathname === '/ecosystem' && "text-light-gold"} hover:underline`} 
+            href="/ecosystem"
+            aria-label="Ecosystem"
+          >
+            Ecosystem
+          </Link>
           <Link
-            className="hover:underline w-fit py-2"
+            className={`${pathname === '/vision' && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/vision"
+            aria-label="Vision"
             onClick={toggleMenu}
           >
             Vision
           </Link>
           <Link
-            className="hover:underline w-fit py-2"
+            className={`${pathname === '/team' && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/team"
+            aria-label="Team"
             onClick={toggleMenu}
           >
             Team
           </Link>
           <Link
-            className="hover:underline w-fit py-2"
+            className={`${pathname === '/articles' && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/articles"
+            aria-label="Articles"
             onClick={toggleMenu}
           >
             Articles
@@ -240,6 +277,30 @@ export const Nav: React.FC = () => {
           </ConnectKitButton.Custom>
         </div>
       </div>
+
+      <style>{`
+
+      @media(min-width:825px){
+        .navMinMD{
+          display: flex;
+        }
+
+        .navMaxMD{
+          display: none;
+        }
+      }
+
+      @media(max-width:825px){
+        .navMaxMD{
+          display: block;
+        }
+
+        .navMinMD{
+          display: none;
+        }
+      }
+
+      `}</style>
     </>
   );
 };
