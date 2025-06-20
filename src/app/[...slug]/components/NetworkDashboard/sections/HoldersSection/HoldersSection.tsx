@@ -188,7 +188,7 @@ export function HoldersSection() {
     <section>
       <div className="flex flex-col gap-4 w-full">
         <div className="bg-grey-450 p-[12px] rounded-2xl">
-          <div className="background-color p-[16px] rounded-xl mt-2">
+          <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
               {totalBalance && token.data && formatNumber(Number(formatUnits(totalBalance.value, token.data?.decimals)), false)}
             </h3>
@@ -241,7 +241,7 @@ export function HoldersSection() {
         <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {pendingReserveTokenBalance && token.data?.decimals ? formatNumber(Number(formatUnits(pendingReserveTokenBalance, token.data?.decimals)), true) : 0}
+              {pendingReserveTokenBalance && token.data?.decimals ? formatNumber(Number(formatUnits(pendingReserveTokenBalance, token.data?.decimals)), false) : 0}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               Pending Reserved Tokens
