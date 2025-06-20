@@ -159,7 +159,7 @@ export const Nav: React.FC = () => {
         <div className="items-center gap-12 uppercase font-extralight select-none navMinMD">
           <Link 
             className={`${pathname === '/' && "text-light-gold"} hover:underline`} 
-            href="/projects"
+            href="/"
             aria-label="Projects"
           >
             Projects
@@ -229,7 +229,7 @@ export const Nav: React.FC = () => {
         <div className="flex flex-col gap-2 uppercase font-extralight text-lg">
           <Link
             className={`${pathname === '/' && "text-light-gold"} w-fit py-2 hover:underline`}
-            href="/projects"
+            href="/"
             aria-label="Projects"
             onClick={toggleMenu}
           >
