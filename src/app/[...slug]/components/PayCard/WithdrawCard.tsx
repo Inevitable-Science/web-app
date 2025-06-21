@@ -58,6 +58,7 @@ export function WithdrawCard(
               <img
                 className="h-[22px] w-[22px]" 
                 src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
+                alt="Token Icon"
               />
               <p className="text-lg font-light">{formatTokenSymbol(tokenB?.data?.symbol)}</p>
             </div>

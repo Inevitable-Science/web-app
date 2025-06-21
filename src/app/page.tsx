@@ -132,6 +132,7 @@ export default function Page() {
           <img 
             className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up" 
             src="/assets/img/fog_bg.png"
+            alt=""
           />
 
           <div className="relative text-center my-16 sm:my-32">
@@ -146,12 +147,14 @@ export default function Page() {
                 className="z-[-10] overflow-hidden select-none" 
                 src="/assets/img/clouds/cloud_left.png" 
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
+                alt=""
               />
 
               <img 
                 className="z-[-10] relative overflow-hidden select-none" 
                 src="/assets/img/clouds/cloud_right.png" 
                 style={{ transform: "translateX(40%)" }}
+                alt=""
               />
             </div>
           </div>
@@ -181,7 +184,7 @@ export default function Page() {
               </Button>
             </div>
 
-            <img className="h-[40vh] sm:block hidden relative top-[-10px]" src="/assets/img/hero.png" />
+            <img className="h-[40vh] sm:block hidden relative top-[-10px]" src="/assets/img/hero.png" alt="Hero Image" />
             </div>
         </section>
 

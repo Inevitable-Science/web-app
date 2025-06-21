@@ -87,6 +87,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
           className="z-[-10] select-none w-screen" 
           src="/assets/img/clouds/cloud_bg_1.png"
           style={{ transform: "translateX(-25%)" }}
+          alt=""
         />
 
         {/* Right cloud - shifted slightly left */}
@@ -94,6 +95,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
           className="z-[-10] select-none w-screen" 
           src="/assets/img/clouds/cloud_bg_3.png" 
           style={{ transform: "translateX(25%)" }}
+          alt=""
         />
       </div>
 

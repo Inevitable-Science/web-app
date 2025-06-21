@@ -9,27 +9,27 @@ const PartnersComponent: React.FC = () => {
 
         <div className="flex items-center justify-center flex-wrap gap-6">
           <div className="text-center">
-            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" />
+            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" alt="Partner Image" />
             <p className="text-xl">Partner Title</p>
           </div>
 
           <div className="text-center">
-            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" />
+            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" alt="Partner Image" />
             <p className="text-xl">Partner Title</p>
           </div>
 
           <div className="text-center">
-            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" />
+            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" alt="Partner Image" />
             <p className="text-xl">Partner Title</p>
           </div>
 
           <div className="text-center">
-            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" />
+            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" alt="Partner Image" />
             <p className="text-xl">Partner Title</p>
           </div>
 
           <div className="text-center">
-            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" />
+            <img src="/assets/img/partner.png" className="md:w-48 w-32 opacity-60 mb-4" alt="Partner Image" />
             <p className="text-xl">Partner Title</p>
           </div>
         </div>

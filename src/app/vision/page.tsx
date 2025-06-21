@@ -62,7 +62,7 @@ export default function Vision() {
             </h2>
           </div>
 
-          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.png" />
+          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.png" alt="Hero Image" />
         </div>
       </div>
 
@@ -80,6 +80,7 @@ export default function Vision() {
             className="z-[-10] select-none w-[100vw]"
             src="/assets/img/clouds/cloud_bg_1.png"
             style={{ transform: 'translateX(25%)' }}
+            alt=""
           />
 
           {/* Right cloud */}
@@ -87,6 +88,7 @@ export default function Vision() {
             className="z-[-10] select-none w-[100vw]"
             src="/assets/img/clouds/cloud_bg_3.png"
             style={{ transform: 'translateX(-25%)' }}
+            alt=""
           />
         </div>
 

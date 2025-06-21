@@ -27,7 +27,7 @@ const AuctionComponent: React.FC = () => {
     <section className="bg-[url('/assets/img/auction_bg.png')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
       <div className="bg-background rounded-2xl sm:min-h-[650px] sm:p-[32px] p-[16px] flex flex-col justify-between gap-[112px] w-full md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
-          <img className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.png" />
+          <img className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.png" alt="Auction Image" />
           <h3 className="font-optima text-3xl uppercase">Stasis</h3>
           <p className="text-sm">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

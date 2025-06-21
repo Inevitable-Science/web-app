@@ -208,6 +208,7 @@ export function Header() {
             className="z-[-10] select-none w-screen" 
             src="/assets/img/clouds/dao_cloud_left.png" 
             style={{ transform: "translateX(-40%)" }}
+            alt=""
           />
 
           {/* Right cloud - shifted slightly left */}
@@ -215,6 +216,7 @@ export function Header() {
             className="z-[-10] select-none w-screen" 
             src="/assets/img/clouds/dao_cloud_right.png" 
             style={{ transform: "translateX(40%)" }}
+            alt=""
           />
         </div>
     </header>

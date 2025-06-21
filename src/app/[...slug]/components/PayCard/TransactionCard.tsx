@@ -178,6 +178,7 @@ export function TransactionCard() {
                     <img 
                       className="h-[22px] w-[22px]" 
                       src="/assets/img/logo/mainnet.svg"
+                      alt="ETH Icon"
                     />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
@@ -201,6 +202,7 @@ export function TransactionCard() {
                   <img
                     className="h-[22px] w-[22px] rounded-full" 
                     src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
+                    alt="Token Icon"
                   />
                   <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
                 </div>
