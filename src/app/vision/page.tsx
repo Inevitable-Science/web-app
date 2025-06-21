@@ -50,7 +50,7 @@ export default function Vision() {
   return (
     <div>
       <div className="
-        bg-[url('/assets/img/vision_hero_scene.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[100vh] sm:min-h-[700px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]
+        bg-[url('/assets/img/vision_hero_scene.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[100vh] sm:min-h-[750px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]
         flex sm:items-end items-center justify-center
       ">
         <div className="ctWrapper relative top-[15px] flex flex-col items-center">
