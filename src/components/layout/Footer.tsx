@@ -1,9 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
+import { FooterLoginButton } from "./FooterLoginButton";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full h-screen bg-[url('/assets/img/footer.png')] bg-cover bg-center flex flex-col text-white px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
+    <footer className="w-full h-screen bg-[url('/assets/img/footer.png')] bg-cover bg-center flex flex-col px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
       {/* CENTERED SECTION */}
       <div className="flex-grow flex flex-col items-center justify-center gap-16">
         <Image src="/assets/img/branding/icon.svg" alt="Icon Logo" height="70" width="38" />
@@ -13,7 +14,8 @@ const Footer: React.FC = () => {
           <Link href="/vision" aria-label="Vision" className="hover:underline">Vision</Link>
           <Link href="/team" aria-label="Team" className="hover:underline">Team</Link>
           <Link href="/articles" aria-label="Articles" className="hover:underline">Articles</Link>
-          <Link href="/login" aria-label="Log In" className="hover:underline">Log In</Link>
+          {/*<Link href="/login" aria-label="Log In" className="hover:underline">Log In</Link>*/}
+          <FooterLoginButton />
         </div>
       </div>
 
