@@ -67,7 +67,7 @@ function DashboardContent() {
   return (
     <>
       <div className="w-full relative">
-        <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.png')] bg-cover w-full bg-center z-[-10]"></div>
+        <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.webp')] bg-cover w-full bg-center z-[-10]"></div>
         <Header />
       </div>
       <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10 sm:mb-24">

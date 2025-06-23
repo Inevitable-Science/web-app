@@ -164,7 +164,7 @@ export default function Page() {
 
 
         <section className="
-          bg-[url('/assets/img/light_future.png')] bg-cover bg-center h-[100vh] min-h-[500px] rounded-2xl mt-[40px] mb-[60px] flex sm:items-end items-center justify-center
+          bg-[url('/assets/img/light_future.webp')] bg-cover bg-center h-[100vh] min-h-[500px] rounded-2xl mt-[40px] mb-[60px] flex sm:items-end items-center justify-center
           [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]"
         >
           <div className="ctWrapper relative top-[15px] flex flex-col items-center">

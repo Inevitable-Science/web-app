@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Ecosystem() {
   return (
     <div className="relative">
-      <div className="absolute inset-0 bg-[url('/assets/img/ecosystem_backdrop.png')] bg-cover w-full bg-center z-[-1] top-[-140px]" />
+      <div className="absolute inset-0 bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover w-full bg-center z-[-1] top-[-140px]" />
       
       <section className="ctWrapper mt-[140px]">
         <div className="flex gap-4 flex-col md:flex-row md:gap-12 mb-[52px]">
