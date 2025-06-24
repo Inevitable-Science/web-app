@@ -183,7 +183,10 @@ export default function ActivityGraph({
             setRange(Number(value) as ProjectTimelineRange);
           }}
         >
-          <SelectTrigger className="w-[5.6rem] h-fit rounded border-none background-color rounded-full px-2 text-xs uppercase text-muted-foreground hover:text-foreground">
+          <SelectTrigger 
+            className="w-[5.6rem] h-fit rounded border-none background-color rounded-full px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
+            aria-label="Select Time Range"
+          >
             <SelectValue placeholder="Select range" />
           </SelectTrigger>
           <SelectContent align="end">

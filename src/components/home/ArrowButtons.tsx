@@ -60,6 +60,7 @@ export const PrevButton: React.FC<PropType> = (props) => {
     <button
       className="opacity-80 hover:opacity-100 disabled:opacity-60 transition-opacity duration-150 cursor-pointer"
       type="button"
+      aria-label="Carousel Left"
       {...restProps}
     >
       <ArrowLeftIcon height="28" width="28" />
@@ -75,6 +76,7 @@ export const NextButton: React.FC<PropType> = (props) => {
     <button
       className="disabled:opacity-60 transition-opacity duration-150 cursor-pointer"
       type="button"
+      aria-label="Carousel Right"
       {...restProps}
     >
       <ArrowRightIcon height="28" width="28" className="stroke-primary" />

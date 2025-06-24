@@ -33,7 +33,10 @@ export const ChainSelector = ({
       disabled={disabled}
       defaultValue={String(value)}
     >
-      <SelectTrigger className="w-fit h-fit border-none background-color rounded-full p-1.5 text-xs text-color">
+      <SelectTrigger 
+        className="w-fit h-fit border-none background-color rounded-full p-1.5 text-xs text-color"
+        aria-label="Select Chain"
+      >
         <SelectValue placeholder="Select chain">
           {value ? (
             <div className="mr-1">
