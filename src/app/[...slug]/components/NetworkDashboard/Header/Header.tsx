@@ -206,7 +206,7 @@ export function Header() {
           {/* Left cloud - shifted slightly right */}
           <img 
             className="z-[-10] select-none w-screen" 
-            src="/assets/img/clouds/dao_cloud_left.png" 
+            src="/assets/img/clouds/dao_cloud_left.webp" 
             style={{ transform: "translateX(-40%)" }}
             alt=""
           />
@@ -214,7 +214,7 @@ export function Header() {
           {/* Right cloud - shifted slightly left */}
           <img 
             className="z-[-10] select-none w-screen" 
-            src="/assets/img/clouds/dao_cloud_right.png" 
+            src="/assets/img/clouds/dao_cloud_right.webp" 
             style={{ transform: "translateX(40%)" }}
             alt=""
           />

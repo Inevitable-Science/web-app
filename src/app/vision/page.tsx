@@ -78,7 +78,7 @@ export default function Vision() {
           {/* Left cloud */}
           <img
             className="z-[-10] select-none w-[100vw]"
-            src="/assets/img/clouds/cloud_bg_1.png"
+            src="/assets/img/clouds/cloud_bg_1.webp"
             style={{ transform: 'translateX(25%)' }}
             alt=""
           />
@@ -86,7 +86,7 @@ export default function Vision() {
           {/* Right cloud */}
           <img
             className="z-[-10] select-none w-[100vw]"
-            src="/assets/img/clouds/cloud_bg_3.png"
+            src="/assets/img/clouds/cloud_bg_3.webp"
             style={{ transform: 'translateX(-25%)' }}
             alt=""
           />

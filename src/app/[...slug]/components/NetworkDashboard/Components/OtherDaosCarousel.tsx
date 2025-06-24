@@ -54,7 +54,7 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
           {/* Left cloud - shifted slightly right */}
           <img 
             className="z-[-10] select-none w-full" 
-            src="/assets/img/clouds/dao_cloud_bottom_left.png"
+            src="/assets/img/clouds/dao_cloud_bottom_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
           />
@@ -62,7 +62,7 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
           {/* Right cloud - shifted slightly left */}
           <img 
             className="z-[-10] select-none w-full" 
-            src="/assets/img/clouds/dao_cloud_bottom_right.png" 
+            src="/assets/img/clouds/dao_cloud_bottom_right.webp" 
             style={{ transform: "translateX(25%)" }}
             alt=""
           />

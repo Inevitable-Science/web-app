@@ -69,7 +69,7 @@ const DaosGrid: React.FC = () => {
         {/* Left cloud */}
         <img
           className="z-[-10] select-none w-screen"
-          src="/assets/img/clouds/cloud_bg_1.png"
+          src="/assets/img/clouds/cloud_bg_1.webp"
           style={{ transform: 'translateX(25%)' }}
           alt=""
         />
@@ -77,7 +77,7 @@ const DaosGrid: React.FC = () => {
         {/* Center cloud */}
         <img
           className="z-[-10] select-none w-screen"
-          src="/assets/img/clouds/cloud_bg_2.png"
+          src="/assets/img/clouds/cloud_bg_2.webp"
           style={{ transform: 'translateX(10%)' }}
           alt=""
         />
@@ -85,7 +85,7 @@ const DaosGrid: React.FC = () => {
         {/* Right cloud */}
         <img
           className="z-[-10] select-none w-screen"
-          src="/assets/img/clouds/cloud_bg_3.png"
+          src="/assets/img/clouds/cloud_bg_3.webp"
           style={{ transform: 'translateX(-25%)' }}
           alt=""
         />
@@ -116,7 +116,7 @@ const DaosGrid: React.FC = () => {
       >
         <img
           className="z-[-10] select-none w-screen"
-          src="/assets/img/clouds/cloud_bottom_right.png"
+          src="/assets/img/clouds/cloud_bottom_right.webp"
           style={{ transform: 'translateX(30%)' }}
           alt=""
         />
@@ -151,7 +151,7 @@ const DaosGrid: React.FC = () => {
       >
         <img
           className="z-[-10] select-none w-screen"
-          src="/assets/img/clouds/cloud_bottom_center.png"
+          src="/assets/img/clouds/cloud_bottom_center.webp"
           style={{ transform: 'translateX(-5%)' }}
           alt=""
         />

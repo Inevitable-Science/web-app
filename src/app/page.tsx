@@ -57,22 +57,22 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SLIDES = [
   {
-    img: '/assets/img/articles/article_1.png',
+    img: '/assets/img/articles/article_1.webp',
     title: 'Article Title 1',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/articles/article_2.png',
+    img: '/assets/img/articles/article_2.webp',
     title: 'Article Title 2',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/articles/article_3.png',
+    img: '/assets/img/articles/article_3.webp',
     title: 'Article Title 3',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/articles/article_4.png',
+    img: '/assets/img/articles/article_4.webp',
     title: 'Article Title 4',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
@@ -145,14 +145,14 @@ export default function Page() {
             <div className="absolute top-0 w-full justify-between items-center overflow-hidden sm:flex hidden">
               <img 
                 className="z-[-10] overflow-hidden select-none" 
-                src="/assets/img/clouds/cloud_left.png" 
+                src="/assets/img/clouds/cloud_left.webp" 
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
               <img 
                 className="z-[-10] relative overflow-hidden select-none" 
-                src="/assets/img/clouds/cloud_right.png" 
+                src="/assets/img/clouds/cloud_right.webp" 
                 style={{ transform: "translateX(40%)" }}
                 alt=""
               />
