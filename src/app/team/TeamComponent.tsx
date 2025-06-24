@@ -13,31 +13,31 @@ type SlideType = {
 
 const slides: SlideType[] = [
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
     linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
@@ -69,7 +69,7 @@ const TeamComponent: React.FC = () => {
                   {slide.linkedIn && (
                     <a href={slide.linkedIn} target="_blank" rel="noopener noreferrer">
                       <Image
-                        src="/assets/img/team/linked_in_image.png"
+                        src="/assets/img/team/linked_in_image.webp"
                         alt="Linked In Logo"
                         height={45}
                         width={28}
@@ -79,7 +79,7 @@ const TeamComponent: React.FC = () => {
                   {slide.twitter && (
                     <a href={slide.twitter} target="_blank" rel="noopener noreferrer">
                       <Image
-                        src="/assets/img/team/twitter_image.png"
+                        src="/assets/img/team/twitter_image.webp"
                         alt="Twitter Logo"
                         height={41}
                         width={28}

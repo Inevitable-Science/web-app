@@ -15,10 +15,10 @@ export interface ArticleSchema {
 
 const getRandomImage = () => {
   const images = [
-    "/assets/img/articles/article_1.png",
-    "/assets/img/articles/article_2.png",
-    "/assets/img/articles/article_3.png",
-    "/assets/img/articles/article_4.png",
+    "/assets/img/articles/article_1.webp",
+    "/assets/img/articles/article_2.webp",
+    "/assets/img/articles/article_3.webp",
+    "/assets/img/articles/article_4.webp",
   ];
   return images[Math.floor(Math.random() * images.length)];
 };

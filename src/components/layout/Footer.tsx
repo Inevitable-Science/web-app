@@ -4,7 +4,7 @@ import { FooterLoginButton } from "./FooterLoginButton";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full h-screen bg-[url('/assets/img/footer.png')] bg-cover bg-center flex flex-col px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
+    <footer className="w-full h-screen bg-[url('/assets/img/footer.webp')] bg-cover bg-center flex flex-col px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
       {/* CENTERED SECTION */}
       <div className="flex-grow flex flex-col items-center justify-center gap-16">
         <Image src="/assets/img/branding/icon.svg" alt="Icon Logo" height="70" width="38" />

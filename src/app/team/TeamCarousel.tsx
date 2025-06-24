@@ -24,31 +24,31 @@ type PropType = {
 
 const slides: SlideType[] = [
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
     linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
   },
   {
-    img: '/assets/img/team/kai_member.png',
+    img: '/assets/img/team/kai_member.webp',
     name: 'Kai Micah Mills',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     twitter: 'https://x.com/kaimicahmills',
@@ -94,7 +94,7 @@ const TeamCarousel: React.FC<PropType> = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          <Image src="/assets/img/team/linked_in_image.png" alt="Linked In Logo" height={45} width={28} />
+                          <Image src="/assets/img/team/linked_in_image.webp" alt="Linked In Logo" height={45} width={28} />
                         </a>
                       )}
 
@@ -104,7 +104,7 @@ const TeamCarousel: React.FC<PropType> = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                         >
-                          <Image src="/assets/img/team/twitter_image.png" alt="Twitter Logo" height={41} width={28} />
+                          <Image src="/assets/img/team/twitter_image.webp" alt="Twitter Logo" height={41} width={28} />
                         </a>
                       )}
                     </div>
@@ -135,7 +135,7 @@ const TeamCarousel: React.FC<PropType> = () => {
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
-                      <Image src="/assets/img/team/linked_in_image.png" alt="Linked In Logo" height={45} width={28} />
+                      <Image src="/assets/img/team/linked_in_image.webp" alt="Linked In Logo" height={45} width={28} />
                     </a>
                   )}
 
@@ -145,7 +145,7 @@ const TeamCarousel: React.FC<PropType> = () => {
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
-                      <Image src="/assets/img/team/twitter_image.png" alt="Twitter Logo" height={41} width={28} />
+                      <Image src="/assets/img/team/twitter_image.webp" alt="Twitter Logo" height={41} width={28} />
                     </a>
                   )}
                 </div>

@@ -44,7 +44,7 @@ const DaosGrid: React.FC = () => {
   return (
     <section className="sectionDaosGrid">
       <div className="dGrid-1 dGrid max-w-[1400px] mx-auto">
-        <div className="div1-1 bg-[url('/assets/img/daos/hydra.png')] bg-cover bg-center">
+        <div className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">HydraDAO</h4>
@@ -52,7 +52,7 @@ const DaosGrid: React.FC = () => {
           </div>
         </div>
 
-        <div className="div2-1 bg-[url('/assets/img/daos/cryo.jpg')] bg-cover bg-center">
+        <div className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">CryoDAO</h4>
@@ -92,7 +92,7 @@ const DaosGrid: React.FC = () => {
       </div>
 
       <div className="dGrid dGrid-mid flex items-center lg:gap-32 gap-16 max-w-[1400px] mx-auto">
-        <div className="div1-mid bg-[url('/assets/img/daos/moon.png')] bg-cover bg-center">
+        <div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">MoonDAO</h4>
@@ -100,7 +100,7 @@ const DaosGrid: React.FC = () => {
           </div>
         </div>
 
-        <div className="div2-mid bg-[url('/assets/img/daos/erectus.jpg')] bg-cover bg-center">
+        <div className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">ErectusDAO</h4>
@@ -123,7 +123,7 @@ const DaosGrid: React.FC = () => {
       </div>
 
       <div className="dGrid-2 dGrid max-w-[1400px] mx-auto">
-        <div className="div1-2 bg-[url('/assets/img/daos/placeholder_1.png')] bg-cover bg-center h-[450px]">
+        <div className="div1-2 bg-[url('/assets/img/daos/placeholder_1.webp')] bg-cover bg-center h-[450px]">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">DAOTitle</h4>
@@ -133,7 +133,7 @@ const DaosGrid: React.FC = () => {
           </div>
         </div>
 
-        <div className="div2-2 bg-[url('/assets/img/daos/placeholder_3.png')] bg-cover bg-center">
+        <div className="div2-2 bg-[url('/assets/img/daos/placeholder_3.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">DAOTitle</h4>

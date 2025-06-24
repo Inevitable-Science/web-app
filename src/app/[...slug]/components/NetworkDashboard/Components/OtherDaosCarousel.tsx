@@ -20,22 +20,22 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: '/assets/img/daos/cryo.jpg',
+    img: '/assets/img/daos/cryo.webp',
     title: 'CryoDAO',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/daos/moon.png',
+    img: '/assets/img/daos/moon.webp',
     title: 'MoonDAO',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/daos/erectus.jpg',
+    img: '/assets/img/daos/erectus.webp',
     title: 'Erectus',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },
   {
-    img: '/assets/img/daos/placeholder_1.png',
+    img: '/assets/img/daos/placeholder_1.webp',
     title: 'DAO Title',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
   },

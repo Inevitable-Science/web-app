@@ -131,7 +131,7 @@ export default function Page() {
         <div className="relative">
           <img 
             className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up" 
-            src="/assets/img/fog_bg.png"
+            src="/assets/img/fog_bg.webp"
             alt=""
           />
 
@@ -184,7 +184,7 @@ export default function Page() {
               </Button>
             </div>
 
-            <img className="h-[40vh] sm:block hidden relative top-[-10px]" src="/assets/img/hero.png" alt="Hero Image" />
+            <img className="h-[40vh] sm:block hidden relative top-[-10px]" src="/assets/img/hero.webp" alt="Hero Image" />
             </div>
         </section>
 

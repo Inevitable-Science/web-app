@@ -62,7 +62,7 @@ export default function Vision() {
             </h2>
           </div>
 
-          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.png" alt="Hero Image" />
+          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.webp" alt="Hero Image" />
         </div>
       </div>
 
