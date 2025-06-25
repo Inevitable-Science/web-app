@@ -23,10 +23,24 @@ const Footer: React.FC = () => {
       <div className="w-full flex md:flex-row md:gap-0 gap-4 text-center md:mb-2 mb-8 flex-col-reverse justify-between items-center text-sm">
         <p>All rights reserved Inevitable 2025</p>
         <div className="flex gap-4 items-center">
-          <Image src="/assets/img/logo/socials/x.svg" alt="X Logo" height={16} width={16} />
-          <Image src="/assets/img/logo/socials/discord.svg" alt="Discord Logo" height={20} width={20} />
-          <p>Terms</p>
-          <p>Privacy</p>
+          <a
+            href="https://x.com/inevitablesci"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image src="/assets/img/logo/socials/x.svg" alt="X Logo" height={16} width={16} />
+          </a>
+
+          <a
+            href="https://discord.gg/inevitable"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image src="/assets/img/logo/socials/discord.svg" alt="Discord Logo" height={20} width={20} />
+          </a>
+          
+          <Link href="/legal/terms" aria-label="Terms and Conditions" className="hover:underline">Terms</Link>
+          <Link href="/legal/privacy" aria-label="Privacy Policy" className="hover:underline">Privacy</Link>
         </div>
       </div>
     </footer>

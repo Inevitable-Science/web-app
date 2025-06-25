@@ -83,27 +83,27 @@ export function formatDate(
   input?: Date | string | null,
   short: boolean = false
 ): string {
-  if (!input) return '--';
+  if (!input) return "--";
 
   const date = input instanceof Date ? input : new Date(input);
-  if (isNaN(date.getTime())) return '--'; // Invalid date
+  if (isNaN(date.getTime())) return "--"; // Invalid date
 
   const options: Intl.DateTimeFormatOptions = short
     ? {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
       }
     : {
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
         hour12: true,
       };
 
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+  return new Intl.DateTimeFormat("en-US", options).format(date);
 }
 
 export function etherscanLink(

@@ -8,7 +8,7 @@ export const FooterLoginButton: React.FC = () => {
   return (
     <>
       <ConnectKitButton.Custom>
-        {({ isConnected, show, address, ensName }) => {
+        {({ isConnected, show, address }) => {
           return (
             <Button onClick={show} variant="link">
               {isConnected ? ((address ? formatEthAddress(address) : "")) : "LOG IN"}
