@@ -182,7 +182,7 @@ export function TransactionCard() {
                     />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground font-light text-nowrap">
+                  <p className="w-[130px] text-sm text-right text-muted-foreground font-light text-nowrap">
                     Balance: {walletBalance ? parseFloat(formatUnits(walletBalance.value, tokenA.decimals)).toFixed(4) : "0.00"}
                   </p>
                 </div>

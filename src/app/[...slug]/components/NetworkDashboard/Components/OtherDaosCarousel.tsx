@@ -5,8 +5,6 @@ import { EmblaOptionsType } from 'embla-carousel';
 import { PrevButton, NextButton, usePrevNextButtons } from '@/components/home/ArrowButtons';
 import useEmblaCarousel from 'embla-carousel-react';
 
-// DATA_TODO: Add functionality to view other daos in the ecosystem
-
 type SlideType = {
   img: string;
   title: string;

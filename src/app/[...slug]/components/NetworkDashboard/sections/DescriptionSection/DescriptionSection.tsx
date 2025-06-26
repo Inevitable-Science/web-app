@@ -103,7 +103,7 @@ export function DescriptionSection({ analyticsError, data, setSelectedTab }: Des
 
   return (
       <div className="text-sm">
-        <ChartSection setSelectedTab={setSelectedTab} /> {/* DATA_TODO: Add functionality to view changes to the project rules */}
+        <ChartSection setSelectedTab={setSelectedTab} />
       
         {/* TODO: No idea why this is showing a "0" when not loading. */}
         {/* {!analyticsError && data?.latestMarketCap && (
