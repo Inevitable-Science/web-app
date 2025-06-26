@@ -154,8 +154,15 @@ export async function generateMetadata({
 
   let imgUrl = project?.logoUri || `${origin}/assets/img/branding/seo_banner.png`;
 
+  let metadataTitle;
+  if (projectName !== "project"){
+    metadataTitle = `${projectName} | Inevitable Protocol`;
+  } else {
+    metadataTitle = "Inevitable Protocol"
+  }
+
   return buildMetadata({
-    title: "Inevitable Protocol",
+    title: metadataTitle,
     description: "Begin your journey. Build the future of life—together.",
     imageUrl: imgUrl,
     url: url.href,

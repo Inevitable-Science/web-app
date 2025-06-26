@@ -51,14 +51,12 @@ function DashboardContent() {
       : []),
   ];
 
-  // set title
-  // TODO, hacky, probably eventually a next-idiomatic way to do this. 
-  // I think it best we leave this here, but ive made it more robust.
-  useEffect(() => {
+  // set title - removed for now, use SSR to render title in layout file using project handle instead of token name
+  /*useEffect(() => {
     console.log("token symbol", token?.data?.symbol)
-    if (token?.data?.symbol === undefined) document.title = `${metadata.data?.name} | REVNET`; else
-    document.title = `${formatTokenSymbol(token)} | REVNET`;
-  }, [token, metadata]);
+    if (token?.data?.symbol === undefined) document.title = `${metadata.data?.name} | Inevitable Protocol`; else
+    document.title = `${formatTokenSymbol(token)} | Inevitable Protocol`;
+  }, [token, metadata]);*/
 
   if (contracts.contracts.controller.data === zeroAddress) {
     notFound();
