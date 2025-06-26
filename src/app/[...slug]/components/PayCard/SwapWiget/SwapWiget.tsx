@@ -12,8 +12,6 @@ export function SwapWidget({ token } : TokenState) {
   //const [provider, setProvider] = useState(null);
   const [provider, setProvider] = useState<EthereumProvider | undefined>(undefined);
 
-  // TODO : Custom Token List
-
   const params: CowSwapWidgetParams = {
     appCode: "Inevitable",
     width: "100%",
@@ -22,7 +20,7 @@ export function SwapWidget({ token } : TokenState) {
     tokenLists: [
       "https://files.cow.fi/tokens/CowSwap.json",
       "https://files.cow.fi/tokens/CoinGecko.json",
-      "https://www.profiler.bio/web3/tokenlist.schema.json",
+      "https://inevitable.science/web3/tokenlist.schema.json",
     ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
