@@ -5,6 +5,7 @@ import { EmblaOptionsType } from 'embla-carousel';
 import { PrevButton, NextButton, usePrevNextButtons } from './ArrowButtons';
 import PartnersComponent from './PartnersComponent';
 import useEmblaCarousel from 'embla-carousel-react';
+import articleSchema, { Article } from "@/app/articles/Articles";
 
 type SlideType = {
   img: string;
@@ -46,6 +47,36 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
+  // Sort articles by date (latest first) on server
+  const sortedArticles = [...articleSchema.articles].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  // Get trending slides (latest 3 articles)
+  const trendingSlides = sortedArticles
+    .slice(0, 3)
+    .map((article: Article) => ({
+      img: article.image,
+      title: article.title,
+      description: article.overview,
+    }));
+
+  const uniqueCategories = Array.from(
+    new Set(sortedArticles.flatMap((article) => article.category))
+  ).slice(0, 14); // Limit to 14 categories
+
+  const categorySlides = uniqueCategories.map((category) => ({
+    category,
+    slides: sortedArticles
+      .filter((article) => article.category.includes(category))
+      .map((article: Article) => ({
+        img: article.image,
+        title: article.title,
+        description: article.overview,
+      })),
+  }));
+
+
   return (
     <section className="w-full mx-auto">
 
@@ -59,7 +90,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
         </div>
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
-            {slides.map((slide, index) => (
+            {trendingSlides.map((slide, index) => (
               <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
                 <div className="flex flex-col items-start h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
                   <img
