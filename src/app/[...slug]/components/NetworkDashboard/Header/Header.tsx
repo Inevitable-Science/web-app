@@ -93,7 +93,7 @@ export function Header() {
                 <Image
                   src={ipfsUriToGatewayUrl(logoUri)}
                   className="overflow-hidden block border-[3px] border-background rounded-xl"
-                  alt={"revnet logo"}
+                  alt={"Project Logo"}
                   width={120}
                   height={10}
                 />
@@ -102,7 +102,7 @@ export function Header() {
                 <Image
                   src={ipfsUriToGatewayUrl(logoUri)}
                   className="overflow-hidden block border-[4px] border-background rounded-2xl"
-                  alt={"revnet logo"}
+                  alt={"Project Logo"}
                   width={144}
                   height={144}
                 />

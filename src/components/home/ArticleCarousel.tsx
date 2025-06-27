@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { EmblaOptionsType } from 'embla-carousel';
 import { PrevButton, NextButton, usePrevNextButtons } from './ArrowButtons';
 import PartnersComponent from './PartnersComponent';
@@ -93,10 +94,12 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
             {trendingSlides.map((slide, index) => (
               <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
                 <div className="flex flex-col items-start h-full p-4 bg-background border border-grey-500 rounded-2xl select-none">
-                  <img
+                  <Image
                     src={slide.img}
                     alt={slide.title}
-                    className="object-cover rounded-lg w-full h-auto"
+                    height={220}
+                    width={390}
+                    className="object-cover object-contain rounded-lg w-full h-auto"
                   />
                   <div>
                     <h4 className="text-xl font-optima mt-2">{slide.title}</h4>

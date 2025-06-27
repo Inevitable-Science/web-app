@@ -1,8 +1,9 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import CircularGauge from "./CircularGague";
+// import CircularGauge from "./CircularGague";
 
 const AuctionComponent: React.FC = () => {
   const [gaugeSize, setGaugeSize] = useState(120); // Default to large
@@ -27,7 +28,12 @@ const AuctionComponent: React.FC = () => {
     <section className="bg-[url('/assets/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
       <div className="bg-background rounded-2xl sm:min-h-[650px] sm:p-[32px] p-[16px] flex flex-col justify-between gap-[112px] w-full md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
-          <img className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.webp" alt="Auction Image" />
+          <Image 
+            className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.webp" 
+            height={390}
+            width={690}
+            alt="Auction Image" 
+          />
           <h3 className="font-optima text-3xl uppercase">Stasis</h3>
           <p className="text-sm">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

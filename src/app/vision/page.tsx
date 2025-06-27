@@ -1,4 +1,4 @@
-
+import Image from "next/image";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata"
@@ -62,7 +62,13 @@ export default function Vision() {
             </h2>
           </div>
 
-          <img className="h-[55vh] sm:min-h-[400px] sm:block hidden select-none" src="/assets/img/hero.webp" alt="Hero Image" />
+          <Image 
+            src="/assets/img/hero.webp"
+            className="h-[55vh] sm:min-h-[400px] object-contain sm:block hidden select-none" 
+            height={600}
+            width={290}
+            alt="Hero Image" 
+          />
         </div>
       </div>
 
