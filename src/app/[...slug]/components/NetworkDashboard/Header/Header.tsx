@@ -43,7 +43,7 @@ export function Header() {
     return percentage.toFixed(2);
   }, [dailyTotals, loadTimestamp]);
 
-  const { name: projectName, logoUri, twitter, introImageUri } = metadata?.data ?? {};
+  const { name: projectName, logoUri, twitter, introImageUri, coverImageUri } = metadata?.data ?? {};
 
   const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
     id: project?.suckerGroupId ?? "",
@@ -65,9 +65,9 @@ export function Header() {
         <div className="relative sm:h-[215px] h-[235px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
             {/* "FE_TODO: You may need to adjust these sizes." */}
-            { introImageUri ? (
+            { coverImageUri ? (
               <Image
-                src={ipfsUriToGatewayUrl(introImageUri)}
+                src={ipfsUriToGatewayUrl(coverImageUri)}
                 alt={"project header image"}
                 className="inset-0 w-full h-full object-cover mt-[90px] rounded"
                 width={600}
