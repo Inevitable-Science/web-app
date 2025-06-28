@@ -4,16 +4,40 @@ import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 import { TreasuryResponse } from '@/lib/types/AnalyticTypes'
 import { Address } from "viem";
 import { LinkIcon } from "@heroicons/react/24/solid";
-import { Loader2 } from "lucide-react";
+import { Loader2, RotateCw } from "lucide-react";
 
 import TreasuryPieChart from "./TreasuryPieChart";
 import TreasuryChart from "./TreasuryChart";
+import { useState } from "react";
 
 interface TreasurySectionProps {
   data: TreasuryResponse | null;
 }
 
 export function TreasurySection({ data }: TreasurySectionProps) {
+  const [responseData, setResponseData] = useState("")
+
+  const refreshData = async (): Promise<void> => {
+    try {
+      const response = await fetch(`https://inev.profiler.bio/treasury/refresh/${data?.name}`, {
+        method: 'POST',
+      });
+
+      const responseJson = await response.json();
+
+      if (!response.ok) {
+        setResponseData(responseJson.error);
+        return;
+        //throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      setResponseData(responseJson.message);
+    } catch (error) {
+      console.error('Request failed:', error);
+      setResponseData("Failed to refresh");
+    }
+  };
+
 
   return (
       <section>
@@ -28,12 +52,18 @@ export function TreasurySection({ data }: TreasurySectionProps) {
               </div>
 
               <div className="background-color p-[16px] rounded-2xl">
-                <h4 className="text-xl mb-0.5 tracking-wider">
-                  {data?.lastUpdated && (
-                    formatDate(data.lastUpdated)
-                  )}
-                </h4>
-                <p className="text-muted-foreground font-light uppercase">Last Updated</p>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xl mb-0.5 tracking-wider">
+                    {data?.lastUpdated && (
+                      formatDate(data.lastUpdated)
+                    )}
+                  </h4>
+
+                  <RotateCw onClick={refreshData} className="text-grey-100 cursor-pointer" />
+                </div>
+                <p className="text-muted-foreground font-light">
+                  {responseData ? (responseData) : ("LAST UPDATED")}
+                </p>
               </div>
             </div>
 

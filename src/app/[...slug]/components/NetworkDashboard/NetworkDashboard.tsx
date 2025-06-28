@@ -43,12 +43,11 @@ function DashboardContent() {
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    ...(analyticsData?.daoData === null
-      ? [
+    ...(analyticsData?.daoData === null && isAnalyticsLoading === false // Intended to prevent CLS
+      ? [] : [
           { key: "analytics", label: "Analytics" },
           { key: "treasury", label: "Treasury" },
-        ]
-      : []),
+        ]),
   ];
 
   // set title - removed for now, use SSR to render title in layout file using project handle instead of token name
