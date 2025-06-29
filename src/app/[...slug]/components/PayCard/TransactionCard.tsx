@@ -175,9 +175,11 @@ export function TransactionCard() {
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <div className="flex w-fit bg-grey-450 rounded-full py-1 px-2 gap-2 items-center justify-end">
-                    <img 
-                      className="h-[22px] w-[22px]" 
+                    <Image
                       src="/assets/img/logo/mainnet.svg"
+                      className="rounded-full"
+                      height={22}
+                      width={22}
                       alt="ETH Icon"
                     />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
@@ -199,9 +201,11 @@ export function TransactionCard() {
                   />
                 </div>
                 <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
-                  <img
-                    className="h-[22px] w-[22px] rounded-full" 
+                  <Image
                     src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
+                    className="rounded-full" 
+                    height={22}
+                    width={22}
                     alt="Token Icon"
                   />
                   <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>

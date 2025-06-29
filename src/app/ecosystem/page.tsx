@@ -1,9 +1,9 @@
 import PlaceholderActivityGraph from "./DummyChart";
 
 import { headers } from "next/headers";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata"
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRightIcon } from "lucide-react";
 
@@ -138,10 +138,11 @@ export default function Ecosystem() {
                     className="md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto] flex justify-between items-center gap-4 py-2 items-center"
                   >
                     <div className="py-2 flex items-center gap-2 w-[170px] lg:w-[225px]">
-                      <img
+                      <Image
                         src={project.logo}
                         alt={project.name}
-                        className="w-8 h-8"
+                        height={32}
+                        width={32}
                       />
                       <h4 className="text-lg pl-2">
                         {project.name}
