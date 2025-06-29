@@ -26,7 +26,8 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`https://api.profiler.bio/api/historical/treasury/${organisation}`);
+        //const response = await fetch(`https://api.profiler.bio/api/historical/treasury/${organisation}`);
+        const response = await fetch(`https://inev.profiler.bio/charts/treasury/${organisation}`);
         const jsonData: ChartData = await response.json();
         setData(jsonData);
       } catch (error) {

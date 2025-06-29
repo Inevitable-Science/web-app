@@ -277,8 +277,11 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
     try {
       const apiUrl =
         type === "marketCap" || type === "volume"
-          ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
-          : `https://api.profiler.bio/api/holders/${tokenName}`;
+        //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
+        //  : `https://api.profiler.bio/api/holders/${tokenName}`;
+          ? `https://inev.profiler.bio/chart/${organisation}-${range}`
+          : `https://api.profiler.bio/charts/holders/${tokenName}`;
+
 
       const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
       const cacheEntry = cache.get(cacheKey);

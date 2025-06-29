@@ -107,11 +107,18 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
           fetch(`https://api.profiler.bio/api/market-chart?id=${tokenName}&days=7`)
         ]);*/
 
-        const responses = await Promise.all([
+        /*const responses = await Promise.all([
           fetch(`https://api.profiler.bio/api/dao/hydradao`),
           fetch(`https://api.profiler.bio/api/token/hydra`),
           fetch(`https://api.profiler.bio/api/treasury/hydradao`),
           fetch(`https://api.profiler.bio/api/market-chart?id=hydra&days=7`)
+        ]); // Temporary remove in production*/
+
+        const responses = await Promise.all([
+          fetch(`https://inev.profiler.bio/dao/hydradao`),
+          fetch(`https://inev.profiler.bio/token/hydra`),
+          fetch(`https://inev.profiler.bio/treasury/hydradao`),
+          fetch(`https://inev.profiler.bio/chart/hydra-7`)
         ]); // Temporary remove in production
 
         // Check if all responses are OK

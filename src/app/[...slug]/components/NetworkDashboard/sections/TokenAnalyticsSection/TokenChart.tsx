@@ -344,7 +344,8 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
 
   const fetchData = async (range: string): Promise<PriceData> => {
     try {
-      const apiUrl = `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`;
+      //const apiUrl = `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`;
+      const apiUrl = `https://inev.profiler.bio/chart/${organisation}-${range}`;
       const cacheEntry = cache.get(apiUrl);
       const now = Date.now();
       if (cacheEntry && now - cacheEntry.timestamp < 5 * 60 * 1000) {
