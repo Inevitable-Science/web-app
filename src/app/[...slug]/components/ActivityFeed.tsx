@@ -26,6 +26,7 @@ import { Address, formatEther } from "viem";
 import { Loader2 } from "lucide-react";
 import StaticVolumeChart, { ProjectTimelineRange, ProjectTimelineView } from "./NetworkDashboard/Components/ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
+import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
 // DATA_TODO: Add functionality to view changes to the project rules
 
@@ -69,6 +70,7 @@ function PayActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
+  const { metadata } = useNetworkData();
   const composeCast = sdk.actions.composeCast;
   const chainId = payEvent.chainId;
   const chain = JB_CHAINS[chainId].chain;
@@ -83,7 +85,7 @@ function PayActivityItem(
     checkMiniApp();
   }, []);
 
-  if (!token?.data || !payEvent) return null;
+  if (!payEvent) return null;
 
   const activityItemData = {
     amount: new Ether(BigInt(payEvent.amount)),
@@ -99,7 +101,7 @@ function PayActivityItem(
     ? `@${payEvent.identity.username}`
     : `${payEvent.beneficiary.slice(0, 6)}…`;
 
-  const shareText = `⏩ ${handle} paid ${activityItemData.amount.format(4)} ETH and received ${activityItemData.beneficiaryTokenCount?.format(2)} ${token.data?.symbol} — "${activityItemData.memo}"`;
+  const shareText = `⏩ ${handle} paid ${activityItemData.amount.format(4)} ETH and received ${activityItemData.beneficiaryTokenCount?.format(2)} ${token?.data?.symbol ? token.data.symbol : metadata?.data?.name} — "${activityItemData.memo}"`;
 
   const formattedDate = formatDistance(payEvent.timestamp * 1000, new Date(), {
     addSuffix: true,
@@ -165,6 +167,7 @@ function RedeemActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
+  const { metadata } = useNetworkData();
   const composeCast = sdk.actions.composeCast;
 
   const [isMiniApp, setIsMiniApp] = useState(false);
@@ -177,7 +180,7 @@ function RedeemActivityItem(
     checkMiniApp();
   }, []);
 
-  if (!token?.data || !cashOutEvent) return null;
+  if (!cashOutEvent) return null;
 
   const activityItemData = {
     amount: new Ether(BigInt(cashOutEvent.reclaimAmount)),
@@ -189,7 +192,7 @@ function RedeemActivityItem(
     ? `@${cashOutEvent.identity.username}`
     : `${cashOutEvent.beneficiary.slice(0, 6)}…`;
 
-  const shareText = `⏩ ${handle} redeemed ${activityItemData.cashOutCount?.format(2)} ${token.data.symbol} for ${activityItemData.amount.format(4)} ETH`;
+  const shareText = `⏩ ${handle} redeemed ${activityItemData.cashOutCount?.format(2)} ${token?.data?.symbol ? token.data.symbol : metadata?.data?.name} for ${activityItemData.amount.format(4)} ETH`;
 
   const formattedDate = formatDistance(
     cashOutEvent.timestamp * 1000,
@@ -216,7 +219,7 @@ function RedeemActivityItem(
       <div className="flex items-center justify-between pb-4 gap-1 text-md flex-wrap">
         <div className="flex items-center gap-1 text-color font-light">
           {activityItemData.cashOutCount?.format(6)}{" "}
-          {formatTokenSymbol(token.data.symbol)}
+          {formatTokenSymbol(token?.data?.symbol ? token?.data?.symbol : metadata?.data?.name)}
         </div>
 
         <div className="font-light text-grey-100 text-md">
