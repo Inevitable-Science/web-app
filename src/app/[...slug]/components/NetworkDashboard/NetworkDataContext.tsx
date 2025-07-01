@@ -100,19 +100,22 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       setAnalyticsError(null);
       try {
         // Use Promise.all to fetch data in parallel for better performance
-        /*const responses = await Promise.all([
-          fetch(`https://api.profiler.bio/api/dao/${daoName}`),
-          fetch(`https://api.profiler.bio/api/token/${tokenName}`),
-          fetch(`https://api.profiler.bio/api/treasury/${daoName}`),
-          fetch(`https://api.profiler.bio/api/market-chart?id=${tokenName}&days=7`)
-        ]);*/
+        /*
+        const responses = await Promise.all([
+          fetch(`https://inev.profiler.bio/dao/${daoName}`),
+          fetch(`https://inev.profiler.bio/token/${tokenName}`),
+          fetch(`https://inev.profiler.bio/treasury/${daoName}`),
+          fetch(`https://inev.profiler.bio/chart/${tokenName}-7`)
+        ]);
+        */
 
+        // TODO: 
         /*const responses = await Promise.all([
-          fetch(`https://api.profiler.bio/api/dao/hydradao`),
-          fetch(`https://api.profiler.bio/api/token/hydra`),
-          fetch(`https://api.profiler.bio/api/treasury/hydradao`),
-          fetch(`https://api.profiler.bio/api/market-chart?id=hydra&days=7`)
-        ]); // Temporary remove in production*/
+          fetch(`https://inev.profiler.bio/dao/hydradao`),
+          fetch(`https://inev.profiler.bio/token/hydra`), // only fetch if project is not tokenless
+          fetch(`https://inev.profiler.bio/treasury/hydradao`),
+          fetch(`https://inev.profiler.bio/chart/hydra-7`) // only fetch if project is not tokenless
+        ]);*/
 
         const responses = await Promise.all([
           fetch(`https://inev.profiler.bio/dao/hydradao`),

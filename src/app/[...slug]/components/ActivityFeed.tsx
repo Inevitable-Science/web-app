@@ -310,16 +310,11 @@ export function ActivityFeed() {
         ) ?? []
       }
     >
-
-
-
       <section className="flex flex-col mb-6 bg-grey-450 p-[16px] rounded-2xl">
         <StaticVolumeChart
           suckerGroupId={suckerGroupId}
         />
       </section>
-
-
 
       {isOpen && (
         <div className="flex flex-col gap-1">
