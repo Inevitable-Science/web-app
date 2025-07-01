@@ -91,7 +91,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
     const daoName = metadata.data?.name;
     const tokenName = token.data?.name; // Assuming token symbol is used as the ID. Adjust if needed.
 
-    if (!daoName || !tokenName) {
+    if (!daoName /*|| !tokenName*/) { // TODO: allow for tokenless projects
       return;
     }
 

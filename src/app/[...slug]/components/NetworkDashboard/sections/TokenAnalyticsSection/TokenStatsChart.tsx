@@ -271,6 +271,7 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
   const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">("1");
   const [chartType, setChartType] = useState<"volume" | "holders" | "marketCap">("volume");
   const [dataFound, setDataFound] = useState<boolean>(true);
+  const [passedData, setPassedData] = useState<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
 
   const fetchData = async (range: string, type: string): Promise<ChartData[] | null> => {
@@ -280,7 +281,7 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
         //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
         //  : `https://api.profiler.bio/api/holders/${tokenName}`;
           ? `https://inev.profiler.bio/chart/${organisation}-${range}`
-          : `https://api.profiler.bio/charts/holders/${tokenName}`;
+          : `https://inev.profiler.bio/charts/holders/${tokenName}`;
 
 
       const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
@@ -312,6 +313,8 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
       console.error("Error fetching data:", error);
       setDataFound(false);
       return null;
+    } finally {
+      setPassedData(true);
     }
   };
 
@@ -474,7 +477,7 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
       {dataFound ? (
         <div
           ref={chartContainerRef}
-          className="chartOverrideShow-token"
+          className={`chartOverrideShow-token ${passedData ? "opacity-1" : "opacity-0 !h-[1px]"}`}
           style={{ width: "100%", height: "400px", maxHeight: "400px" }}
         />
       ) : (
@@ -483,6 +486,8 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
           <h5>We are unable to fetch data for this token right now.</h5>
         </div>
       )}
+
+      <div className={`activeSkeleton w-full h-[376px] rounded-lg ${passedData ? "hidden" : "block"}`} />
 
       <style>{`
         #tv-attr-logo { display: none; }

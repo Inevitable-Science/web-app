@@ -543,18 +543,20 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
         </div>
       </div>
 
-      {dataFound ? (
-        <div
-          ref={chartContainerRef}
-          className="chartOverrideShow-token"
-          style={{ width: "100%", height: "400px", maxHeight: "400px" }}
-        />
-      ) : (
-        <div className="hitboxUTFD-chart">
-          <h3>Unable to fetch data</h3>
-          <h5>We are unable to fetch data for this token right now.</h5>
-        </div>
-      )}
+        {dataFound ? (
+          <div
+            ref={chartContainerRef}
+            className={`chartOverrideShow-token ${priceData ? "opacity-1" : "opacity-0 !h-[1px]"}`}
+            style={{ width: "100%", height: "400px", maxHeight: "400px" }}
+          />
+        ) : (
+          <div className="hitboxUTFD-chart">
+            <h3>Unable to fetch data</h3>
+            <h5>We are unable to fetch data for this token right now.</h5>
+          </div>
+        )}
+
+        <div className={`activeSkeleton w-full h-[376px] rounded-lg ${priceData ? "hidden" : "block"}`} />
 
       <style>{`
         #tv-attr-logo { display: none; }

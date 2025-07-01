@@ -161,12 +161,15 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
     <>
       <div
         ref={chartContainerRef}
+        className={data ? "opacity-1" : "opacity-0 !h-[1px]"}
         style={{
           width: "100%",
           height: "400px",
         }}
       />
       <style>{`#tv-attr-logo { display: none; }`}</style>
+
+      <div className={`activeSkeleton w-full h-[376px] rounded-lg ${data ? "hidden" : "block"}`} />
     </>
   );
 };
