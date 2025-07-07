@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
       // Sanitize input by removing query strings and trimming whitespace
       const sanitizedSlug = raw.split("?")[0].trim();
 
-      const decoded = decodeURIComponent(sanitizedSlug);
+      /*const decoded = decodeURIComponent(sanitizedSlug);
       const urn = jbUrn(decoded);
 
       if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
@@ -45,7 +45,23 @@ export default function Page({ params }: { params: { slug?: string[] } }) {
       }
 
       setProjectId(urn.projectId);
-      setChainId(urn.chainId);
+      setChainId(urn.chainId);*/
+
+      const decoded = decodeURIComponent(sanitizedSlug);
+
+      if (decoded == "@stasis") {
+        setProjectId(64n);
+        setChainId(1);
+      } else {
+        const urn = jbUrn(decoded);
+        if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
+          throw new Error("Invalid URN format or unknown chain");
+        }
+
+        setProjectId(urn.projectId);
+        setChainId(urn.chainId);
+      }
+
       setNotFound(false);
     } catch (error) {
       console.warn("URN decoding error:", error);
