@@ -50,6 +50,112 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
     if (process.env.NODE_ENV === "development") {
       console.log("Fetching project metadata for slug:", slug);
     }
+
+    const cleanSlug = slug.split("?")[0]?.trim();
+    if (!cleanSlug || typeof cleanSlug !== "string") {
+      throw new Error("Missing or malformed slug");
+    }
+
+    const decoded = decodeURIComponent(cleanSlug);
+
+    let projectId: bigint;
+    let chainId: number;
+
+    if (decoded === "@stasis") {
+      projectId = 64n;
+      chainId = 1;
+    } else {
+      if (!decoded.includes(":")) {
+        throw new Error("Missing namespace in slug");
+      }
+
+      const urn = jbUrn(decoded);
+
+      if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
+        throw new Error("Invalid URN");
+      }
+
+      projectId = urn.projectId;
+      chainId = Number(urn.chainId);
+    }
+
+    if (!(chainId in SUBGRAPH_URLS)) {
+      console.error("No valid subgraph URL for chain: " + chainId);
+      return null;
+    }
+
+    const subgraphUrl = SUBGRAPH_URLS[chainId as keyof typeof SUBGRAPH_URLS];
+    if (!subgraphUrl) {
+      console.error("Subgraph URL is undefined for chain: " + chainId);
+      return null;
+    }
+
+    const query = `
+      query Projects($projectId: Int!) {
+        projects(where: { projectId: $projectId }, first: 1, skip: 0) {
+          projectId
+          metadataUri
+          handle
+          contributorsCount
+          createdAt
+        }
+      }
+    `;
+
+    const variables = { projectId: Number(projectId) };
+
+    const data = await request<ProjectsQueryResult>(subgraphUrl, query, variables);
+    if (!data.projects.length) {
+      console.warn("No project found for projectId", projectId);
+      return { handle: "project" };
+    }
+
+    const project = data.projects[0];
+
+    // If handle exists, return it directly
+    if (project.handle) {
+      return { handle: project.handle };
+    }
+
+    // Try to resolve from IPFS metadata if no handle
+    let ipfsHash = "";
+    if (typeof project.metadataUri === "string") {
+      if (project.metadataUri.startsWith("ipfs://")) {
+        ipfsHash = project.metadataUri.replace("ipfs://", "");
+      } else if (/^[A-Za-z0-9]{46,}$/.test(project.metadataUri)) {
+        ipfsHash = project.metadataUri;
+      }
+    }
+
+    if (!ipfsHash) {
+      console.warn("Invalid metadata URI, skipping IPFS fetch");
+      return { handle: "project" };
+    }
+
+    try {
+      const metadataRes = await fetch(`https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${ipfsHash}`);
+      const metadata = await metadataRes.json();
+      return {
+        handle: metadata.name ?? "project",
+        logoUri: metadata.logoUri?.startsWith("ipfs://")
+          ? `https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${metadata.logoUri.replace("ipfs://", "")}`
+          : metadata.logoUri,
+      };
+    } catch (err) {
+      console.error("Failed to fetch metadata from IPFS:", err);
+      return { handle: "project" };
+    }
+  } catch (err) {
+    console.warn("getProjectMetadata error:", err);
+    return null;
+  }
+}
+
+/*async function getProjectMetadata(slug: string): Promise<{ handle: string; logoUri?: string } | null> {
+  try {
+    if (process.env.NODE_ENV === "development") {
+      console.log("Fetching project metadata for slug:", slug);
+    }
     const cleanSlug = slug.split("?")[0]?.trim();
     if (!cleanSlug || typeof cleanSlug !== "string" || !cleanSlug.includes(":")) {
       throw new Error("Missing or malformed slug");
@@ -123,7 +229,7 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
     console.warn("getProjectMetadata error:", err);
     return null;
   }
-}
+}*/
 
 export async function generateMetadata({
   params,
@@ -136,7 +242,10 @@ export async function generateMetadata({
   const origin = `${proto}://${host}`;
   const slugPath = decodeURIComponent(params?.slug?.join("/") ?? "");
 
-  if (!slugPath.includes(":")) {
+  if (
+    !slugPath.includes(":") &&
+    slugPath != "@stasis"
+  ) {
     const url = new URL(`/${slugPath}`, origin);
     const title = "Inevitable Protocol";
     const description = "Begin your journey. Build the future of life—together.";
