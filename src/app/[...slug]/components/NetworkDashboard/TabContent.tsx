@@ -9,7 +9,7 @@ import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 import { TreasurySection } from './sections/TreasuryAnalyticsSection/TreasurySection';
 import { TokenSection } from './sections/TokenAnalyticsSection/TokenSection';
 import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes'
-import { AnalyticsData } from './NetworkDataContext';
+import { AnalyticsData, useNetworkData } from './NetworkDataContext';
 
 interface TabContentProps {
   selectedTab: string;
@@ -44,6 +44,7 @@ export const TabContent: FC<TabContentProps> = ({
   analyticsData,
   analyticsError,
 }) => {
+  const { token } = useNetworkData();
   const SelectedComponent = tabComponents[selectedTab];
   const latestPrice = analyticsData?.marketData?.prices[analyticsData.marketData.prices.length - 1]?.[1] || 0;
   const latestMarketCap = analyticsData?.marketData?.market_caps[analyticsData.marketData.market_caps.length - 1]?.[1] || 0;
@@ -81,8 +82,12 @@ export const TabContent: FC<TabContentProps> = ({
 
       {!analyticsError && analyticsData?.tokenData && analyticsData?.treasuryData && (
         <>
-          {selectedTab === "analytics" && (
-            <TokenSection data={analyticsData?.tokenData} />
+          {token?.data && (
+            <>
+              {selectedTab === "analytics" && (
+                <TokenSection data={analyticsData?.tokenData} />
+              )}
+            </>
           )}
           {selectedTab === "treasury" && (
             <TreasurySection data={analyticsData?.treasuryData} />

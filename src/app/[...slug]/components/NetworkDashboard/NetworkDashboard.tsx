@@ -45,7 +45,7 @@ function DashboardContent() {
     { key: "cycles", label: "Cycles" },
     ...(analyticsData?.daoData === null && isAnalyticsLoading === false // Intended to prevent CLS
       ? [] : [
-          { key: "analytics", label: "Analytics" },
+        ...(token.data ? [{ key: "analytics", label: "Analytics" }] : []),
           { key: "treasury", label: "Treasury" },
         ]),
   ];

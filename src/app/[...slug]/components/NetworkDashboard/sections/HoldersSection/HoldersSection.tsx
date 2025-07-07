@@ -187,16 +187,18 @@ export function HoldersSection() {
   return (
     <section>
       <div className="flex flex-col gap-4 w-full">
-        <div className="bg-grey-450 p-[12px] rounded-2xl">
-          <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">
-              {totalBalance && token.data && formatNumber(Number(formatUnits(totalBalance.value, token.data?.decimals)), false)}
-            </h3>
-            <p className="text-muted-foreground font-light uppercase">
-              {tokenSymbol!= "$TOKEN" ? `Your ${tokenSymbol}` : "Your Balance"}
-            </p>
+        {token?.data && (
+          <div className="bg-grey-450 p-[12px] rounded-2xl">
+            <div className="background-color p-[16px] rounded-xl">
+              <h3 className="text-xl">
+                {totalBalance && token.data && formatNumber(Number(formatUnits(totalBalance.value, token.data?.decimals)), false)}
+              </h3>
+              <p className="text-muted-foreground font-light uppercase">
+                {tokenSymbol!= "$TOKEN" ? `Your ${tokenSymbol}` : "Your Balance"}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="bg-grey-450 p-[12px] rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
           <div className="background-color p-[16px] rounded-xl">
