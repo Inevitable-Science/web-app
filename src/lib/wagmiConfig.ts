@@ -25,7 +25,7 @@ export const wagmiConfig = createConfig({
       safeConnector,
       coinbaseWallet({
         appName: "REVNET",
-        appLogoUrl: "https://app.revnet.eth.sucks/assets/img/small-bw.svg",
+        appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
       }),
       walletConnect({
         projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
@@ -34,7 +34,7 @@ export const wagmiConfig = createConfig({
           name: "Inevitable Sciences",
           description: "Fund radical science.",
           url: "https://app.inevitable.science",
-          icons: ["https://app.inevitable.science/assets/img/small-bw.svg"],
+          icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
         },
       }),
     ],
