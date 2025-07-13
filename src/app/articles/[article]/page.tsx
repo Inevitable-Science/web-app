@@ -43,7 +43,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         images: [`${origin}/assets/img/branding/seo_banner.png`],
       },
       manifest: "/manifest/manifest.json",
-      keywords: "Inevitable, Inevitable Protocol",
     };
   }
 
@@ -74,7 +73,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [imgUrl],
     },
     manifest: "/manifest/manifest.json",
-    keywords: [...article.category, "Inevitable", "Inevitable Protocol"].join(", "),
   };
 }
 

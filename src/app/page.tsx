@@ -51,7 +51,6 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [imgUrl],
     },
     manifest: metadata.manifest,
-    keywords: metadata.keywords, 
   };
 }
 

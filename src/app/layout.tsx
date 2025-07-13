@@ -48,7 +48,6 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [imgUrl],
     },
     manifest: "/manifest/manifest.json",
-    keywords: "Inevitable, Inevitable Protocol", 
   };
 }*/
 
