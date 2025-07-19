@@ -57,7 +57,19 @@ export default function ClientTable() {
   
 
   useEffect(() => {
-    if (!address || !isConnected) return;
+    if (!address || !isConnected) {
+      const fallback: Record<string, string> = {};
+
+      dummyStats.forEach((token) => {
+        fallback[token.tokenAddress] = "0";
+        if (token.vestingContract) {
+          fallback[token.vestingContract] = "0";
+        }
+      });
+
+      setBalances(fallback);
+      return;
+    }
 
     const fetchBalances = async () => {
       try {
