@@ -25,23 +25,23 @@ export function Providers({ children }: { children: React.ReactNode }) {
     const queryClient = new QueryClient();
 
     return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectKitProvider
-                  theme="auto"
-                  mode="dark"
-                  customTheme={{
-                    "--ck-font-family": "var(--font-simplon-norm)",
-                    "--ck-connectbutton-border-radius": "0",
-                    "--ck-accent-color": "#14B8A6",
-                    "--ck-accent-text-color": "#ffffff",
-                  }}
-                >
-      {children}
-      </ConnectKitProvider>
-      </QueryClientProvider>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <ConnectKitProvider
+            theme="auto"
+            mode="dark"
+            customTheme={{
+              "--ck-font-family": "var(--font-simplon-norm)",
+              "--ck-connectbutton-border-radius": "0",
+              "--ck-accent-color": "#14B8A6",
+              "--ck-accent-text-color": "#ffffff",
+            }}
+          >
+            {children}
+          </ConnectKitProvider>
+        </QueryClientProvider>
       </WagmiProvider>
-      );
+    );
   }
 
   // For all other pages, render the dynamically imported AppSpecificProviders

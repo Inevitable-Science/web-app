@@ -1,19 +1,9 @@
 import PlaceholderActivityGraph from "./DummyChart";
+import ClientTable from "./ClientTable";
 
 import { headers } from "next/headers";
-import Image from "next/image";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata"
-import Link from "next/link";
-import { ArrowRightIcon } from "lucide-react";
-
-const dummyStats = [
-  { name: "HydraDAO", logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg" },
-  { name: "CryoDAO", logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg" },
-  { name: "Erectus", logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg" },
-  { name: "MoonDAO", logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg" },
-  { name: "Stasis", logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg" },
-];
 
 // DATA_TODO: Will need to consolidate, need to route data to this page. Will talk about this later down the line...
 
@@ -75,7 +65,7 @@ export default function Ecosystem() {
             </h3>
           </div>
 
-          <div className="lg:text-xl md:text-sm font-light text-base">
+          <div className="lg:text-xl text-md font-light">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
           </div>
         </div>
@@ -121,95 +111,13 @@ export default function Ecosystem() {
               </div>
             </div>
 
-            <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] w-full rounded-2xl">
+            <div className="bg-grey-450 flex flex-col justify-center h-full gap-[12px] p-[12px] w-full rounded-2xl">
               <PlaceholderActivityGraph />
             </div>
           </div>
 
 
-          <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] rounded-2xl">
-            <h3 className="text-xl">Projects</h3>
-
-            <div className="background-color p-[8px] rounded-xl font-light">
-              {dummyStats.map((project, index) => (
-                <div key={index} className="border-b border-grey-500">
-                  <div
-                    className="md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto] flex justify-between items-center gap-4 py-2 items-center"
-                  >
-                    <div className="py-2 flex items-center gap-2 w-[170px] lg:w-[225px]">
-                      <Image
-                        src={project.logo}
-                        alt={project.name}
-                        height={32}
-                        width={32}
-                      />
-                      <h4 className="text-lg pl-2">
-                        {project.name}
-                      </h4>
-                    </div>
-
-                    <div className="md:flex flex-col gap-1 hidden">
-                      <span className="text-grey-50 text-sm">
-                        AMOUNT
-                      </span>
-                      0
-                    </div>
-
-                    <div className="md:flex flex-col gap-1 hidden">
-                      <span className="text-grey-50 text-sm">
-                        vAMOUNT
-                      </span>
-                      0
-                    </div>
-
-                    <div className="md:flex flex-col gap-1 hidden">
-                      <span className="text-grey-50 text-sm">
-                        PRICE
-                      </span>
-                      0
-                    </div>
-
-                    <div className="md:flex flex-col gap-1 hidden">
-                      <span className="text-grey-50 text-sm">
-                        LIQUID VALUE
-                      </span>
-                      0
-                    </div>
-
-                    <button className="focus:outline-none py-[6px] px-[12px] rounded-full bg-gunmetal font-normal">
-                      <Link href="/eth:64" className="flex items-center gap-2">
-                        Invest
-                        <ArrowRightIcon height="18" width="18" />
-                      </Link>
-                    </button>
-                  </div>
-
-                  <div className="md:hidden grid grid-cols-[2fr_2fr_3fr] gap-4 items-center mb-3">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-grey-50 text-sm">
-                        AMOUNT
-                      </span>
-                      0
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <span className="text-grey-50 text-sm">
-                        vAMOUNT
-                      </span>
-                      0
-                    </div>
-
-                    <div className="flex flex-col gap-1">
-                      <span className="text-grey-50 text-sm">
-                        LIQUID VALUE
-                      </span>
-                      0
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ClientTable />
 
         </div>
       </section>
