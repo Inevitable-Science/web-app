@@ -21,11 +21,15 @@ function buildMetadata({
   description,
   imageUrl,
   url,
+  imageWidth,
+  imageHeight
 }: {
   title: string;
   description: string;
   imageUrl: string;
   url: string;
+  imageWidth: number;
+  imageHeight: number;
 }): Metadata {
   return {
     title,
@@ -33,7 +37,8 @@ function buildMetadata({
       title,
       description,
       url,
-      images: [{ url: imageUrl, width: 1200, height: 800, alt: `${title} preview image` }],
+      // images: [{ url: imageUrl, width: 1200, height: 800, alt: `${title} preview image` }],
+      images: [{ url: imageUrl, width: imageWidth, height: imageHeight, alt: `${title} preview image` }],
       type: "website",
     },
     twitter: {
@@ -250,8 +255,11 @@ export async function generateMetadata({
     const title = "Inevitable Protocol";
     const description = "Begin your journey. Build the future of life—together.";
     const imageUrl = `${origin}/assets/img/branding/seo_banner.png`;
+
+    const imageWidth = 1200;
+    const imageHeight = 800;
     
-    return buildMetadata({ title, description, imageUrl, url: url.href });
+    return buildMetadata({ title, description, imageUrl, url: url.href, imageWidth, imageHeight });
   }
 
   const fullPath = `/${slugPath}`;
@@ -264,8 +272,12 @@ export async function generateMetadata({
   let imgUrl = project?.logoUri || `${origin}/assets/img/branding/seo_banner.png`;
 
   let metadataTitle;
+  let imageWidth = 1200;
+  let imageHeight = 800;
   if (projectName !== "project"){
     metadataTitle = `${projectName} | Inevitable Protocol`;
+    imageWidth = 800;
+    imageHeight = 800;
   } else {
     metadataTitle = "Inevitable Protocol"
   }
@@ -275,6 +287,8 @@ export async function generateMetadata({
     description: "Begin your journey. Build the future of life—together.",
     imageUrl: imgUrl,
     url: url.href,
+    imageWidth,
+    imageHeight
   });
 }
 
