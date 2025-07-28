@@ -90,7 +90,7 @@ export function ActivityFeed() {
         ) : (
           <div>
             {data.data.map((transaction) => (
-              <div className="border-b border-color pb-2 mb-1 min-h-[80px]">
+              <div key={transaction["Transaction hash"]} className="border-b border-color pb-2 mb-1 min-h-[80px]">
                 <div className="flex items-center justify-between">
                   <h3 className="text-grey-50 font-light">PAID</h3>
                   <div className="text-md font-light text-grey-50 mb-2">

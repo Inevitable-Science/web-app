@@ -48,10 +48,6 @@ export const TabContent: FC<TabContentProps> = ({
     return null;
   }
 
-  useEffect(() => {
-    console.log(selectedTab);
-  }, [selectedTab]);
-
   return (
     <div className="pb-10">
 
