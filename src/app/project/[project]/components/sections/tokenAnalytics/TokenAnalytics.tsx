@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
 import { TokenResponse } from '@/lib/types/AnalyticTypes';
@@ -9,12 +10,20 @@ import {
   useSuckers,
 } from "juice-sdk-react";
 import { JB_CHAINS } from "juice-sdk-core";
+import { useWatchAsset } from "wagmi";
 
-import { Address } from "viem";
+import { Address, formatUnits } from "viem";
 import { Loader2 } from "lucide-react";
 
-import TokenChart from "./TokenChart";
-import TokenStatsChart from "./TokenStatsChart";
+import TokenChart from "@/app/[...slug]/components/NetworkDashboard/sections/TokenAnalyticsSection/TokenChart";
+import TokenStatsChart from "@/app/[...slug]/components/NetworkDashboard/sections/TokenAnalyticsSection/TokenStatsChart";
+import { useData } from "../../../DataProvider";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+
+import { useAccount } from "wagmi";
+import { getBalance } from '@wagmi/core'
+import { wagmiConfig } from "@/lib/wagmiConfig";
 
 
 interface DescriptionSectionProps {
@@ -59,18 +68,115 @@ function getValuationLabel(aum: number | null, marketCap: number | null): string
   return "STRETCHED";
 }
 
-export function TokenSection({ data }: DescriptionSectionProps) {
-  const chainId = useJBChainId();
+export function TokenSection() {
+  const { analyticsData } = useData();
+  const data = analyticsData?.tokenData;
 
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
 
+  const { watchAsset, isSuccess, isPending } = useWatchAsset();
+  
+  const handleAddToken = () => {
+    // Make sure token.data and necessary properties exist
+    if (!data?.selectedToken.address || !data.selectedToken.name /*|| !data.selectedToken.decimals*/) {
+      console.error("Token information is incomplete.");
+      return;
+    }
+    
+    watchAsset({
+      type: 'ERC20',
+      options: {
+        address: data?.selectedToken.address as Address,
+        symbol: data.selectedToken.name,
+        decimals: 18,
+        image: data.selectedToken.logoUrl || "", 
+      },
+    });
+  };
+
+  const { address, isConnected } = useAccount();
+  const [balance, setBalance] = useState<string>("");
+  
+
+  useEffect(() => {
+    if (!address || !isConnected) {
+      return;
+    }
+
+    const fetchBalance = async () => {
+      try {
+        const balanceResults = await getBalance(wagmiConfig, {
+          address,
+          token: data?.selectedToken.address as Address,
+        });
+
+        const raw = Number(formatUnits(balanceResults.value, balanceResults.decimals));
+        let formatted: string;
+
+        if (raw < 1000) {
+          formatted = raw.toFixed(2);
+        } else {
+          formatted = formatNumber(raw, true);
+        }
+        
+
+        setBalance(formatted);
+      } catch (err) {
+        console.error("Error fetching token balances:", err);
+      }
+    };
+
+    fetchBalance();
+  }, [address, isConnected]);
+
   return (
     <section>
 
-      <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
-        <TokenChart organisation="cryodao"/>
-      </div>
+      {data?.name && (
+        <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px]">
+          <TokenChart organisation={data?.name}/>
+        </div>
+      )}
+
+      <div className="bg-grey-450 p-[12px] my-4 rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+        <div className="background-color p-[16px] rounded-xl">
+          <div className="flex gap-2 items-end">
+            {/* This h3 is already correctly handling a potential lack of token.data */}
+            <h3 className="text-xl">
+              {data?.selectedToken.name}
+            </h3>
+            {data?.selectedToken && (
+              <p className="text-muted-foreground font-light text-sm">
+                {/* Use the actual token address from your data */}
+                {truncateAddress(data?.selectedToken.address as Address)}
+              </p>
+            )}
+          </div>
+          <p className="text-muted-foreground font-light uppercase">
+            Project Token
+          </p>
+          {data?.selectedToken && (
+            <Button
+              variant="link"
+              className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+              onClick={handleAddToken}
+              disabled={isPending} // Disable the button while processing
+            >
+              {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+              <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
+            </Button>
+          )}
+        </div>
+          <div className="background-color p-[16px] rounded-xl">
+            <h3 className="text-xl">
+              {balance}
+            </h3>
+            <p className="text-muted-foreground font-light uppercase">
+              Your Balance
+            </p>
+          </div>
+        </div>
 
       {data ? (
         <div className="flex flex-col gap-4 w-full">
@@ -86,24 +192,26 @@ export function TokenSection({ data }: DescriptionSectionProps) {
                   {getValuationLabel(data.assetsUnderManagement, data.selectedToken.marketCap)}
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
-                <div className="flex gap-2 h-[24px] mb-[4px]">
-                  {suckers?.map((pair) => {
-                    if (!pair) return null;
-
-                    const networkSlug =
-                      JB_CHAINS[pair?.peerChainId as JBChainId].slug;
-                    return (
-                      <ChainLogo
-                        key={pair.peerChainId}
-                        chainId={pair.peerChainId as JBChainId}
-                        width={24}
-                        height={24}
-                      />
-                    );
-                  })}
+              <div className="background-color p-[16px_16px_10px_16px] rounded-2xl">
+                <div className="flex h-[28px] [&>*:not(:first-child)]:relative [&>*:not(:first-child)]:right-2">
+                  {data?.selectedToken?.networks?.map((network, index) => (
+                    <span key={index}>
+                      {network === "eth" && (
+                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/mainnet.svg" />
+                      )}
+                      {network === "base" && (
+                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/base.svg" />
+                      )}
+                      {network === "opt" && (
+                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/optimism.svg" />
+                      )}
+                      {network === "arb" && (
+                        <Image alt="Token Logo" width={25} height={25} src="/assets/img/logo/arbitrum.svg" />
+                      )}
+                    </span>
+                  ))}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">Networks</p>
+                <p className="text-muted-foreground font-light uppercase mt-[8px]">Networks</p>
               </div>
             </div>
           </div>
@@ -186,45 +294,11 @@ export function TokenSection({ data }: DescriptionSectionProps) {
             </div>
           )}
 
-
-          {/*{data.tokenDistribution && (
-            <div className="bg-grey-450 p-[12px] rounded-2xl">
-              <h3 className="text-grey-50 uppercase text-sm pt-1">Holder Distribution</h3>
-
-              <div className="background-color p-[16px] rounded-xl mt-2">
-                <h3 className="text-xl">
-                  {data.selectedToken.totalHolders}
-                </h3>
-                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
-              </div>
-
-              <div>
-                {data.tokenDistribution.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-grey-300">{item.range} ({item.accounts} accounts)</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-grey-500">{item.percent_tokens_held?.toFixed(2)}%</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {data.selectedToken.ticker && data.selectedToken.name && (
+            <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
+              <TokenStatsChart organisation={data.selectedToken.ticker} tokenName={data.selectedToken.name} />
             </div>
-          )}*/}
-          
-          
-          <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
-            <TokenStatsChart organisation="cryodao" tokenName="cryo" />
-          </div>
-
-
-          {/*<pre>
-            <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>*/}
+          )}
         </div>
       ) : (
         <div className="w-full flex justify-center my-[15vh]">

@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CowSwapWidgetParams, CowSwapWidget, CowSwapWidgetPalette, EthereumProvider, TradeType } from "@cowprotocol/widget-react";
+import { useAccount } from "wagmi";
+import { wagmiConfig } from "@/lib/wagmiConfig";
 
 interface TokenState {
   token: string;
@@ -21,6 +23,7 @@ export function SwapWidget({ token } : TokenState) {
       "https://files.cow.fi/tokens/CowSwap.json",
       "https://files.cow.fi/tokens/CoinGecko.json",
       "https://inevitable.science/web3/tokenlist.schema.json",
+      "https://www.profiler.bio/web3/tokenlist.schema.json"
     ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },

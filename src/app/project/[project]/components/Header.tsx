@@ -1,63 +1,12 @@
 "use client";
-
-import {
-  ParticipantsDocument,
-  SuckerGroupDocument,
-} from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { formatDate } from "@/lib/utils";
-import {
-  useJBProjectMetadataContext,
-} from "juice-sdk-react";
 import Image from "next/image";
-import { useMemo, useState } from "react";
-import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useNetworkData } from "../NetworkDataContext";
+import { Address } from "viem";
+import { useData } from "../DataProvider";
+
 
 export function Header() {
-  const { project, dailyTotals } = useNetworkData();
-  const { metadata } = useJBProjectMetadataContext();
-
-  const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
-
-  const weeklyVolumeChange = useMemo(() => {
-    const aWeekAgoTimestamp = loadTimestamp - 7 * 24 * 60 * 60;
-
-    const accPrevVolume = dailyTotals
-      .filter((day) => day.date.getTime() / 1000 < aWeekAgoTimestamp)
-      .reduce((acc, day) => acc + day.volume, 0n);
-
-    const accCurVolume = dailyTotals
-      .filter((day) => day.date.getTime() / 1000 >= aWeekAgoTimestamp)
-      .reduce((acc, day) => acc + day.volume, 0n);
-
-    if (accPrevVolume === 0n) {
-    const percentage = accCurVolume > 0n ? 100 : 0;
-    return percentage.toFixed(2);
-    }
-
-    const difference = accCurVolume - accPrevVolume;
-    const percentage = (Number(difference) * 100) / Number(accPrevVolume);
-    return percentage.toFixed(2);
-  }, [dailyTotals, loadTimestamp]);
-
-  const { name: projectName, logoUri, twitter, introImageUri, coverImageUri } = metadata?.data ?? {};
-
-  const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
-    id: project?.suckerGroupId ?? "",
-  });
-
-  const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
-    where: {
-      suckerGroupId: suckerGroup.data?.suckerGroup?.id,
-      balance_gt: 0,
-    },
-    limit: 1000 // BUG: will break once more than 1000 participants exist
-  });
-
-  const suckerGroupData = participants?.participants;
+  const { analyticsData } = useData();
 
   return (
     <header>
@@ -65,10 +14,10 @@ export function Header() {
         <div className="relative sm:h-[215px] h-[235px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
             {/* "FE_TODO: You may need to adjust these sizes." */}
-            { coverImageUri ? (
+            {analyticsData?.daoData?.logo ? (
               <Image
-                src={ipfsUriToGatewayUrl(coverImageUri)}
-                alt={"project header image"}
+                src={analyticsData?.daoData?.backdrop}
+                alt={"Project Logo"}
                 className="inset-0 w-full h-full object-cover mt-[90px] rounded"
                 width={600}
                 height={400}
@@ -87,12 +36,12 @@ export function Header() {
       </div>
       <div className="ctWrapper flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
         <div className="mx-4">
-          {logoUri ? (
+          {analyticsData?.daoData?.logo ? (
             <>
               <div className="sm:hidden">
                 <Image
-                  src={ipfsUriToGatewayUrl(logoUri)}
-                  className="overflow-hidden block border-[3px] border-background rounded-xl"
+                  src={analyticsData?.daoData?.logo}
+                  className="overflow-hidden bg-[var(--card)] block border-[3px] border-background rounded-xl"
                   alt={"Project Logo"}
                   width={120}
                   height={10}
@@ -100,8 +49,8 @@ export function Header() {
               </div>
               <div className="sm:block hidden">
                 <Image
-                  src={ipfsUriToGatewayUrl(logoUri)}
-                  className="overflow-hidden block border-[4px] border-background rounded-2xl"
+                  src={analyticsData?.daoData?.logo}
+                  className="overflow-hidden bg-[var(--card)] block border-[4px] border-background rounded-2xl"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -124,14 +73,14 @@ export function Header() {
           <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
             <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
               <div className="text-sm flex flex-wrap gap-x-2 items-baseline">
-                <h1 className="text-2xl sm:text-3xl font-light">{projectName}</h1>
+                <h1 className="text-2xl sm:text-3xl font-light">{analyticsData?.daoData?.name}</h1>
                 <h5 className="text-cerulean text-base">
                   <a 
-                    href={`https://x.com/@${twitter}`} 
+                    href={`https://x.com/@${analyticsData?.daoData?.socials.x}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    @{twitter}
+                    @{analyticsData?.daoData?.socials.x}
                   </a>
                 </h5>
               </div>
@@ -142,7 +91,7 @@ export function Header() {
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
-                    Ξ{suckerGroup.data?.suckerGroup?.volume ? parseFloat(formatEther(BigInt(suckerGroup.data.suckerGroup.volume))).toFixed(2) : "0.00"}
+                    Ξ{analyticsData?.daoData?.eth_raised}
                   </h3>
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Raised</p>
@@ -151,7 +100,7 @@ export function Header() {
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
                   <h3 className="text-2xl font-semibold tracking-wider w-full">
-                    {suckerGroupData?.totalCount ?? <div className="activeSkeleton h-[32px] max-w-[142px] w-full rounded-md"/> }
+                    {analyticsData?.daoData?.payments}
                   </h3>
                 </div>
                 <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Payments</p>
@@ -159,19 +108,10 @@ export function Header() {
 
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
-                  <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
-                    { weeklyVolumeChange != null ? `${weeklyVolumeChange}%` : <div className="activeSkeleton h-[24px] w-[64px] !bg-transparent rounded-md"/> }
-                  </div>
-                </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Weekly Vol Change</p>
-              </div>
-
-              <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="h-fit flex items-center">
                   <h3 className="w-full">
-                    {project?.owner ? (
+                    {analyticsData?.treasuryData?.treasury.address ? (
                     <EthereumAddress
-                      address={project?.owner as Address}
+                      address={analyticsData?.treasuryData?.treasury.address as Address}
                       short
                       withEnsAvatar={false}
                       withEnsName
@@ -190,8 +130,10 @@ export function Header() {
               <div className="bg-grey-450 p-[20px] rounded-2xl">
                 <div className="h-fit flex items-center">
                   <h3 className="text-xl font-light">
-                    {project?.createdAt ? (
-                      formatDate(new Date(project.createdAt * 1000), true)
+                    {analyticsData?.daoData?.description ? (
+                      <>
+                        {analyticsData.daoData.date_created}
+                      </>
                     ) : (
                       <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
                     )

@@ -1,11 +1,10 @@
+import { z } from "zod";
 
 export interface TokenResponse {
   name: string;
   isIptToken: boolean;
   logo: string;
   tags: string;
-  ecosystem: string | null;
-  ecosystemSite: string | null;
   socials: {
     site: string | null;
     linked_in: string | null;
@@ -45,9 +44,11 @@ export interface TokenResponse {
 export interface DaoResponse {
   name: string;
   logo: string;
+  backdrop: string;
+  date_created: string;
+  payments: number;
+  eth_raised: string;
   tags: string;
-  ecosystem: string | null;
-  ecosystemSite: string | null;
   socials: {
     site: string | null;
     linked_in: string | null;
@@ -79,8 +80,6 @@ export interface TreasuryResponse {
   logo: string;
   description: string;
   tags: string;
-  ecosystem: string | null;
-  ecosystemSite: string | null;
   socials: {
     site: string | null;
     linked_in: string | null;
@@ -131,3 +130,45 @@ export interface MarketChartResponse {
   prices: [number, number][];
   market_caps: [number, number][];
 }
+
+// TODO : Migrate to ZOD
+
+export const DaoResponseSchema = z.object({
+  name: z.string(),
+  logo: z.string(),
+  backdrop: z.string(),
+  date_created: z.string(),
+  payments: z.number(),
+  eth_raised: z.string(),
+  tags: z.string(),
+  socials: z.object({
+    site: z.string().nullable(),
+    linked_in: z.string().nullable(),
+    x: z.string().nullable(),
+    discord: z.string().nullable(),
+  }),
+  description: z.string(),
+  treasuryHoldings: z.string().nullable(),
+  assetsUnderManagement: z.number().nullable(),
+  nativeToken: z.object({
+    name: z.string().nullable(),
+    address: z.string().nullable(),
+    mc_ticker: z.string().nullable(),
+    totalSupply: z.number().nullable(),
+    totalHolders: z.string().nullable(),
+    marketCap: z.number().nullable(),
+  }),
+  ipt: z
+    .array(
+      z.object({
+        name: z.string().nullable(),
+        backdrop: z.string().nullable(),
+        logo: z.string().nullable(),
+        description: z.string().nullable(),
+        tokenType: z.string().nullable(),
+      })
+    )
+    .nullable(),
+});
+
+export type DaoResponseZod = z.infer<typeof DaoResponseSchema>;

@@ -109,12 +109,7 @@ export default function ClientTable() {
 
     fetchBalances();
   }, [address, isConnected]);
-
-  useEffect(() => {
-    console.log(balances);
-  }, [balances]);
-
-
+  
 
   return(
   <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] rounded-2xl">
