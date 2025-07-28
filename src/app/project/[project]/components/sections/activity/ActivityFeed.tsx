@@ -51,7 +51,7 @@ export function ActivityFeed() {
       try {
         if(!analyticsData?.daoData?.name) return null;
 
-        const response = await fetch(`http://localhost:3001/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`);
+        const response = await fetch(`https://inev.profiler.bio/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`);
         
         if(!response.ok) {
           setData(null);
