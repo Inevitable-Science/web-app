@@ -1,8 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
 import { CowSwapWidgetParams, CowSwapWidget, CowSwapWidgetPalette, EthereumProvider, TradeType } from "@cowprotocol/widget-react";
-import { useAccount } from "wagmi";
-import { wagmiConfig } from "@/lib/wagmiConfig";
+
 
 interface TokenState {
   token: string;
@@ -10,9 +8,8 @@ interface TokenState {
 
 // DATA_TODO: Make this component work with the web3 provider, view https://widget.cow.fi/
 
-export function SwapWidget({ token } : TokenState) {
-  //const [provider, setProvider] = useState(null);
-  const [provider, setProvider] = useState<EthereumProvider | undefined>(undefined);
+export async function SwapWidget({ token } : TokenState) {
+  const provider = window.ethereum;
 
   const params: CowSwapWidgetParams = {
     appCode: "Inevitable",
@@ -48,7 +45,7 @@ export function SwapWidget({ token } : TokenState) {
 
   return (
     <div className="swapWrapper">
-      <CowSwapWidget params={params} provider={provider} />
+      <CowSwapWidget params={params} provider={provider as EthereumProvider} />
     </div>
   );
 }

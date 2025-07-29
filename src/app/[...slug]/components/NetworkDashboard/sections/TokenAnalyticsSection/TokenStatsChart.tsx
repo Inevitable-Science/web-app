@@ -474,7 +474,18 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
         </div>
       </div>
 
-      {dataFound ? (
+        <div
+          ref={chartContainerRef}
+          className={dataFound ? "" : "hidden"}
+          style={{ width: "100%", height: "400px", maxHeight: "400px" }}
+        />
+
+        <div className={`${dataFound ? "hidden" : ""} text-center my-12 font-light`}>
+          <h3>Unable to fetch data</h3>
+          <h5>We are unable to fetch data for this token right now.</h5>
+        </div>
+
+      {/*{dataFound ? (
         <div
           ref={chartContainerRef}
           className={`chartOverrideShow-token ${passedData ? "opacity-1" : "opacity-0 !h-[1px]"}`}
@@ -485,7 +496,7 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
           <h3>Unable to fetch data</h3>
           <h5>We are unable to fetch data for this token right now.</h5>
         </div>
-      )}
+      )}*/}
 
       <div className={`activeSkeleton w-full h-[376px] rounded-lg ${passedData ? "hidden" : "block"}`} />
 

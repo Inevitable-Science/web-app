@@ -77,7 +77,7 @@ export function ActivityFeed() {
   return (
     <div>
       {isLoading ? (
-        <div className="flex justify-center align-center">
+        <div className="flex justify-center align-center mt-[10vh]">
           <Loader2 className="h-12 w-12 animate-spin" />
         </div>
       ) : (
@@ -164,7 +164,7 @@ export function ActivityFeed() {
                     <Button
                       key={pageNum}
                       variant={pageNum === page ? 'default' : 'outline'}
-                      className="font-light"
+                      className={`${pageNum === page ? 'border border-color' : ''} font-light`}
                       onClick={() => setPage(pageNum)}
                     >
                       {pageNum}

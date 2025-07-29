@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${projectData.name} | Inevitable Protocol`,
         description: projectData.description,
         card: "summary_large_image",
-        images: [imgUrl],
+        images: [projectData.logo],
       },
       manifest: metadata.manifest,
     };

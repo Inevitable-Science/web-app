@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-grey-450 text-color rounded-lg border border-color hover:bg-grey-500",
+          "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
         destructive:

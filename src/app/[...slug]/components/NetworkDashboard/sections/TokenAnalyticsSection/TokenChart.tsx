@@ -310,6 +310,7 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
   const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">("1");
   const [priceData, setPriceData] = useState<ReturnData | null>(null);
   const [dataFound, setDataFound] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
   const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
@@ -342,6 +343,10 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    console.log("Data found", dataFound);
+  }, [dataFound]);
+
   const fetchData = async (range: string): Promise<PriceData> => {
     try {
       //const apiUrl = `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`;
@@ -355,10 +360,13 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
       const response = await fetch(apiUrl);
       if (!response.ok) {
         setDataFound(false);
+        setError(true);
         return { prices: [] };
       }
 
       setDataFound(true);
+      if(error === true) setError(false);
+
       const data = await response.json();
 
       const processedData: PriceData = {
@@ -373,6 +381,7 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     } catch (error) {
       console.error("Error fetching chart data:", error);
       setDataFound(false);
+      setError(true);
       return { prices: [] };
     }
   };
@@ -543,20 +552,20 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
         </div>
       </div>
 
-        {dataFound ? (
-          <div
-            ref={chartContainerRef}
-            className={`chartOverrideShow-token ${priceData ? "opacity-1" : "opacity-0 !h-[1px]"}`}
-            style={{ width: "100%", height: "400px", maxHeight: "400px" }}
-          />
-        ) : (
-          <div className="hitboxUTFD-chart">
-            <h3>Unable to fetch data</h3>
-            <h5>We are unable to fetch data for this token right now.</h5>
-          </div>
-        )}
+      <div
+        ref={chartContainerRef}
+        className={dataFound === true ? "" : "hidden"}
+        style={{ width: "100%", height: "400px", maxHeight: "400px" }}
+      />
 
+      <div className={`${dataFound === false && error === true ? "" : "hidden"} text-center my-12 font-light`}>
+        <h3>Unable to fetch data</h3>
+        <h5>We are unable to fetch data for this token right now.</h5>
+      </div>
+
+      {error === false && (
         <div className={`activeSkeleton w-full h-[376px] rounded-lg ${priceData ? "hidden" : "block"}`} />
+      )}
 
       <style>{`
         #tv-attr-logo { display: none; }
