@@ -111,10 +111,16 @@ export default function Page() {
         <div className="ctWrapper flex gap-4 flex-col md:flex-row md:gap-0 mb-16">
           <div className="sm:min-w-[470px] flex flex-col gap-4">
             <h3 className="text-5xl font-extralight">This Is Where The <span className="text-primary">Impossible</span> Begins.</h3>
-            <Link href="/apply" aria-label="Apply To Inevitable" className="flex w-fit gap-3 items-center font-medium uppercase hover:underline transition-[gap] duration-150 hover:gap-5">
+            <a 
+              href="https://discord.com/invite/inevitable" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label="Join our discord server" 
+              className="flex w-fit gap-3 items-center font-medium uppercase hover:underline transition-[gap] duration-150 hover:gap-5"
+            >
               Apply To Inevitable
               <ArrowRightIcon height={20} width={20} />
-            </Link>
+            </a>
           </div>
 
           <div className="lg:text-xl md:text-sm font-light text-base">
