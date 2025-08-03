@@ -15,6 +15,7 @@ import { Loader2 } from "lucide-react";
 
 import TokenChart from "./TokenChart";
 import TokenStatsChart from "./TokenStatsChart";
+import { useNetworkData } from "../../NetworkDataContext";
 
 
 interface DescriptionSectionProps {
@@ -59,7 +60,10 @@ function getValuationLabel(aum: number | null, marketCap: number | null): string
   return "STRETCHED";
 }
 
-export function TokenSection({ data }: DescriptionSectionProps) {
+export function TokenSection() {
+  const { analyticsData } = useNetworkData();
+  const data = analyticsData?.tokenData;
+
   const chainId = useJBChainId();
 
   const suckersQuery = useSuckers();

@@ -6,7 +6,7 @@ import {
   useJBTokenContext,
 } from "juice-sdk-react";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
 // import { SwapWidget } from "../PayCard/SwapWiget/SwapWiget";
@@ -45,8 +45,8 @@ function DashboardContent() {
     { key: "cycles", label: "Cycles" },
     ...(analyticsData?.daoData === null && isAnalyticsLoading === false // Intended to prevent CLS
       ? [] : [
-        ...(token.data ? [{ key: "analytics", label: "Analytics" }] : []),
-          { key: "treasury", label: "Treasury" },
+        ...(token.data && analyticsData?.tokenData ? [{ key: "analytics", label: "Analytics" }] : []),
+          ...(analyticsData?.treasuryData ? [{ key: "treasury", label: "Treasury" }] : []),
         ]),
   ];
 
@@ -125,8 +125,6 @@ function DashboardContent() {
                 <TabContent
                   selectedTab={selectedTab} 
                   setSelectedTab={setSelectedTab} 
-                  analyticsError={analyticsError}
-                  analyticsData={analyticsData}
                 />
               </div>
             </section>

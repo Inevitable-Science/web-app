@@ -24,7 +24,7 @@ interface NetworkDetailsParams {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkDetailsParams) {
+export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
   const [showRules, setShowRules] = useState<boolean>(true);
 
@@ -253,7 +253,7 @@ export function NetworkDetailsTable({ analyticsError, setSelectedTab }: NetworkD
           <p className="text-sm text-muted-foreground font-light uppercase">Payouts</p>
             <SplitsSection/>
 
-            {!analyticsError && (
+            {analyticsData?.treasuryData && (
               <Button 
                 onClick={() => setSelectedTab("treasury")}
                 variant="link" 

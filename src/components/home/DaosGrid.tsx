@@ -56,7 +56,7 @@ const DaosGrid: React.FC = () => {
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">CryoDAO</h4>
-            <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
+            <p className="text-sm">Advancing high-impact cryopreservation research.</p>
           </div>
         </div>
       </div>
@@ -92,11 +92,18 @@ const DaosGrid: React.FC = () => {
       </div>
 
       <div className="dGrid dGrid-mid flex items-center lg:gap-32 gap-16 max-w-[1400px] mx-auto">
-        <div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
+        {/*<div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">MoonDAO</h4>
             <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
+          </div>
+        </div>*/}
+        <div className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center">
+          <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
+          <div>
+            <h4 className="font-optima text-2xl">CryoRat</h4>
+            <p className="text-sm">High sub-zero preservation and revival of a rat.</p>
           </div>
         </div>
 
@@ -104,7 +111,7 @@ const DaosGrid: React.FC = () => {
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">ErectusDAO</h4>
-            <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
+            <p className="text-sm">Community owned collective funding and promoting male sexual health research.</p>
           </div>
         </div>
       </div>

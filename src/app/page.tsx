@@ -97,8 +97,8 @@ export default function Page() {
         
         <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
           <div className="sm:w-[1400px] mx-auto px-[24px] flex flex-col gap-4">
-            <h1 className="font-optima text-center text-6xl sm:text-left">Begin your journey.</h1>
-            <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">Build the future of life—together.</h4>
+            <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
+            <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">We’re building the critical infrastructure to fund technological breakthroughs.</h4>
             <Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
                 Explore Inevitable
             </Button>
@@ -124,7 +124,7 @@ export default function Page() {
           </div>
 
           <div className="lg:text-xl md:text-sm font-light text-base">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Inevitable Protocol runs on a tokenized on-chain protocol coordinating a collection of token nodes whose core design is to automatically funnel real-world revenues back into the ecosystem, ensuring a recurring cash flow. The token nodes - revnets - autonomously operate their economic aspects without human interference: they sell tokens, earn revenues, pay for liabilities such as ecosystem fees and third-party services, and use the revenues to back the token and grow the treasury in a sustainable, circular way.
           </div>
         </div>
 

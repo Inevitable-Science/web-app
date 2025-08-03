@@ -1,7 +1,6 @@
 "use client";
 
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
-import { TreasuryResponse } from '@/lib/types/AnalyticTypes'
 import { Address } from "viem";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { Loader2, RotateCw } from "lucide-react";
@@ -9,13 +8,13 @@ import { Loader2, RotateCw } from "lucide-react";
 import TreasuryPieChart from "./TreasuryPieChart";
 import TreasuryChart from "./TreasuryChart";
 import { useState } from "react";
+import { useNetworkData } from "../../NetworkDataContext";
 
-interface TreasurySectionProps {
-  data: TreasuryResponse | null;
-}
+export function TreasurySection() {
+  const { analyticsData } = useNetworkData();
+  const data = analyticsData?.treasuryData;
 
-export function TreasurySection({ data }: TreasurySectionProps) {
-  const [responseData, setResponseData] = useState("")
+  const [responseData, setResponseData] = useState("");
 
   const refreshData = async (): Promise<void> => {
     try {

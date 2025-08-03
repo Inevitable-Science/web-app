@@ -7,36 +7,6 @@ import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 
-{/*const RichPreview = ({ source }: { source: string }) => {
-  console.log(source)
-  useEffect(() => {
-    DOMPurify.addHook("afterSanitizeAttributes", function(node) {
-      if (node.tagName === "A") {
-        node.setAttribute("target", "_blank");
-        node.setAttribute("rel", "noopener noreferrer");
-      }
-    });
-  }, []);
-
-  if (!source?.trim()) {
-    return null;
-  }
-
-  try {
-    const purified = DOMPurify.sanitize(source)
-    return (
-      <div
-        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:break-all [&_a]:text-cerulean [&_a:hover]:underline"
-        dangerouslySetInnerHTML={{
-          __html: purified,
-        }}
-      />
-    )
-  } catch (error) {
-    console.error("HTML sanitization failed:", error)
-    return <div className="break-words">{source}</div>
-  }
-}*/}
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
     DOMPurify.addHook("afterSanitizeAttributes", function (node) {
@@ -87,17 +57,11 @@ interface DaoData {
 }
 
 interface DescriptionSectionProps {
-  analyticsError: string | null;
-  data: DaoData | null; // or undefined if it's not guaranteed to be passed yet
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DescriptionSection({ analyticsError, data, setSelectedTab }: DescriptionSectionProps) {
+export function DescriptionSection({ setSelectedTab }: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
-
-  useEffect(() => {
-    console.log(analyticsError);
-  }, [analyticsError])
 
   const { description, name } = metadata?.data ?? {};
 

@@ -100,14 +100,14 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       setAnalyticsError(null);
       try {
         // Use Promise.all to fetch data in parallel for better performance
-        /*
-        const responses = await Promise.all([
+        
+        /*const responses = await Promise.all([
           fetch(`https://inev.profiler.bio/dao/${daoName}`),
           fetch(`https://inev.profiler.bio/token/${tokenName}`),
           fetch(`https://inev.profiler.bio/treasury/${daoName}`),
           fetch(`https://inev.profiler.bio/chart/${tokenName}-7`)
-        ]);
-        */
+        ]);*/
+        
 
         // TODO: 
         /*const responses = await Promise.all([
