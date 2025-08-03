@@ -148,7 +148,7 @@ export function Header() {
       </div>
 
       <div 
-          className="absolute z-[-10] w-screen flex justify-center items-center overflow-hidden"
+          className="absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
           style={{ transform: "translateY(-60%)" }}
         >
           {/* Left cloud - shifted slightly right */}

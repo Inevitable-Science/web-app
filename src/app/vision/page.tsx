@@ -77,7 +77,7 @@ export default function Vision() {
         </h2>
         
         <div
-          className="s absolute z-[-10] w-screen hidden sm:flex justify-center items-center gap-[70vw] overflow-hidden"
+          className="s absolute z-[-10] max-w-screen hidden sm:flex justify-center items-center gap-[70vw] overflow-hidden"
           style={{ transform: 'translateY(-50%)' }}
         >
           {/* Left cloud */}

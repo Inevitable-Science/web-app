@@ -43,7 +43,7 @@ const DaosGrid: React.FC = () => {
 
   return (
     <section className="sectionDaosGrid">
-      <div className="dGrid-1 dGrid max-w-[1400px] mx-auto">
+      <div className="dGrid-1 dGrid max-w-[1600px] mx-auto">
         <div className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -63,7 +63,7 @@ const DaosGrid: React.FC = () => {
 
       <div
         ref={cloudTopRef}
-        className="hiddenDaoCloud absolute z-[-10] w-screen flex justify-center items-center overflow-hidden"
+        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
         style={{ transform: 'translateY(-40%)' }}
       >
         {/* Left cloud */}
@@ -91,7 +91,7 @@ const DaosGrid: React.FC = () => {
         />
       </div>
 
-      <div className="dGrid dGrid-mid flex items-center lg:gap-32 gap-16 max-w-[1400px] mx-auto">
+      <div className="dGrid dGrid-mid flex items-center lg:gap-32 gap-16 max-w-[1600px] mx-auto">
         {/*<div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -118,7 +118,7 @@ const DaosGrid: React.FC = () => {
 
       <div
         ref={cloudMidRef}
-        className="hiddenDaoCloud absolute z-[-10] w-screen flex justify-end items-center overflow-hidden"
+        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
         style={{ transform: 'translateY(-50%)' }}
       >
         <img
@@ -129,7 +129,7 @@ const DaosGrid: React.FC = () => {
         />
       </div>
 
-      <div className="dGrid-2 dGrid max-w-[1400px] mx-auto">
+      <div className="dGrid-2 dGrid max-w-[1600px] mx-auto">
         <div className="div1-2 bg-[url('/assets/img/daos/placeholder_1.webp')] bg-cover bg-center h-[450px]">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -153,7 +153,7 @@ const DaosGrid: React.FC = () => {
 
       <div
         ref={cloudBottomRef}
-        className="hiddenDaoCloud absolute z-[-10] w-screen flex justify-end items-center overflow-hidden"
+        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
         style={{ transform: 'translateY(-50%)' }}
       >
         <img

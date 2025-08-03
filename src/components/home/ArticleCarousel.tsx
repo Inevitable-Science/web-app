@@ -113,7 +113,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
       </div>
 
       <div 
-        className="absolute z-[-10] w-screen hidden md:flex justify-center items-center overflow-hidden"
+        className="absolute z-[-10] max-w-screen hidden md:flex justify-center items-center overflow-hidden"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud - shifted slightly right */}

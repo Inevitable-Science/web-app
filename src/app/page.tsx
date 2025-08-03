@@ -96,7 +96,7 @@ export default function Page() {
         </video>
         
         <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
-          <div className="sm:w-[1400px] mx-auto px-[24px] flex flex-col gap-4">
+          <div className="sm:w-[1600px] mx-auto px-[24px] flex flex-col gap-4">
             <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
             <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">We’re building the critical infrastructure to fund technological breakthroughs.</h4>
             <Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
@@ -128,7 +128,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="md:max-w-[1400px] md:mx-auto md:px-[24px]">
+        <div className="md:max-w-[1600px] md:mx-auto md:px-[24px]">
           <AuctionComponent />
         </div>
 

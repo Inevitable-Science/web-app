@@ -73,7 +73,7 @@ body {
 }
 
 .ctWrapper {
-  @apply max-w-[1400px] mx-auto px-[24px];
+  @apply max-w-[1600px] mx-auto px-[24px];
 }
 
 .background-color{
