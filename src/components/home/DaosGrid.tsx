@@ -91,7 +91,7 @@ const DaosGrid: React.FC = () => {
         />
       </div>
 
-      <div className="dGrid dGrid-mid flex items-center lg:gap-32 gap-16 max-w-[1600px] mx-auto">
+      <div className="dGrid dGrid-mid flex items-center justify-center lg:gap-32 gap-16 max-w-[1600px] mx-auto">
         {/*<div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -129,7 +129,7 @@ const DaosGrid: React.FC = () => {
         />
       </div>
 
-      <div className="dGrid-2 dGrid max-w-[1600px] mx-auto">
+      {/*<div className="dGrid-2 dGrid max-w-[1600px] mx-auto">
         <div className="div1-2 bg-[url('/assets/img/daos/placeholder_1.webp')] bg-cover bg-center h-[450px]">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -149,7 +149,7 @@ const DaosGrid: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       <div
         ref={cloudBottomRef}
@@ -276,7 +276,7 @@ const DaosGrid: React.FC = () => {
           .dGrid-mid {
             padding-left: 6rem;
             padding-right: 8rem;
-            margin: 88px auto;
+            margin: 122px auto;
           }
         }
       `}</style>

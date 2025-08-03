@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const PartnersComponent: React.FC = () => {
   return (
-    <div className="ctWrapper mt-32">
+    <div className="ctWrapper mt-32 hidden">
       <div className="flex flex-col items-center gap-2">
         <p className="font-optima text-xl uppercase">Inevitable</p>
         <h3 className="sm:text-6xl text-4xl font-light text-primary mb-12">
