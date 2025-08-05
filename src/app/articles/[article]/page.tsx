@@ -5,14 +5,15 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 
 interface Props {
-  params: {
+  params: Promise<{
     article: string;
-  };
+  }>;
 }
 
 // Generate dynamic metadata based on the article
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fullPath = `/articles/${params.article}`;
   const url = new URL(fullPath, origin);
 
-  
+
   const imgUrl = article.image.startsWith("http") ? article.image : `${origin}${article.image}`;
 
 
@@ -76,7 +77,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const ArticlePage: FC<Props> = ({ params }) => {
+const ArticlePage: FC<Props> = async props => {
+  const params = await props.params;
   console.log(params.article);
 
   const article = articleSchema.articles.find((a) =>

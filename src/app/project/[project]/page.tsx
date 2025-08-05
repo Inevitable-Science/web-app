@@ -7,13 +7,14 @@ import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
 
 interface Props {
-  params: {
+  params: Promise<{
     project: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   const projectData = await getProjectData(params.project);
-  
+
   if (!projectData) {
     return {
       title: "Page Not Found | Inevitable Protocol", 
@@ -75,7 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       manifest: metadata.manifest,
     };
-  };
+  }
 }
 
 async function getProjectData(project: string): Promise<DaoResponse | null>{
@@ -96,12 +97,13 @@ async function getProjectData(project: string): Promise<DaoResponse | null>{
   }
 }
 
-export default async function ProjectPage({ params } : Props) {
+export default async function ProjectPage(props: Props) {
+  const params = await props.params;
   const project = params.project;
   const projectData = await getProjectData(project);
 
   if (!projectData) return notFound();
-  
+
   return (
     <DataProvider daoName={project} daoData={projectData}>
       <DaoPage />

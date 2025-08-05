@@ -4,7 +4,7 @@ import { EthereumAddress } from "@/components/EthereumAddress";
 import { Participant } from "@/generated/graphql";
 import { formatPortion } from "@/lib/utils";
 import { JBChainId, JBProjectToken } from "juice-sdk-core";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, type JSX } from "react";
 import { Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import { Address } from "viem";
 import { UseTokenReturnType } from "wagmi";

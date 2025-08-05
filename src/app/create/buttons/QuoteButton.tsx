@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { FastForwardIcon, CheckCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
+import type { JSX } from "react";
+
 type ButtonContentType = {
   text: string;
   icon: JSX.Element;

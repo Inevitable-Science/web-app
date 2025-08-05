@@ -1,16 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
 import { sdk } from "@farcaster/frame-sdk";
 import { notFound as triggerNotFound } from 'next/navigation';
 
-export default function Page({ params }: { params: { slug?: string[] } }) {
+export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
+  const params = use(props.params);
   const [projectId, setProjectId] = useState<bigint | undefined>(undefined);
   const [chainId, setChainId] = useState<JBChainId | undefined>(undefined);
   const [notFound, setNotFound] = useState(false);
-  
+
   const [initialized, setInitialized] = useState(false);
 
   const [user, setUser] = useState<{ fid: number; pfp: string; userName: string } | null>(null);

@@ -1,4 +1,5 @@
-"use client";
+"use client"
+
 import { CowSwapWidgetParams, CowSwapWidget, CowSwapWidgetPalette, EthereumProvider, TradeType } from "@cowprotocol/widget-react";
 
 
@@ -8,7 +9,7 @@ interface TokenState {
 
 // DATA_TODO: Make this component work with the web3 provider, view https://widget.cow.fi/
 
-export async function SwapWidget({ token } : TokenState) {
+export function SwapWidget({ token } : TokenState) {
   const provider = window.ethereum;
 
   const params: CowSwapWidgetParams = {

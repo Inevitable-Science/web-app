@@ -13,7 +13,7 @@ import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
@@ -184,12 +184,14 @@ export default function Page() {
                 </h2>
               </div>
 
-              <Button variant={"accent"} className="rounded-full px-6 sm:w-fit w-full font-medium uppercase px-10">
+              <Button variant={"accent"} className="rounded-full sm:w-fit w-full font-medium uppercase px-10">
+                <Link href="/vision">
                   Our Vision
+                </Link>
               </Button>
             </div>
 
-            <img className="h-[40vh] sm:block hidden relative top-[-10px]" src="/assets/img/hero.webp" alt="Hero Image" />
+            <img className="h-[40vh] sm:block hidden relative top-[-10px] pointer-events-none" src="/assets/img/hero.webp" alt="Hero Image" />
             </div>
         </section>
 

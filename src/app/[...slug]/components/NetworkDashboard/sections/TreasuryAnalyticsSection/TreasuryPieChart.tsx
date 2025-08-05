@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type JSX } from 'react';
 import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
 
 interface TreasuryToken {

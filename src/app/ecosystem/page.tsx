@@ -8,7 +8,7 @@ import { metadata } from "@/lib/metadata"
 // DATA_TODO: Will need to consolidate, need to route data to this page. Will talk about this later down the line...
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;

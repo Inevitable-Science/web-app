@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { EmblaOptionsType } from 'embla-carousel';
 import { PrevButton, NextButton, usePrevNextButtons } from './ArrowButtons';
@@ -49,7 +49,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
   const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
 
   // Sort articles by date (latest first) on server
-  const sortedArticles = [...articleSchema.articles].sort(
+  /*const sortedArticles = [...articleSchema.articles].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
@@ -60,9 +60,24 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
       img: article.image,
       title: article.title,
       description: article.overview,
+    }));*/
+  const [trendingSlides, setTrendingSlides] = useState<SlideType[]>([]);
+
+  useEffect(() => {
+    const sortedArticles = [...articleSchema.articles].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    const slides = sortedArticles.slice(0, 3).map((article: Article) => ({
+      img: article.image,
+      title: article.title,
+      description: article.overview,
     }));
 
-  const uniqueCategories = Array.from(
+    setTrendingSlides(slides);
+  }, []);
+
+  /*const uniqueCategories = Array.from(
     new Set(sortedArticles.flatMap((article) => article.category))
   ).slice(0, 14); // Limit to 14 categories
 
@@ -75,7 +90,7 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
         title: article.title,
         description: article.overview,
       })),
-  }));
+  }));*/
 
 
   return (
