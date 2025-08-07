@@ -88,14 +88,14 @@ export function HoldersSection() {
       console.error("Token information is incomplete.");
       return;
     }
-    
+
     watchAsset({
-      type: 'ERC20',
+      type: "ERC20",
       options: {
         address: token.data.address as Address,
         symbol: token.data.symbol,
         decimals: token.data.decimals,
-        image: metadata.data?.logoUri, 
+        image: metadata.data?.logoUri,
       },
     });
   };
@@ -110,7 +110,7 @@ export function HoldersSection() {
         : undefined,
       args: ruleset && selectedSucker ? [projectId] : undefined,
     });
-      
+
   return (
     <section>
       <div className="flex flex-col gap-4 w-full">
@@ -151,7 +151,7 @@ export function HoldersSection() {
               onClick={handleAddToken}
               disabled={isPending} // Disable the button while processing
             >
-              {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+              {isPending ? "Adding..." : isSuccess ? "Added!" : "Add To Metamask"}
               <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
             </Button>
           )}

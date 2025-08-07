@@ -144,11 +144,11 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
       rightPriceScale: {
         borderColor: "#7B7B7B",
       },
-      timeScale: { 
+      timeScale: {
         borderColor: "#7B7B7B",
         fixLeftEdge: true,
-        fixRightEdge: true,     
-        timeVisible: true, 
+        fixRightEdge: true,
+        timeVisible: true,
         secondsVisible: true
       },
       //autoSize: true,

@@ -21,7 +21,7 @@ export function TreasurySection() {
   const refreshData = async (): Promise<void> => {
     try {
       const response = await fetch(`https://inev.profiler.bio/treasury/refresh/${data?.name}`, {
-        method: 'POST',
+        method: "POST",
       });
 
       const responseJson = await response.json();
@@ -33,7 +33,7 @@ export function TreasurySection() {
 
       setResponseData(responseJson.message);
     } catch (error) {
-      console.error('Request failed:', error);
+      console.error("Request failed:", error);
       setResponseData("Failed to refresh");
     }
   };
@@ -85,22 +85,22 @@ export function TreasurySection() {
                 </div>
               </div>
 
-              <div 
+              <div
                 className="mt-2 max-h-[400px] overflow-y-auto scrollbar-hide pb-12"
                 style={{
-                  maskImage: 'linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)',
-                  WebkitMaskImage: 'linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)',
+                  maskImage: "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+                  WebkitMaskImage: "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
                 }}
               >
 
                 {data?.treasuryTokens
-                  ?.slice() 
+                  ?.slice()
                   .sort((a, b) => b.totalValue - a.totalValue)
                   .map((token, index) => {
                     const percentage =
                       token.totalValue > 0
                         ? ((token.totalValue / data?.treasuryValue) * 100).toFixed(2)
-                        : '0.00';
+                        : "0.00";
 
                     return (
                       <div key={index} className="py-3 border-b border-color">
@@ -108,7 +108,7 @@ export function TreasurySection() {
                           <p>
                             {token.contractAddress
                               ? truncateAddress(token.contractAddress as Address)
-                              : 'Native Token'}
+                              : "Native Token"}
                           </p>
                           <p>{percentage}%</p>
                         </div>
@@ -135,8 +135,8 @@ export function TreasurySection() {
                 <h3 className="text-grey-50 uppercase text-sm py-1">Portfolio Peformance</h3>
                 <div className="flex flex-col text-sm font-light">
                   {Object.entries(data.historicalReturns || {}).map(([label, value]) => {
-                    const isPositive = !value.percentReturn.startsWith('-');
-                    const textColor = isPositive ? 'text-green-500' : 'text-red-500';
+                    const isPositive = !value.percentReturn.startsWith("-");
+                    const textColor = isPositive ? "text-green-500" : "text-red-500";
 
                     return (
                       <div key={label} className="flex items-center justify-between py-4 border-b border-[#282828] py-1">
@@ -168,7 +168,7 @@ export function TreasurySection() {
                       <span>
                         {data.comment ? data.comment : truncateAddress(address as Address)}
                       </span>
-                      
+
                       <span>
                         {data.ens ? data.ens : truncateAddress(address as Address)}
                       </span>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { EmblaOptionsType } from 'embla-carousel';
-import { PrevButton, NextButton, usePrevNextButtons } from '@/components/home/ArrowButtons';
-import useEmblaCarousel from 'embla-carousel-react';
+import React from "react";
+import { EmblaOptionsType } from "embla-carousel";
+import { PrevButton, NextButton, usePrevNextButtons } from "@/components/home/ArrowButtons";
+import useEmblaCarousel from "embla-carousel-react";
 
 type SlideType = {
   img: string;
@@ -18,28 +18,28 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: '/assets/img/daos/cryo.webp',
-    title: 'CryoDAO',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/daos/cryo.webp",
+    title: "CryoDAO",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/daos/moon.webp',
-    title: 'MoonDAO',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/daos/moon.webp",
+    title: "MoonDAO",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/daos/erectus.webp',
-    title: 'Erectus',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/daos/erectus.webp",
+    title: "Erectus",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/daos/placeholder_1.webp',
-    title: 'DAO Title',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/daos/placeholder_1.webp",
+    title: "DAO Title",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
 ];
 
-const DEFAULT_OPTIONS: EmblaOptionsType = { align: 'start' };
+const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
 const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options = DEFAULT_OPTIONS }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
@@ -50,17 +50,17 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
       <div className="absolute z-[-10] left-0 right-0 flex justify-center overflow-hidden" style={{ transform: "translateY(-50%)" }}>
         <div className="w-full max-w-[1500px] hidden md:flex justify-center items-center mx-auto">
           {/* Left cloud - shifted slightly right */}
-          <img 
-            className="z-[-10] select-none w-full" 
+          <img
+            className="z-[-10] select-none w-full"
             src="/assets/img/clouds/dao_cloud_bottom_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
           />
 
           {/* Right cloud - shifted slightly left */}
-          <img 
-            className="z-[-10] select-none w-full" 
-            src="/assets/img/clouds/dao_cloud_bottom_right.webp" 
+          <img
+            className="z-[-10] select-none w-full"
+            src="/assets/img/clouds/dao_cloud_bottom_right.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""
           />

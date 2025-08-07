@@ -134,7 +134,7 @@ function PayActivityItem(
           />
         </div>
       </div>
-      
+
       {activityItemData.memo && (
         <div className="pb-4 mt-1">
           {isMiniApp ? (
@@ -241,7 +241,7 @@ export function ActivityFeed() {
   const [isOpen, setIsOpen] = useState(true);
 
   // --- 1. Manage the chart's state here in the parent ---
-  const [view, setView] = useState<ProjectTimelineView>('volume');
+  const [view, setView] = useState<ProjectTimelineView>("volume");
   const [range, setRange] = useState<ProjectTimelineRange>(30); // Default to 30 days
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {

@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { useState } from "react";
 import { Header } from "./Header";
 import { SwapWidget } from "./SwapWiget/SwapWiget";
@@ -11,7 +11,7 @@ import { ArrowRightIcon } from "lucide-react";
 export function DaoPage() {
   const { analyticsData, isLoading } = useData();
   const [selectedTab, setSelectedTab] = useState("about");
-  
+
   const tabs = [
     { key: "about", label: "About" },
     { key: "activity", label: "Activity" },
@@ -43,7 +43,7 @@ export function DaoPage() {
                 }`}
               >
                 {tab.label}
-                <span className={ 
+                <span className={
                   selectedTab === tab.key
                     ? "block"
                     : "hidden"
@@ -85,8 +85,8 @@ export function DaoPage() {
               </aside>
               <div className="sm:min-h-[700px]">
                 <TabContent
-                  selectedTab={selectedTab} 
-                  setSelectedTab={setSelectedTab} 
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
                 />
               </div>
             </section>

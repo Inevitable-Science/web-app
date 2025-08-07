@@ -1,14 +1,14 @@
 // TabContent.tsx
 "use client"
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect } from "react";
 import { ActivityFeed } from "../ActivityFeed";
 import { NetworkDetailsTable } from "../NetworkDetailsTable";
 import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
 import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 
-import { TreasurySection } from './sections/TreasuryAnalyticsSection/TreasurySection';
-import { TokenSection } from './sections/TokenAnalyticsSection/TokenSection';
-import { useNetworkData } from './NetworkDataContext';
+import { TreasurySection } from "./sections/TreasuryAnalyticsSection/TreasurySection";
+import { TokenSection } from "./sections/TokenAnalyticsSection/TokenSection";
+import { useNetworkData } from "./NetworkDataContext";
 
 interface TabContentProps {
   selectedTab: string;
@@ -35,8 +35,8 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export const TabContent: FC<TabContentProps> = ({ 
-  selectedTab, 
+export const TabContent: FC<TabContentProps> = ({
+  selectedTab,
   setSelectedTab,
 }) => {
   const { token, analyticsData, analyticsError } = useNetworkData();

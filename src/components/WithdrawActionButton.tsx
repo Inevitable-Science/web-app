@@ -79,7 +79,7 @@ export function WithdrawActionButton({
       ],
     });
   };
-  
+
   const buttonContent = useMemo(() => {
     if (loading) return <>Processing...</>;
     if (isSuccess) return "Success!";

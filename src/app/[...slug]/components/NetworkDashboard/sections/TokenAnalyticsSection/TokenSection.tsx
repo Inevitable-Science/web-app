@@ -2,7 +2,7 @@
 
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
-import { TokenResponse } from '@/lib/types/AnalyticTypes';
+import { TokenResponse } from "@/lib/types/AnalyticTypes";
 import {
   JBChainId,
   useJBChainId,
@@ -219,8 +219,8 @@ export function TokenSection() {
               </div>
             </div>
           )}*/}
-          
-          
+
+
           <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
             <TokenStatsChart organisation="cryodao" tokenName="cryo" />
           </div>

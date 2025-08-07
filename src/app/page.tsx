@@ -24,18 +24,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   return {
-    title: "Inevitable Protocol | Home", 
+    title: "Inevitable Protocol | Home",
     description: metadata.description,
     alternates: {
-      canonical: url, 
+      canonical: url,
     },
     openGraph: {
-      title: "Inevitable Protocol | Home", 
-      description: metadata.description, 
-      siteName: metadata.siteName, 
+      title: "Inevitable Protocol | Home",
+      description: metadata.description,
+      siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl, 
+          url: imgUrl,
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -56,24 +56,24 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SLIDES = [
   {
-    img: '/assets/img/articles/article_1.webp',
-    title: 'Article Title 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_1.webp",
+    title: "Article Title 1",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_2.webp',
-    title: 'Article Title 2',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_2.webp",
+    title: "Article Title 2",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_3.webp',
-    title: 'Article Title 3',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_3.webp",
+    title: "Article Title 3",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_4.webp',
-    title: 'Article Title 4',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_4.webp",
+    title: "Article Title 4",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
 ];
 
@@ -94,7 +94,7 @@ export default function Page() {
           <source src="/assets/img/home-hero-main.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        
+
         <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
           <div className="sm:w-[1600px] mx-auto px-[24px] flex flex-col gap-4">
             <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
@@ -111,11 +111,11 @@ export default function Page() {
         <div className="ctWrapper flex gap-4 flex-col md:flex-row md:gap-0 mb-16">
           <div className="sm:min-w-[470px] flex flex-col gap-4">
             <h3 className="text-5xl font-extralight">This Is Where The <span className="text-primary">Impossible</span> Begins.</h3>
-            <a 
-              href="https://discord.com/invite/inevitable" 
-              target="_blank" 
+            <a
+              href="https://discord.com/invite/inevitable"
+              target="_blank"
               rel="noopener noreferrer"
-              aria-label="Join our discord server" 
+              aria-label="Join our discord server"
               className="flex w-fit gap-3 items-center font-medium uppercase hover:underline transition-[gap] duration-150 hover:gap-5"
             >
               Apply To Inevitable
@@ -134,8 +134,8 @@ export default function Page() {
 
 
         <div className="relative">
-          <img 
-            className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up" 
+          <img
+            className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up"
             src="/assets/img/fog_bg.webp"
             alt=""
           />
@@ -148,16 +148,16 @@ export default function Page() {
             </h3>
 
             <div className="absolute top-0 w-full justify-between items-center overflow-hidden sm:flex hidden">
-              <img 
-                className="z-[-10] overflow-hidden select-none" 
-                src="/assets/img/clouds/cloud_left.webp" 
+              <img
+                className="z-[-10] overflow-hidden select-none"
+                src="/assets/img/clouds/cloud_left.webp"
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
-              <img 
-                className="z-[-10] relative overflow-hidden select-none" 
-                src="/assets/img/clouds/cloud_right.webp" 
+              <img
+                className="z-[-10] relative overflow-hidden select-none"
+                src="/assets/img/clouds/cloud_right.webp"
                 style={{ transform: "translateX(40%)" }}
                 alt=""
               />

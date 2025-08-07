@@ -23,7 +23,7 @@ const RichPreview = ({ source }: { source: string }) => {
     // Convert markdown links [text](url) → <a href="url">text</a>
     const withLinks = source.replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      '<a href="$2">$1</a>'
+      "<a href=\"$2\">$1</a>"
     );
 
     // Sanitize the generated HTML
@@ -67,7 +67,7 @@ export function DescriptionSection() {
           Join our Discord
         </a>
         )}
-  
+
         {analyticsData?.daoData?.socials.discord && (
           <a
             className="background-color p-[16px] flex gap-2 rounded-2xl items-center"

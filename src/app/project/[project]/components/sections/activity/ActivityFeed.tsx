@@ -5,8 +5,8 @@ import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import FarcasterAvatar from "@/components/FarcasterAvatar";
 import { Address } from "viem";
-import { mainnet } from 'viem/chains';
-import { formatDistance } from 'date-fns';
+import { mainnet } from "viem/chains";
+import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
 
 interface ActivityResponse {
@@ -19,11 +19,11 @@ interface ActivityResponse {
 
 interface Transaction {
   Date: string;
-  'ETH paid': string;
-  'USD value of ETH paid': string;
+  "ETH paid": string;
+  "USD value of ETH paid": string;
   Payer: string;
   Beneficiary: string;
-  'Transaction hash': string;
+  "Transaction hash": string;
 }
 
 function getRelativeTime(dateString: string): string {
@@ -52,7 +52,7 @@ export function ActivityFeed() {
         if(!analyticsData?.daoData?.name) return null;
 
         const response = await fetch(`https://inev.profiler.bio/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`);
-        
+
         if(!response.ok) {
           setData(null);
           setError(true);
@@ -72,7 +72,7 @@ export function ActivityFeed() {
     };
 
     fetchActivity();
-  }, [page]);
+  }, [page, analyticsData?.daoData?.name]);
 
   return (
     <div>
@@ -117,7 +117,7 @@ export function ActivityFeed() {
                     />
                   </div>
                 </div>
-                
+
                 {/*{activityItemData.memo && (
                   <div className="pb-4 mt-1">
                     {isMiniApp ? (
@@ -144,7 +144,7 @@ export function ActivityFeed() {
 
             <div className="flex flex-col items-center gap-2 mt-6">
               <p className="font-light text-sm text-muted-foreground">Page {data.page} out of {data.totalPages}</p>
-              
+
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
@@ -163,8 +163,8 @@ export function ActivityFeed() {
                   return (
                     <Button
                       key={pageNum}
-                      variant={pageNum === page ? 'default' : 'outline'}
-                      className={`${pageNum === page ? 'border border-color' : ''} font-light`}
+                      variant={pageNum === page ? "default" : "outline"}
+                      className={`${pageNum === page ? "border border-color" : ""} font-light`}
                       onClick={() => setPage(pageNum)}
                     >
                       {pageNum}

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { FC } from 'react';
-import { Button } from '@/components/ui/button';
+import { FC } from "react";
+import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StaticVolumeChart from "../../Components/ActivityGraph";
-import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
-import { ProjectDocument } from '@/generated/graphql';
-import { useJBChainId, useJBContractContext } from 'juice-sdk-react';
+import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { ProjectDocument } from "@/generated/graphql";
+import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 
 interface ChartSection {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
@@ -28,10 +28,10 @@ export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
       <StaticVolumeChart
         suckerGroupId={suckerGroupId}
       />
-      
-      <Button 
+
+      <Button
         onClick={() => setSelectedTab("activity")}
-        variant="link" 
+        variant="link"
         className="h-6 mt-2 w-fit pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
       >
         Activity

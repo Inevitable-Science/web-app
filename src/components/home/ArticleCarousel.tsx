@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { EmblaOptionsType } from 'embla-carousel';
-import { PrevButton, NextButton, usePrevNextButtons } from './ArrowButtons';
-import PartnersComponent from './PartnersComponent';
-import useEmblaCarousel from 'embla-carousel-react';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { EmblaOptionsType } from "embla-carousel";
+import { PrevButton, NextButton, usePrevNextButtons } from "./ArrowButtons";
+import PartnersComponent from "./PartnersComponent";
+import useEmblaCarousel from "embla-carousel-react";
 import articleSchema, { Article } from "@/app/articles/Articles";
 
 type SlideType = {
@@ -21,28 +21,28 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: '/assets/img/articles/article_1.png',
-    title: 'Article Title 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_1.png",
+    title: "Article Title 1",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_2.png',
-    title: 'Article Title 2',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_2.png",
+    title: "Article Title 2",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_3.png',
-    title: 'Article Title 3',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_3.png",
+    title: "Article Title 3",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_4.png',
-    title: 'Article Title 4',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_4.png",
+    title: "Article Title 4",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
 ];
 
-const DEFAULT_OPTIONS: EmblaOptionsType = { align: 'start' };
+const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
 const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options = DEFAULT_OPTIONS }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
@@ -127,22 +127,22 @@ const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options 
         </div>
       </div>
 
-      <div 
+      <div
         className="absolute z-[-10] max-w-screen hidden md:flex justify-center items-center overflow-hidden"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud - shifted slightly right */}
-        <img 
-          className="z-[-10] select-none w-screen" 
+        <img
+          className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bg_1.webp"
           style={{ transform: "translateX(-25%)" }}
           alt=""
         />
 
         {/* Right cloud - shifted slightly left */}
-        <img 
-          className="z-[-10] select-none w-screen" 
-          src="/assets/img/clouds/cloud_bg_3.webp" 
+        <img
+          className="z-[-10] select-none w-screen"
+          src="/assets/img/clouds/cloud_bg_3.webp"
           style={{ transform: "translateX(25%)" }}
           alt=""
         />

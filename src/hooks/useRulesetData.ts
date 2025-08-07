@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { useFormattedTokenIssuance } from './useFormattedTokenIssuance';
-import { JBRulesetData, JBRulesetMetadata, RulesetWeight, WeightCutPercent } from 'juice-sdk-core';
-import { format } from 'date-fns';
-import { useReadJbRulesetsAllOf } from 'juice-sdk-react';
-import { MAX_RULESET_COUNT } from '@/app/constants';
+import { useMemo } from "react";
+import { useFormattedTokenIssuance } from "./useFormattedTokenIssuance";
+import { JBRulesetData, JBRulesetMetadata, RulesetWeight, WeightCutPercent } from "juice-sdk-core";
+import { format } from "date-fns";
+import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+import { MAX_RULESET_COUNT } from "@/app/constants";
 
 type UseRulesetDataProps = {
   ruleset?: JBRulesetData;
@@ -58,7 +58,7 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
   const cyclesData = useMemo(() => {
     return {
       /* totalDuration: duration > 0 ? formattedTime : 'Continuous', */
-      startTime: start > 0 ? format(start, 'yyyy-MM-dd, EEE, p zzz') : '-',
+      startTime: start > 0 ? format(start, "yyyy-MM-dd, EEE, p zzz") : "-",
       /* payouts: 'Unlimited', // Placeholder - logic can be added here
       editDeadline: 'No deadline', // Placeholder - logic can be added here */
     };
@@ -68,19 +68,19 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
   const tokenData = useMemo(() => {
     return {
       payerIssuanceRate: formattedTokenIssuance,
-      redemptionRate: metadata?.cashOutTaxRate ? `~${(BigInt(10_000) - metadata.cashOutTaxRate.value) / BigInt(100)}%` : '-',
+      redemptionRate: metadata?.cashOutTaxRate ? `~${(BigInt(10_000) - metadata.cashOutTaxRate.value) / BigInt(100)}%` : "-",
       /* cashOutTax: metadata?.cashOutTaxRate ? `${metadata.cashOutTaxRate.value / BigInt(100)}%` : '-', */
-      reservedRate: metadata?.reservedPercent ? `${metadata.reservedPercent.value / BigInt(100)}%` : '-',
+      reservedRate: metadata?.reservedPercent ? `${metadata.reservedPercent.value / BigInt(100)}%` : "-",
       /* issuanceReductionRate: ruleset?.weightCutPercent ? `${ruleset.weightCutPercent.value / BigInt(1e7)}%` : '-', */
-      ownerTokenMinting: metadata?.allowOwnerMinting ? 'Enabled' : 'Disabled',
+      ownerTokenMinting: metadata?.allowOwnerMinting ? "Enabled" : "Disabled",
       /* creditTransfers: metadata?.pauseCreditTransfers ? 'Enabled' : 'Disabled', */
-      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts ? 'Enabled' : 'Disabled',
+      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts ? "Enabled" : "Disabled",
     };
   }, [formattedTokenIssuance, metadata, ruleset]);
 
   // Memoize other rules data for the single ruleset
   const otherRulesData = useMemo(() => {
-    const formatBool = (val: boolean | undefined) => (val ? 'Yes' : 'No');
+    const formatBool = (val: boolean | undefined) => (val ? "Yes" : "No");
     return {
       paysHalted: formatBool(metadata?.pausePay),
 /*       holdFees: formatBool(metadata?.holdFees),

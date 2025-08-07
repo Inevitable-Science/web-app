@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from "react";
 
 const DaosGrid: React.FC = () => {
   // Create refs for each cloud container
@@ -14,7 +14,7 @@ const DaosGrid: React.FC = () => {
       // Apply parallax effect to each cloud container
       if (cloudTopRef.current) {
         // Top clouds: slight movement for each cloud
-        const clouds = cloudTopRef.current.querySelectorAll('img');
+        const clouds = cloudTopRef.current.querySelectorAll("img");
         clouds[0].style.transform = `translateX(25%) translateY(${scrollY * 0.06}px)`; // Left cloud
         clouds[1].style.transform = `translateX(10%) translateY(${scrollY * 0.03}px)`; // Center cloud
         clouds[2].style.transform = `translateX(-25%) translateY(${scrollY * 0.08}px)`; // Right cloud
@@ -22,7 +22,7 @@ const DaosGrid: React.FC = () => {
 
       if (cloudMidRef.current) {
         // Middle cloud: moderate movement
-        const cloud = cloudMidRef.current.querySelector('img');
+        const cloud = cloudMidRef.current.querySelector("img");
         if (cloud) {
           cloud.style.transform = `translateX(30%) translateY(${scrollY * 0.04}px)`;
         }
@@ -30,15 +30,15 @@ const DaosGrid: React.FC = () => {
 
       if (cloudBottomRef.current) {
         // Bottom cloud: slightly faster movement
-        const cloud = cloudBottomRef.current.querySelector('img');
+        const cloud = cloudBottomRef.current.querySelector("img");
         if (cloud) {
           cloud.style.transform = `translateX(-5%) translateY(${scrollY * 0.09}px)`;
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -64,13 +64,13 @@ const DaosGrid: React.FC = () => {
       <div
         ref={cloudTopRef}
         className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
-        style={{ transform: 'translateY(-40%)' }}
+        style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud */}
         <img
           className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bg_1.webp"
-          style={{ transform: 'translateX(25%)' }}
+          style={{ transform: "translateX(25%)" }}
           alt=""
         />
 
@@ -78,7 +78,7 @@ const DaosGrid: React.FC = () => {
         <img
           className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bg_2.webp"
-          style={{ transform: 'translateX(10%)' }}
+          style={{ transform: "translateX(10%)" }}
           alt=""
         />
 
@@ -86,7 +86,7 @@ const DaosGrid: React.FC = () => {
         <img
           className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bg_3.webp"
-          style={{ transform: 'translateX(-25%)' }}
+          style={{ transform: "translateX(-25%)" }}
           alt=""
         />
       </div>
@@ -119,12 +119,12 @@ const DaosGrid: React.FC = () => {
       <div
         ref={cloudMidRef}
         className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
-        style={{ transform: 'translateY(-50%)' }}
+        style={{ transform: "translateY(-50%)" }}
       >
         <img
           className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bottom_right.webp"
-          style={{ transform: 'translateX(30%)' }}
+          style={{ transform: "translateX(30%)" }}
           alt=""
         />
       </div>
@@ -154,12 +154,12 @@ const DaosGrid: React.FC = () => {
       <div
         ref={cloudBottomRef}
         className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
-        style={{ transform: 'translateY(-50%)' }}
+        style={{ transform: "translateY(-50%)" }}
       >
         <img
           className="z-[-10] select-none w-screen"
           src="/assets/img/clouds/cloud_bottom_center.webp"
-          style={{ transform: 'translateX(-5%)' }}
+          style={{ transform: "translateX(-5%)" }}
           alt=""
         />
       </div>

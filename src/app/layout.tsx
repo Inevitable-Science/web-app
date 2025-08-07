@@ -21,18 +21,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   return {
-    title: "Inevitable Protocol | Home", 
+    title: "Inevitable Protocol | Home",
     description: "Begin your journey. Build the future of life—together.",
     alternates: {
-      canonical: url, 
+      canonical: url,
     },
     openGraph: {
-      title: "Inevitable Protocol | Home", 
-      description: "Begin your journey. Build the future of life—together.", 
-      siteName: "Inevitable Protocol", 
+      title: "Inevitable Protocol | Home",
+      description: "Begin your journey. Build the future of life—together.",
+      siteName: "Inevitable Protocol",
       images: [
         {
-          url: imgUrl, 
+          url: imgUrl,
           width: 700,
           height: 370,
           alt: "Inevitable preview image",

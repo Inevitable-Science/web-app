@@ -107,7 +107,7 @@ const ArticlePage: FC<Props> = async props => {
   const relativeDate = (() => {
     const diffMs = new Date().getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) {
       return "today";
     } else if (diffDays < 7) {

@@ -26,7 +26,7 @@ import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 
 export function TransactionCard() {
-  const [activeTab, setActiveTab] = useState<'buy' | 'withdraw'>('buy');
+  const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [memo, setMemo] = useState("");
@@ -39,7 +39,7 @@ export function TransactionCard() {
 
   const { token: tokenBContext} = useJBTokenContext();
   const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
-  
+
   const { data: suckers, isLoading: areSuckersLoading, isError: isSuckerError } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const { metadata } = useNetworkData();
@@ -48,8 +48,8 @@ export function TransactionCard() {
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
     if (!selectedSucker && suckers && suckers.length > 0) {
-      const defaultSucker = activeChain 
-        ? suckers.find(s => s.peerChainId === activeChain) 
+      const defaultSucker = activeChain
+        ? suckers.find(s => s.peerChainId === activeChain)
         : undefined;
       setSelectedSucker(defaultSucker || suckers[0]);
     }
@@ -72,7 +72,7 @@ export function TransactionCard() {
   }
 
   const defaultToken = {
-    symbol: 'TOKENS',
+    symbol: "TOKENS",
     decimals: 18,
   };
 
@@ -122,7 +122,7 @@ export function TransactionCard() {
     amount: new FixedInt(parseUnits(amountB || "0", tokenB.decimals), tokenB.decimals),
     symbol: formatTokenSymbol(tokenB.symbol),
   };
-  
+
   const isChainMismatched = activeChain !== selectedSucker?.peerChainId;
 
   return (
@@ -130,25 +130,25 @@ export function TransactionCard() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setActiveTab('buy')}
+            onClick={() => setActiveTab("buy")}
             className={`h-[35px] rounded-none font-light bg-transparent hover:bg-transparent border-b-[1.5px] ${
-              activeTab === 'buy' ? 'border-cerulean text-white' : 'border-transparent text-muted-foreground'
+              activeTab === "buy" ? "border-cerulean text-white" : "border-transparent text-muted-foreground"
             }`}
           >
             Buy
           </Button>
           {rulesetMetadata?.useTotalSurplusForCashOuts && (
             <Button
-            onClick={() => setActiveTab('withdraw')}
+            onClick={() => setActiveTab("withdraw")}
             className={`h-[35px] rounded-none font-light bg-transparent hover:bg-transparent border-b-[1.5px] ${
-              activeTab === 'withdraw' ? 'border-cerulean text-white' : 'border-transparent text-muted-foreground'
+              activeTab === "withdraw" ? "border-cerulean text-white" : "border-transparent text-muted-foreground"
             }`}
           >
             Withdraw
           </Button>
           )}
         </div>
-        
+
         {/* 8. Add the ChainSelector to the UI */}
         <ChainSelector
           disabled={!suckers || suckers.length <= 1}
@@ -159,7 +159,7 @@ export function TransactionCard() {
       </div>
 
       <div className="my-4">
-        {activeTab === 'buy' ? (
+        {activeTab === "buy" ? (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <div className="background-color flex items-center justify-between gap-2 p-[16px] rounded-xl">
@@ -203,7 +203,7 @@ export function TransactionCard() {
                 <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
                   <Image
                     src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
-                    className="rounded-full" 
+                    className="rounded-full"
                     height={22}
                     width={22}
                     alt="Token Icon"

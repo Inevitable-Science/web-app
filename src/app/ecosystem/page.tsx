@@ -19,18 +19,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   return {
-    title: "Ecosystem | Inevitable Protocol", 
+    title: "Ecosystem | Inevitable Protocol",
     description: metadata.description,
     alternates: {
-      canonical: url, 
+      canonical: url,
     },
     openGraph: {
-      title: "Ecosystem | Inevitable Protocol", 
-      description: metadata.description, 
-      siteName: metadata.siteName, 
+      title: "Ecosystem | Inevitable Protocol",
+      description: metadata.description,
+      siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl, 
+          url: imgUrl,
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -53,7 +53,7 @@ export default function Ecosystem() {
   return (
     <div className="relative">
       <div className="absolute inset-0 bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover w-full bg-center z-[-1] top-[-140px]" />
-      
+
       <section className="ctWrapper mt-[140px]">
         <div className="flex gap-4 flex-col md:flex-row md:gap-12 mb-[52px]">
           <div className="sm:min-w-[400px] flex flex-col gap-4">

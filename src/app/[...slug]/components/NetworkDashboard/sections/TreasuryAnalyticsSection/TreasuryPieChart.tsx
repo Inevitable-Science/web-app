@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, type JSX } from 'react';
-import { PieChart, Pie, Sector, ResponsiveContainer } from 'recharts';
+import React, { useState, useEffect, type JSX } from "react";
+import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
 
 interface TreasuryToken {
   metadata: {
@@ -24,11 +24,11 @@ interface TreasuryPieChartProps {
 const MIN_PERCENT = 0.5;
 
 const segmentColors = [
-  '#315659',
-  '#C6E0FF',
-  '#2978A0',
-  '#253031',
-  '#FBE8BD',
+  "#315659",
+  "#C6E0FF",
+  "#2978A0",
+  "#253031",
+  "#FBE8BD",
 ];
 
 interface PieChartData extends TreasuryToken {
@@ -64,18 +64,18 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   const my = cy + (outerRadius + 30) * sin;
   const ex = mx + (cos >= 0 ? 1 : -1) * 22;
   const ey = my;
-  const textAnchor = cos >= 0 ? 'start' : 'end';
+  const textAnchor = cos >= 0 ? "start" : "end";
 
   function formatNumber(value: number | string) {
-    if (value === 'N/A') return value;
-    const number = typeof value === 'string' ? parseFloat(value) : value;
+    if (value === "N/A") return value;
+    const number = typeof value === "string" ? parseFloat(value) : value;
     if (isNaN(number)) {
-      return 'N/A';
+      return "N/A";
     }
 
     const fractionDigits = number < 10 ? 2 : 0;
 
-    return number.toLocaleString('en-US', {
+    return number.toLocaleString("en-US", {
       minimumFractionDigits: fractionDigits,
       maximumFractionDigits: fractionDigits,
     });
@@ -83,7 +83,7 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={'var(--foreground)'}>
+      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={"var(--foreground)"}>
         {payload.contractAddress ? (
           <a
             href={`https://etherscan.io/token/${payload.contractAddress}`}
@@ -154,7 +154,7 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
           const percent = (token.value / totalValue) * 100;
           return {
             ...token,
-            percent: isNaN(percent) ? '0.00' : percent.toFixed(2),
+            percent: isNaN(percent) ? "0.00" : percent.toFixed(2),
             visualValue: isNaN(percent) || percent < MIN_PERCENT ? MIN_PERCENT : percent,
             fill: segmentColors[index % segmentColors.length],
           };
@@ -181,9 +181,9 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
 
   useEffect(() => {
     adjustRadius();
-    window.addEventListener('resize', adjustRadius);
+    window.addEventListener("resize", adjustRadius);
     return () => {
-      window.removeEventListener('resize', adjustRadius);
+      window.removeEventListener("resize", adjustRadius);
     };
   }, []);
 

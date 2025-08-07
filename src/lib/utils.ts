@@ -41,9 +41,9 @@ export function formatSeconds(seconds: number, precision = 2, compact = false) {
 
 export function truncateAddress(address: Address) {
   if (address === null) return "-- --";
-  if (address.length <= 10) return address; 
+  if (address.length <= 10) return address;
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};  
+};
 
 export function formatNumber(num: number | null, compact: boolean = false): string {
   if (num === null || isNaN(num)) return "--";

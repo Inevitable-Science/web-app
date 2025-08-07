@@ -24,12 +24,12 @@ export function WithdrawCard(
   const chainId = useJBChainId();
 
   const { metadata } = useNetworkData();
-  
+
   const tokenA = useTokenA();
   const { token: tokenB } = useJBTokenContext();
-  
+
   const withdrawAmountBN = parseUnits(withdrawAmount || "0", tokenB.data?.decimals ?? 18);
-  
+
   // Hooks for fetching data
   const { data: userTokenBalance } = useSuckersUserTokenBalance();
   const { data: ethQuote } = useTokenCashOutQuoteEth(withdrawAmountBN, { chainId });
@@ -58,7 +58,7 @@ export function WithdrawCard(
             <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
               <Image
                 src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
-                className="rounded-full" 
+                className="rounded-full"
                 height={22}
                 width={22}
                 alt="Token Icon"
@@ -84,9 +84,9 @@ export function WithdrawCard(
             />
           </div>
           <div className="flex w-fit min-w-fit bg-grey-450 rounded-full py-1 px-2 gap-2 items-center justify-end">
-            <Image 
+            <Image
               src="/assets/img/logo/mainnet.svg"
-              className="rounded-full" 
+              className="rounded-full"
               height={22}
               width={22}
               alt="ETH Icon"
@@ -95,7 +95,7 @@ export function WithdrawCard(
           </div>
         </div>
       </div>
-      
+
       <WithdrawActionButton
         amountToWithdraw={withdrawAmountBN}
         disabled={!withdrawAmount || withdrawAmountBN === 0n || withdrawAmountBN > (balanceOnCurrentChain?.value ?? 0n)}

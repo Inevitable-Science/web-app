@@ -7,7 +7,7 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
 
   // Ensure the discord link has a protocol
   const discordLink = dataHolder?.discord
-    ? dataHolder.discord.startsWith('http') ? dataHolder.discord : `https://${dataHolder.discord}`
+    ? dataHolder.discord.startsWith("http") ? dataHolder.discord : `https://${dataHolder.discord}`
     : "";
 
   return (

@@ -59,7 +59,7 @@ export default function Articles() {
           <SearchBar />
         </div>
       </div>
-      
+
       <div className="flex justify-between items-center gap-4 mt-6">
         <div className="flex items-center gap-6 max-w-full overflow-x-auto whitespace-nowrap">
           <Button variant={"link"} className="px-0">
@@ -116,18 +116,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   return {
-    title: "Articles | Inevitable Protocol", 
+    title: "Articles | Inevitable Protocol",
     description: metadata.description,
     alternates: {
-      canonical: url, 
+      canonical: url,
     },
     openGraph: {
-      title: "Articles | Inevitable Protocol", 
-      description: metadata.description, 
-      siteName: metadata.siteName, 
+      title: "Articles | Inevitable Protocol",
+      description: metadata.description,
+      siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl, 
+          url: imgUrl,
           width: 700,
           height: 370,
           alt: "Inevitable preview image",

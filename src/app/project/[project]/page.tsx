@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DaoResponse, DaoResponseSchema } from '@/lib/types/AnalyticTypes';
+import { DaoResponse, DaoResponseSchema } from "@/lib/types/AnalyticTypes";
 import { metadata } from "@/lib/metadata";
 import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
@@ -27,18 +27,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   if (!projectData) {
     return {
-      title: "Page Not Found | Inevitable Protocol", 
+      title: "Page Not Found | Inevitable Protocol",
       description: metadata.description,
       alternates: {
-        canonical: url, 
+        canonical: url,
       },
       openGraph: {
-        title: "Page Not Found | Inevitable Protocol", 
-        description: metadata.description, 
-        siteName: metadata.siteName, 
+        title: "Page Not Found | Inevitable Protocol",
+        description: metadata.description,
+        siteName: metadata.siteName,
         images: [
           {
-            url: imgUrl, 
+            url: imgUrl,
             width: 700,
             height: 370,
             alt: "Inevitable preview image",
@@ -64,7 +64,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         title: `${projectData.name} | Inevitable Protocol`,
         description: projectData.description,
         siteName: "Inevitable Protocol",
-        images: [{ url: projectData.logo, width: 800, height: 800, alt: `preview image` }],
+        images: [{ url: projectData.logo, width: 800, height: 800, alt: "preview image" }],
         url,
         type: "article",
       },
@@ -92,7 +92,7 @@ async function getProjectData(project: string): Promise<DaoResponse | null>{
     console.log(data);
     return data;
   } catch (error) {
-    console.error('Invalid response structure', error);
+    console.error("Invalid response structure", error);
     return null;
   }
 }

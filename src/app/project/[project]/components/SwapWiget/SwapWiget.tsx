@@ -42,7 +42,7 @@ export function SwapWidget({ token } : TokenState) {
     images: {},
     sounds: {},
     customTokens: [], //tokenList,
-  };  
+  };
 
   return (
     <div className="swapWrapper">

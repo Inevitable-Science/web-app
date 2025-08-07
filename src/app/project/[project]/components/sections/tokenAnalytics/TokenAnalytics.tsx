@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
-import { TokenResponse } from '@/lib/types/AnalyticTypes';
+import { TokenResponse } from "@/lib/types/AnalyticTypes";
 import {
   JBChainId,
   useJBChainId,
@@ -22,7 +22,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 import { useAccount } from "wagmi";
-import { getBalance } from '@wagmi/core'
+import { getBalance } from "@wagmi/core"
 import { wagmiConfig } from "@/lib/wagmiConfig";
 
 
@@ -76,28 +76,28 @@ export function TokenSection() {
   const suckers = suckersQuery.data;
 
   const { watchAsset, isSuccess, isPending } = useWatchAsset();
-  
+
   const handleAddToken = () => {
     // Make sure token.data and necessary properties exist
     if (!data?.selectedToken.address || !data.selectedToken.name /*|| !data.selectedToken.decimals*/) {
       console.error("Token information is incomplete.");
       return;
     }
-    
+
     watchAsset({
-      type: 'ERC20',
+      type: "ERC20",
       options: {
         address: data?.selectedToken.address as Address,
         symbol: data.selectedToken.name,
         decimals: 18,
-        image: data.selectedToken.logoUrl || "", 
+        image: data.selectedToken.logoUrl || "",
       },
     });
   };
 
   const { address, isConnected } = useAccount();
   const [balance, setBalance] = useState<string>("");
-  
+
 
   useEffect(() => {
     if (!address || !isConnected) {
@@ -119,7 +119,7 @@ export function TokenSection() {
         } else {
           formatted = formatNumber(raw, true);
         }
-        
+
 
         setBalance(formatted);
       } catch (err) {
@@ -128,7 +128,7 @@ export function TokenSection() {
     };
 
     fetchBalance();
-  }, [address, isConnected]);
+  }, [address, isConnected, data?.selectedToken.address]);
 
   return (
     <section>
@@ -163,7 +163,7 @@ export function TokenSection() {
               onClick={handleAddToken}
               disabled={isPending} // Disable the button while processing
             >
-              {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+              {isPending ? "Adding..." : isSuccess ? "Added!" : "Add To Metamask"}
               <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
             </Button>
           )}

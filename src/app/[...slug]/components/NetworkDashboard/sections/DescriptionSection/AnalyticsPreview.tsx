@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { FC, useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { FC, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { formatNumber } from '@/lib/utils';
+import { formatNumber } from "@/lib/utils";
 
 interface DaoData {
   treasuryHoldings: string;
@@ -53,9 +53,9 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
           </div>
         </div>
 
-        <Button 
+        <Button
           onClick={() => setSelectedTab("activity")}
-          variant="link" 
+          variant="link"
           className="h-6 pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Treasury Stats
@@ -113,9 +113,9 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
           </div>
         </div>
 
-        <Button 
+        <Button
           onClick={() => setSelectedTab("analytics")}
-          variant="link" 
+          variant="link"
           className="h-6 pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Analytics

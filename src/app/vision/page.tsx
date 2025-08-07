@@ -15,18 +15,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   return {
-    title: "Vision | Inevitable Protocol", 
+    title: "Vision | Inevitable Protocol",
     description: metadata.description,
     alternates: {
-      canonical: url, 
+      canonical: url,
     },
     openGraph: {
-      title: "Vision | Inevitable Protocol", 
-      description: metadata.description, 
-      siteName: metadata.siteName, 
+      title: "Vision | Inevitable Protocol",
+      description: metadata.description,
+      siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl, 
+          url: imgUrl,
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -61,12 +61,12 @@ export default function Vision() {
             </h2>
           </div>
 
-          <Image 
+          <Image
             src="/assets/img/hero.webp"
-            className="h-[55vh] sm:min-h-[400px] object-contain sm:block hidden select-none" 
+            className="h-[55vh] sm:min-h-[400px] object-contain sm:block hidden select-none"
             height={600}
             width={290}
-            alt="Hero Image" 
+            alt="Hero Image"
           />
         </div>
       </div>
@@ -75,16 +75,16 @@ export default function Vision() {
         <h2 className="ctWrapper text-xl md:text-3xl">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </h2>
-        
+
         <div
           className="s absolute z-[-10] max-w-screen hidden sm:flex justify-center items-center gap-[70vw] overflow-hidden"
-          style={{ transform: 'translateY(-50%)' }}
+          style={{ transform: "translateY(-50%)" }}
         >
           {/* Left cloud */}
           <img
             className="z-[-10] select-none w-[100vw]"
             src="/assets/img/clouds/cloud_bg_1.webp"
-            style={{ transform: 'translateX(25%)' }}
+            style={{ transform: "translateX(25%)" }}
             alt=""
           />
 
@@ -92,7 +92,7 @@ export default function Vision() {
           <img
             className="z-[-10] select-none w-[100vw]"
             src="/assets/img/clouds/cloud_bg_3.webp"
-            style={{ transform: 'translateX(-25%)' }}
+            style={{ transform: "translateX(-25%)" }}
             alt=""
           />
         </div>
@@ -101,8 +101,8 @@ export default function Vision() {
           <div className="flex gap-4 flex-col md:flex-row md:gap-12 my-24">
             <div className="sm:min-w-[470px] flex flex-col gap-4">
               <h3 className="text-5xl font-extralight">
-                This Is Where The 
-                <span className="text-primary"> Impossible </span> 
+                This Is Where The
+                <span className="text-primary"> Impossible </span>
                 Begins.
               </h3>
             </div>

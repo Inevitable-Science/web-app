@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 // ARCHIVE
 
-import React from 'react';
-import { EmblaOptionsType } from 'embla-carousel';
+import React from "react";
+import { EmblaOptionsType } from "embla-carousel";
 import { PrevButton, NextButton, usePrevNextButtons } from "@/components/home/ArrowButtons";
-import useEmblaCarousel from 'embla-carousel-react';
+import useEmblaCarousel from "embla-carousel-react";
 
 type SlideType = {
   img: string;
@@ -21,28 +21,28 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: '/assets/img/articles/article_1.png',
-    title: 'Article Title 1',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_1.png",
+    title: "Article Title 1",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_2.png',
-    title: 'Article Title 2',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_2.png",
+    title: "Article Title 2",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_3.png',
-    title: 'Article Title 3',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_3.png",
+    title: "Article Title 3",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: '/assets/img/articles/article_4.png',
-    title: 'Article Title 4',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+    img: "/assets/img/articles/article_4.png",
+    title: "Article Title 4",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
 ];
 
-const DEFAULT_OPTIONS: EmblaOptionsType = { align: 'start' };
+const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
 const createSlug = (title: string) =>
     title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "");

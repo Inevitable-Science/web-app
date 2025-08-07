@@ -4,7 +4,7 @@ import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
 import { sdk } from "@farcaster/frame-sdk";
-import { notFound as triggerNotFound } from 'next/navigation';
+import { notFound as triggerNotFound } from "next/navigation";
 
 export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = use(props.params);

@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
-import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
-import { ParticipantSnapshotsInRangeDocument } from '@/generated/graphql';
+import { useMemo } from "react";
+import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { ParticipantSnapshotsInRangeDocument } from "@/generated/graphql";
 
 // Define the shape of the data our hook will return
 export type DailyVolume = {
@@ -46,14 +46,14 @@ export function useVolumeData({ suckerGroupId, startTimestamp, endTimestamp }: U
     }
 
     const items = snapshotData.participantSnapshots.items ?? [];
-    
+
     // Use a Map to bucket transactions by day
     const volumeByDay = new Map<string, bigint>();
 
     for (const snapshot of items) {
       // Normalize the timestamp to the start of the day (in UTC)
-      const day = new Date(snapshot.timestamp * 1000).toISOString().split('T')[0];
-      
+      const day = new Date(snapshot.timestamp * 1000).toISOString().split("T")[0];
+
       const currentVolume = volumeByDay.get(day) ?? 0n;
       volumeByDay.set(day, currentVolume + BigInt(snapshot.volume));
     }

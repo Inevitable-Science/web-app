@@ -259,7 +259,7 @@ export async function generateMetadata(
 
     const imageWidth = 1200;
     const imageHeight = 800;
-    
+
     return buildMetadata({ title, description, imageUrl, url: url.href, imageWidth, imageHeight });
   }
 

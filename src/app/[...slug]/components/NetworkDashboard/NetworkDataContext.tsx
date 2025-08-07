@@ -1,5 +1,5 @@
-import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
-import { useAccount, useBalance } from 'wagmi';
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from "react";
+import { useAccount, useBalance } from "wagmi";
 import {
   useJBRulesetContext,
   useSuckers,
@@ -7,19 +7,19 @@ import {
   useJBChainId,
   useJBProjectMetadataContext,
   useReadJbRulesetsAllOf
-} from 'juice-sdk-react';
-import { Loader2 } from 'lucide-react';
-import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectMetadata } from 'juice-sdk-core';
-import { JBContractContextData } from 'juice-sdk-react';
-import { useBendystrawQuery } from '@/graphql/useBendystrawQuery';
-import { ProjectDocument, ProjectQuery } from '@/generated/graphql';
-import { useVolumeData, DailyVolume } from '@/hooks/useVolumeData';
-import { notFound } from 'next/navigation';
-import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes';
-import { AsyncData } from 'juice-sdk-react/dist/contexts/types';
-import { type GetTokenReturnType } from '@wagmi/core'
-import { useBoostRecipient } from '@/hooks/useBoostRecipient';
-import { SelectedSuckerContextType, useSelectedSucker } from '../PayCard/SelectedSuckerContext';
+} from "juice-sdk-react";
+import { Loader2 } from "lucide-react";
+import { SuckerPair, JBRulesetData, JBRulesetMetadata, JBProjectMetadata } from "juice-sdk-core";
+import { JBContractContextData } from "juice-sdk-react";
+import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
+import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
+import { notFound } from "next/navigation";
+import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from "@/lib/types/AnalyticTypes";
+import { AsyncData } from "juice-sdk-react/dist/contexts/types";
+import { type GetTokenReturnType } from "@wagmi/core"
+import { useBoostRecipient } from "@/hooks/useBoostRecipient";
+import { SelectedSuckerContextType, useSelectedSucker } from "../PayCard/SelectedSuckerContext";
 
 export interface AnalyticsData {
   tokenData: TokenResponse | null;
@@ -30,11 +30,11 @@ export interface AnalyticsData {
 
 interface NetworkDataContextType {
   suckers: SuckerPair[];
-  walletBalance: ReturnType<typeof useBalance>['data'];
+  walletBalance: ReturnType<typeof useBalance>["data"];
   ruleset: JBRulesetData;
   rulesetMetadata: JBRulesetMetadata;
   contracts: JBContractContextData;
-  project: NonNullable<ProjectQuery['project']>;
+  project: NonNullable<ProjectQuery["project"]>;
   dailyTotals: DailyVolume[];
   isRefetching: boolean;
   analyticsData: AnalyticsData | null;
@@ -69,7 +69,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
     projectId: Number(projectId),
     skip: !chainId || !projectId,
   });
-  
+
   // NOTE: `project` will hold the current or stale data from the query hook.
   const project = projectData?.project;
 
@@ -100,16 +100,16 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
       setAnalyticsError(null);
       try {
         // Use Promise.all to fetch data in parallel for better performance
-        
+
         /*const responses = await Promise.all([
           fetch(`https://inev.profiler.bio/dao/${daoName}`),
           fetch(`https://inev.profiler.bio/token/${tokenName}`),
           fetch(`https://inev.profiler.bio/treasury/${daoName}`),
           fetch(`https://inev.profiler.bio/chart/${tokenName}-7`)
         ]);*/
-        
 
-        // TODO: 
+
+        // TODO:
         /*const responses = await Promise.all([
           fetch(`https://inev.profiler.bio/dao/hydradao`),
           fetch(`https://inev.profiler.bio/token/hydra`), // only fetch if project is not tokenless
@@ -118,10 +118,10 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
         ]);*/
 
         const responses = await Promise.all([
-          fetch(`https://inev.profiler.bio/dao/hydradao`),
-          fetch(`https://inev.profiler.bio/token/hydra`),
-          fetch(`https://inev.profiler.bio/treasury/hydradao`),
-          fetch(`https://inev.profiler.bio/chart/hydra-7`)
+          fetch("https://inev.profiler.bio/dao/hydradao"),
+          fetch("https://inev.profiler.bio/token/hydra"),
+          fetch("https://inev.profiler.bio/treasury/hydradao"),
+          fetch("https://inev.profiler.bio/chart/hydra-7")
         ]); // Temporary remove in production
 
         // Check if all responses are OK
@@ -141,7 +141,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
         });
 
       } catch (err) {
-        setAnalyticsError(err instanceof Error ? err.message : 'An unknown error occurred');
+        setAnalyticsError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setIsAnalyticsLoading(false);
       }
@@ -158,7 +158,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
     rulesetMetadata.isLoading ||
     isProjectLoading ||
     (!!project?.suckerGroupId && isVolumeLoading);
-  
+
   const isInitialLoading = isFetching && !project;
 
   // `isRefetching` is true when we are fetching again (e.g., chain changed)
@@ -211,7 +211,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
     !isFetching &&
     (!value.suckers || !value.ruleset || !value.rulesetMetadata || !value.project)
   ) {
-    notFound(); 
+    notFound();
   }
 
   return (
@@ -226,7 +226,7 @@ export const NetworkDataProvider = ({ children, token }: { children: ReactNode, 
 export const useNetworkData = () => {
   const context = useContext(NetworkDataContext);
   if (!context) {
-    throw new Error('useNetworkData must be used within a NetworkDataProvider');
+    throw new Error("useNetworkData must be used within a NetworkDataProvider");
   }
   return context;
 };

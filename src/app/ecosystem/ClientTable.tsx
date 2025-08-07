@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useAccount } from "wagmi";
-import { getBalance } from '@wagmi/core'
+import { getBalance } from "@wagmi/core"
 import { Address, formatUnits } from "viem"
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { formatNumber } from "@/lib/utils";
@@ -14,44 +14,44 @@ import { ArrowRightIcon } from "lucide-react";
 // TODO: allow for ERC 721 token balance to appear
 
 interface statItem{
-  name: string, 
+  name: string,
   logo: string;
   tokenAddress: Address;
   vestingContract?: Address;
 }
 
 const dummyStats: statItem[] = [
-  { 
-    name: "HydraDAO", 
+  {
+    name: "HydraDAO",
     logo: "https://www.profiler.bio/external/logos/hydradao.png",
     tokenAddress: "0xaF04f0912E793620824F4442b03F4d984Af29853",
     vestingContract: "0x87d83a88cdc3bfe53877cf852013fc76c8669a99",
   },
-  { 
-    name: "CryoDAO", 
+  {
+    name: "CryoDAO",
     logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg",
     tokenAddress: "0xf4308b0263723b121056938c2172868e408079d0",
     vestingContract: "0xF5BdfeE7910c561606e6A19Bbf0319238A6a2340",
   },
-  { 
-    name: "Erectus", 
-    logo: "https://www.profiler.bio/external/logos/erectusdao.png", 
+  {
+    name: "Erectus",
+    logo: "https://www.profiler.bio/external/logos/erectusdao.png",
     tokenAddress: "0xFdc9D2A3cae56e484a85de3C2e812784a8184d0D",
     vestingContract: "0xD8D29d907C248BE3721C0c434c792a127113b297",
   },
-  { 
-    name: "CryoRat", 
+  {
+    name: "CryoRat",
     logo: "https://www.profiler.bio/external/logos/cryorat.png",
     tokenAddress: "0x4cd1B2874e020C5bf08c4bE18Ab69ca86EC25fEf",
     vestingContract: "0x9dad05FAD7b20C8bb66e5b7796a4E601967e2868",
   },
-  /*{ 
-    name: "MoonDAO", 
+  /*{
+    name: "MoonDAO",
     logo: "https://www.profiler.bio/external/logos/moondao.png",
     tokenAddress: "0x20d4DB1946859E2Adb0e5ACC2eac58047aD41395",
   },
-  { 
-    name: "Stasis", 
+  {
+    name: "Stasis",
     logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg",
     tokenAddress: "0x732f0736ea540e7b4d38e948cfcfdb81024377d9"
   },*/
@@ -60,7 +60,7 @@ const dummyStats: statItem[] = [
 export default function ClientTable() {
   const { address, isConnected } = useAccount();
   const [balances, setBalances] = useState<Record<string, string>>({});
-  
+
 
   useEffect(() => {
     if (!address || !isConnected) {
@@ -115,7 +115,7 @@ export default function ClientTable() {
 
     fetchBalances();
   }, [address, isConnected]);
-  
+
 
   return(
   <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] rounded-2xl">
