@@ -222,6 +222,7 @@ export function TransactionCard() {
             <PayActionButton
               amountA={preparedAmountA}
               amountB={preparedAmountB}
+              walletBalance={walletBalance ? parseFloat(formatUnits(walletBalance.value, tokenA.decimals)).toFixed(4) : 0}
               memo={memo}
               disabled={!amountA || parseFloat(amountA) === 0}
               selectedSucker={selectedSucker}

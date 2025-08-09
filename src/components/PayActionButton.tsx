@@ -16,6 +16,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { useNetworkData } from "@/app/[...slug]/components/NetworkDashboard/NetworkDataContext";
 import { Button } from "./ui/button"; // Using your shadcn/ui Button
 import { ConnectKitButton } from "connectkit";
+import { formatUnits } from "viem";
 
 const shimmerClasses = `
     relative overflow-hidden 
@@ -35,12 +36,14 @@ const primaryButtonClasses =
 export function PayActionButton({
   amountA,
   amountB,
+  walletBalance,
   memo,
   disabled,
   selectedSucker,
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
+  walletBalance: number | string;
   memo: string | undefined;
   disabled?: boolean;
   selectedSucker?: SuckerPair | undefined;
@@ -146,7 +149,19 @@ export function PayActionButton({
     );
   }
 
-  // State 3: User is connected and on the correct chain. Show the 'Buy' button.
+  // State 3: User is connected however has inputted an amount greater than their balance
+  if (walletBalance && amountA.amount._value && Number(walletBalance) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))) {
+    return (
+      <Button
+        className={twMerge(primaryButtonClasses, shimmerClasses)}
+        disabled={true}
+      >
+        Insufficient Funds
+      </Button>
+    );
+  }
+
+  // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
       <Dialog.Trigger asChild>
