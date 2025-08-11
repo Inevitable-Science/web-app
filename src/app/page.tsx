@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ExploreButton from "@/components/home/ExploreButton";
 import ArticleCarousel from "@/components/home/ArticleCarousel";
 import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
@@ -99,9 +100,10 @@ export default function Page() {
           <div className="sm:w-[1600px] mx-auto px-[24px] flex flex-col gap-4">
             <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
             <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">We’re building the critical infrastructure to fund technological breakthroughs.</h4>
-            <Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
+            {/*<Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
                 Explore Inevitable
-            </Button>
+            </Button>*/}
+            <ExploreButton />
           </div>
         </div>
       </div>

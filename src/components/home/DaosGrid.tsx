@@ -42,7 +42,7 @@ const DaosGrid: React.FC = () => {
   }, []);
 
   return (
-    <section className="sectionDaosGrid">
+    <section className="sectionDaosGrid" id="projects-target">
       <div className="dGrid-1 dGrid max-w-[1600px] mx-auto">
         <div className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
