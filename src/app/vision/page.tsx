@@ -61,7 +61,7 @@ export default function Vision() {
             </h2>
           </div>
 
-          <Image
+          <img
             src="/assets/img/hero.webp"
             className="h-[55vh] sm:min-h-[400px] object-contain sm:block hidden select-none"
             height={600}

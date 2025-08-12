@@ -4,9 +4,11 @@ import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import { PrevButton, NextButton, usePrevNextButtons } from "@/components/home/ArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
 
 type SlideType = {
   img: string;
+  href: string;
   title: string;
   description: string;
 };
@@ -19,23 +21,27 @@ type PropType = {
 const DEFAULT_SLIDES: SlideType[] = [
   {
     img: "/assets/img/daos/cryo.webp",
+    href: "cryodao",
     title: "CryoDAO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    description: "DAO specialized in advancing high-impact cryopreservation research.",
   },
   {
-    img: "/assets/img/daos/moon.webp",
-    title: "MoonDAO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    img: "/assets/img/daos/hydra.webp",
+    href: "hydradao",
+    title: "HydraDAO",
+    description: "Funding and incubating replacement research to extend human lifespan.",
   },
   {
     img: "/assets/img/daos/erectus.webp",
+    href: "erectusdao",
     title: "Erectus",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    description: "Community owned collective funding and promoting male sexual health research.",
   },
   {
-    img: "/assets/img/daos/placeholder_1.webp",
-    title: "DAO Title",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+    img: "/assets/img/daos/cryorat.webp",
+    href: "cryorat",
+    title: "CryoRat",
+    description: "High sub-zero preservation and revival of a rat.",
   },
 ];
 
@@ -78,7 +84,11 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
             {slides.map((slide, index) => (
-              <div key={index} className="flex min-w-[280px] sm:min-w-[440px] pl-4">
+              <Link 
+                key={index} 
+                href={`/project/${slide.href}`} 
+                className="flex min-w-[280px] sm:min-w-[440px] pl-4"
+              >
                 <div
                   className="flex flex-col items-start justify-between h-full min-h-[370px] p-4 bg-background rounded-2xl select-none bg-cover bg-center"
                   style={{ backgroundImage: `url(${slide.img})` }}
@@ -89,7 +99,7 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
                     <p className="text-sm line-clamp-2">{slide.description}</p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
