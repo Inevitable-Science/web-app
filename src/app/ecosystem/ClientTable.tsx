@@ -11,7 +11,6 @@ import { formatNumber } from "@/lib/utils";
 
 import { ArrowRightIcon } from "lucide-react";
 
-// TODO: allow for ERC 721 token balance to appear
 
 interface projectInterface{
   name: string,
@@ -35,7 +34,7 @@ type Participant = {
   creditBalance: string;
 };
 
-type ProjectBalanceMap = Record<string, bigint>;
+type ProjectBalanceMap = Record<string, bigint | string>;
 
 const projectVars: projectInterface[] = [
   {
@@ -66,16 +65,6 @@ const projectVars: projectInterface[] = [
     tokenAddress: "0x4cd1B2874e020C5bf08c4bE18Ab69ca86EC25fEf",
     vestingContract: "0x9dad05FAD7b20C8bb66e5b7796a4E601967e2868",
   },
-  /*{
-    name: "MoonDAO",
-    logo: "https://www.profiler.bio/external/logos/moondao.png",
-    tokenAddress: "0x20d4DB1946859E2Adb0e5ACC2eac58047aD41395",
-  },
-  {
-    name: "Stasis",
-    logo: "https://cdn.prod.website-files.com/643d6a447c6e1b4184d3ddfd/643d7ebba7e71c58cdb21f5a_CryoDAO-icon-black.svg",
-    tokenAddress: "0x732f0736ea540e7b4d38e948cfcfdb81024377d9"
-  },*/
 ];
 
 const v4ProjectVars: v4ProjectInterface[] = [
@@ -96,21 +85,17 @@ export default function ClientTable() {
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 
   useEffect(() => {
-    console.log(v4Balances);
-  }, [v4Balances])
-
-  useEffect(() => {
     if (!address || !isConnected) {
       const fallback: Record<string, string> = {};
 
-      projectVars.forEach((project) => {
-        fallback[project.tokenAddress] = "0";
+      v4ProjectVars.forEach((project) => {
+        fallback[project.projectID.toString()] = "0";
         if (project.vestingContract) {
           fallback[project.vestingContract] = "0";
         }
       });
 
-      setBalances(fallback);
+      setV4Balances(fallback);
       return;
     }
 
@@ -143,7 +128,7 @@ export default function ClientTable() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   query,
-                  variables: { chainId, projectId: projectID, address: "0x12A0A400FeB541E16D4C1eA5fC32bd750B44b84B" },
+                  variables: { chainId, projectId: projectID, address },
                 }),
               });
 
@@ -173,6 +158,24 @@ export default function ClientTable() {
 
       setV4Balances(balances);
     };
+
+    fetchGraphQLQuery();
+  }, [address, isConnected]);
+
+  useEffect(() => {
+    if (!address || !isConnected) {
+      const fallback: Record<string, string> = {};
+
+      projectVars.forEach((project) => {
+        fallback[project.tokenAddress] = "0";
+        if (project.vestingContract) {
+          fallback[project.vestingContract] = "0";
+        }
+      });
+
+      setBalances(fallback);
+      return;
+    }
 
     const fetchBalances = async () => {
       try {
@@ -214,9 +217,10 @@ export default function ClientTable() {
       }
     };
 
-    fetchBalances();
-    fetchGraphQLQuery();
-  }, [address, isConnected]);
+    if (isSwitchingChain === false) {
+      fetchBalances();
+    }
+  }, [address, isConnected, isSwitchingChain]);
 
 
   return(
@@ -342,7 +346,7 @@ export default function ClientTable() {
                 <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
               ) : (
                 <span>
-                  {formatNumber(Number(formatUnits(v4Balances[project.projectID], 18)))}
+                  {formatNumber(Number(formatUnits(v4Balances[project.projectID] as bigint, 18)))}
                 </span>
               )}
             </div>
