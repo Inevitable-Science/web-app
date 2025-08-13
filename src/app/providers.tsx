@@ -3,13 +3,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
 import { wagmiConfig } from "@/lib/wagmiConfig";
-import React from 'react';
-import { usePathname } from 'next/navigation';
-import dynamic from 'next/dynamic';
+import React from "react";
+import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { WagmiProvider } from "wagmi";
 
 const DynamicAppSpecificProviders = dynamic(
-  () => import('./AppSpecificProviders').then(mod => mod.AppSpecificProviders),
+  () => import("./AppSpecificProviders").then(mod => mod.AppSpecificProviders),
   {
     ssr: false,
     loading: () => null,
@@ -20,7 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   // Don't load providers for splash
-  const isSplashPage = pathname === '/';
+  const isSplashPage = pathname === "/";
   if (isSplashPage) {
     const queryClient = new QueryClient();
 

@@ -236,12 +236,13 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
   }
 }*/
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug?: string[] };
-}): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug?: string[] }>;
+  }
+): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
@@ -258,7 +259,7 @@ export async function generateMetadata({
 
     const imageWidth = 1200;
     const imageHeight = 800;
-    
+
     return buildMetadata({ title, description, imageUrl, url: url.href, imageWidth, imageHeight });
   }
 

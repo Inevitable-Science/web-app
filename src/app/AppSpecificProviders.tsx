@@ -1,6 +1,5 @@
 "use client";
 
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
@@ -33,9 +32,7 @@ export function AppSpecificProviders({ children }: { children: React.ReactNode }
             "--ck-accent-text-color": "#ffffff",
           }}
         >
-          <TooltipProvider delayDuration={200} skipDelayDuration={100}>
-            {children}
-          </TooltipProvider>
+          {children}
         </ConnectKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

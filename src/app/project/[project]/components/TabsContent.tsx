@@ -1,7 +1,7 @@
 // TabContent.tsx
 "use client"
-import { FC, useState, useEffect } from 'react';
-import { DescriptionSection } from './sections/about/AboutSection';
+import { FC, useState, useEffect } from "react";
+import { DescriptionSection } from "./sections/about/AboutSection";
 /*
 import { ActivityFeed } from "../ActivityFeed";
 import { NetworkDetailsTable } from "../NetworkDetailsTable";
@@ -9,10 +9,10 @@ import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 
 import { TreasurySection } from './sections/TreasuryAnalyticsSection/TreasurySection';
 import { TokenSection } from './sections/TokenAnalyticsSection/TokenSection';*/
-import { useData } from '../DataProvider';
-import { TreasurySection } from './sections/treasury/TreasurySection';
-import { TokenSection } from './sections/tokenAnalytics/TokenAnalytics';
-import { ActivityFeed } from './sections/activity/ActivityFeed';
+import { useData } from "../DataProvider";
+import { TreasurySection } from "./sections/treasury/TreasurySection";
+import { TokenSection } from "./sections/tokenAnalytics/TokenAnalytics";
+import { ActivityFeed } from "./sections/activity/ActivityFeed";
 
 interface TabContentProps {
   selectedTab: string;
@@ -36,13 +36,13 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export const TabContent: FC<TabContentProps> = ({ 
-  selectedTab, 
+export const TabContent: FC<TabContentProps> = ({
+  selectedTab,
   setSelectedTab,
 }) => {
   const { analyticsData } = useData();
   const SelectedComponent = tabComponents[selectedTab];
-  
+
   // If no matching component is found, render nothing or a fallback
   if (!SelectedComponent) {
     return null;

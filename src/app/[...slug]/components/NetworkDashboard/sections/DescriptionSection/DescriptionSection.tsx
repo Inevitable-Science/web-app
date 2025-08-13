@@ -25,7 +25,7 @@ const RichPreview = ({ source }: { source: string }) => {
     // Convert markdown links [text](url) → <a href="url">text</a>
     const withLinks = source.replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      '<a href="$2">$1</a>'
+      "<a href=\"$2\">$1</a>"
     );
 
     // Sanitize the generated HTML
@@ -68,7 +68,7 @@ export function DescriptionSection({ setSelectedTab }: DescriptionSectionProps) 
   return (
       <div className="text-sm">
         <ChartSection setSelectedTab={setSelectedTab} />
-      
+
         {/* TODO: No idea why this is showing a "0" when not loading. */}
         {/* {!analyticsError && data?.latestMarketCap && (
           <DaoData data={data} setSelectedTab={setSelectedTab} />

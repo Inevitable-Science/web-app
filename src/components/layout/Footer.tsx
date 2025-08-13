@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
       {/* CENTERED SECTION */}
       <div className="flex-grow flex flex-col items-center justify-center gap-16">
         <Image src="/assets/img/branding/icon.svg" alt="Icon Logo" height="70" width="38" />
-        
+
         <div className="uppercase flex flex-wrap sm:flex-row flex-col items-center justify-center gap-8">
           <Link href="/" aria-label="Auctions" className="hover:underline">Projects</Link>
           <Link href="/vision" aria-label="Vision" className="hover:underline">Vision</Link>
@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
           >
             <Image src="/assets/img/logo/socials/discord.svg" alt="Discord Logo" height={20} width={20} />
           </a>
-          
+
           <Link href="/legal/terms" aria-label="Terms and Conditions" className="hover:underline">Terms</Link>
           <Link href="/legal/privacy" aria-label="Privacy Policy" className="hover:underline">Privacy</Link>
         </div>

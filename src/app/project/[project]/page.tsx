@@ -1,19 +1,20 @@
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DaoResponse, DaoResponseSchema } from '@/lib/types/AnalyticTypes';
+import { DaoResponse, DaoResponseSchema } from "@/lib/types/AnalyticTypes";
 import { metadata } from "@/lib/metadata";
 import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
 
 interface Props {
-  params: {
+  params: Promise<{
     project: string;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const headersList = headers();
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
@@ -23,21 +24,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   const projectData = await getProjectData(params.project);
-  
+
   if (!projectData) {
     return {
-      title: "Page Not Found | Inevitable Protocol", 
+      title: "Page Not Found | Inevitable Protocol",
       description: metadata.description,
       alternates: {
-        canonical: url, 
+        canonical: url,
       },
       openGraph: {
-        title: "Page Not Found | Inevitable Protocol", 
-        description: metadata.description, 
-        siteName: metadata.siteName, 
+        title: "Page Not Found | Inevitable Protocol",
+        description: metadata.description,
+        siteName: metadata.siteName,
         images: [
           {
-            url: imgUrl, 
+            url: imgUrl,
             width: 700,
             height: 370,
             alt: "Inevitable preview image",
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         title: `${projectData.name} | Inevitable Protocol`,
         description: projectData.description,
         siteName: "Inevitable Protocol",
-        images: [{ url: projectData.logo, width: 800, height: 800, alt: `preview image` }],
+        images: [{ url: projectData.logo, width: 800, height: 800, alt: "preview image" }],
         url,
         type: "article",
       },
@@ -75,7 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       manifest: metadata.manifest,
     };
-  };
+  }
 }
 
 async function getProjectData(project: string): Promise<DaoResponse | null>{
@@ -91,17 +92,18 @@ async function getProjectData(project: string): Promise<DaoResponse | null>{
     console.log(data);
     return data;
   } catch (error) {
-    console.error('Invalid response structure', error);
+    console.error("Invalid response structure", error);
     return null;
   }
 }
 
-export default async function ProjectPage({ params } : Props) {
+export default async function ProjectPage(props: Props) {
+  const params = await props.params;
   const project = params.project;
   const projectData = await getProjectData(project);
 
   if (!projectData) return notFound();
-  
+
   return (
     <DataProvider daoName={project} daoData={projectData}>
       <DaoPage />

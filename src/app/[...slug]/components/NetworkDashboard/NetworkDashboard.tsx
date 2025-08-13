@@ -81,7 +81,7 @@ function DashboardContent() {
                 }`}
               >
                 {tab.label}
-                <span className={ 
+                <span className={
                   selectedTab === tab.key
                     ? "block"
                     : "hidden"
@@ -123,8 +123,8 @@ function DashboardContent() {
               </aside>
               <div className="sm:min-h-[700px]">
                 <TabContent
-                  selectedTab={selectedTab} 
-                  setSelectedTab={setSelectedTab} 
+                  selectedTab={selectedTab}
+                  setSelectedTab={setSelectedTab}
                 />
               </div>
             </section>

@@ -84,21 +84,21 @@ module.exports = {
         ring: "var(--ring)",
 
         // Accent Colors
-        'light-gold': 'var(--light-gold)',
-        'dark-slate-grey': 'var(--dark-slate-grey)',
-        'gunmetal': 'var(--gunmetal)',
-        'cerulean': 'var(--cerulean)',
-        'columbia-blue': 'var(--columbia-blue)',
+        "light-gold": "var(--light-gold)",
+        "dark-slate-grey": "var(--dark-slate-grey)",
+        "gunmetal": "var(--gunmetal)",
+        "cerulean": "var(--cerulean)",
+        "columbia-blue": "var(--columbia-blue)",
 
         // Tone Colors
-        'grey-50': 'var(--grey-50)',
-        'grey-100': 'var(--grey-100)',
-        'grey-450': 'var(--grey-450)',
-        'grey-500': 'var(--grey-500)',
+        "grey-50": "var(--grey-50)",
+        "grey-100": "var(--grey-100)",
+        "grey-450": "var(--grey-450)",
+        "grey-500": "var(--grey-500)",
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
-        optima: ['var(--font-optima)', 'sans-serif'],
+        sans: ["var(--font-geist-sans)", ...defaultTheme.fontFamily.sans],
+        optima: ["var(--font-optima)", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -110,18 +110,18 @@ module.exports = {
           to: { height: "0" },
         },
         shimmer: {
-          '0%': {
-            transform: 'translateX(-100%)',
+          "0%": {
+            transform: "translateX(-100%)",
           },
-          '100%': {
-            transform: 'translateX(100%)',
+          "100%": {
+            transform: "translateX(100%)",
           },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "shimmer": 'shimmer 2s infinite',
+        "shimmer": "shimmer 2s infinite",
       },
     },
   },

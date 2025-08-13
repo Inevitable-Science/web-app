@@ -88,14 +88,14 @@ export function HoldersSection() {
       console.error("Token information is incomplete.");
       return;
     }
-    
+
     watchAsset({
-      type: 'ERC20',
+      type: "ERC20",
       options: {
         address: token.data.address as Address,
         symbol: token.data.symbol,
         decimals: token.data.decimals,
-        image: metadata.data?.logoUri, 
+        image: metadata.data?.logoUri,
       },
     });
   };
@@ -110,79 +110,6 @@ export function HoldersSection() {
         : undefined,
       args: ruleset && selectedSucker ? [projectId] : undefined,
     });
-      
-  /* const ownersTab = (view: TableView, label: string) => {
-    return (
-      <Button
-        variant={participantsView === view ? "tab-selected" : "bottomline"}
-        className={twJoin(
-          "text-md",
-          participantsView === view && "text-inherit"
-        )}
-        onClick={() => setParticipantsView(view)}
-      >
-        {label}
-      </Button>
-    );
-  }; */
-
-  /*return (
-    <div>
-        <div className="text-color text-md">
-          <div className="mb-2">
-            {/* View Tabs * /}
-            <div className="flex flex-row space-x-4 mb-3">
-              {ownersTab("all", "All")}
-              {ownersTab("you", "You")}
-              {ownersTab("splits", "Splits")}
-            </div>
-
-            {/* ========================= * /}
-            {/* ========= Views ========= * /}
-            {/* ========================= * /}
-
-            {/* All Section * /}
-            <div className={participantsView === "all" ? "" : "hidden"}>
-              <div className="space-y-4 p-2 pb-0 sm:pb-2">
-                <p className="text-md font-light italic">
-                  {formatTokenSymbol(token)} owners are accounts who either paid in, received splits, received auto issuance, or traded for them on the secondary market.
-                </p>
-              </div>
-              <div className="flex lg:flex-row flex-col max-h-140 sm:items-start items-center sm:border-t border-color">
-                <div className="w-1/3">
-                  <ParticipantsPieChart
-                    participants={Object.values(participantsDataAggregate)}
-                    totalSupply={totalOutstandingTokens}
-                    token={token?.data}
-                  />
-                </div>
-                <div className="overflow-auto p-2 rounded-tl-none border-color sm:border-t-[0px] border w-full">
-                  <div>
-                    <ParticipantsTable
-                      participants={Object.values(participantsDataAggregate)}
-                      token={token?.data}
-                      totalSupply={totalOutstandingTokens}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* You Section * /}
-            <div className={participantsView === "you" ? "" : "hidden"}>
-              <YouSection totalSupply={totalOutstandingTokens} />
-            </div>
-
-            {/* Splits Section * /}
-            <div className={participantsView === "splits" ? "" : "hidden"}>
-              <SplitsSection />
-              <DistributeReservedTokensButton />
-            </div>
-
-          </div>
-        </div>
-    </div>
-  );*/
 
   return (
     <section>
@@ -224,7 +151,7 @@ export function HoldersSection() {
               onClick={handleAddToken}
               disabled={isPending} // Disable the button while processing
             >
-              {isPending ? 'Adding...' : isSuccess ? 'Added!' : 'Add To Metamask'}
+              {isPending ? "Adding..." : isSuccess ? "Added!" : "Add To Metamask"}
               <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
             </Button>
           )}

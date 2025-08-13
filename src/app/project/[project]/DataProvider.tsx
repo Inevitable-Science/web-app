@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useMemo, ReactNode, useState, useEffect } from 'react';
-import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from '@/lib/types/AnalyticTypes';
-import { Loader2 } from 'lucide-react';
+import { createContext, useContext, useMemo, ReactNode, useState, useEffect } from "react";
+import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from "@/lib/types/AnalyticTypes";
+import { Loader2 } from "lucide-react";
 
 const DataContext = createContext<DataContextType | null>(null);
 
@@ -31,7 +31,7 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-      
+
     const fetchData = async () => {
       try {
         const tokenName = daoData.nativeToken.name;
@@ -56,7 +56,7 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
         ]);
 
         if (!tokenRes.ok || !treasuryRes.ok) {
-          throw new Error('Failed to fetch required analytics data');
+          throw new Error("Failed to fetch required analytics data");
         }
 
         const [tokenResult, treasuryResult] = await Promise.all([
@@ -72,10 +72,10 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
           if (chartRes.ok) {
             marketResult = await chartRes.json();
           } else {
-            console.warn('Chart fetch failed with status', chartRes.status);
+            console.warn("Chart fetch failed with status", chartRes.status);
           }
         } catch (chartErr) {
-          console.warn('Chart fetch error:', chartErr);
+          console.warn("Chart fetch error:", chartErr);
         }
         // ------
 
@@ -87,7 +87,7 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
         });
 
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        setError(err instanceof Error ? err.message : "An unknown error occurred");
       } finally {
         setIsLoading(false);
       }
@@ -108,7 +108,7 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
     isLoading,
     error,
   ]);
-  
+
   if (isLoading) {
     return (
       <div className="w-full h-screen flex items-center justify-center">
@@ -128,7 +128,7 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
 export function useData() {
   const context = useContext(DataContext);
   if (!context) {
-    throw new Error('useData must be used within a DataProvider');
+    throw new Error("useData must be used within a DataProvider");
   }
   return context;
 }

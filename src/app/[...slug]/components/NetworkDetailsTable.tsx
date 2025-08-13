@@ -45,7 +45,7 @@ export function NetworkDetailsTable() {
   // FIX: Only set the index if data is ready AND the index hasn't been set yet.
   if (sortedRulesets && currentRuleset && selectedStageIdx === null) {
     const currentIndex = sortedRulesets.findIndex(rs => rs.cycleNumber === currentRuleset.cycleNumber);
-    
+
     if (currentIndex !== -1) {
       setSelectedStageIdx(currentIndex);
     } else {
@@ -67,7 +67,7 @@ export function NetworkDetailsTable() {
     const decoded = decodeRulesetMetadata(displayedRuleset.metadata);
     return decoded;
     }
-  }, [displayedRuleset, allRulesets]); 
+  }, [displayedRuleset, allRulesets]);
 
   // NEW: 5. Call the formatting hook with the **displayed** ruleset and metadata.
   const { cyclesData, tokenData, otherRulesData } = useRulesetData({
@@ -102,7 +102,7 @@ export function NetworkDetailsTable() {
 
     // FIX 2: Create a final display string that handles all cycle states
   const displayTimeRemaining = useMemo(() => {
-    if (!displayedRuleset) return '-';
+    if (!displayedRuleset) return "-";
 
     const start = Number(displayedRuleset.start);
     const duration = Number(displayedRuleset.duration);
@@ -110,31 +110,31 @@ export function NetworkDetailsTable() {
 
     // Case 1: Continuous cycle. Highest priority.
     if (duration === 0) {
-      return 'Unlocked';
+      return "Unlocked";
     }
 
     // Case 2: Cycle has already ended.
     if (start + duration < nowInSeconds) {
       return null;
     }
-    
+
     // Case 3: Cycle is upcoming.
     if (start > nowInSeconds) {
       // The `countdownOutput` is now correctly counting down to the start time.
       // We can add a prefix for clarity.
-      return `Starts in ${countdownOutput ?? '...'}`;
+      return `Starts in ${countdownOutput ?? "..."}`;
     }
 
     // Case 4: Cycle is active.
     // The `countdownOutput` is correctly counting down to the end time.
-    return countdownOutput ?? '...';
+    return countdownOutput ?? "...";
 
   }, [displayedRuleset, countdownOutput]);
 
   const availableToPayout = useMemo(() => {
     if (!nativeTokenSurplus || !tokenData?.reservedRate) return 0;
     const surplusInEther = parseFloat(formatEther(nativeTokenSurplus));
-    const reservedRateNumber = parseFloat(tokenData.reservedRate.replace('%', ''));
+    const reservedRateNumber = parseFloat(tokenData.reservedRate.replace("%", ""));
     if (isNaN(reservedRateNumber)) return 0;
     const payoutMultiplier = 1 - (reservedRateNumber / 100);
     return surplusInEther * payoutMultiplier;
@@ -159,7 +159,7 @@ export function NetworkDetailsTable() {
             <div className="flex flex-col">
               <p className="text-sm text-muted-foreground font-light uppercase">Cycle</p>
               <h3 className="text-xl">
-                {displayedRuleset?.cycleNumber ?? '-'}
+                {displayedRuleset?.cycleNumber ?? "-"}
               </h3>
             </div>
             <div className="flex gap-1">
@@ -170,12 +170,12 @@ export function NetworkDetailsTable() {
           </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {displayedRuleset ? (Number(displayedRuleset.start) <= (Date.now() / 1000) ? "Active" : "Upcoming") : '-'}
+              {displayedRuleset ? (Number(displayedRuleset.start) <= (Date.now() / 1000) ? "Active" : "Upcoming") : "-"}
             </h3>
             <p className="text-sm text-muted-foreground font-light uppercase">Status</p>
           </div>
           <div className="background-color p-[16px] rounded-xl flex items-center justify-center">
-            <h3 className="text-sm text-center">{displayTimeRemaining ?? '-'}</h3>
+            <h3 className="text-sm text-center">{displayTimeRemaining ?? "-"}</h3>
           </div>
         </div>
 
@@ -190,7 +190,7 @@ export function NetworkDetailsTable() {
               {showRules ? <ChevronDownIcon height="24" width="24" /> : <ChevronUpIcon height="24" width="24" />}
             </Button>
           </div>
-          
+
           {showRules && (
             <>
               {/* Cycles Section */}
@@ -235,7 +235,7 @@ export function NetworkDetailsTable() {
           )}
         </div>
       </div>
-      
+
       {/* --- The rest of the component remains the same --- */}
 
       <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
@@ -254,9 +254,9 @@ export function NetworkDetailsTable() {
             <SplitsSection/>
 
             {analyticsData?.treasuryData && (
-              <Button 
+              <Button
                 onClick={() => setSelectedTab("treasury")}
-                variant="link" 
+                variant="link"
                 className="h-6 pl-0 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
               >
                 Treasury Stats

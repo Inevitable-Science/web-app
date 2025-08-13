@@ -1,6 +1,6 @@
 // src/components/NetworkDashboard/Components/ActivityGraph.tsx
 
-import { CSSProperties, useMemo, useState } from 'react';
+import { CSSProperties, useMemo, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -11,18 +11,18 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from "recharts";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from '@/components/ui/select';
-import { twMerge } from 'tailwind-merge';
-import { Loader2 } from 'lucide-react';
-import { useVolumeData } from '@/hooks/useVolumeData'; // 1. Import the data hook
-import { formatEther } from 'viem';
+} from "@/components/ui/select";
+import { twMerge } from "tailwind-merge";
+import { Loader2 } from "lucide-react";
+import { useVolumeData } from "@/hooks/useVolumeData"; // 1. Import the data hook
+import { formatEther } from "viem";
 
 // Export types for clarity and potential external use
 export type ProjectTimelinePoint = {
@@ -31,7 +31,7 @@ export type ProjectTimelinePoint = {
   balance: number;
   trendingScore: number;
 };
-export type ProjectTimelineView = 'volume' | 'balance' | 'trendingScore';
+export type ProjectTimelineView = "volume" | "balance" | "trendingScore";
 export type ProjectTimelineRange = 7 | 30 | 365;
 
 /**
@@ -43,10 +43,10 @@ export default function ActivityGraph({
   height = 300,
 }: {
   suckerGroupId: string | undefined;
-  height?: CSSProperties['height'];
+  height?: CSSProperties["height"];
 }) {
   // 2. Internal state management for the chart's UI controls
-  const [view, setView] = useState<ProjectTimelineView>('volume');
+  const [view, setView] = useState<ProjectTimelineView>("volume");
   const [range, setRange] = useState<ProjectTimelineRange>(30);
 
   // 3. Internal data fetching logic
@@ -66,7 +66,7 @@ export default function ActivityGraph({
     const volumeMap = new Map<string, number>();
     dailyTotals.forEach(day => {
       // Normalize the date to a string key to avoid timezone issues.
-      const dateKey = day.date.toISOString().split('T')[0];
+      const dateKey = day.date.toISOString().split("T")[0];
       volumeMap.set(dateKey, Number(formatEther(day.volume)));
     });
 
@@ -75,7 +75,7 @@ export default function ActivityGraph({
     let initialCumulativeVolume = dailyTotals
     .filter(day => day.date.getTime() < startTimestamp)
     .reduce((sum, day) => sum + Number(formatEther(day.volume)), 0);
-    
+
     // 2. Loop through every day in the selected date range.
     for (let i = 0; i <= range; i++) {
       const currentDate = new Date(startTimestamp * 1000);
@@ -86,8 +86,8 @@ export default function ActivityGraph({
         break;
       }
 
-      const dateKey = currentDate.toISOString().split('T')[0];
-      
+      const dateKey = currentDate.toISOString().split("T")[0];
+
       // 3. Get the volume from our map, or default to 0 if it doesn't exist.
       const volume = volumeMap.get(dateKey) || 0;
 
@@ -106,17 +106,17 @@ export default function ActivityGraph({
 
 
   // --- All chart rendering logic from here down is mostly unchanged ---
-  
+
   const colors = {
-    grey: { 400: '#7B7B7B', 500: '#6b7280' },
-    primary: { 400: '#FBE8BD' },
-    smoke: { 100: '#f5f5f5' },
+    grey: { 400: "#7B7B7B", 500: "#6b7280" },
+    primary: { 400: "#FBE8BD" },
+    smoke: { 100: "#f5f5f5" },
   };
 
   const stroke = colors.grey[400];
   const color = colors.grey[400];
-  const bg = 'var(--grey-450)';
-  const fontSize = '0.65rem';
+  const bg = "var(--grey-450)";
+  const fontSize = "0.65rem";
   const highTrendingScore = 1000;
 
   const defaultYDomain = useMemo((): [number, number] => {
@@ -131,7 +131,7 @@ export default function ActivityGraph({
   }, [data, view]);
 
   const yDomain: [number, number] =
-    view === 'trendingScore' && highTrendingScore
+    view === "trendingScore" && highTrendingScore
       ? [defaultYDomain[0], Math.max(highTrendingScore, defaultYDomain[1]) * 1.05]
       : defaultYDomain;
 
@@ -161,18 +161,18 @@ export default function ActivityGraph({
     <div>
       <div className="mb-4 flex items-baseline justify-between activityGraphHeader">
         <div className="flex gap-3">
-          {['volume', 'trendingScore'].map((v) => (
+          {["volume", "trendingScore"].map((v) => (
             <div
               key={v}
               className={twMerge(
-                'cursor-pointer text-sm border-b pb-2 px-2',
-                v === view ? 'font-medium border-primary' : 'font-light text-muted-foreground border-transparent'
+                "cursor-pointer text-sm border-b pb-2 px-2",
+                v === view ? "font-medium border-primary" : "font-light text-muted-foreground border-transparent"
               )}
               // 5. Connect UI controls to internal state setters
               onClick={() => setView(v as ProjectTimelineView)}
             >
-              {v === 'volume' && 'Volume'}
-              {v === 'trendingScore' && 'Trending'}
+              {v === "volume" && "Volume"}
+              {v === "trendingScore" && "Trending"}
             </div>
           ))}
         </div>
@@ -183,7 +183,7 @@ export default function ActivityGraph({
             setRange(Number(value) as ProjectTimelineRange);
           }}
         >
-          <SelectTrigger 
+          <SelectTrigger
             className="w-[5.6rem] h-fit rounded border-none background-color rounded-full px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
             aria-label="Select Time Range"
           >
@@ -213,7 +213,7 @@ export default function ActivityGraph({
                 tickLine={false}
                 tickSize={0}
                 tick={(props) => {
-                  if (view === 'trendingScore' || !data.length) return <g></g>;
+                  if (view === "trendingScore" || !data.length) return <g></g>;
                   const { value } = props.payload;
                   const formattedValue = value.toFixed(value >= 10 ? 0 : 1);
                   return (
@@ -225,7 +225,7 @@ export default function ActivityGraph({
                         fill={bg}
                       />
                       <text
-                        x={-4} 
+                        x={-4}
                         y={-8}
                         fontSize={fontSize}
                         fill={color}
@@ -261,7 +261,7 @@ export default function ActivityGraph({
                 dataKey="timestamp"
                 scale="time"
               />
-              {view === 'trendingScore' && highTrendingScore && data.length > 0 && (
+              {view === "trendingScore" && highTrendingScore && data.length > 0 && (
                 <ReferenceLine
                   label={<Label fill={color} style={{ fontSize, fontWeight: 500 }} position="insideTopLeft" offset={8} value="Current #1 trending" />}
                   stroke={color}
@@ -288,7 +288,7 @@ export default function ActivityGraph({
                   return (
                     <div className="rounded bg-transparent p-2 text-sm">
                       <div className="text-grey-400">{dateStringForBlockTime(point.timestamp)}</div>
-                      {view !== 'trendingScore' && (
+                      {view !== "trendingScore" && (
                         <div className="font-medium">
                           Ξ{amount.toFixed(amount > 10 ? 1 : amount > 1 ? 2 : 4)}
                         </div>

@@ -28,11 +28,11 @@ const AuctionComponent: React.FC = () => {
     <section className="bg-[url('/assets/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
       <div className="bg-background rounded-2xl sm:min-h-[650px] sm:p-[32px] p-[16px] flex flex-col justify-between gap-[112px] w-full md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
-          <Image 
-            className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.webp" 
+          <Image
+            className="rounded-2xl mb-3 md:hidden block" src="/assets/img/auction_bg.webp"
             height={390}
             width={690}
-            alt="Auction Image" 
+            alt="Auction Image"
           />
           <h3 className="font-optima text-3xl uppercase">Stasis</h3>
           <p className="text-sm">
@@ -46,7 +46,7 @@ const AuctionComponent: React.FC = () => {
           </Link>
         </div>
 
-          
+
 
         <div className="bg-[#1F1F1F] p-[12px] rounded-2xl flex justify-between items-center">
           <div className="flex flex-col gap-4 ml-2">

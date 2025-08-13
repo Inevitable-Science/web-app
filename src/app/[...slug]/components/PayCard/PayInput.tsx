@@ -91,7 +91,7 @@ const PayInput = React.forwardRef<HTMLInputElement, PayInputProps>(
             placeholder="0.00"
             {...props}
           />
-          
+
           {/*<span className="text-right select-none text-lg">{currency}</span>*/}
           <ChainLogo
             chainId={1}

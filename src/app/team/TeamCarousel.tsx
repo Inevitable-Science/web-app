@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
 // ARCHIVE
 
-import React from 'react';
-import Image from 'next/image';
-import { EmblaOptionsType } from 'embla-carousel';
+import React from "react";
+import Image from "next/image";
+import { EmblaOptionsType } from "embla-carousel";
 import { PrevButton, NextButton, usePrevNextButtons } from "@/components/home/ArrowButtons";
-import useEmblaCarousel from 'embla-carousel-react';
+import useEmblaCarousel from "embla-carousel-react";
 
 type SlideType = {
   img: string;
@@ -24,39 +24,39 @@ type PropType = {
 
 const slides: SlideType[] = [
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/kaimicahmills',
-    linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/kaimicahmills",
+    linkedIn: "https://www.linkedin.com/in/kaimicahmills",
   },
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   },
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/kaimicahmills',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/kaimicahmills",
   },
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    linkedIn: "https://www.linkedin.com/in/kaimicahmills",
   },
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/kaimicahmills',
-    linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/kaimicahmills",
+    linkedIn: "https://www.linkedin.com/in/kaimicahmills",
   },
 ];
 
-const options: EmblaOptionsType = { align: 'start' };
+const options: EmblaOptionsType = { align: "start" };
 
 const TeamCarousel: React.FC<PropType> = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
@@ -89,9 +89,9 @@ const TeamCarousel: React.FC<PropType> = () => {
                     <p className="text-sm text-muted-foreground font-light line-clamp-2">{slide.description}</p>
                     <div className="flex justify-center items-center gap-2 mt-4">
                       {slide.linkedIn && (
-                        <a 
-                          href={slide.linkedIn} 
-                          target="_blank" 
+                        <a
+                          href={slide.linkedIn}
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           <Image src="/assets/img/team/linked_in_image.webp" alt="Linked In Logo" height={45} width={28} />
@@ -99,9 +99,9 @@ const TeamCarousel: React.FC<PropType> = () => {
                       )}
 
                       {slide.twitter && (
-                        <a 
-                          href={slide.twitter} 
-                          target="_blank" 
+                        <a
+                          href={slide.twitter}
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           <Image src="/assets/img/team/twitter_image.webp" alt="Twitter Logo" height={41} width={28} />
@@ -130,9 +130,9 @@ const TeamCarousel: React.FC<PropType> = () => {
                 <p className="text-sm text-muted-foreground font-light line-clamp-2">{slide.description}</p>
                 <div className="flex justify-center items-center gap-2 mt-4">
                   {slide.linkedIn && (
-                    <a 
-                      href={slide.linkedIn} 
-                      target="_blank" 
+                    <a
+                      href={slide.linkedIn}
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
                       <Image src="/assets/img/team/linked_in_image.webp" alt="Linked In Logo" height={45} width={28} />
@@ -140,9 +140,9 @@ const TeamCarousel: React.FC<PropType> = () => {
                   )}
 
                   {slide.twitter && (
-                    <a 
-                      href={slide.twitter} 
-                      target="_blank" 
+                    <a
+                      href={slide.twitter}
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
                       <Image src="/assets/img/team/twitter_image.webp" alt="Twitter Logo" height={41} width={28} />

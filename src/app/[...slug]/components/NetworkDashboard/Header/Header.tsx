@@ -75,7 +75,7 @@ export function Header() {
               />
             ) : (
               <Image
-                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65" 
+                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
                 alt="placeholder header image"
                 className="inset-0 w-full h-full object-cover mt-[90px] rounded"
                 width={600}
@@ -126,8 +126,8 @@ export function Header() {
               <div className="text-sm flex flex-wrap gap-x-2 items-baseline">
                 <h1 className="text-2xl sm:text-3xl font-light">{projectName}</h1>
                 <h5 className="text-cerulean text-base">
-                  <a 
-                    href={`https://x.com/@${twitter}`} 
+                  <a
+                    href={`https://x.com/@${twitter}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -175,7 +175,7 @@ export function Header() {
                       short
                       withEnsAvatar={false}
                       withEnsName
-                      avatarProps={{ size: "sm" }} 
+                      avatarProps={{ size: "sm" }}
                       className="text-xl font-light"
                     />
                     ) : (
@@ -205,22 +205,22 @@ export function Header() {
         </div>
       </div>
 
-      <div 
+      <div
           className="absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
           style={{ transform: "translateY(-60%)" }}
         >
           {/* Left cloud - shifted slightly right */}
-          <img 
-            className="z-[-10] select-none w-screen" 
-            src="/assets/img/clouds/dao_cloud_left.webp" 
+          <img
+            className="z-[-10] select-none w-screen"
+            src="/assets/img/clouds/dao_cloud_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
           />
 
           {/* Right cloud - shifted slightly left */}
-          <img 
-            className="z-[-10] select-none w-screen" 
-            src="/assets/img/clouds/dao_cloud_right.webp" 
+          <img
+            className="z-[-10] select-none w-screen"
+            src="/assets/img/clouds/dao_cloud_right.webp"
             style={{ transform: "translateX(40%)" }}
             alt=""
           />

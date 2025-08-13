@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { ConnectKitButton } from "@/components/ConnectKitButton";
 import { formatEthAddress } from "@/lib/utils";
-import { Button } from '../ui/button';
+import { Button } from "../ui/button";
 
 export const FooterLoginButton: React.FC = () => {
   return (

@@ -66,11 +66,11 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
       rightPriceScale: {
         borderColor: "#7B7B7B",
       },
-      timeScale: { 
+      timeScale: {
         borderColor: "#7B7B7B",
         fixLeftEdge: true,
-        fixRightEdge: true,     
-        timeVisible: false, 
+        fixRightEdge: true,
+        timeVisible: false,
         secondsVisible: false,
       },
       autoSize: true,
@@ -167,7 +167,7 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
           height: "400px",
         }}
       />
-      <style>{`#tv-attr-logo { display: none; }`}</style>
+      <style>{"#tv-attr-logo { display: none; }"}</style>
 
       <div className={`activeSkeleton w-full h-[376px] rounded-lg ${data ? "hidden" : "block"}`} />
     </>

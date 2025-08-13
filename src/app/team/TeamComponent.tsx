@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 type SlideType = {
   img: string;
@@ -13,38 +13,38 @@ type SlideType = {
 
 const slides: SlideType[] = [
   {
-    img: '/assets/img/team/kai_member.webp',
-    name: 'Kai Micah Mills',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/kaimicahmills',
-    linkedIn: 'https://www.linkedin.com/in/kaimicahmills',
+    img: "/assets/img/team/kai_member.webp",
+    name: "Kai Micah Mills",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/kaimicahmills",
+    linkedIn: "https://www.linkedin.com/in/kaimicahmills",
   },
   {
-    img: '/assets/img/team/eli_member.webp',
-    name: 'Eli Mohamad',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/elimohamad',
-    linkedIn: 'https://www.linkedin.com/in/emohamad/',
+    img: "/assets/img/team/eli_member.webp",
+    name: "Eli Mohamad",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/elimohamad",
+    linkedIn: "https://www.linkedin.com/in/emohamad/",
   },
   {
-    img: '/assets/img/team/austin_member.webp',
-    name: 'Austin Lynch',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/AustinTLynch',
-    linkedIn: 'https://www.linkedin.com/in/austin-lynch-61a673202',
+    img: "/assets/img/team/austin_member.webp",
+    name: "Austin Lynch",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/AustinTLynch",
+    linkedIn: "https://www.linkedin.com/in/austin-lynch-61a673202",
   },
   {
-    img: '/assets/img/team/emil_member.webp',
-    name: 'Dr. Emil Kendziorra',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/emilkendziorra',
-    linkedIn: 'https://www.linkedin.com/in/emilkendziorra/',
+    img: "/assets/img/team/emil_member.webp",
+    name: "Dr. Emil Kendziorra",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/emilkendziorra",
+    linkedIn: "https://www.linkedin.com/in/emilkendziorra/",
   },
   {
-    img: '/assets/img/team/jango_member.webp',
-    name: 'Jango',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    twitter: 'https://x.com/me_jango',
+    img: "/assets/img/team/jango_member.webp",
+    name: "Jango",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    twitter: "https://x.com/me_jango",
   },
 ];
 
@@ -74,7 +74,7 @@ const TeamComponent: React.FC = () => {
                       <Image
                         src="/assets/img/team/linked_in_image.webp"
                         alt="Linked In Logo"
-                        className="pointer-events-none select-none" 
+                        className="pointer-events-none select-none"
                         height={45}
                         width={28}
                       />
@@ -84,7 +84,7 @@ const TeamComponent: React.FC = () => {
                     <a href={slide.twitter} target="_blank" rel="noopener noreferrer">
                       <Image
                         src="/assets/img/team/twitter_image.webp"
-                        className="pointer-events-none select-none" 
+                        className="pointer-events-none select-none"
                         alt="Twitter Logo"
                         height={41}
                         width={28}
