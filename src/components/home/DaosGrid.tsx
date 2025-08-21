@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 
 const DaosGrid: React.FC = () => {
@@ -44,21 +45,21 @@ const DaosGrid: React.FC = () => {
   return (
     <section className="sectionDaosGrid" id="projects-target">
       <div className="dGrid-1 dGrid max-w-[1600px] mx-auto">
-        <div className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
+        <Link href="/project/hydradao" className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">HydraDAO</h4>
             <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
           </div>
-        </div>
+        </Link>
 
-        <div className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center">
+        <Link href="/project/cryodao" className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">CryoDAO</h4>
             <p className="text-sm">Advancing high-impact cryopreservation research.</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div
@@ -99,21 +100,21 @@ const DaosGrid: React.FC = () => {
             <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
           </div>
         </div>*/}
-        <div className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center">
+        <Link href="/project/cryorat" className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">CryoRat</h4>
             <p className="text-sm">High sub-zero preservation and revival of a rat.</p>
           </div>
-        </div>
+        </Link>
 
-        <div className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center">
+        <Link href="/project/erectusdao" className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
             <h4 className="font-optima text-2xl">ErectusDAO</h4>
             <p className="text-sm">Community owned collective funding and promoting male sexual health research.</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div

@@ -108,7 +108,7 @@ body {
 
 /* Home and Nav Styles */
 
-.dGrid > div {
+.dGrid > div, .dGrid > a {
   @apply bg-cover bg-center p-[20px] flex flex-col justify-between rounded-2xl;
 }
 

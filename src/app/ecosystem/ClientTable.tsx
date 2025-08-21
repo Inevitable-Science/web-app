@@ -379,7 +379,7 @@ export default function ClientTable() {
             </div>
 
             <button className="focus:outline-none py-[6px] px-[12px] rounded-full bg-gunmetal font-normal">
-              <Link href={`/project/${project.href}`} className="flex items-center gap-2">
+              <Link href={`/@${project.href}`} className="flex items-center gap-2">
                 Buy
                 <ArrowRightIcon height="18" width="18" />
               </Link>

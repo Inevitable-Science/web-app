@@ -38,7 +38,7 @@ const AuctionComponent: React.FC = () => {
           <p className="text-sm">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
-          <Link href="/eth:4" aria-label="View Auction" className="w-fit mt-2 text-base font-medium uppercase hover:underline">
+          <Link href="/@stasis" aria-label="View Auction" className="w-fit mt-2 text-base font-medium uppercase hover:underline">
             <div className="flex font-normal gap-3 items-center transition-[gap] duration-150 hover:gap-5">
               Go To Auction
               <ArrowRightIcon height={20} width={20} />

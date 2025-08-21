@@ -1,4 +1,6 @@
-/*import {
+/*
+// Include Testnets
+import {
   arbitrum,
   arbitrumSepolia,
   base,
@@ -98,7 +100,7 @@ export const wagmiConfig = createConfig({
       miniAppConnector(),
       safeConnector,
       coinbaseWallet({
-        appName: "REVNET",
+        appName: "Inevitable Protocol",
         appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
       }),
       walletConnect({
