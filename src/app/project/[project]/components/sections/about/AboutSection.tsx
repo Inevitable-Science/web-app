@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import DOMPurify from "dompurify"
 import Image from "next/image";
 import { useData } from "../../../DataProvider";
+import { Globe } from "lucide-react";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -51,6 +52,18 @@ export function DescriptionSection() {
       <RichPreview source={analyticsData?.daoData?.description || "..."} />
 
       <div className="bg-grey-450 p-[12px] mt-6 flex flex-col gap-2 rounded-2xl">
+        {analyticsData?.daoData?.socials.site && (
+          <a
+            className="background-color p-[16px] flex gap-2 rounded-2xl items-center"
+            href={analyticsData?.daoData?.socials.site}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Globe height="20" width="20" />
+            View our Website
+          </a>
+        )}
+
         {analyticsData?.daoData?.socials.discord && (
           <a
             className="background-color p-[16px] flex gap-2 rounded-2xl items-center"
@@ -58,14 +71,14 @@ export function DescriptionSection() {
             target="_blank"
             rel="noopener noreferrer"
           >
-          <Image
-            src="/assets/img/logo/socials/discord.svg"
-            alt="Join Discord"
-            height="20"
-            width="20"
-          />
-          Join our Discord
-        </a>
+            <Image
+              src="/assets/img/logo/socials/discord.svg"
+              alt="Join Discord"
+              height="20"
+              width="20"
+            />
+            Join our Discord
+          </a>
         )}
 
         {analyticsData?.daoData?.socials.discord && (

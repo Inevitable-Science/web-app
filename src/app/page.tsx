@@ -149,7 +149,7 @@ export default function Page() {
               Where <span className="text-primary"> Life Evolves.</span>
             </h3>
 
-            <div className="absolute top-0 w-full justify-between items-center overflow-hidden sm:flex hidden">
+            <div className="absolute top-0 w-full justify-between items-center overflow-hidden pointer-events-none sm:flex hidden">
               <img
                 className="z-[-10] overflow-hidden select-none"
                 src="/assets/img/clouds/cloud_left.webp"
