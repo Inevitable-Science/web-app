@@ -59,7 +59,7 @@ export function DaoPage() {
         {/* Column 1 */}
         <div className="flex-1">
           <div className="md:hidden block">
-            <div className="mt-1 mb-4">
+            <div className="mt-1">
               <SwapWidget token={analyticsData?.tokenData?.selectedToken.address as string} />
             </div>
           </div>
