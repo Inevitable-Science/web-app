@@ -94,6 +94,8 @@ const safeConnector = safe({
   shimDisconnect: true,
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const wagmiConfig = createConfig({
     chains: [mainnet, optimism, arbitrum, base],
     connectors: [
@@ -109,7 +111,7 @@ export const wagmiConfig = createConfig({
         metadata: {
           name: "Inevitable Sciences",
           description: "Fund radical science.",
-          url: "https://app.inevitable.science",
+          url: isProduction ? "https://inevitable.science" : "http://localhost:3000",
           icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
         },
       }),

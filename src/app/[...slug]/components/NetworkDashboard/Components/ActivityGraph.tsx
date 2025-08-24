@@ -119,7 +119,14 @@ export default function ActivityGraph({
   const fontSize = "0.65rem";
   const highTrendingScore = 1000;
 
-  const defaultYDomain = useMemo((): [number, number] => {
+  const now = Date.now().valueOf();
+  const daysToMS = (days: number) => days * 24 * 60 * 60 * 1000;
+  const xDomain = useMemo(
+    () => [ Math.floor((now - daysToMS(range)) / 1000), Math.floor(now / 1000) ] as [number, number],
+    [range, now]
+  );
+
+  /*const defaultYDomain = useMemo((): [number, number] => {
     if (data.length === 0) return [0, 100];
     const values = data.map(p => p[view]);
     const min = Math.min(...values);
@@ -134,20 +141,47 @@ export default function ActivityGraph({
     view === "trendingScore" && highTrendingScore
       ? [defaultYDomain[0], Math.max(highTrendingScore, defaultYDomain[1]) * 1.05]
       : defaultYDomain;
-
-  const now = Date.now().valueOf();
-  const daysToMS = (days: number) => days * 24 * 60 * 60 * 1000;
-  const xDomain = useMemo(
-    () => [ Math.floor((now - daysToMS(range)) / 1000), Math.floor(now / 1000) ] as [number, number],
-    [range, now]
-  );
-
+      
   const generateTicks = (range: [number, number], resolution: number) => {
     const [min, max] = range;
     if (min === max) return [min];
     const step = (max - min) / resolution;
     return Array.from({ length: resolution + 1 }, (_, i) => Math.round(min + i * step));
   };
+
+  const xTicks = generateTicks(xDomain, 7);
+  const yTicks = generateTicks(yDomain, 5);
+
+  const dateStringForBlockTime = (timestampSecs: number) => {
+    const date = new Date(timestampSecs * 1000);
+    return `${date.getMonth() + 1}/${date.getDate()}`;
+  };*/
+
+  const generateTicks = (range: [number, number], resolution: number) => {
+    const [min, max] = range;
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return [0];
+    if (min === max) return [min];
+    const step = (max - min) / resolution;
+    const ticks = Array.from({ length: resolution + 1 }, (_, i) => min + i * step);
+    return [...new Set(ticks.map(tick => Math.round(tick)))].filter(Number.isFinite);
+  };
+
+  const defaultYDomain = useMemo((): [number, number] => {
+    if (data.length === 0) return [0, 100];
+    const values = data.map(p => p[view]).filter(val => Number.isFinite(val));
+    if (values.length === 0) return [0, 100];
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return [
+      Number.isFinite(min) ? Math.floor(min * 0.95) : 0,
+      Number.isFinite(max) ? Math.ceil(max * 1.05) : 100,
+    ];
+  }, [data, view]);
+
+  const yDomain: [number, number] =
+    view === "trendingScore" && Number.isFinite(highTrendingScore)
+      ? [defaultYDomain[0], Math.max(highTrendingScore, defaultYDomain[1]) * 1.05]
+      : defaultYDomain;
 
   const xTicks = generateTicks(xDomain, 7);
   const yTicks = generateTicks(yDomain, 5);

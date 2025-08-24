@@ -51,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       images: [imgUrl],
     },
-    manifest: `${url}${metadata.manifest}`,
+    manifest: metadata.manifest,
   };
 }
 

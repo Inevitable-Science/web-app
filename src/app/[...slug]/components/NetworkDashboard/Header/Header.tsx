@@ -64,7 +64,6 @@ export function Header() {
       <div className="ctWrapper">
         <div className="relative sm:h-[215px] h-[235px]">
           <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
-            {/* "FE_TODO: You may need to adjust these sizes." */}
             { coverImageUri ? (
               <Image
                 src={ipfsUriToGatewayUrl(coverImageUri)}
