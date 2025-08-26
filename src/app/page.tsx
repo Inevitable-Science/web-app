@@ -55,28 +55,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const SLIDES = [
-  {
-    img: "/assets/img/articles/article_1.webp",
-    title: "Article Title 1",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_2.webp",
-    title: "Article Title 2",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_3.webp",
-    title: "Article Title 3",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_4.webp",
-    title: "Article Title 4",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-];
 
 export default function Page() {
 
@@ -100,9 +78,7 @@ export default function Page() {
           <div className="sm:w-[1600px] max-w-full mx-auto px-[24px] flex flex-col gap-4">
             <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
             <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">We’re building the critical infrastructure to fund technological breakthroughs.</h4>
-            {/*<Button variant={"accent"} className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase">
-                Explore Inevitable
-            </Button>*/}
+
             <ExploreButton />
           </div>
         </div>
@@ -197,7 +173,7 @@ export default function Page() {
             </div>
         </section>
 
-        <ArticleCarousel slides={SLIDES} />
+        <ArticleCarousel />
       </div>
 
 

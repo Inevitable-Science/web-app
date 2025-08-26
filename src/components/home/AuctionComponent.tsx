@@ -5,27 +5,9 @@ import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
-// import CircularGauge from "./CircularGague";
 
 const AuctionComponent: React.FC = () => {
   const [projectVolume, setProjectVolume] = useState<bigint | null | undefined>();
-  /*const [gaugeSize, setGaugeSize] = useState(120); // Default to large
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setGaugeSize(100);
-      } else {
-        setGaugeSize(120);
-      }
-    };
-
-    // Call it once on mount
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);*/
   
   const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
   const query = `
@@ -90,7 +72,6 @@ const AuctionComponent: React.FC = () => {
         </div>
 
 
-
         <div className="bg-[#1F1F1F] p-[12px] rounded-2xl flex justify-between items-center">
           <div className="flex flex-col gap-4 ml-2">
             <div className="flex items-center gap-2 md:gap-4">
@@ -113,7 +94,6 @@ const AuctionComponent: React.FC = () => {
           </div>
 
           <div className="bg-[#253031] rounded-2xl sm:h-[140px] sm:w-[140px] h-[110px] w-[110px] justify-center items-center flex">
-            {/*<CircularGauge percentage={76} size={gaugeSize} strokeWidth={10} label="Funded" />*/}
             <div className="flex flex-col items-center gap-1 text-center">
               <h4 className="font-semibold flex items-center gap-2 text-xl sm:text-3xl">
                 Ξ

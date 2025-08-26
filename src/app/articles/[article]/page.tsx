@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import DynamicArticleCarousel from "../ArticleCarousel";
-import articleSchema, { Article } from "../Articles"; // Adjust path as needed
+import articleSchema, { Article } from "../Articles";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 
@@ -77,15 +77,15 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-const ArticlePage: FC<Props> = async props => {
-  const params = await props.params;
-  console.log(params.article);
+//const ArticlePage: FC<Props> = async props => {
+export default async function ArticlePage({ params }: Props) {
+  const { article } = await params;
 
-  const article = articleSchema.articles.find((a) =>
-    a.title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "") === params.article
+  const fetchedArticle = articleSchema.articles.find((a) =>
+    a.title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "") === article
   );
 
-  if (!article) {
+  if (!fetchedArticle) {
     return (
       <div className="text-white text-center h-screen flex items-center justify-center flex-col">
         <div className="flex gap-2 items-center">
@@ -103,7 +103,7 @@ const ArticlePage: FC<Props> = async props => {
     );
   }
 
-  const date = new Date(article.date);
+  const date = new Date(fetchedArticle.date);
   const relativeDate = (() => {
     const diffMs = new Date().getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -118,7 +118,7 @@ const ArticlePage: FC<Props> = async props => {
   })();
 
   const relatedArticles = articleSchema.articles
-    .filter((a) => a !== article && a.category.some((cat) => article.category.includes(cat)))
+    .filter((a) => a !== fetchedArticle && a.category.some((cat) => fetchedArticle.category.includes(cat)))
     .slice(0, 4) // Limit to 4 related articles
     .map((a: Article) => ({
       img: a.image,
@@ -131,15 +131,15 @@ const ArticlePage: FC<Props> = async props => {
       <div className="max-w-[960px] mx-auto">
         <div className="mt-28">
           <h1 className="sm:text-5xl text-3xl font-extralight text-primary">
-            {article.title}
+            {fetchedArticle.title}
           </h1>
 
           <p className="capitalize font-light my-4">
-            {article.author} | {relativeDate}
+            {fetchedArticle.author} | {relativeDate}
           </p>
 
           <div className="flex items-center gap-2 max-w-full overflow-x-auto whitespace-nowrap">
-            {article.category.map((cat) => (
+            {fetchedArticle.category.map((cat) => (
               <span
                 key={cat}
                 className="bg-gunmetal focus:outline-none py-[6px] px-[12px] text-sm rounded-full"
@@ -154,19 +154,19 @@ const ArticlePage: FC<Props> = async props => {
           <div className="w-full h-auto">
             <img
               className="w-full h-auto my-4 rounded"
-              src={article.image}
-              alt={`${article.title} image`}
+              src={fetchedArticle.image}
+              alt={`${fetchedArticle.title} image`}
             />
           </div>
 
           <div className="flex flex-col gap-6 font-light">
             <p className="sm:text-xl">
-              {article.overview}
+              {fetchedArticle.overview}
             </p>
 
             <div
               className="sm:text-xl"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: fetchedArticle.content }}
             />
           </div>
         </section>
@@ -179,4 +179,4 @@ const ArticlePage: FC<Props> = async props => {
   );
 };
 
-export default ArticlePage;
+//export default ArticlePage;

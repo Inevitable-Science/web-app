@@ -21,10 +21,7 @@ export const Nav: React.FC = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const triggerPoint = window.innerHeight;
-
-      //if (pathname === '/') {
-        setIsPastViewport(currentScrollY >= triggerPoint);
-      //}
+      setIsPastViewport(currentScrollY >= triggerPoint);
 
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
         setIsVisible(false);
@@ -38,7 +35,6 @@ export const Nav: React.FC = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  //}, [lastScrollY, pathname]);
   }, [lastScrollY]);
 
   // Close menu on route change
@@ -84,7 +80,6 @@ export const Nav: React.FC = () => {
           ${isVisible ? "translate-y-0" : "-translate-y-full"}
           ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"}
         `}
-        // ${pathname === '/' && isVisible && isPastViewport ? 'bg-background bg-opacity-60' : pathname === '/' ? 'bg-transparent' : 'bg-background'}
       >
         <div className="flex items-center gap-6">
           <Link
@@ -145,7 +140,7 @@ export const Nav: React.FC = () => {
           >
             Articles
           </Link>
-          {/*<Button variant={"accent"} className="uppercase rounded-full">Log In</Button>*/}
+
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
               return (

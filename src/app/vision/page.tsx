@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata"

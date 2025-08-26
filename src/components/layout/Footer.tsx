@@ -14,7 +14,6 @@ const Footer: React.FC = () => {
           <Link href="/vision" aria-label="Vision" className="hover:underline">Vision</Link>
           <Link href="/team" aria-label="Team" className="hover:underline">Team</Link>
           <Link href="/articles" aria-label="Articles" className="hover:underline">Articles</Link>
-          {/*<Link href="/login" aria-label="Log In" className="hover:underline">Log In</Link>*/}
           <FooterLoginButton />
         </div>
       </div>

@@ -1,11 +1,11 @@
 "use client";
+import React from "react";
+import dynamic from "next/dynamic";
 
+import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
 import { wagmiConfig } from "@/lib/wagmiConfig";
-import React from "react";
-import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import { WagmiProvider } from "wagmi";
 
 const DynamicAppSpecificProviders = dynamic(

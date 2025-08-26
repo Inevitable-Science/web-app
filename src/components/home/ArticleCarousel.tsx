@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { EmblaOptionsType } from "embla-carousel";
-import { PrevButton, NextButton, usePrevNextButtons } from "./ArrowButtons";
 import PartnersComponent from "./PartnersComponent";
-import useEmblaCarousel from "embla-carousel-react";
 import articleSchema, { Article } from "@/app/articles/Articles";
 import DynamicArticleCarousel from "@/app/articles/ArticleCarousel";
 
@@ -20,33 +17,9 @@ type PropType = {
   options?: EmblaOptionsType;
 };
 
-const DEFAULT_SLIDES: SlideType[] = [
-  {
-    img: "/assets/img/articles/article_1.png",
-    title: "Article Title 1",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_2.png",
-    title: "Article Title 2",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_3.png",
-    title: "Article Title 3",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "/assets/img/articles/article_4.png",
-    title: "Article Title 4",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-];
-
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-const ArticleCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options = DEFAULT_OPTIONS }) => {
-
+const ArticleCarousel: React.FC<PropType> = ({ options = DEFAULT_OPTIONS }) => {
   const [trendingSlides, setTrendingSlides] = useState<SlideType[]>([]);
 
   useEffect(() => {
