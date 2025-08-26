@@ -14,6 +14,7 @@ export interface TokenResponse {
   assetsUnderManagement: number | null;
   selectedToken: {
     address: string | null;
+    chain_id: number | null;
     logoUrl: string | null;
     ticker: string | null;
     tokenType: string | null;

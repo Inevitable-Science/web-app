@@ -2,15 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { formatNumber, truncateAddress } from "@/lib/utils";
-import { ChainLogo } from "@/components/ChainLogo";
 import { TokenResponse } from "@/lib/types/AnalyticTypes";
-import {
-  JBChainId,
-  useJBChainId,
-  useSuckers,
-} from "juice-sdk-react";
-import { JB_CHAINS } from "juice-sdk-core";
-import { useWatchAsset } from "wagmi";
+import { useChainId, useSwitchChain, useWatchAsset } from "wagmi";
 
 import { Address, formatUnits } from "viem";
 import { Loader2 } from "lucide-react";
@@ -24,11 +17,8 @@ import { Button } from "@/components/ui/button";
 import { useAccount } from "wagmi";
 import { getBalance } from "@wagmi/core"
 import { wagmiConfig } from "@/lib/wagmiConfig";
+import { useSwitchToCorrectChain } from "../../../useEnsureCorrectChain";
 
-
-interface DescriptionSectionProps {
-  data: TokenResponse | null;
-}
 
 function calculateRatio(value1: number | null | undefined, value2: number | null | undefined): string {
   // Handle null/undefined or zero inputs
@@ -71,11 +61,22 @@ function getValuationLabel(aum: number | null, marketCap: number | null): string
 export function TokenSection() {
   const { analyticsData } = useData();
   const data = analyticsData?.tokenData;
+  const nativeTokenChainId = analyticsData?.tokenData?.selectedToken.chain_id;
 
-  const suckersQuery = useSuckers();
-  const suckers = suckersQuery.data;
-
+  const { address, isConnected } = useAccount();
   const { watchAsset, isSuccess, isPending } = useWatchAsset();
+  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const chainId = useChainId();
+  const [balance, setBalance] = useState<string>("");
+
+  const handleSwitchChain = () => {
+    if (!nativeTokenChainId || !isConnected || !chainId ||  chainId === nativeTokenChainId) return;
+    try {
+      switchChain({ chainId: nativeTokenChainId });
+    } catch (err) {
+      console.error("Failed to switch chain", err);
+    }
+  }
 
   const handleAddToken = () => {
     // Make sure token.data and necessary properties exist
@@ -95,12 +96,9 @@ export function TokenSection() {
     });
   };
 
-  const { address, isConnected } = useAccount();
-  const [balance, setBalance] = useState<string>("");
-
 
   useEffect(() => {
-    if (!address || !isConnected) {
+    if (!address || !isConnected || chainId !== nativeTokenChainId) {
       return;
     }
 
@@ -120,7 +118,6 @@ export function TokenSection() {
           formatted = formatNumber(raw, true);
         }
 
-
         setBalance(formatted);
       } catch (err) {
         console.error("Error fetching token balances:", err);
@@ -128,7 +125,7 @@ export function TokenSection() {
     };
 
     fetchBalance();
-  }, [address, isConnected, data?.selectedToken.address]);
+  }, [address, chainId, isConnected, data?.selectedToken.address]);
 
   return (
     <section>
@@ -170,7 +167,22 @@ export function TokenSection() {
         </div>
           <div className="background-color p-[16px] rounded-xl">
             <h3 className="text-xl">
-              {balance}
+              {isConnected ? (
+                <>
+                  {chainId === nativeTokenChainId ? (
+                    <>{!balance ? (<div className="activeSkeleton h-8 w-24 mb-2 rounded-lg" />) : (balance)}</>
+                  ) : (
+                    <Button
+                      variant="link"
+                      className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+                      onClick={handleSwitchChain}
+                      disabled={isSwitchingChain}
+                    >
+                      Switch Chain
+                    </Button>
+                  )}
+                </>
+              ) : ("0.00")}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
               Your Balance

@@ -6,6 +6,7 @@ import { DescriptionSection } from "./sections/about/AboutSection";
 import { ActivityFeed } from "./sections/activity/ActivityFeed";
 import { TreasurySection } from "./sections/treasury/TreasurySection";
 import { TokenSection } from "./sections/tokenAnalytics/TokenAnalytics";
+import { useSwitchToCorrectChain } from "../useEnsureCorrectChain";
 
 interface TabContentProps {
   selectedTab: string;
@@ -25,6 +26,8 @@ export const TabContent: FC<TabContentProps> = ({
 }) => {
   const { analyticsData } = useData();
   const SelectedComponent = tabComponents[selectedTab];
+
+  useSwitchToCorrectChain();
 
   if (!SelectedComponent) {
     return null;

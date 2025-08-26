@@ -33,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             customTheme={{
               "--ck-font-family": "var(--font-simplon-norm)",
               "--ck-connectbutton-border-radius": "0",
-              "--ck-accent-color": "#14B8A6",
+              "--ck-accent-color": "#2978a0",
               "--ck-accent-text-color": "#ffffff",
             }}
           >
