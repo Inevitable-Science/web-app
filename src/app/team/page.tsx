@@ -58,11 +58,10 @@ export default function Team() {
           </div>
 
           <div className="lg:text-xl md:text-sm font-light text-base">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            The Inevitable team has collectively launched 5 DAOs, co-founded 36 companies, and achieved 10 successful exits, securing capital in excess of $300 million, with an additional $10 million raised for DeSci initiatives.
           </div>
         </div>
 
-        {/*<TeamCarousel />*/}
         <TeamComponent />
 
         <div className="my-48">

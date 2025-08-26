@@ -126,7 +126,7 @@ export default function Page() {
           </div>
 
           <div className="lg:text-xl md:text-sm font-light text-base">
-            Inevitable Protocol runs on a tokenized on-chain protocol coordinating a collection of token nodes whose core design is to automatically funnel real-world revenues back into the ecosystem, ensuring a recurring cash flow. The token nodes - revnets - autonomously operate their economic aspects without human interference: they sell tokens, earn revenues, pay for liabilities such as ecosystem fees and third-party services, and use the revenues to back the token and grow the treasury in a sustainable, circular way.
+            Inevitable’s mission is to accelerate exponential technologies for the benefit of mankind. Such DAOs fund and implement heavily-vetted frontier research to deliver it to the user or patient in the shortest time possible. DAOs may employ revenue-generating mechanisms by selling IP, products, processes, machines, designs, or advice that demonstrably improve or enhance the human condition.
           </div>
         </div>
 

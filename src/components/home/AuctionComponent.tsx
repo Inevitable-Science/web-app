@@ -79,7 +79,7 @@ const AuctionComponent: React.FC = () => {
           />
           <h3 className="font-optima text-3xl uppercase">Stasis</h3>
           <p className="text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            CryoDAO, HydraDAO, Tomorrow Bio, and Cryopets are partnering to develop the first purpose-built long-term cryopreservation facility and research lab in the United States. This facility builds on the success of the world’s first such site, the European Biostasis Foundation, opened in Switzerland in 2022. With a projected size of 8,000–9,000 sqft on a 2-acre plot, the facility will be designed for the safe, secure storage of 1,000–2,000 patients, with expansion capabilities.
           </p>
           <Link href="/@stasis" aria-label="View Auction" className="w-fit mt-2 text-base font-medium uppercase hover:underline">
             <div className="flex font-normal gap-3 items-center transition-[gap] duration-150 hover:gap-5">

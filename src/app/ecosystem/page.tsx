@@ -66,7 +66,7 @@ export default function Ecosystem() {
           </div>
 
           <div className="lg:text-xl text-md font-light">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
+            Inevitable Protocol runs on a tokenized on-chain protocol coordinating a collection of token nodes whose core design is to automatically funnel real-world revenues back into the ecosystem, ensuring a recurring cash flow. The token nodes, or Revnets, autonomously operate their economic aspects without human interference.
           </div>
         </div>
 
