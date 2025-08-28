@@ -18,9 +18,9 @@ export function SwapWidget({ token } : TokenState) {
     height: "582px",
     chainId: 1,
     tokenLists: [
-      "https://files.cow.fi/tokens/CowSwap.json",
-      "https://files.cow.fi/tokens/CoinGecko.json",
-      "https://inevitable.science/web3/tokenlist.schema.json",
+      //"https://files.cow.fi/tokens/CowSwap.json",
+      //"https://files.cow.fi/tokens/CoinGecko.json",
+      //"https://inevitable.science/web3/tokenlist.schema.json",
       "https://www.profiler.bio/web3/tokenlist.schema.json"
     ],
     tradeType: TradeType.SWAP,
@@ -45,7 +45,7 @@ export function SwapWidget({ token } : TokenState) {
   };
 
   return (
-    <div className="swapWrapper">
+    <div>
       <CowSwapWidget params={params} provider={provider as EthereumProvider} />
     </div>
   );

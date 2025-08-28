@@ -1,6 +1,6 @@
 "use client";
 
-import { ConnectKitButton } from "@/components/ConnectKitButton";
+import { ConnectKitButton } from "connectkit";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";

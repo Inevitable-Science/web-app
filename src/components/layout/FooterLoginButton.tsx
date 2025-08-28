@@ -1,6 +1,6 @@
 "use client";
 
-import { ConnectKitButton } from "@/components/ConnectKitButton";
+import { ConnectKitButton } from "connectkit";
 import { formatEthAddress } from "@/lib/utils";
 import { Button } from "../ui/button";
 
