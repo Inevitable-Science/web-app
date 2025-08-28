@@ -38,16 +38,6 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
       // Sanitize input by removing query strings and trimming whitespace
       const sanitizedSlug = raw.split("?")[0].trim();
 
-      /*const decoded = decodeURIComponent(sanitizedSlug);
-      const urn = jbUrn(decoded);
-
-      if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
-        throw new Error("Invalid URN format or unknown chain");
-      }
-
-      setProjectId(urn.projectId);
-      setChainId(urn.chainId);*/
-
       const decoded = decodeURIComponent(sanitizedSlug);
 
       if (decoded == "@stasis") {
@@ -77,14 +67,6 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
   if (initialized && (notFound || !projectId || !chainId)) {
     triggerNotFound();
   }
-
-  /*if (notFound || !projectId || !chainId) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center">
-        {notFound ? "Not found" : "Loading..."}
-      </div>
-    );
-  }*/
 
   if (initialized && chainId && projectId) {
     return (

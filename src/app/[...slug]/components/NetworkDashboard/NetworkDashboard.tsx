@@ -9,7 +9,6 @@ import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
-// import { SwapWidget } from "../PayCard/SwapWiget/SwapWiget";
 import { Header } from "./Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
@@ -49,13 +48,6 @@ function DashboardContent() {
           ...(analyticsData?.treasuryData ? [{ key: "treasury", label: "Treasury" }] : []),
         ]),
   ];
-
-  // set title - removed for now, use SSR to render title in layout file using project handle instead of token name
-  /*useEffect(() => {
-    console.log("token symbol", token?.data?.symbol)
-    if (token?.data?.symbol === undefined) document.title = `${metadata.data?.name} | Inevitable Protocol`; else
-    document.title = `${formatTokenSymbol(token)} | Inevitable Protocol`;
-  }, [token, metadata]);*/
 
   if (contracts.contracts.controller.data === zeroAddress) {
     notFound();
