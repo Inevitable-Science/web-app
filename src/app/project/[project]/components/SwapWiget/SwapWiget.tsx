@@ -21,7 +21,7 @@ export function SwapWidget({ token } : TokenState) {
     height: "582px",
     chainId: 1,
     tokenLists: [
-      "https://inev.profiler.bio/web3/tokenList"
+      "https://inev.profiler.bio/web3/tokenlist.schema.json"
     ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
