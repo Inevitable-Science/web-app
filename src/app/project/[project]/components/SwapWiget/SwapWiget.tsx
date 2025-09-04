@@ -21,7 +21,7 @@ export function SwapWidget({ token } : TokenState) {
     height: "582px",
     chainId: 1,
     tokenLists: [
-      "https://raw.githubusercontent.com/Inevitable-Science/web-app/refs/heads/frontend/public/web3/tokenlist.schema.json"
+      "https://inev.profiler.bio/web3/tokenList"
     ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
