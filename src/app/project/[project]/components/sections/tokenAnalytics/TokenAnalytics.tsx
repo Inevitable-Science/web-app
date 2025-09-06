@@ -15,12 +15,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 import { useAccount } from "wagmi";
-import { getBalance } from "@wagmi/core"
+import { getBalance } from "@wagmi/core";
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { useSwitchToCorrectChain } from "../../../useEnsureCorrectChain";
 
-
-function calculateRatio(value1: number | null | undefined, value2: number | null | undefined): string {
+function calculateRatio(
+  value1: number | null | undefined,
+  value2: number | null | undefined
+): string {
   // Handle null/undefined or zero inputs
   if (!value1 || !value2) {
     return "-- --";
@@ -41,11 +43,17 @@ function calculateRatio(value1: number | null | undefined, value2: number | null
   return `${rounded1} : ${rounded2}`;
 }
 
-function getValuationLabel(aum: number | null, marketCap: number | null): string {
+function getValuationLabel(
+  aum: number | null,
+  marketCap: number | null
+): string {
   if (
-    !aum || !marketCap ||
-    isNaN(aum) || isNaN(marketCap) ||
-    aum <= 0 || marketCap <= 0
+    !aum ||
+    !marketCap ||
+    isNaN(aum) ||
+    isNaN(marketCap) ||
+    aum <= 0 ||
+    marketCap <= 0
   ) {
     return "--";
   }
@@ -70,17 +78,26 @@ export function TokenSection() {
   const [balance, setBalance] = useState<string>("");
 
   const handleSwitchChain = () => {
-    if (!nativeTokenChainId || !isConnected || !chainId ||  chainId === nativeTokenChainId) return;
+    if (
+      !nativeTokenChainId ||
+      !isConnected ||
+      !chainId ||
+      chainId === nativeTokenChainId
+    )
+      return;
     try {
       switchChain({ chainId: nativeTokenChainId });
     } catch (err) {
       console.error("Failed to switch chain", err);
     }
-  }
+  };
 
   const handleAddToken = () => {
     // Make sure token.data and necessary properties exist
-    if (!data?.selectedToken.address || !data.selectedToken.name /*|| !data.selectedToken.decimals*/) {
+    if (
+      !data?.selectedToken.address ||
+      !data.selectedToken.name /*|| !data.selectedToken.decimals*/
+    ) {
       console.error("Token information is incomplete.");
       return;
     }
@@ -96,7 +113,6 @@ export function TokenSection() {
     });
   };
 
-
   useEffect(() => {
     if (!address || !isConnected || chainId !== nativeTokenChainId) {
       return;
@@ -109,7 +125,9 @@ export function TokenSection() {
           token: data?.selectedToken.address as Address,
         });
 
-        const raw = Number(formatUnits(balanceResults.value, balanceResults.decimals));
+        const raw = Number(
+          formatUnits(balanceResults.value, balanceResults.decimals)
+        );
         let formatted: string;
 
         if (raw < 1000) {
@@ -129,158 +147,199 @@ export function TokenSection() {
 
   return (
     <section>
-
       {data?.name && (
-        <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px]">
-          <TokenChart organisation={data?.name}/>
+        <div className="h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
+          <TokenChart organisation={data?.name} />
         </div>
       )}
 
-      <div className="bg-grey-450 p-[12px] my-4 rounded-2xl grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-        <div className="background-color p-[16px] rounded-xl">
-          <div className="flex gap-2 items-end">
+      <div className="my-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
+        <div className="background-color rounded-xl p-[16px]">
+          <div className="flex items-end gap-2">
             {/* This h3 is already correctly handling a potential lack of token.data */}
-            <h3 className="text-xl">
-              {data?.selectedToken.name}
-            </h3>
+            <h3 className="text-xl">{data?.selectedToken.name}</h3>
             {data?.selectedToken && (
-              <p className="text-muted-foreground font-light text-sm">
+              <p className="text-sm font-light text-muted-foreground">
                 {/* Use the actual token address from your data */}
                 {truncateAddress(data?.selectedToken.address as Address)}
               </p>
             )}
           </div>
-          <p className="text-muted-foreground font-light uppercase">
+          <p className="font-light uppercase text-muted-foreground">
             Project Token
           </p>
           {data?.selectedToken && (
             <Button
               variant="link"
-              className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
+              className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
               onClick={handleAddToken}
               disabled={isPending} // Disable the button while processing
             >
-              {isPending ? "Adding..." : isSuccess ? "Added!" : "Add To Metamask"}
-              <Image alt="Metamask Logo" src="/assets/img/logo/metamask.svg" height={16} width={16} />
+              {isPending
+                ? "Adding..."
+                : isSuccess
+                  ? "Added!"
+                  : "Add To Metamask"}
+              <Image
+                alt="Metamask Logo"
+                src="/assets/img/logo/metamask.svg"
+                height={16}
+                width={16}
+              />
             </Button>
           )}
         </div>
-          <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">
-              {isConnected ? (
-                <>
-                  {chainId === nativeTokenChainId ? (
-                    <>{!balance ? (<div className="activeSkeleton h-8 w-24 mb-2 rounded-lg" />) : (balance)}</>
-                  ) : (
-                    <Button
-                      variant="link"
-                      className="h-6 px-0 w-fit flex items-center gap-1.5 font-normal uppercase"
-                      onClick={handleSwitchChain}
-                      disabled={isSwitchingChain}
-                    >
-                      Switch Chain
-                    </Button>
-                  )}
-                </>
-              ) : ("0.00")}
-            </h3>
-            <p className="text-muted-foreground font-light uppercase">
-              Your Balance
-            </p>
-          </div>
+        <div className="background-color rounded-xl p-[16px]">
+          <h3 className="text-xl">
+            {isConnected ? (
+              <>
+                {chainId === nativeTokenChainId ? (
+                  <>
+                    {!balance ? (
+                      <div className="activeSkeleton mb-2 h-8 w-24 rounded-lg" />
+                    ) : (
+                      balance
+                    )}
+                  </>
+                ) : (
+                  <Button
+                    variant="link"
+                    className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
+                    onClick={handleSwitchChain}
+                    disabled={isSwitchingChain}
+                  >
+                    Switch Chain
+                  </Button>
+                )}
+              </>
+            ) : (
+              "0.00"
+            )}
+          </h3>
+          <p className="font-light uppercase text-muted-foreground">
+            Your Balance
+          </p>
         </div>
+      </div>
 
       {data ? (
-        <div className="flex flex-col gap-4 w-full">
-          <div className="bg-grey-450 p-[12px] rounded-2xl">
-            <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
+        <div className="flex w-full flex-col gap-4">
+          <div className="rounded-2xl bg-grey-450 p-[12px]">
+            <h3 className="pb-3 pt-1 text-xl">AUM/MC Ratio</h3>
 
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {calculateRatio(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                  {calculateRatio(
+                    data.assetsUnderManagement,
+                    data.selectedToken.marketCap
+                  )}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
-                  {getValuationLabel(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                <p className="font-light uppercase text-muted-foreground">
+                  {getValuationLabel(
+                    data.assetsUnderManagement,
+                    data.selectedToken.marketCap
+                  )}
                 </p>
               </div>
-              <div className="background-color p-[16px_16px_10px_16px] rounded-2xl">
+              <div className="background-color rounded-2xl p-[16px_16px_10px_16px]">
                 <div className="flex h-[28px] [&>*:not(:first-child)]:relative [&>*:not(:first-child)]:right-2">
                   {data?.selectedToken?.networks?.map((network, index) => (
                     <span key={index}>
                       {network === "eth" && (
-                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/mainnet.svg" />
+                        <Image
+                          alt="Token Logo"
+                          width={28}
+                          height={28}
+                          src="/assets/img/logo/mainnet.svg"
+                        />
                       )}
                       {network === "base" && (
-                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/base.svg" />
+                        <Image
+                          alt="Token Logo"
+                          width={28}
+                          height={28}
+                          src="/assets/img/logo/base.svg"
+                        />
                       )}
                       {network === "opt" && (
-                        <Image alt="Token Logo" width={28} height={28} src="/assets/img/logo/optimism.svg" />
+                        <Image
+                          alt="Token Logo"
+                          width={28}
+                          height={28}
+                          src="/assets/img/logo/optimism.svg"
+                        />
                       )}
                       {network === "arb" && (
-                        <Image alt="Token Logo" width={25} height={25} src="/assets/img/logo/arbitrum.svg" />
+                        <Image
+                          alt="Token Logo"
+                          width={25}
+                          height={25}
+                          src="/assets/img/logo/arbitrum.svg"
+                        />
                       )}
                     </span>
                   ))}
                 </div>
-                <p className="text-muted-foreground font-light uppercase mt-[8px]">Networks</p>
+                <p className="mt-[8px] font-light uppercase text-muted-foreground">
+                  Networks
+                </p>
               </div>
             </div>
           </div>
 
-
-
-          <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3 py-5">
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+          <div className="flex flex-col gap-3 rounded-2xl bg-grey-450 p-[12px] py-5">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.totalSupply)}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Total Supply
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
+              <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
                   ${formatNumber(data.selectedToken.marketCap)}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Market Cap
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.averageBal)}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Average Balance
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
+              <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
                   {formatNumber(data.selectedToken.medianBal)}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Median Balance
                 </p>
               </div>
             </div>
           </div>
 
-
           {data.topHolders && (
-            <div className="bg-grey-450 p-[12px] rounded-2xl">
-              <div className="background-color p-[16px] rounded-xl mb-2">
-                <h3 className="text-xl">
-                  {data.selectedToken.totalHolders}
-                </h3>
-                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
+            <div className="rounded-2xl bg-grey-450 p-[12px]">
+              <div className="background-color mb-2 rounded-xl p-[16px]">
+                <h3 className="text-xl">{data.selectedToken.totalHolders}</h3>
+                <p className="font-light uppercase text-muted-foreground">
+                  Total Holders
+                </p>
               </div>
 
-              <h3 className="text-grey-50 uppercase text-sm py-1">Top Holders</h3>
+              <h3 className="py-1 text-sm uppercase text-grey-50">
+                Top Holders
+              </h3>
               <div>
                 {data.topHolders.slice(0, 5).map((holder, idx) => {
                   const { address, token_amount } = holder;
@@ -288,7 +347,7 @@ export function TokenSection() {
                   return (
                     <div
                       key={`${address}-${idx}`}
-                      className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
+                      className="flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light text-grey-50"
                     >
                       <span>{truncateAddress(address as Address)}</span>
                       <a
@@ -307,16 +366,19 @@ export function TokenSection() {
           )}
 
           {data.selectedToken.ticker && data.selectedToken.name && (
-            <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
-              <TokenStatsChart organisation={data.selectedToken.ticker} tokenName={data.selectedToken.name} />
+            <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
+              <TokenStatsChart
+                organisation={data.selectedToken.ticker}
+                tokenName={data.selectedToken.name}
+              />
             </div>
           )}
         </div>
       ) : (
-        <div className="w-full flex justify-center my-[15vh]">
+        <div className="my-[15vh] flex w-full justify-center">
           <Loader2 className="animate-spin" size={32} />
         </div>
       )}
     </section>
-  )
+  );
 }

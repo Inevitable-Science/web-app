@@ -5,7 +5,12 @@ import {
   useWriteJbMultiTerminalPay,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
-import { useAccount, useChainId, useSwitchChain, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { SuckerPair } from "juice-sdk-core";
 import { JBChainId } from "juice-sdk-react";
@@ -49,7 +54,9 @@ export function PayActionButton({
   selectedSucker?: SuckerPair | undefined;
 }) {
   // --- 1. HOOKS ---
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
+  const {
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
   const { address, isConnected } = useAccount();
   const { toast } = useToast();
   const { metadata } = useNetworkData();
@@ -83,7 +90,9 @@ export function PayActionButton({
 
   // --- 3. DERIVED STATE & MEMOS ---
   const onCorrectChain = userChainId === targetChainId;
-  const targetChainName = targetChainId ? JB_CHAINS[targetChainId]?.name : "the correct network";
+  const targetChainName = targetChainId
+    ? JB_CHAINS[targetChainId]?.name
+    : "the correct network";
 
   const actionButtonContent = useMemo(() => {
     if (loading) return "Processing...";
@@ -107,12 +116,26 @@ export function PayActionButton({
 
   // This now works correctly because `writeContract` is defined
   const handlePay = () => {
-    if (!primaryNativeTerminal?.data || !address || !selectedSucker || !writeContract) return;
+    if (
+      !primaryNativeTerminal?.data ||
+      !address ||
+      !selectedSucker ||
+      !writeContract
+    )
+      return;
     const value = amountA.amount.value;
     writeContract({
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
-      args: [selectedSucker.projectId, NATIVE_TOKEN, value, address, 0n, memo || "", "0x0"],
+      args: [
+        selectedSucker.projectId,
+        NATIVE_TOKEN,
+        value,
+        address,
+        0n,
+        memo || "",
+        "0x0",
+      ],
       value,
     });
   };
@@ -150,7 +173,12 @@ export function PayActionButton({
   }
 
   // State 3: User is connected however has inputted an amount greater than their balance
-  if (walletBalance && amountA.amount._value && Number(walletBalance) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))) {
+  if (
+    walletBalance &&
+    amountA.amount._value &&
+    Number(walletBalance) <
+      Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+  ) {
     return (
       <Button
         className={twMerge(primaryButtonClasses, shimmerClasses)}
@@ -187,14 +215,14 @@ export function PayActionButton({
             Please review and agree to the project's terms before proceeding.
           </Dialog.Description>
 
-          <div className="my-4 max-h-48 overflow-y-auto rounded-xl background-color p-4 text-xs">
+          <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
             {metadata.data?.payDisclosure ? (
               <>
-              <p className="whitespace-pre-wrap font-semibold">{metadata.data.payDisclosure}</p>
+                <p className="whitespace-pre-wrap font-semibold">
+                  {metadata.data.payDisclosure}
+                </p>
               </>
-            ) : (
-              null
-            )}
+            ) : null}
           </div>
           <div className="mt-4 flex items-center space-x-3">
             <Checkbox.Root
@@ -203,23 +231,30 @@ export function PayActionButton({
               onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
               className="peer h-4 w-4 shrink-0 rounded-sm border border-slate-400 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:bg-cerulean data-[state=checked]:text-white"
             >
-              <Checkbox.Indicator className="flex items-center justify-center text-current"><Check className="h-4 w-4" /></Checkbox.Indicator>
+              <Checkbox.Indicator className="flex items-center justify-center text-current">
+                <Check className="h-4 w-4" />
+              </Checkbox.Indicator>
             </Checkbox.Root>
-            <label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-semibold">
+            <label
+              htmlFor="terms"
+              className="text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               I have read and agree to the terms.
             </label>
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
             <Dialog.Close asChild>
-              <Button className="rounded-md background-color hover:background-color">Cancel</Button>
+              <Button className="background-color hover:background-color rounded-md">
+                Cancel
+              </Button>
             </Dialog.Close>
             <ButtonWithWallet
               targetChainId={targetChainId}
               disabled={!agreedToTerms || loading}
               loading={loading}
               onClick={handlePay}
-              className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors !bg-cerulean focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:!bg-gunmetal disabled:text-grey-100"
+              className="inline-flex items-center justify-center rounded-md !bg-cerulean px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:!bg-gunmetal disabled:text-grey-100"
             >
               {actionButtonContent}
             </ButtonWithWallet>

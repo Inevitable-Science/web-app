@@ -10,7 +10,7 @@ import {
   useJBChainId,
   useJBRulesetContext,
   useJBTokenContext,
-  useSuckers
+  useSuckers,
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
@@ -35,12 +35,19 @@ export function TransactionCard() {
   const { address } = useAccount(); // Get user's wallet and chain
   const activeChain = useJBChainId();
   const { switchChain } = useSwitchChain();
-  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({ address });
+  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
+    address,
+  });
 
-  const { token: tokenBContext} = useJBTokenContext();
-  const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
+  const { token: tokenBContext } = useJBTokenContext();
+  const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } =
+    useJBRulesetContext();
 
-  const { data: suckers, isLoading: areSuckersLoading, isError: isSuckerError } = useSuckers();
+  const {
+    data: suckers,
+    isLoading: areSuckersLoading,
+    isError: isSuckerError,
+  } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const { metadata } = useNetworkData();
 
@@ -49,7 +56,7 @@ export function TransactionCard() {
     // Only set default if context has no value and suckers have loaded
     if (!selectedSucker && suckers && suckers.length > 0) {
       const defaultSucker = activeChain
-        ? suckers.find(s => s.peerChainId === activeChain)
+        ? suckers.find((s) => s.peerChainId === activeChain)
         : undefined;
       setSelectedSucker(defaultSucker || suckers[0]);
     }
@@ -65,8 +72,8 @@ export function TransactionCard() {
     !rulesetMetadataContext.data
   ) {
     return (
-      <div className="bg-grey-450 flex flex-col items-center justify-center p-[12px] rounded-xl h-[450px]">
-        <Loader2 className="animate-spin h-8 w-8" />
+      <div className="flex h-[450px] flex-col items-center justify-center rounded-xl bg-grey-450 p-[12px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -84,28 +91,45 @@ export function TransactionCard() {
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setAmountA(value);
-    if (!value || value === ".") { setAmountB(""); return; }
-    const quote = getTokenAToBQuote(new FixedInt(parseEther(value), tokenA.decimals), {
-      weight: ruleset.weight,
-      reservedPercent: rulesetMetadata.reservedPercent,
-    });
+    if (!value || value === ".") {
+      setAmountB("");
+      return;
+    }
+    const quote = getTokenAToBQuote(
+      new FixedInt(parseEther(value), tokenA.decimals),
+      {
+        weight: ruleset.weight,
+        reservedPercent: rulesetMetadata.reservedPercent,
+      }
+    );
     setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
   };
 
-  const handleReceiveAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleReceiveAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     setAmountB(value);
-    if (!value || value === ".") { setAmountA(""); return; }
-    const quote = getTokenBtoAQuote(new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals), tokenA.decimals, {
-      weight: ruleset.weight,
-      reservedPercent: rulesetMetadata.reservedPercent,
-    });
+    if (!value || value === ".") {
+      setAmountA("");
+      return;
+    }
+    const quote = getTokenBtoAQuote(
+      new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
+      tokenA.decimals,
+      {
+        weight: ruleset.weight,
+        reservedPercent: rulesetMetadata.reservedPercent,
+      }
+    );
     setAmountA(quote.format()); // Use .format() for safety
   };
 
   // 7. Handler to update context and switch chain
   const handleChainChange = (newChainId: JBChainId) => {
-    const newSelectedSucker = suckers?.find(s => s.peerChainId === newChainId);
+    const newSelectedSucker = suckers?.find(
+      (s) => s.peerChainId === newChainId
+    );
     if (newSelectedSucker) {
       setSelectedSucker(newSelectedSucker);
     }
@@ -119,33 +143,40 @@ export function TransactionCard() {
     symbol: tokenA.symbol,
   };
   const preparedAmountB = {
-    amount: new FixedInt(parseUnits(amountB || "0", tokenB.decimals), tokenB.decimals),
+    amount: new FixedInt(
+      parseUnits(amountB || "0", tokenB.decimals),
+      tokenB.decimals
+    ),
     symbol: formatTokenSymbol(tokenB.symbol),
   };
 
   const isChainMismatched = activeChain !== selectedSucker?.peerChainId;
 
   return (
-    <div className="bg-grey-450 flex flex-col p-[12px] rounded-xl">
+    <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Button
             onClick={() => setActiveTab("buy")}
-            className={`h-[35px] rounded-none font-light bg-transparent hover:bg-transparent border-b-[1.5px] ${
-              activeTab === "buy" ? "border-cerulean text-white" : "border-transparent text-muted-foreground"
+            className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
+              activeTab === "buy"
+                ? "border-cerulean text-white"
+                : "border-transparent text-muted-foreground"
             }`}
           >
             Buy
           </Button>
           {rulesetMetadata?.useTotalSurplusForCashOuts && (
             <Button
-            onClick={() => setActiveTab("withdraw")}
-            className={`h-[35px] rounded-none font-light bg-transparent hover:bg-transparent border-b-[1.5px] ${
-              activeTab === "withdraw" ? "border-cerulean text-white" : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Withdraw
-          </Button>
+              onClick={() => setActiveTab("withdraw")}
+              className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
+                activeTab === "withdraw"
+                  ? "border-cerulean text-white"
+                  : "border-transparent text-muted-foreground"
+              }`}
+            >
+              Withdraw
+            </Button>
           )}
         </div>
 
@@ -154,7 +185,7 @@ export function TransactionCard() {
           disabled={!suckers || suckers.length <= 1}
           value={selectedSucker?.peerChainId as JBChainId}
           onChange={handleChainChange}
-          options={suckers?.map(s => s.peerChainId) ?? []}
+          options={suckers?.map((s) => s.peerChainId) ?? []}
         />
       </div>
 
@@ -162,19 +193,21 @@ export function TransactionCard() {
         {activeTab === "buy" ? (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <div className="background-color flex items-center justify-between gap-2 p-[16px] rounded-xl">
+              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
                 <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm text-muted-foreground font-light">YOU PAY</p>
+                  <p className="text-sm font-light text-muted-foreground">
+                    YOU PAY
+                  </p>
                   <input
                     type="number"
-                    className="bg-transparent w-full shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
                     placeholder="0.00"
                     value={amountA}
                     onChange={handlePayAmountChange}
                   />
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <div className="flex w-fit bg-grey-450 rounded-full py-1 px-2 gap-2 items-center justify-end">
+                  <div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">
                     <Image
                       src="/assets/img/logo/mainnet.svg"
                       className="rounded-full"
@@ -184,37 +217,50 @@ export function TransactionCard() {
                     />
                     <p className="text-lg font-light">{tokenA.symbol}</p>
                   </div>
-                  <p className="w-[130px] text-sm text-right text-muted-foreground font-light text-nowrap">
-                    Balance: {walletBalance ? parseFloat(formatUnits(walletBalance.value, tokenA.decimals)).toFixed(4) : "0.00"}
+                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+                    Balance:{" "}
+                    {walletBalance
+                      ? parseFloat(
+                          formatUnits(walletBalance.value, tokenA.decimals)
+                        ).toFixed(4)
+                      : "0.00"}
                   </p>
                 </div>
               </div>
-              <div className="background-color flex items-center justify-between gap-2 p-[16px] rounded-xl">
+              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
                 <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm text-muted-foreground font-light">YOU RECEIVE</p>
+                  <p className="text-sm font-light text-muted-foreground">
+                    YOU RECEIVE
+                  </p>
                   <input
                     type="number"
-                    className="bg-transparent w-full shadow-none outline-none ring-0 border-none p-0 text-2xl placeholder:text-white focus:placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
+                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
                     placeholder="0.00"
                     value={amountB}
                     onChange={handleReceiveAmountChange}
                   />
                 </div>
-                <div className="flex items-center w-fit min-w-fit gap-2 bg-grey-450 rounded-full py-1 px-2">
+                <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
                   <Image
-                    src={metadata.data?.logoUri ? ipfsUriToGatewayUrl(metadata.data.logoUri) : "/assets/img/logo/mainnet.svg"}
+                    src={
+                      metadata.data?.logoUri
+                        ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                        : "/assets/img/logo/mainnet.svg"
+                    }
                     className="rounded-full"
                     height={22}
                     width={22}
                     alt="Token Icon"
                   />
-                  <p className="text-lg font-light">{formatTokenSymbol(tokenB.symbol)}</p>
+                  <p className="text-lg font-light">
+                    {formatTokenSymbol(tokenB.symbol)}
+                  </p>
                 </div>
               </div>
             </div>
             <input
               type="text"
-              className="w-full background-color p-2 border-none rounded-lg text-sm font-light placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450 transition-shadow"
+              className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
               onChange={(e) => setMemo(e.target.value)}
               value={memo}
               placeholder="Add a note... (optional)"
@@ -222,14 +268,20 @@ export function TransactionCard() {
             <PayActionButton
               amountA={preparedAmountA}
               amountB={preparedAmountB}
-              walletBalance={walletBalance ? parseFloat(formatUnits(walletBalance.value, tokenA.decimals)).toFixed(4) : 0}
+              walletBalance={
+                walletBalance
+                  ? parseFloat(
+                      formatUnits(walletBalance.value, tokenA.decimals)
+                    ).toFixed(4)
+                  : 0
+              }
               memo={memo}
               disabled={!amountA || parseFloat(amountA) === 0}
               selectedSucker={selectedSucker}
             />
           </div>
         ) : (
-            <WithdrawCard selectedSucker={selectedSucker}/>
+          <WithdrawCard selectedSucker={selectedSucker} />
         )}
       </div>
 

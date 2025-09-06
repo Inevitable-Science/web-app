@@ -3,25 +3,29 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useAccount, useChainId, useSwitchChain, useWaitForTransactionReceipt } from "wagmi";
-import { getBalance } from "@wagmi/core"
-import { Address, formatUnits } from "viem"
+import {
+  useAccount,
+  useChainId,
+  useSwitchChain,
+  useWaitForTransactionReceipt,
+} from "wagmi";
+import { getBalance } from "@wagmi/core";
+import { Address, formatUnits } from "viem";
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { formatNumber } from "@/lib/utils";
 
 import { ArrowRightIcon } from "lucide-react";
 
-
-interface projectInterface{
-  name: string,
+interface projectInterface {
+  name: string;
   logo: string;
   href: string;
   tokenAddress: Address;
   vestingContract?: Address;
 }
 
-interface v4ProjectInterface{
-  name: string,
+interface v4ProjectInterface {
+  name: string;
   logo: string;
   href: string;
   projectID: number;
@@ -74,7 +78,7 @@ const v4ProjectVars: v4ProjectInterface[] = [
     logo: "/assets/img/daos/tokenLogos/stasis.svg",
     projectID: 64,
   },
-]
+];
 
 export default function ClientTable() {
   const { address, isConnected } = useAccount();
@@ -101,7 +105,7 @@ export default function ClientTable() {
 
     const fetchGraphQLQuery = async () => {
       const chainIds = [1, 10, 42161, 8453];
-      const endpoint = 'https://bendystraw.xyz/schema';
+      const endpoint = "https://bendystraw.xyz/schema";
 
       const query = `
         query MyQuery($chainId: Float!, $projectId: Float!, $address: String!) {
@@ -198,18 +202,21 @@ export default function ClientTable() {
           )
         );
 
-        const parsed = balanceResults.reduce((acc, bal, index) => {
-          const raw = Number(formatUnits(bal.value, bal.decimals));
-          let formatted: string;
+        const parsed = balanceResults.reduce(
+          (acc, bal, index) => {
+            const raw = Number(formatUnits(bal.value, bal.decimals));
+            let formatted: string;
 
-          if (raw < 1000) {
-            formatted = raw.toFixed(2);
-          } else {
-            formatted = formatNumber(raw, true);
-          }
-          acc[contracts[index]] = formatted;
-          return acc;
-        }, {} as Record<string, string>);
+            if (raw < 1000) {
+              formatted = raw.toFixed(2);
+            } else {
+              formatted = formatNumber(raw, true);
+            }
+            acc[contracts[index]] = formatted;
+            return acc;
+          },
+          {} as Record<string, string>
+        );
 
         setBalances(parsed);
       } catch (err) {
@@ -222,195 +229,157 @@ export default function ClientTable() {
     }
   }, [address, isConnected, isSwitchingChain]);
 
+  return (
+    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+      <h3 className="text-xl">Projects</h3>
 
-  return(
-  <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] rounded-2xl">
-    <h3 className="text-xl">Projects</h3>
+      <div className="background-color rounded-xl p-[8px] font-light">
+        {projectVars.map((project, index) => (
+          <div key={index} className="border-b border-grey-500">
+            <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
+              <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
+                <Image
+                  src={project.logo}
+                  alt={project.name}
+                  height={32}
+                  width={32}
+                />
+                <h4 className="pl-2 text-lg">{project.name}</h4>
+              </div>
 
-    <div className="background-color p-[8px] rounded-xl font-light">
-      {projectVars.map((project, index) => (
-        <div key={index} className="border-b border-grey-500">
-          <div
-            className="md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto] flex justify-between items-center gap-4 py-2 items-center"
-          >
-            <div className="py-2 flex items-center gap-2 w-[170px] lg:w-[225px]">
-              <Image
-                src={project.logo}
-                alt={project.name}
-                height={32}
-                width={32}
-              />
-              <h4 className="text-lg pl-2">
-                {project.name}
-              </h4>
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">AMOUNT</span>
+                {Object.keys(balances).length === 0 ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>{balances[project.tokenAddress]}</span>
+                )}
+              </div>
+
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">vAMOUNT</span>
+                {Object.keys(balances).length === 0 ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {project.vestingContract
+                      ? balances[project.vestingContract]
+                      : "—"}
+                  </span>
+                )}
+              </div>
+
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">PRICE</span>0
+              </div>
+
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+              </div>
+
+              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-none">
+                <Link
+                  href={`/project/${project.href}`}
+                  className="flex items-center gap-2"
+                >
+                  Buy
+                  <ArrowRightIcon height="18" width="18" />
+                </Link>
+              </button>
             </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                AMOUNT
-              </span>
-              {Object.keys(balances).length === 0 ? (
-                <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
-              ) : (
-                <span>
-                  {balances[project.tokenAddress]}
-                </span>
-              )}
-            </div>
+            <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">AMOUNT</span>0
+              </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                vAMOUNT
-              </span>
-              {Object.keys(balances).length === 0 ? (
-                <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
-              ) : (
-                <span>
-                  {project.vestingContract ? balances[project.vestingContract] : "—"}
-                </span>
-              )}
-            </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">vAMOUNT</span>0
+              </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                PRICE
-              </span>
-              0
-            </div>
-
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                LIQUID VALUE
-              </span>
-              0
-            </div>
-
-            <button className="focus:outline-none py-[6px] px-[12px] rounded-full bg-gunmetal font-normal">
-              <Link href={`/project/${project.href}`} className="flex items-center gap-2">
-                Buy
-                <ArrowRightIcon height="18" width="18" />
-              </Link>
-            </button>
-          </div>
-
-          <div className="md:hidden grid grid-cols-[2fr_2fr_3fr] gap-4 items-center mb-3">
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                AMOUNT
-              </span>
-              0
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                vAMOUNT
-              </span>
-              0
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                LIQUID VALUE
-              </span>
-              0
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
+        {v4ProjectVars.map((project, index) => (
+          <div key={index} className="border-b border-grey-500">
+            <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
+              <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
+                <Image
+                  src={project.logo}
+                  alt={project.name}
+                  height={32}
+                  width={32}
+                />
+                <h4 className="pl-2 text-lg">{project.name}</h4>
+              </div>
 
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">AMOUNT</span>
+                {Object.keys(v4Balances).length === 0 ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {formatNumber(
+                      Number(
+                        formatUnits(v4Balances[project.projectID] as bigint, 18)
+                      )
+                    )}
+                  </span>
+                )}
+              </div>
 
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">vAMOUNT</span>
+                {Object.keys(balances).length === 0 ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {project.vestingContract
+                      ? balances[project.vestingContract]
+                      : "—"}
+                  </span>
+                )}
+              </div>
 
-      {v4ProjectVars.map((project, index) => (
-        <div key={index} className="border-b border-grey-500">
-          <div
-            className="md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto] flex justify-between items-center gap-4 py-2 items-center"
-          >
-            <div className="py-2 flex items-center gap-2 w-[170px] lg:w-[225px]">
-              <Image
-                src={project.logo}
-                alt={project.name}
-                height={32}
-                width={32}
-              />
-              <h4 className="text-lg pl-2">
-                {project.name}
-              </h4>
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">PRICE</span>0
+              </div>
+
+              <div className="hidden flex-col gap-1 md:flex">
+                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+              </div>
+
+              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-none">
+                <Link
+                  href={`/@${project.href}`}
+                  className="flex items-center gap-2"
+                >
+                  Buy
+                  <ArrowRightIcon height="18" width="18" />
+                </Link>
+              </button>
             </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                AMOUNT
-              </span>
-              {Object.keys(v4Balances).length === 0 ? (
-                <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
-              ) : (
-                <span>
-                  {formatNumber(Number(formatUnits(v4Balances[project.projectID] as bigint, 18)))}
-                </span>
-              )}
-            </div>
+            <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">AMOUNT</span>0
+              </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                vAMOUNT
-              </span>
-              {Object.keys(balances).length === 0 ? (
-                <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
-              ) : (
-                <span>
-                  {project.vestingContract ? balances[project.vestingContract] : "—"}
-                </span>
-              )}
-            </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">vAMOUNT</span>0
+              </div>
 
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                PRICE
-              </span>
-              0
-            </div>
-
-            <div className="md:flex flex-col gap-1 hidden">
-              <span className="text-grey-50 text-sm">
-                LIQUID VALUE
-              </span>
-              0
-            </div>
-
-            <button className="focus:outline-none py-[6px] px-[12px] rounded-full bg-gunmetal font-normal">
-              <Link href={`/@${project.href}`} className="flex items-center gap-2">
-                Buy
-                <ArrowRightIcon height="18" width="18" />
-              </Link>
-            </button>
-          </div>
-
-          <div className="md:hidden grid grid-cols-[2fr_2fr_3fr] gap-4 items-center mb-3">
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                AMOUNT
-              </span>
-              0
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                vAMOUNT
-              </span>
-              0
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <span className="text-grey-50 text-sm">
-                LIQUID VALUE
-              </span>
-              0
+              <div className="flex flex-col gap-1">
+                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
   );
 }

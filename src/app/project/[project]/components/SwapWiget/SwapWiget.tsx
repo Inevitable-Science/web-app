@@ -1,6 +1,12 @@
-"use client"
+"use client";
 
-import { CowSwapWidgetParams, CowSwapWidget, CowSwapWidgetPalette, EthereumProvider, TradeType } from "@cowprotocol/widget-react";
+import {
+  CowSwapWidgetParams,
+  CowSwapWidget,
+  CowSwapWidgetPalette,
+  EthereumProvider,
+  TradeType,
+} from "@cowprotocol/widget-react";
 //import { useAccount, useConnectorClient } from "wagmi";
 //import { useData } from "../../DataProvider";
 import { useEip1193Provider } from "@/hooks/useEip1193Provider";
@@ -11,7 +17,7 @@ interface TokenState {
 
 // DATA_TODO: Make this component work with the web3 provider, view https://widget.cow.fi/
 
-export function SwapWidget({ token } : TokenState) {
+export function SwapWidget({ token }: TokenState) {
   //const provider = window.ethereum;
   const provider = useEip1193Provider();
 
@@ -20,9 +26,7 @@ export function SwapWidget({ token } : TokenState) {
     width: "100%",
     height: "582px",
     chainId: 1,
-    tokenLists: [
-      "https://inev.profiler.bio/web3/tokenlist.schema.json"
-    ],
+    tokenLists: ["https://inev.profiler.bio/web3/tokenlist.schema.json"],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
     buy: { asset: token, amount: "0" },

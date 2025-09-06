@@ -9,7 +9,8 @@ import { wagmiConfig } from "@/lib/wagmiConfig";
 import { WagmiProvider } from "wagmi";
 
 const DynamicAppSpecificProviders = dynamic(
-  () => import("./AppSpecificProviders").then(mod => mod.AppSpecificProviders),
+  () =>
+    import("./AppSpecificProviders").then((mod) => mod.AppSpecificProviders),
   {
     ssr: false,
     loading: () => null,

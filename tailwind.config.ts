@@ -43,8 +43,8 @@ module.exports = {
         // Accent Colors
         "light-gold": "var(--light-gold)",
         "dark-slate-grey": "var(--dark-slate-grey)",
-        "gunmetal": "var(--gunmetal)",
-        "cerulean": "var(--cerulean)",
+        gunmetal: "var(--gunmetal)",
+        cerulean: "var(--cerulean)",
         "columbia-blue": "var(--columbia-blue)",
 
         // Tone Colors
@@ -78,7 +78,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "shimmer": "shimmer 2s infinite",
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

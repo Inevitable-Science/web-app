@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata"
+import { metadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -55,16 +55,14 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-
 export default function Page() {
-
   return (
     <div>
       {/*<div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
-      <div className="relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">
+      <div className="relative h-[500px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
         {/* Background Video */}
         <video
-          className="absolute inset-0 w-full h-full object-cover object-[calc(50%+80px)_center] sm:object-center"
+          className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
           autoPlay
           loop
           muted
@@ -74,67 +72,80 @@ export default function Page() {
           Your browser does not support the video tag.
         </video>
 
-        <div className="absolute sm:bottom-[25vh] bottom-[40px] w-full z-10 flex flex-col gap-38">
-          <div className="sm:w-[1600px] max-w-full mx-auto px-[24px] flex flex-col gap-4">
-            <h1 className="font-optima text-center text-6xl sm:text-left">DeSci is Inevitable.</h1>
-            <h4 className="font-extralight text-2xl text-center sm:text-3xl sm:text-left">We’re building the critical infrastructure to fund technological breakthroughs.</h4>
+        <div className="gap-38 absolute bottom-[40px] z-10 flex w-full flex-col sm:bottom-[25vh]">
+          <div className="mx-auto flex max-w-full flex-col gap-4 px-[24px] sm:w-[1600px]">
+            <h1 className="text-center font-optima text-6xl sm:text-left">
+              DeSci is Inevitable.
+            </h1>
+            <h4 className="text-center text-2xl font-extralight sm:text-left sm:text-3xl">
+              We’re building the critical infrastructure to fund technological
+              breakthroughs.
+            </h4>
 
             <ExploreButton />
           </div>
         </div>
       </div>
 
-
-      <div className="relative sm:top-[-10vh] top-0">
-        <div className="ctWrapper flex gap-4 flex-col md:flex-row md:gap-0 mb-16">
-          <div className="sm:min-w-[470px] flex flex-col gap-4">
-            <h3 className="text-5xl font-extralight">This Is Where The <span className="text-primary">Impossible</span> Begins.</h3>
+      <div className="relative top-0 sm:top-[-10vh]">
+        <div className="ctWrapper mb-16 flex flex-col gap-4 md:flex-row md:gap-0">
+          <div className="flex flex-col gap-4 sm:min-w-[470px]">
+            <h3 className="text-5xl font-extralight">
+              This Is Where The <span className="text-primary">Impossible</span>{" "}
+              Begins.
+            </h3>
             <a
               href="https://discord.com/invite/inevitable"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Join our discord server"
-              className="flex w-fit gap-3 items-center font-medium uppercase hover:underline transition-[gap] duration-150 hover:gap-5"
+              className="flex w-fit items-center gap-3 font-medium uppercase transition-[gap] duration-150 hover:gap-5 hover:underline"
             >
               Apply To Inevitable
               <ArrowRightIcon height={20} width={20} />
             </a>
           </div>
 
-          <div className="lg:text-xl md:text-sm font-light text-base">
-            Inevitable’s mission is to accelerate exponential technologies for the benefit of mankind. Such DAOs fund and implement heavily-vetted frontier research to deliver it to the user or patient in the shortest time possible. DAOs may employ revenue-generating mechanisms by selling IP, products, processes, machines, designs, or advice that demonstrably improve or enhance the human condition.
+          <div className="text-base font-light md:text-sm lg:text-xl">
+            Inevitable’s mission is to accelerate exponential technologies for
+            the benefit of mankind. Such DAOs fund and implement heavily-vetted
+            frontier research to deliver it to the user or patient in the
+            shortest time possible. DAOs may employ revenue-generating
+            mechanisms by selling IP, products, processes, machines, designs, or
+            advice that demonstrably improve or enhance the human condition.
           </div>
         </div>
 
-        <div className="md:max-w-[1600px] md:mx-auto md:px-[24px]">
+        <div className="md:mx-auto md:max-w-[1600px] md:px-[24px]">
           <AuctionComponent />
         </div>
 
-
         <div className="relative">
           <img
-            className="absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] overflow-hidden select-none sm-translate-up"
+            className="sm-translate-up absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] select-none overflow-hidden"
             src="/assets/img/fog_bg.webp"
             alt=""
           />
 
-          <div className="relative text-center my-16 sm:my-32">
-            <p className="font-optima text-primary text-xl uppercase mb-2">Discover DAO&rsquo;S</p>
-            <h3 className="text-4xl sm:text-6xl font-light">
-              Enter the Stack <br/>
+          <div className="relative my-16 text-center sm:my-32">
+            <p className="mb-2 font-optima text-xl uppercase text-primary">
+              Discover DAO&rsquo;S
+            </p>
+            <h3 className="text-4xl font-light sm:text-6xl">
+              Enter the Stack <br />
               Where <span className="text-primary"> Life Evolves.</span>
             </h3>
 
-            <div className="absolute top-0 w-full justify-between items-center overflow-hidden pointer-events-none sm:flex hidden">
+            <div className="pointer-events-none absolute top-0 hidden w-full items-center justify-between overflow-hidden sm:flex">
               <img
-                className="z-[-10] overflow-hidden select-none"
+                className="z-[-10] select-none overflow-hidden"
                 src="/assets/img/clouds/cloud_left.webp"
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
               <img
-                className="z-[-10] relative overflow-hidden select-none"
+                className="relative z-[-10] select-none overflow-hidden"
                 src="/assets/img/clouds/cloud_right.webp"
                 style={{ transform: "translateX(40%)" }}
                 alt=""
@@ -145,37 +156,44 @@ export default function Page() {
           <DaosGrid />
         </div>
 
-
-        <section className="
-          bg-[url('/assets/img/light_future.webp')] bg-cover bg-center h-[100vh] min-h-[500px] rounded-2xl mt-[40px] mb-[60px] flex sm:items-end items-center justify-center
-          [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]"
-        >
+        <section className="mb-[60px] mt-[40px] flex h-[100vh] min-h-[500px] items-center justify-center rounded-2xl bg-[url('/assets/img/light_future.webp')] bg-cover bg-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
           <div className="ctWrapper relative top-[15px] flex flex-col items-center">
-            <div className="text-center flex flex-col items-center gap-6">
-              <Image alt="Icon Logo" src="/assets/img/branding/icon.svg" height="70" width="35" />
+            <div className="flex flex-col items-center gap-6 text-center">
+              <Image
+                alt="Icon Logo"
+                src="/assets/img/branding/icon.svg"
+                height="70"
+                width="35"
+              />
 
               <div>
-                <p className="font-optima uppercase text-lg">It Is Inevitable</p>
-                <h2 className="sm:text-7xl text-4xl font-light">
-                  The Future Is Not Found. <br/>
+                <p className="font-optima text-lg uppercase">
+                  It Is Inevitable
+                </p>
+                <h2 className="text-4xl font-light sm:text-7xl">
+                  The Future Is Not Found. <br />
                   <span className="text-primary">It&rsquo;s Built.</span>
                 </h2>
               </div>
 
-              <Button variant={"accent"} className="rounded-full sm:w-fit w-full font-medium uppercase px-10">
-                <Link href="/vision">
-                  Our Vision
-                </Link>
+              <Button
+                variant={"accent"}
+                className="w-full rounded-full px-10 font-medium uppercase sm:w-fit"
+              >
+                <Link href="/vision">Our Vision</Link>
               </Button>
             </div>
 
-            <img className="h-[40vh] sm:block hidden relative top-[-10px] pointer-events-none" src="/assets/img/hero.webp" alt="Hero Image" />
-            </div>
+            <img
+              className="pointer-events-none relative top-[-10px] hidden h-[40vh] sm:block"
+              src="/assets/img/hero.webp"
+              alt="Hero Image"
+            />
+          </div>
         </section>
 
         <ArticleCarousel />
       </div>
-
 
       <style>{`
       @media (min-width: 640px) {

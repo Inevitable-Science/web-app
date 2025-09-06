@@ -64,27 +64,34 @@ export interface PayInputProps
 }
 
 const PayInput = React.forwardRef<HTMLInputElement, PayInputProps>(
-  ({ className, inputClassName, label, type, currency, withPayOnSelect, ...props }, ref) => {
+  (
+    {
+      className,
+      inputClassName,
+      label,
+      type,
+      currency,
+      withPayOnSelect,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         className={cn(
-          "flex flex-col h-30 px-2 py-4 w-full items-center justify-between shadow-sm",
+          "h-30 flex w-full flex-col items-center justify-between px-2 py-4 shadow-sm",
           className
         )}
       >
-        <div className="flex justify-between w-full gap-1">
-          <label className="text-lg">
-            {label}
-          </label>
-          {withPayOnSelect && (
-            <PayOnSelect />
-          )}
+        <div className="flex w-full justify-between gap-1">
+          <label className="text-lg">{label}</label>
+          {withPayOnSelect && <PayOnSelect />}
         </div>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <input
             type={type}
             className={cn(
-              "border-0 bg-transparent pl-0 pr-3 pt-1 pb-0 text-2xl w-full placeholder:text-zinc-400 sm:leading-6 focus:ring-transparent",
+              "w-full border-0 bg-transparent pb-0 pl-0 pr-3 pt-1 text-2xl placeholder:text-zinc-400 focus:ring-transparent sm:leading-6",
               inputClassName
             )}
             ref={ref}
@@ -93,11 +100,7 @@ const PayInput = React.forwardRef<HTMLInputElement, PayInputProps>(
           />
 
           {/*<span className="text-right select-none text-lg">{currency}</span>*/}
-          <ChainLogo
-            chainId={1}
-            width={24}
-            height={24}
-          />
+          <ChainLogo chainId={1} width={24} height={24} />
         </div>
       </div>
     );

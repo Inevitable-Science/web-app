@@ -14,15 +14,23 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
 
   const [initialized, setInitialized] = useState(false);
 
-  const [user, setUser] = useState<{ fid: number; pfp: string; userName: string } | null>(null);
+  const [user, setUser] = useState<{
+    fid: number;
+    pfp: string;
+    userName: string;
+  } | null>(null);
 
   useEffect(() => {
     if (user) return;
     const fetchUser = async () => {
       await sdk.actions.ready();
-      const ctx = await (await sdk.context);
+      const ctx = await await sdk.context;
       if (ctx && ctx.user && typeof ctx.user.fid === "number") {
-        setUser({ fid: ctx.user.fid, pfp: ctx.user.pfpUrl || "", userName: ctx.user.username || "" });
+        setUser({
+          fid: ctx.user.fid,
+          pfp: ctx.user.pfpUrl || "",
+          userName: ctx.user.username || "",
+        });
       }
     };
     fetchUser();
@@ -60,8 +68,8 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
       setProjectId(undefined);
       setChainId(undefined);
     } finally {
-    setInitialized(true);
-  }
+      setInitialized(true);
+    }
   }, [params.slug]);
 
   if (initialized && (notFound || !projectId || !chainId)) {

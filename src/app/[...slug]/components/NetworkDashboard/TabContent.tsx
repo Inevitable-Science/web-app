@@ -1,5 +1,5 @@
 // TabContent.tsx
-"use client"
+"use client";
 import { FC, useState, useEffect } from "react";
 import { ActivityFeed } from "../ActivityFeed";
 import { NetworkDetailsTable } from "../NetworkDetailsTable";
@@ -49,34 +49,23 @@ export const TabContent: FC<TabContentProps> = ({
 
   return (
     <div className="pb-10">
-
       {selectedTab === "about" && (
         <DescriptionSection setSelectedTab={setSelectedTab} />
       )}
-      {selectedTab === "tokens" && (
-        <HoldersSection />
-      )}
-      {selectedTab === "activity" && (
-        <ActivityFeed />
-      )}
-      {selectedTab === "cycles" && (
-        <NetworkDetailsTable />
-      )}
+      {selectedTab === "tokens" && <HoldersSection />}
+      {selectedTab === "activity" && <ActivityFeed />}
+      {selectedTab === "cycles" && <NetworkDetailsTable />}
 
-      {!analyticsError && analyticsData?.tokenData && analyticsData?.treasuryData && (
-        <>
-          {token?.data && (
-            <>
-              {selectedTab === "analytics" && (
-                <TokenSection />
-              )}
-            </>
-          )}
-          {selectedTab === "treasury" && (
-            <TreasurySection />
-          )}
-        </>
-      )}
+      {!analyticsError &&
+        analyticsData?.tokenData &&
+        analyticsData?.treasuryData && (
+          <>
+            {token?.data && (
+              <>{selectedTab === "analytics" && <TokenSection />}</>
+            )}
+            {selectedTab === "treasury" && <TreasurySection />}
+          </>
+        )}
     </div>
   );
 };

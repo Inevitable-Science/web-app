@@ -22,8 +22,12 @@ type SuckerPairWithRulesets = SuckerPair & {
   readonly rulesets: readonly RuleSet[];
 };
 
-export function useFetchProjectRulesets(suckers: SuckerPair[] | undefined | null) {
-  const [suckerPairsWithRulesets, setSuckerPairsWithRulesets] = useState<SuckerPairWithRulesets[] | undefined>(undefined);
+export function useFetchProjectRulesets(
+  suckers: SuckerPair[] | undefined | null
+) {
+  const [suckerPairsWithRulesets, setSuckerPairsWithRulesets] = useState<
+    SuckerPairWithRulesets[] | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<any | null>(null);
 
@@ -45,10 +49,13 @@ export function useFetchProjectRulesets(suckers: SuckerPair[] | undefined | null
       if (allRuleSets.length === 0) return undefined;
       const pairsWithRulesets = suckers.map((sucker, index) => ({
         ...sucker,
-        rulesets: allRuleSets[index].slice().reverse().map((ruleset) => ({
-          ...ruleset,
-          metadata: decodeRulesetMetadata(ruleset.metadata),
-        })),
+        rulesets: allRuleSets[index]
+          .slice()
+          .reverse()
+          .map((ruleset) => ({
+            ...ruleset,
+            metadata: decodeRulesetMetadata(ruleset.metadata),
+          })),
       }));
       setSuckerPairsWithRulesets(pairsWithRulesets);
     } catch (error) {

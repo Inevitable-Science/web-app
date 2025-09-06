@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "../ui/button";
 
 export default function ExploreButton() {
@@ -8,10 +8,10 @@ export default function ExploreButton() {
   };
 
   return (
-    <Button 
-      onClick={handleScroll} 
-      variant={"accent"} 
-      className="rounded-full px-6 mt-2 sm:w-fit w-full font-medium uppercase"
+    <Button
+      onClick={handleScroll}
+      variant={"accent"}
+      className="mt-2 w-full rounded-full px-6 font-medium uppercase sm:w-fit"
     >
       Explore Inevitable
     </Button>

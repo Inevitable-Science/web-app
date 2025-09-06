@@ -36,21 +36,22 @@ const ArticleCarousel: React.FC<PropType> = ({ options = DEFAULT_OPTIONS }) => {
     setTrendingSlides(slides);
   }, []);
 
-
   return (
-    <section className="w-full mx-auto">
-
+    <section className="mx-auto w-full">
       <div className="ctWrapper">
-        <DynamicArticleCarousel category="Trending Articles" slides={trendingSlides} />
+        <DynamicArticleCarousel
+          category="Trending Articles"
+          slides={trendingSlides}
+        />
       </div>
 
       <div
-        className="absolute z-[-10] max-w-screen hidden md:flex justify-center items-center overflow-hidden"
+        className="max-w-screen absolute z-[-10] hidden items-center justify-center overflow-hidden md:flex"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud - shifted slightly right */}
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bg_1.webp"
           style={{ transform: "translateX(-25%)" }}
           alt=""
@@ -58,13 +59,12 @@ const ArticleCarousel: React.FC<PropType> = ({ options = DEFAULT_OPTIONS }) => {
 
         {/* Right cloud - shifted slightly left */}
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bg_3.webp"
           style={{ transform: "translateX(25%)" }}
           alt=""
         />
       </div>
-
 
       <PartnersComponent />
     </section>

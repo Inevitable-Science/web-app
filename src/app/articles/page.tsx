@@ -3,7 +3,7 @@ import ArticlesClient from "./ArticlesClient";
 
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata"
+import { metadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -54,13 +54,11 @@ export default function Articles() {
   );
 
   // Get trending slides (latest 3 articles)
-  const trendingSlides = sortedArticles
-    .slice(0, 3)
-    .map((article: Article) => ({
-      img: article.image,
-      title: article.title,
-      description: article.overview,
-    }));
+  const trendingSlides = sortedArticles.slice(0, 3).map((article: Article) => ({
+    img: article.image,
+    title: article.title,
+    description: article.overview,
+  }));
 
   const uniqueCategories = Array.from(
     new Set(sortedArticles.flatMap((article) => article.category))

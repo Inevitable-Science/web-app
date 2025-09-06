@@ -4,9 +4,9 @@
 
 /* hide scroll wheel for numbers */
 @layer base {
-  input[type='number']::-webkit-outer-spin-button,
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number'] {
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"] {
     -webkit-appearance: none;
     margin: 0;
     -moz-appearance: textfield !important;
@@ -14,11 +14,11 @@
 }
 
 @layer components {
-    .container-border-x {
-      border-left: 1px solid theme('colors.zinc.400');
-      border-right: 1px solid theme('colors.zinc.400');
-      padding: 0 theme('spacing.7')
-    }
+  .container-border-x {
+    border-left: 1px solid theme("colors.zinc.400");
+    border-right: 1px solid theme("colors.zinc.400");
+    padding: 0 theme("spacing.7");
+  }
 }
 
 @layer base {
@@ -28,41 +28,41 @@
 }
 
 ::selection {
-  background: theme('colors.orange.200');
+  background: theme("colors.orange.200");
 }
 
 :root {
   --radius: 0.625rem;
   --background: #121212;
-  --foreground: #FFFFFF;
+  --foreground: #ffffff;
   --card: #121212;
-  --card-foreground: #FFFFFF;
+  --card-foreground: #ffffff;
   --popover: #121212;
-  --popover-foreground: #FFFFFF;
-  --primary: #FBE8BD;
+  --popover-foreground: #ffffff;
+  --primary: #fbe8bd;
   --primary-foreground: #000000;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: #B4B4B4;
+  --muted-foreground: #b4b4b4;
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-  --destructive: #BB4430;
+  --destructive: #bb4430;
   --border: #606060;
   --input: #121212;
   --ring: oklch(0.708 0 0);
 
   /* Accent Colors */
-  --light-gold: #FBE8BD;
+  --light-gold: #fbe8bd;
   --dark-slate-grey: #315659;
   --gunmetal: #253031;
-  --cerulean: #2978A0;
-  --columbia-blue: #C6E0FF;
+  --cerulean: #2978a0;
+  --columbia-blue: #c6e0ff;
 
   /* Tone Colors */
-  --grey-50: #B4B4B4;
-  --grey-100: #7B7B7B;
-  --grey-450: #1F1F1F;
+  --grey-50: #b4b4b4;
+  --grey-100: #7b7b7b;
+  --grey-450: #1f1f1f;
   --grey-500: #303030;
 }
 
@@ -73,28 +73,29 @@ body {
 }
 
 .ctWrapper {
-  @apply max-w-[1600px] mx-auto px-[24px];
+  @apply mx-auto max-w-[1600px] px-[24px];
 }
 
-.background-color{
+.background-color {
   @apply bg-[var(--background)];
 }
 
-.border-color{
+.border-color {
   @apply border-[var(--border)];
 }
 
-.text-color{
+.text-color {
   @apply text-foreground;
 }
 
-.activeSkeleton{
+.activeSkeleton {
   background: linear-gradient(
-    100deg,
-    rgba(152, 130, 130, 0) 40%,
-    var(--border) 50%,
-    rgba(106, 96, 96, 0) 60%
-  ) var(--grey-450);
+      100deg,
+      rgba(152, 130, 130, 0) 40%,
+      var(--border) 50%,
+      rgba(106, 96, 96, 0) 60%
+    )
+    var(--grey-450);
   background-size: 200% 100%;
   background-position-x: 180%;
   animation: 1s skeletonAnimation ease-in-out infinite;
@@ -108,23 +109,24 @@ body {
 
 /* Home and Nav Styles */
 
-.dGrid > div, .dGrid > a {
-  @apply bg-cover bg-center p-[20px] flex flex-col justify-between rounded-2xl;
+.dGrid > div,
+.dGrid > a {
+  @apply flex flex-col justify-between rounded-2xl bg-cover bg-center p-[20px];
 }
 
-@media (max-width:370px) {
+@media (max-width: 370px) {
   .logoNavSvg {
     display: none;
   }
 }
 
-@media (min-width:370px) {
+@media (min-width: 370px) {
   .iconNavSvg {
     display: none;
   }
 }
 
-@media (max-width:1000px) and (min-width:769px) {
+@media (max-width: 1000px) and (min-width: 769px) {
   .logoNavSvg {
     display: none !important;
   }

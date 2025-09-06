@@ -29,7 +29,10 @@ export function WithdrawActionButton({
   disabled?: boolean;
   selectedSucker?: SuckerPair | undefined;
 }) {
-  const { projectId, contracts: { primaryNativeTerminal } } = useJBContractContext();
+  const {
+    projectId,
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
@@ -51,7 +54,10 @@ export function WithdrawActionButton({
 
   useEffect(() => {
     if (isSuccess) {
-      toast({ title: "Withdraw Successful!", description: "Your ETH is on its way." });
+      toast({
+        title: "Withdraw Successful!",
+        description: "Your ETH is on its way.",
+      });
     }
     if (isWriteError || isTxError) {
       toast({
@@ -63,7 +69,14 @@ export function WithdrawActionButton({
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
 
   const handleWithdraw = () => {
-    if (!primaryNativeTerminal?.data || !address || !writeContract || !selectedSucker || !chainId) return;
+    if (
+      !primaryNativeTerminal?.data ||
+      !address ||
+      !writeContract ||
+      !selectedSucker ||
+      !chainId
+    )
+      return;
 
     writeContract({
       chainId: selectedSucker.peerChainId,
@@ -96,7 +109,7 @@ export function WithdrawActionButton({
       className={twMerge(
         "w-full rounded-full transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey",
         shimmerClasses,
-        "w-full rounded-full bg-cerulean",
+        "w-full rounded-full bg-cerulean"
       )}
     >
       {buttonContent}

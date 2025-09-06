@@ -34,14 +34,14 @@ export default function RootLayout({
         className={twMerge(
           geistSans.variable,
           optima.variable,
-          "font-sans min-h-screen tracking-[0.015em]"
+          "min-h-screen font-sans tracking-[0.015em]"
         )}
       >
-          <Providers>
-            <Nav />
-            <main className="min-h-screen">{children}</main>
-            <Footer />
-          </Providers>
+        <Providers>
+          <Nav />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </Providers>
 
         <Toaster />
       </body>

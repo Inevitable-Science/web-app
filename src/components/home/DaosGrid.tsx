@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 
@@ -44,32 +44,47 @@ const DaosGrid: React.FC = () => {
 
   return (
     <section className="sectionDaosGrid" id="projects-target">
-      <div className="dGrid-1 dGrid max-w-[1600px] mx-auto">
-        <Link href="/project/hydradao" className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center">
-          <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
+      <div className="dGrid-1 dGrid mx-auto max-w-[1600px]">
+        <Link
+          href="/project/hydradao"
+          className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center"
+        >
+          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+            LIVE
+          </h5>
           <div>
             <h4 className="font-optima text-2xl">HydraDAO</h4>
-            <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
+            <p className="text-sm">
+              Funding and incubating replacement research to extend human
+              lifespan.
+            </p>
           </div>
         </Link>
 
-        <Link href="/project/cryodao" className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center">
-          <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
+        <Link
+          href="/project/cryodao"
+          className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center"
+        >
+          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+            LIVE
+          </h5>
           <div>
             <h4 className="font-optima text-2xl">CryoDAO</h4>
-            <p className="text-sm">Advancing high-impact cryopreservation research.</p>
+            <p className="text-sm">
+              Advancing high-impact cryopreservation research.
+            </p>
           </div>
         </Link>
       </div>
 
       <div
         ref={cloudTopRef}
-        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud */}
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bg_1.webp"
           style={{ transform: "translateX(25%)" }}
           alt=""
@@ -77,7 +92,7 @@ const DaosGrid: React.FC = () => {
 
         {/* Center cloud */}
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bg_2.webp"
           style={{ transform: "translateX(10%)" }}
           alt=""
@@ -85,14 +100,14 @@ const DaosGrid: React.FC = () => {
 
         {/* Right cloud */}
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bg_3.webp"
           style={{ transform: "translateX(-25%)" }}
           alt=""
         />
       </div>
 
-      <div className="dGrid dGrid-mid flex items-center justify-center lg:gap-32 gap-16 max-w-[1600px] mx-auto">
+      <div className="dGrid dGrid-mid mx-auto flex max-w-[1600px] items-center justify-center gap-16 lg:gap-32">
         {/*<div className="div1-mid bg-[url('/assets/img/daos/moon.webp')] bg-cover bg-center">
           <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
           <div>
@@ -100,30 +115,45 @@ const DaosGrid: React.FC = () => {
             <p className="text-sm">Funding and incubating replacement research to extend human lifespan.</p>
           </div>
         </div>*/}
-        <Link href="/project/cryorat" className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center">
-          <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
+        <Link
+          href="/project/cryorat"
+          className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center"
+        >
+          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+            LIVE
+          </h5>
           <div>
             <h4 className="font-optima text-2xl">CryoRat</h4>
-            <p className="text-sm">High sub-zero preservation and revival of a rat.</p>
+            <p className="text-sm">
+              High sub-zero preservation and revival of a rat.
+            </p>
           </div>
         </Link>
 
-        <Link href="/project/erectusdao" className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center">
-          <h5 className="w-fit rounded-full text-sm bg-[#315659] px-[12px] py-[8px] font-semibold">LIVE</h5>
+        <Link
+          href="/project/erectusdao"
+          className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center"
+        >
+          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+            LIVE
+          </h5>
           <div>
             <h4 className="font-optima text-2xl">ErectusDAO</h4>
-            <p className="text-sm">Community owned collective funding and promoting male sexual health research.</p>
+            <p className="text-sm">
+              Community owned collective funding and promoting male sexual
+              health research.
+            </p>
           </div>
         </Link>
       </div>
 
       <div
         ref={cloudMidRef}
-        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bottom_right.webp"
           style={{ transform: "translateX(30%)" }}
           alt=""
@@ -154,11 +184,11 @@ const DaosGrid: React.FC = () => {
 
       <div
         ref={cloudBottomRef}
-        className="hiddenDaoCloud absolute z-[-10] max-w-screen flex justify-end items-center overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img
-          className="z-[-10] select-none w-screen"
+          className="z-[-10] w-screen select-none"
           src="/assets/img/clouds/cloud_bottom_center.webp"
           style={{ transform: "translateX(-5%)" }}
           alt=""

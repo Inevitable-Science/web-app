@@ -54,17 +54,19 @@ export function useExitFloorPrice() {
     nativeTokenSurplus &&
     exitFloorPriceUnit &&
     rulesetMetadata?.data
-      ? BigInt(getTokenCashOutQuoteEth(
-        parseUnits(exitFloorPriceUnit as `${number}`, token.data.decimals),
-        {
-          overflowWei: nativeTokenSurplus,
-          totalSupply: totalTokenSupply,
-          cashOutTaxRate: Number(
-            rulesetMetadata?.data?.cashOutTaxRate.value ?? 0n
-          ),
-          tokensReserved,
-        }
-      )) * 10n
+      ? BigInt(
+          getTokenCashOutQuoteEth(
+            parseUnits(exitFloorPriceUnit as `${number}`, token.data.decimals),
+            {
+              overflowWei: nativeTokenSurplus,
+              totalSupply: totalTokenSupply,
+              cashOutTaxRate: Number(
+                rulesetMetadata?.data?.cashOutTaxRate.value ?? 0n
+              ),
+              tokensReserved,
+            }
+          )
+        ) * 10n
       : null;
 
   return exitFloorPrice;

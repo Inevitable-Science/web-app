@@ -75,36 +75,29 @@ export const Nav: React.FC = () => {
   return (
     <>
       <nav
-        className={`
-          fixed top-0 w-full px-8 pt-6 pb-4 z-50 transition-all duration-300 flex items-center justify-between gap-6
-          ${isVisible ? "translate-y-0" : "-translate-y-full"}
-          ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"}
-        `}
+        className={`fixed top-0 z-50 flex w-full items-center justify-between gap-6 px-8 pb-4 pt-6 transition-all duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"} ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"} `}
       >
         <div className="flex items-center gap-6">
-          <Link
-            aria-label="Home"
-            href="/"
-          >
+          <Link aria-label="Home" href="/">
             <Image
               src="/assets/img/branding/icon.svg"
               width={26}
               height={26}
-              className="iconNavSvg select-none pointer-events-none [html.light_&]:brightness-0"
+              className="iconNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
               alt="Icon Image"
             />
             <Image
               src="/assets/img/branding/logo.svg"
               width={240}
               height={68}
-              className="logoNavSvg select-none pointer-events-none [html.light_&]:brightness-0"
+              className="logoNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
               alt="Logo Image"
             />
           </Link>
         </div>
 
         {/* Desktop Menu */}
-        <div className="items-center gap-12 uppercase font-extralight select-none navMinMD">
+        <div className="navMinMD select-none items-center gap-12 font-extralight uppercase">
           <Link
             className={`${pathname === "/" && "text-light-gold"} hover:underline`}
             href="/"
@@ -144,8 +137,14 @@ export const Nav: React.FC = () => {
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
               return (
-                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px] max-w-[125px] truncate overflow-hidden text-ellipsis">
-                  {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
+                <Button
+                  onClick={show}
+                  variant="accent"
+                  className="min-w-[90px] max-w-[125px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
+                >
+                  {isConnected
+                    ? (ensName ?? (address ? formatEthAddress(address) : ""))
+                    : "LOGIN"}
                 </Button>
               );
             }}
@@ -167,14 +166,9 @@ export const Nav: React.FC = () => {
       {/* Mobile Menu Overlay */}
       <div
         id="mobile-menu"
-        className={`
-          ctWrapper
-          fixed inset-0 bg-background bg-opacity-90 z-40 flex flex-col pt-[110px] transition-transform duration-500 ease-in-out
-          ${isMenuOpen ? "translate-y-0" : "translate-y-full"}
-          navMaxMD
-        `}
+        className={`ctWrapper fixed inset-0 z-40 flex flex-col bg-background bg-opacity-90 pt-[110px] transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "translate-y-full"} navMaxMD`}
       >
-        <div className="flex flex-col gap-2 uppercase font-extralight text-lg">
+        <div className="flex flex-col gap-2 text-lg font-extralight uppercase">
           <Link
             className={`${pathname === "/" && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/"
@@ -217,8 +211,14 @@ export const Nav: React.FC = () => {
           <ConnectKitButton.Custom>
             {({ isConnected, show, address, ensName }) => {
               return (
-                <Button onClick={show} variant="accent" className="px-4 text-center normal-case min-w-[90px] max-w-[125px] truncate overflow-hidden text-ellipsis">
-                  {isConnected ? (ensName ?? (address ? formatEthAddress(address) : "")) : "LOGIN"}
+                <Button
+                  onClick={show}
+                  variant="accent"
+                  className="min-w-[90px] max-w-[125px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
+                >
+                  {isConnected
+                    ? (ensName ?? (address ? formatEthAddress(address) : ""))
+                    : "LOGIN"}
                 </Button>
               );
             }}

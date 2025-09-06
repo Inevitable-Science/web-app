@@ -3,7 +3,7 @@ import ClientTable from "./ClientTable";
 
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata"
+import { metadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -50,73 +50,65 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Ecosystem() {
   return (
     <div className="relative">
-      <div className="absolute inset-0 bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover w-full bg-center z-[-1] top-[-140px]" />
+      <div className="absolute inset-0 top-[-140px] z-[-1] w-full bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover bg-center" />
 
       <section className="ctWrapper mt-[140px]">
-        <div className="flex gap-4 flex-col md:flex-row md:gap-12 mb-[52px]">
-          <div className="sm:min-w-[400px] flex flex-col gap-4">
+        <div className="mb-[52px] flex flex-col gap-4 md:flex-row md:gap-12">
+          <div className="flex flex-col gap-4 sm:min-w-[400px]">
             <h3 className="text-5xl font-extralight">
               The Inevitable
-              <span className="text-primary">
-                {" "}Ecosystem
-              </span>
+              <span className="text-primary"> Ecosystem</span>
             </h3>
           </div>
 
-          <div className="lg:text-xl text-md font-light">
-            Inevitable Protocol runs on a tokenized on-chain protocol coordinating a collection of token nodes whose core design is to automatically funnel real-world revenues back into the ecosystem, ensuring a recurring cash flow. The token nodes, or Revnets, autonomously operate their economic aspects without human interference.
+          <div className="text-md font-light lg:text-xl">
+            Inevitable Protocol runs on a tokenized on-chain protocol
+            coordinating a collection of token nodes whose core design is to
+            automatically funnel real-world revenues back into the ecosystem,
+            ensuring a recurring cash flow. The token nodes, or Revnets,
+            autonomously operate their economic aspects without human
+            interference.
           </div>
         </div>
 
-
         <div className="flex flex-col gap-[12px]">
-          <div className="lg:grid gap-3 lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))] flex flex-col items-center">
-            <div className="bg-grey-450 flex flex-col gap-[12px] p-[12px] w-full rounded-2xl uppercase">
-              <div className="background-color p-[16px] rounded-xl">
-                <h3 className="text-xl">
-                  0
-                </h3>
-                <p className="text-muted-foreground font-light">
+          <div className="flex flex-col items-center gap-3 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+            <div className="flex w-full flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px] uppercase">
+              <div className="background-color rounded-xl p-[16px]">
+                <h3 className="text-xl">0</h3>
+                <p className="font-light text-muted-foreground">
                   Token Marketcap
                 </p>
               </div>
 
-              <div className="background-color p-[16px] rounded-xl">
-                <h3 className="text-xl">
-                  0
-                </h3>
-                <p className="text-muted-foreground font-light">
+              <div className="background-color rounded-xl p-[16px]">
+                <h3 className="text-xl">0</h3>
+                <p className="font-light text-muted-foreground">
                   Total Project Funding
                 </p>
               </div>
 
-              <div className="background-color p-[16px] rounded-xl">
-                <h3 className="text-xl">
-                  0
-                </h3>
-                <p className="text-muted-foreground font-light">
+              <div className="background-color rounded-xl p-[16px]">
+                <h3 className="text-xl">0</h3>
+                <p className="font-light text-muted-foreground">
                   Ecosystem Token Holders
                 </p>
               </div>
 
-              <div className="background-color p-[16px] rounded-xl">
-                <h3 className="text-xl">
-                  0
-                </h3>
-                <p className="text-muted-foreground font-light">
+              <div className="background-color rounded-xl p-[16px]">
+                <h3 className="text-xl">0</h3>
+                <p className="font-light text-muted-foreground">
                   Community Size
                 </p>
               </div>
             </div>
 
-            <div className="bg-grey-450 flex flex-col justify-center h-full gap-[12px] p-[12px] w-full rounded-2xl">
+            <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
               <PlaceholderActivityGraph />
             </div>
           </div>
 
-
           <ClientTable />
-
         </div>
       </section>
     </div>

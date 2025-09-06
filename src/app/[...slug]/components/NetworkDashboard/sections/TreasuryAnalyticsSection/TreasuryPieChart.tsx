@@ -23,13 +23,7 @@ interface TreasuryPieChartProps {
 
 const MIN_PERCENT = 0.5;
 
-const segmentColors = [
-  "#315659",
-  "#C6E0FF",
-  "#2978A0",
-  "#253031",
-  "#FBE8BD",
-];
+const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
 
 interface PieChartData extends TreasuryToken {
   value: number;
@@ -55,7 +49,17 @@ interface ActiveShapeProps {
 
 const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+  } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius + 10) * cos;
@@ -83,7 +87,13 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={"var(--foreground)"}>
+      <text
+        x={cx}
+        y={cy}
+        dy={-8}
+        textAnchor="middle"
+        fill={"var(--foreground)"}
+      >
         {payload.contractAddress ? (
           <a
             href={`https://etherscan.io/token/${payload.contractAddress}`}
@@ -91,7 +101,9 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
             rel="noopener noreferrer"
             className="text-4xl hover:underline"
           >
-            <tspan x={cx} dy="0">{payload.metadata.symbol}</tspan>
+            <tspan x={cx} dy="0">
+              {payload.metadata.symbol}
+            </tspan>
           </a>
         ) : (
           <tspan x={cx} dy="0" className="text-4xl">
@@ -104,7 +116,9 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
         <tspan x={cx} dy="1.3em" className="text-sm">
           {formatNumber(payload.decodedBalance)} {payload.metadata.symbol}
         </tspan>
-        <tspan x={cx} dy="1.3em" className="text-sm">${formatNumber(payload.totalValue)}</tspan>
+        <tspan x={cx} dy="1.3em" className="text-sm">
+          ${formatNumber(payload.totalValue)}
+        </tspan>
       </text>
       <Sector
         cx={cx}
@@ -128,41 +142,45 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   );
 };
 
-const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => {
+const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({
+  filteredData,
+}) => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [radius, setRadius] = useState<{ innerRadius: number; outerRadius: number }>({
+  const [radius, setRadius] = useState<{
+    innerRadius: number;
+    outerRadius: number;
+  }>({
     innerRadius: 120,
     outerRadius: 150,
   });
-
 
   const totalValue = filteredData.reduce((sum, token) => {
     const value = token.totalValue || 0;
     return sum + (isNaN(value) ? 0 : value);
   }, 0);
 
-
-  const adjustedData: PieChartData[] = totalValue > 0
-    ? filteredData
-        .map((token) => ({
-          ...token,
-          value: token.totalValue || 0,
-        }))
-        .filter((token) => token.value > 0)
-        .sort((a, b) => b.value - a.value)
-        .map((token, index) => {
-          const percent = (token.value / totalValue) * 100;
-          return {
+  const adjustedData: PieChartData[] =
+    totalValue > 0
+      ? filteredData
+          .map((token) => ({
             ...token,
-            percent: isNaN(percent) ? "0.00" : percent.toFixed(2),
-            visualValue: isNaN(percent) || percent < MIN_PERCENT ? MIN_PERCENT : percent,
-            fill: segmentColors[index % segmentColors.length],
-          };
-        })
-    : [];
+            value: token.totalValue || 0,
+          }))
+          .filter((token) => token.value > 0)
+          .sort((a, b) => b.value - a.value)
+          .map((token, index) => {
+            const percent = (token.value / totalValue) * 100;
+            return {
+              ...token,
+              percent: isNaN(percent) ? "0.00" : percent.toFixed(2),
+              visualValue:
+                isNaN(percent) || percent < MIN_PERCENT ? MIN_PERCENT : percent,
+              fill: segmentColors[index % segmentColors.length],
+            };
+          })
+      : [];
 
-
-    useEffect(() => {
+  useEffect(() => {
     setActiveIndex(0);
   }, [filteredData]);
 
@@ -186,7 +204,6 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({ filteredData }) => 
       window.removeEventListener("resize", adjustRadius);
     };
   }, []);
-
 
   if (!adjustedData.length) {
     return (

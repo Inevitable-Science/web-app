@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata"
+import { metadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -46,10 +46,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function NotFound() {
   return (
-    <div className="text-white text-center h-screen flex items-center justify-center flex-col">
-      <div className="flex gap-2 items-center">
+    <div className="flex h-screen flex-col items-center justify-center text-center text-white">
+      <div className="flex items-center gap-2">
         <h1 className="text-5xl font-semibold">404</h1>
-        <div className="border-l border-color h-16 w-1" />
+        <div className="border-color h-16 w-1 border-l" />
         <p>Page Not Found</p>
       </div>
 

@@ -40,7 +40,17 @@ interface ActiveShapeProps {
 
 const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   const RADIAN = Math.PI / 180;
-  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
+  const {
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    startAngle,
+    endAngle,
+    fill,
+    payload,
+  } = props;
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
   const sx = cx + (outerRadius + 10) * cos;
@@ -53,7 +63,13 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
   return (
     <g>
-      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={"var(--foreground)"}>
+      <text
+        x={cx}
+        y={cy}
+        dy={-8}
+        textAnchor="middle"
+        fill={"var(--foreground)"}
+      >
         <tspan x={cx} dy="-0.5em" className="text-2xl">
           <EthereumAddress address={payload.address} short />
         </tspan>
@@ -98,7 +114,10 @@ export function ParticipantsPieChart({
   participants: (Participant & { chains: JBChainId[] })[];
 }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [radius, setRadius] = useState<{ innerRadius: number; outerRadius: number }>({
+  const [radius, setRadius] = useState<{
+    innerRadius: number;
+    outerRadius: number;
+  }>({
     innerRadius: 120,
     outerRadius: 150,
   });
@@ -113,7 +132,8 @@ export function ParticipantsPieChart({
       ?.map((participant, idx) => {
         const balance = new JBProjectToken(BigInt(participant?.balance));
         const percent = formatPortion(balance.value, totalSupply);
-        const visualValue = Number(percent) < MIN_PERCENT ? MIN_PERCENT : Number(percent);
+        const visualValue =
+          Number(percent) < MIN_PERCENT ? MIN_PERCENT : Number(percent);
 
         return {
           address: participant?.address,

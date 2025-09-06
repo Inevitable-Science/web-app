@@ -20,95 +20,104 @@ interface TreasuryPreview {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
 export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
-
   //if (isLoading) return <div>Loading...</div>;
   //if (error) return <div>Error: {error}</div>;
   //if (!data) return <div>No data available</div>;
 
   return (
-    <section className="flex flex-col gap-6 mt-6">
-      <div className="bg-grey-450 p-[12px] rounded-2xl">
-        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))] mb-2">
-          <div className="background-color p-[16px] rounded-2xl">
+    <section className="mt-6 flex flex-col gap-6">
+      <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="mb-2 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+          <div className="background-color rounded-2xl p-[16px]">
             {data ? (
-            <h4 className="text-xl mb-0.5 tracking-wider">
-              ${formatNumber(Number(data.treasuryHoldings))}
-            </h4>
+              <h4 className="mb-0.5 text-xl tracking-wider">
+                ${formatNumber(Number(data.treasuryHoldings))}
+              </h4>
             ) : (
-              <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+              <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
             )}
-            <p className="text-muted-foreground font-light uppercase">Treasury Holdings</p>
+            <p className="font-light uppercase text-muted-foreground">
+              Treasury Holdings
+            </p>
           </div>
-          <div className="background-color p-[16px] rounded-2xl">
+          <div className="background-color rounded-2xl p-[16px]">
             {data ? (
-            <h4 className="text-xl mb-0.5 tracking-wider">
-              ${formatNumber(Number(data.assetsUnderManagement))}
-            </h4>
+              <h4 className="mb-0.5 text-xl tracking-wider">
+                ${formatNumber(Number(data.assetsUnderManagement))}
+              </h4>
             ) : (
-              <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+              <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
             )}
-            <p className="text-muted-foreground font-light uppercase">Assets Under Management</p>
+            <p className="font-light uppercase text-muted-foreground">
+              Assets Under Management
+            </p>
           </div>
         </div>
 
         <Button
           onClick={() => setSelectedTab("activity")}
           variant="link"
-          className="h-6 pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+          className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Treasury Stats
           <ArrowRightIcon height="20" width="20" />
         </Button>
       </div>
 
-
-      <div className="bg-grey-450 p-[12px] rounded-2xl">
-        <div className="flex flex-col gap-2 mb-2">
-          <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-            <div className="background-color p-[16px] rounded-2xl">
+      <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="mb-2 flex flex-col gap-2">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+            <div className="background-color rounded-2xl p-[16px]">
               {data ? (
-              <h4 className="text-xl mb-0.5 tracking-wider">
-                ${formatNumber(Number(data.latestPrice))}
-              </h4>
+                <h4 className="mb-0.5 text-xl tracking-wider">
+                  ${formatNumber(Number(data.latestPrice))}
+                </h4>
               ) : (
-                <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+                <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="text-muted-foreground font-light uppercase">{data ? data.tokenName : ""} Price</p>
+              <p className="font-light uppercase text-muted-foreground">
+                {data ? data.tokenName : ""} Price
+              </p>
             </div>
-            <div className="background-color p-[16px] rounded-2xl">
+            <div className="background-color rounded-2xl p-[16px]">
               {data ? (
-              <h4 className="text-xl mb-0.5 tracking-wider">
-                {formatNumber(Number(data.totalSupply))}
-              </h4>
+                <h4 className="mb-0.5 text-xl tracking-wider">
+                  {formatNumber(Number(data.totalSupply))}
+                </h4>
               ) : (
-                <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+                <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="text-muted-foreground font-light uppercase">Total Supply</p>
+              <p className="font-light uppercase text-muted-foreground">
+                Total Supply
+              </p>
             </div>
           </div>
 
-          <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-            <div className="background-color p-[16px] rounded-2xl">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+            <div className="background-color rounded-2xl p-[16px]">
               {data ? (
-              <h4 className="text-xl mb-0.5 tracking-wider">
-                ${formatNumber(Number(data.latestMarketCap))}
-              </h4>
+                <h4 className="mb-0.5 text-xl tracking-wider">
+                  ${formatNumber(Number(data.latestMarketCap))}
+                </h4>
               ) : (
-                <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+                <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="text-muted-foreground font-light uppercase">Market Cap</p>
+              <p className="font-light uppercase text-muted-foreground">
+                Market Cap
+              </p>
             </div>
-            <div className="background-color p-[16px] rounded-2xl">
+            <div className="background-color rounded-2xl p-[16px]">
               {data ? (
-              <h4 className="text-xl mb-0.5 tracking-wider">
-                {formatNumber(Number(data.totalHolders))}
-              </h4>
+                <h4 className="mb-0.5 text-xl tracking-wider">
+                  {formatNumber(Number(data.totalHolders))}
+                </h4>
               ) : (
-                <div className="activeSkeleton h-[28px] w-[142px] mb-1 rounded"></div>
+                <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="text-muted-foreground font-light uppercase">Total Holders</p>
+              <p className="font-light uppercase text-muted-foreground">
+                Total Holders
+              </p>
             </div>
           </div>
         </div>
@@ -116,7 +125,7 @@ export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
         <Button
           onClick={() => setSelectedTab("analytics")}
           variant="link"
-          className="h-6 pl-2 flex items-center gap-1.5 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+          className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Analytics
           <ArrowRightIcon height="20" width="20" />

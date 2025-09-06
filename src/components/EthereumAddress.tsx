@@ -33,7 +33,7 @@ export function EthereumAddress({
   withEnsAvatar?: boolean;
   avatarProps?: { size?: "sm" | "md" };
   className?: string;
-  chain?: Chain
+  chain?: Chain;
 }) {
   const { data } = useEnsName(address, { enabled: withEnsName });
   const formattedAddress = short ? formatEthAddress(address) : address;
@@ -55,8 +55,8 @@ export function EthereumAddress({
           src={ensAvatarUrlForAddress(address)}
           alt={ensName ?? address}
           className={twMerge(
-            "inline-block mr-2 rounded-full",
-            avatarSize === "md" ? "w-9 h-9" : "w-6 h-6"
+            "mr-2 inline-block rounded-full",
+            avatarSize === "md" ? "h-9 w-9" : "h-6 w-6"
           )}
           width={avatarDimensions}
           height={avatarDimensions}

@@ -4,6 +4,8 @@ import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { useMutation } from "wagmi/query";
 
+// todo: archive + remove axios
+
 export type InfuraPinResponse = {
   Hash: string;
 };
@@ -58,7 +60,7 @@ export function IpfsImageUploader({
     <div className="mb-5">
       <label
         htmlFor="file_input"
-        className="inline-flex cursor-pointer h-9 rounded-lg items-center justify-center font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90 h-11 px-8 text-base bg-primary text-primary-foreground hover:bg-primary"
+        className="inline-flex h-11 h-9 cursor-pointer items-center justify-center rounded-lg bg-primary px-8 text-base font-medium text-primary-foreground ring-offset-white transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-900 dark:ring-offset-zinc-950 dark:hover:bg-zinc-50/90 dark:focus-visible:ring-zinc-300"
       >
         Upload File
       </label>
@@ -79,7 +81,7 @@ export function IpfsImageUploader({
         </div>
       )}
       {uploadFile.data && (
-        <div className="overflow-hidden mt-3 max-h-[200px]">
+        <div className="mt-3 max-h-[200px] overflow-hidden">
           <Image
             src={ipfsGatewayUrl(uploadFile.data.Hash)}
             className="rounded"

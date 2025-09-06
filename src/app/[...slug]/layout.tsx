@@ -22,7 +22,7 @@ function buildMetadata({
   imageUrl,
   url,
   imageWidth,
-  imageHeight
+  imageHeight,
 }: {
   title: string;
   description: string;
@@ -38,7 +38,14 @@ function buildMetadata({
       description,
       url,
       // images: [{ url: imageUrl, width: 1200, height: 800, alt: `${title} preview image` }],
-      images: [{ url: imageUrl, width: imageWidth, height: imageHeight, alt: `${title} preview image` }],
+      images: [
+        {
+          url: imageUrl,
+          width: imageWidth,
+          height: imageHeight,
+          alt: `${title} preview image`,
+        },
+      ],
       type: "website",
     },
     twitter: {
@@ -50,7 +57,9 @@ function buildMetadata({
   };
 }
 
-async function getProjectMetadata(slug: string): Promise<{ handle: string; logoUri?: string } | null> {
+async function getProjectMetadata(
+  slug: string
+): Promise<{ handle: string; logoUri?: string } | null> {
   try {
     if (process.env.NODE_ENV === "development") {
       console.log("Fetching project metadata for slug:", slug);
@@ -109,7 +118,11 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
 
     const variables = { projectId: Number(projectId) };
 
-    const data = await request<ProjectsQueryResult>(subgraphUrl, query, variables);
+    const data = await request<ProjectsQueryResult>(
+      subgraphUrl,
+      query,
+      variables
+    );
     if (!data.projects.length) {
       console.warn("No project found for projectId", projectId);
       return { handle: "project" };
@@ -138,7 +151,9 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
     }
 
     try {
-      const metadataRes = await fetch(`https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${ipfsHash}`);
+      const metadataRes = await fetch(
+        `https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${ipfsHash}`
+      );
       const metadata = await metadataRes.json();
       return {
         handle: metadata.name ?? "project",
@@ -156,11 +171,9 @@ async function getProjectMetadata(slug: string): Promise<{ handle: string; logoU
   }
 }
 
-export async function generateMetadata(
-  props: {
-    params: Promise<{ slug?: string[] }>;
-  }
-): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Promise<{ slug?: string[] }>;
+}): Promise<Metadata> {
   const params = await props.params;
   const headersList = await headers();
   const host = headersList.get("host");
@@ -168,19 +181,24 @@ export async function generateMetadata(
   const origin = `${proto}://${host}`;
   const slugPath = decodeURIComponent(params?.slug?.join("/") ?? "");
 
-  if (
-    !slugPath.includes(":") &&
-    slugPath != "@stasis"
-  ) {
+  if (!slugPath.includes(":") && slugPath != "@stasis") {
     const url = new URL(`/${slugPath}`, origin);
     const title = "Inevitable Protocol";
-    const description = "Begin your journey. Build the future of life—together.";
+    const description =
+      "Begin your journey. Build the future of life—together.";
     const imageUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
     const imageWidth = 1200;
     const imageHeight = 800;
 
-    return buildMetadata({ title, description, imageUrl, url: url.href, imageWidth, imageHeight });
+    return buildMetadata({
+      title,
+      description,
+      imageUrl,
+      url: url.href,
+      imageWidth,
+      imageHeight,
+    });
   }
 
   const fullPath = `/${slugPath}`;
@@ -190,17 +208,18 @@ export async function generateMetadata(
   const project = slugPath ? await getProjectMetadata(slugPath) : null;
   const projectName = project ? project.handle : "project";
 
-  let imgUrl = project?.logoUri || `${origin}/assets/img/branding/seo_banner.png`;
+  let imgUrl =
+    project?.logoUri || `${origin}/assets/img/branding/seo_banner.png`;
 
   let metadataTitle;
   let imageWidth = 1200;
   let imageHeight = 800;
-  if (projectName !== "project"){
+  if (projectName !== "project") {
     metadataTitle = `${projectName} | Inevitable Protocol`;
     imageWidth = 800;
     imageHeight = 800;
   } else {
-    metadataTitle = "Inevitable Protocol"
+    metadataTitle = "Inevitable Protocol";
   }
 
   return buildMetadata({
@@ -209,10 +228,14 @@ export async function generateMetadata(
     imageUrl: imgUrl,
     url: url.href,
     imageWidth,
-    imageHeight
+    imageHeight,
   });
 }
 
-export default function SlugLayout({ children }: { children: React.ReactNode }) {
+export default function SlugLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

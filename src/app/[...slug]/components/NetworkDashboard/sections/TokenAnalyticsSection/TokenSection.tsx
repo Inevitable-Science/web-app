@@ -3,11 +3,7 @@
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
 import { TokenResponse } from "@/lib/types/AnalyticTypes";
-import {
-  JBChainId,
-  useJBChainId,
-  useSuckers,
-} from "juice-sdk-react";
+import { JBChainId, useJBChainId, useSuckers } from "juice-sdk-react";
 import { JB_CHAINS } from "juice-sdk-core";
 
 import { Address } from "viem";
@@ -17,12 +13,14 @@ import TokenChart from "./TokenChart";
 import TokenStatsChart from "./TokenStatsChart";
 import { useNetworkData } from "../../NetworkDataContext";
 
-
 interface DescriptionSectionProps {
   data: TokenResponse | null;
 }
 
-function calculateRatio(value1: number | null | undefined, value2: number | null | undefined): string {
+function calculateRatio(
+  value1: number | null | undefined,
+  value2: number | null | undefined
+): string {
   // Handle null/undefined or zero inputs
   if (!value1 || !value2) {
     return "-- --";
@@ -43,11 +41,17 @@ function calculateRatio(value1: number | null | undefined, value2: number | null
   return `${rounded1} : ${rounded2}`;
 }
 
-function getValuationLabel(aum: number | null, marketCap: number | null): string {
+function getValuationLabel(
+  aum: number | null,
+  marketCap: number | null
+): string {
   if (
-    !aum || !marketCap ||
-    isNaN(aum) || isNaN(marketCap) ||
-    aum <= 0 || marketCap <= 0
+    !aum ||
+    !marketCap ||
+    isNaN(aum) ||
+    isNaN(marketCap) ||
+    aum <= 0 ||
+    marketCap <= 0
   ) {
     return "--";
   }
@@ -71,27 +75,32 @@ export function TokenSection() {
 
   return (
     <section>
-
-      <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
-        <TokenChart organisation="cryodao"/>
+      <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
+        <TokenChart organisation="cryodao" />
       </div>
 
       {data ? (
-        <div className="flex flex-col gap-4 w-full">
-          <div className="bg-grey-450 p-[12px] rounded-2xl">
-            <h3 className="text-xl pt-1 pb-3">AUM/MC Ratio</h3>
+        <div className="flex w-full flex-col gap-4">
+          <div className="rounded-2xl bg-grey-450 p-[12px]">
+            <h3 className="pb-3 pt-1 text-xl">AUM/MC Ratio</h3>
 
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {calculateRatio(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                  {calculateRatio(
+                    data.assetsUnderManagement,
+                    data.selectedToken.marketCap
+                  )}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
-                  {getValuationLabel(data.assetsUnderManagement, data.selectedToken.marketCap)}
+                <p className="font-light uppercase text-muted-foreground">
+                  {getValuationLabel(
+                    data.assetsUnderManagement,
+                    data.selectedToken.marketCap
+                  )}
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
-                <div className="flex gap-2 h-[24px] mb-[4px]">
+              <div className="background-color rounded-2xl p-[16px]">
+                <div className="mb-[4px] flex h-[24px] gap-2">
                   {suckers?.map((pair) => {
                     if (!pair) return null;
 
@@ -107,64 +116,65 @@ export function TokenSection() {
                     );
                   })}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">Networks</p>
+                <p className="font-light uppercase text-muted-foreground">
+                  Networks
+                </p>
               </div>
             </div>
           </div>
 
-
-
-          <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3 py-5">
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+          <div className="flex flex-col gap-3 rounded-2xl bg-grey-450 p-[12px] py-5">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.totalSupply)}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Total Supply
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
+              <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
                   ${formatNumber(data.selectedToken.marketCap)}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Market Cap
                 </p>
               </div>
             </div>
 
-            <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-              <div className="background-color p-[16px] rounded-xl">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+              <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
                   {formatNumber(data.selectedToken.averageBal)}
                 </h3>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Average Balance
                 </p>
               </div>
-              <div className="background-color p-[16px] rounded-2xl">
+              <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
                   {formatNumber(data.selectedToken.medianBal)}
                 </div>
-                <p className="text-muted-foreground font-light uppercase">
+                <p className="font-light uppercase text-muted-foreground">
                   Median Balance
                 </p>
               </div>
             </div>
           </div>
 
-
           {data.topHolders && (
-            <div className="bg-grey-450 p-[12px] rounded-2xl">
-              <div className="background-color p-[16px] rounded-xl mb-2">
-                <h3 className="text-xl">
-                  {data.selectedToken.totalHolders}
-                </h3>
-                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
+            <div className="rounded-2xl bg-grey-450 p-[12px]">
+              <div className="background-color mb-2 rounded-xl p-[16px]">
+                <h3 className="text-xl">{data.selectedToken.totalHolders}</h3>
+                <p className="font-light uppercase text-muted-foreground">
+                  Total Holders
+                </p>
               </div>
 
-              <h3 className="text-grey-50 uppercase text-sm py-1">Top Holders</h3>
+              <h3 className="py-1 text-sm uppercase text-grey-50">
+                Top Holders
+              </h3>
               <div>
                 {data.topHolders.slice(0, 5).map((holder, idx) => {
                   const { address, token_amount } = holder;
@@ -172,7 +182,7 @@ export function TokenSection() {
                   return (
                     <div
                       key={`${address}-${idx}`}
-                      className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
+                      className="flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light text-grey-50"
                     >
                       <span>{truncateAddress(address as Address)}</span>
                       <a
@@ -189,7 +199,6 @@ export function TokenSection() {
               </div>
             </div>
           )}
-
 
           {/*{data.tokenDistribution && (
             <div className="bg-grey-450 p-[12px] rounded-2xl">
@@ -220,21 +229,19 @@ export function TokenSection() {
             </div>
           )}*/}
 
-
-          <div className="bg-grey-450 rounded-2xl h-auto max-h-[550px] p-[12px] mb-4">
+          <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
             <TokenStatsChart organisation="cryodao" tokenName="cryo" />
           </div>
-
 
           {/*<pre>
             <code>{JSON.stringify(data, null, 2)}</code>
           </pre>*/}
         </div>
       ) : (
-        <div className="w-full flex justify-center my-[15vh]">
+        <div className="my-[15vh] flex w-full justify-center">
           <Loader2 className="animate-spin" size={32} />
         </div>
       )}
     </section>
-  )
+  );
 }

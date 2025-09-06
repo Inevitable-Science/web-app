@@ -21,9 +21,7 @@ export function Providers({
         metadata: { ipfsGatewayHostname: OPEN_IPFS_GATEWAY_HOSTNAME },
       }}
     >
-      <SelectedSuckerProvider>
-      {children}
-      </SelectedSuckerProvider>
+      <SelectedSuckerProvider>{children}</SelectedSuckerProvider>
     </JBProjectProvider>
   );
 }

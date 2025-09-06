@@ -3,7 +3,7 @@ import { TransactionCard } from "./TransactionCard";
 
 export function PayCard() {
   return (
-    <div className="flex flex-col rounded-xl w-full">
+    <div className="flex w-full flex-col rounded-xl">
       <SelectedSuckerProvider>
         <TransactionCard />
       </SelectedSuckerProvider>

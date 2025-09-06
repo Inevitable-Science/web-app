@@ -64,7 +64,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         title: `${projectData.name} | Inevitable Protocol`,
         description: projectData.description,
         siteName: "Inevitable Protocol",
-        images: [{ url: projectData.logo, width: 800, height: 800, alt: "preview image" }],
+        images: [
+          {
+            url: projectData.logo,
+            width: 800,
+            height: 800,
+            alt: "preview image",
+          },
+        ],
         url,
         type: "article",
       },
@@ -79,9 +86,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 }
 
-async function getProjectData(project: string): Promise<DaoResponse | null>{
-
-  const response = await fetch(`https://inev.profiler.bio/dao/${project}`)
+async function getProjectData(project: string): Promise<DaoResponse | null> {
+  const response = await fetch(`https://inev.profiler.bio/dao/${project}`);
   if (!response.ok) return null;
 
   const json = await response.json();
@@ -109,5 +115,4 @@ export default async function ProjectPage(props: Props) {
       <DaoPage />
     </DataProvider>
   );
-};
-
+}

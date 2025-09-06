@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useData } from "./DataProvider";
 
-
 export function useSwitchToCorrectChain() {
   const { analyticsData } = useData();
   const nativeTokenChainId = analyticsData?.tokenData?.selectedToken?.chain_id;
@@ -12,7 +11,13 @@ export function useSwitchToCorrectChain() {
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 
   useEffect(() => {
-    if (!nativeTokenChainId || !isConnected || !chainId ||  chainId === nativeTokenChainId) return;
+    if (
+      !nativeTokenChainId ||
+      !isConnected ||
+      !chainId ||
+      chainId === nativeTokenChainId
+    )
+      return;
 
     handleSwitchChain();
   }, [nativeTokenChainId]);
@@ -24,7 +29,7 @@ export function useSwitchToCorrectChain() {
     } catch (err) {
       console.error("Failed to switch chain", err);
     }
-  }
+  };
 
   return { handleSwitchChain, isSwitchingChain };
 }

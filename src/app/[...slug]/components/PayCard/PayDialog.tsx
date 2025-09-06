@@ -126,7 +126,7 @@ export function PayDialog({
           Pay
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg rounded background-color border-color text-color">
+      <DialogContent className="background-color border-color text-color max-w-lg rounded">
         <DialogHeader>
           <DialogDescription>
             <div>
@@ -134,7 +134,7 @@ export function PayDialog({
                 <div>Success! You can close this window.</div>
               ) : (
                 <>
-                  <div className="flex flex-col gap-6 text-color">
+                  <div className="text-color flex flex-col gap-6">
                     <Stat label="Pay">
                       <TokenAmount amount={amountA} />
                     </Stat>
@@ -151,9 +151,9 @@ export function PayDialog({
             </div>
           </DialogDescription>
           {!isSuccess ? (
-            <div className="flex flex-row justify-between items-end">
+            <div className="flex flex-row items-end justify-between">
               {suckers && suckers.length > 1 ? (
-                <div className="flex flex-col mt-4">
+                <div className="mt-4 flex flex-col">
                   <div className="text-sm">
                     {amountB.symbol} is available on:
                   </div>
@@ -190,11 +190,11 @@ export function PayDialog({
                 </div>
               ) : (
                 selectedSucker && (
-                  <div className="flex flex-col mt-4">
+                  <div className="mt-4 flex flex-col">
                     <div className="text-xs text-muted-foreground">
                       {amountB.symbol} is only on:
                     </div>
-                    <div className=" flex flex-row items-center gap-2 pl-3 min-w-fit pr-5 py-2 border rounded-md ring-offset-white">
+                    <div className="flex min-w-fit flex-row items-center gap-2 rounded-md border py-2 pl-3 pr-5 ring-offset-white">
                       <ChainLogo
                         chainId={selectedSucker.peerChainId as JBChainId}
                       />
@@ -209,7 +209,7 @@ export function PayDialog({
                 }
                 loading={loading}
                 onClick={handlePay}
-                className="bg-primary text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90"
+                className="hover:bg-primary/90 w-fit rounded-full bg-primary px-6 font-medium uppercase text-primary-foreground"
               >
                 Pay
               </ButtonWithWallet>

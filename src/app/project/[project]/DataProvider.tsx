@@ -1,12 +1,24 @@
 "use client";
 
-import { createContext, useContext, useMemo, ReactNode, useState, useEffect } from "react";
-import { TokenResponse, DaoResponse, TreasuryResponse, MarketChartResponse } from "@/lib/types/AnalyticTypes";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import {
+  TokenResponse,
+  DaoResponse,
+  TreasuryResponse,
+  MarketChartResponse,
+} from "@/lib/types/AnalyticTypes";
 import { Loader2 } from "lucide-react";
 
 const DataContext = createContext<DataContextType | null>(null);
 
-interface ContextProps{
+interface ContextProps {
   children: ReactNode;
   daoName: string;
   daoData: DaoResponse;
@@ -26,12 +38,13 @@ export interface DataContextType {
 }
 
 export function DataProvider({ children, daoName, daoData }: ContextProps) {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const tokenName = daoData.nativeToken.name;
@@ -68,7 +81,9 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
         let marketResult: MarketChartResponse | null = null;
         try {
           //const chartRes = await fetch(`https://inev.profiler.bio/chart/${tokenName}-7`);
-          const chartRes = await fetch(`http://localhost:3001/chart/${tokenName}-7`);
+          const chartRes = await fetch(
+            `http://localhost:3001/chart/${tokenName}-7`
+          );
           if (chartRes.ok) {
             marketResult = await chartRes.json();
           } else {
@@ -83,18 +98,18 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
           daoData: daoData,
           tokenData: tokenResult,
           treasuryData: treasuryResult,
-          marketData: marketResult
+          marketData: marketResult,
         });
-
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-
   }, [daoName]);
 
   const value = useMemo(() => {
@@ -103,19 +118,15 @@ export function DataProvider({ children, daoName, daoData }: ContextProps) {
       isLoading,
       error,
     };
-  }, [
-    analyticsData,
-    isLoading,
-    error,
-  ]);
+  }, [analyticsData, isLoading, error]);
 
   if (isLoading) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin h-12 w-12" />
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin" />
       </div>
     );
-  };
+  }
 
   return (
     <DataContext.Provider value={value as DataContextType}>

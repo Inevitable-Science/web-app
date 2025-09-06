@@ -1,6 +1,4 @@
-import {
-  JBChainId,
-} from "juice-sdk-react";
+import { JBChainId } from "juice-sdk-react";
 import { revLoansAddress } from "revnet-sdk";
 import { HasPermissionDocument } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";

@@ -34,13 +34,17 @@ export const ChainSelector = ({
       defaultValue={String(value)}
     >
       <SelectTrigger
-        className="w-fit h-fit border-none background-color rounded-full p-1.5 text-xs text-color"
+        className="background-color text-color h-fit w-fit rounded-full border-none p-1.5 text-xs"
         aria-label="Select Chain"
       >
         <SelectValue placeholder="Select chain">
           {value ? (
             <div className="mr-1">
-              <ChainLogo chainId={Number(value) as JBChainId} height={24} width={24} />
+              <ChainLogo
+                chainId={Number(value) as JBChainId}
+                height={24}
+                width={24}
+              />
               {/*<span>{JB_CHAINS[value].name}</span>*/}
             </div>
           ) : (
@@ -50,10 +54,7 @@ export const ChainSelector = ({
       </SelectTrigger>
       <SelectContent align="end">
         {chainOptions.map((chainId) => (
-          <SelectItem
-            key={chainId}
-            value={chainId.toString()}
-          >
+          <SelectItem key={chainId} value={chainId.toString()}>
             <div className="flex items-center gap-2 font-light">
               <ChainLogo chainId={chainId as JBChainId} />
               <span>{JB_CHAINS[chainId as JBChainId].name}</span>

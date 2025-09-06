@@ -32,7 +32,14 @@ export function NetworkDashboard() {
 }
 
 function DashboardContent() {
-  const { contracts, token, analyticsData, isAnalyticsLoading, analyticsError, metadata } = useNetworkData();
+  const {
+    contracts,
+    token,
+    analyticsData,
+    isAnalyticsLoading,
+    analyticsError,
+    metadata,
+  } = useNetworkData();
 
   // UI-specific state remains in this component.
   const [selectedTab, setSelectedTab] = useState("about");
@@ -43,9 +50,14 @@ function DashboardContent() {
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
     ...(analyticsData?.daoData === null && isAnalyticsLoading === false // Intended to prevent CLS
-      ? [] : [
-        ...(token.data && analyticsData?.tokenData ? [{ key: "analytics", label: "Analytics" }] : []),
-          ...(analyticsData?.treasuryData ? [{ key: "treasury", label: "Treasury" }] : []),
+      ? []
+      : [
+          ...(token.data && analyticsData?.tokenData
+            ? [{ key: "analytics", label: "Analytics" }]
+            : []),
+          ...(analyticsData?.treasuryData
+            ? [{ key: "treasury", label: "Treasury" }]
+            : []),
         ]),
   ];
 
@@ -55,30 +67,25 @@ function DashboardContent() {
 
   return (
     <>
-      <div className="w-full relative">
-        <div className="absolute inset-0 bg-[url('/assets/img/dao_landing.webp')] bg-cover w-full bg-center z-[-10]"></div>
+      <div className="relative w-full">
+        <div className="absolute inset-0 z-[-10] w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
-      <div className="ctWrapper flex gap-10 px-4 pb-5 md:flex-nowrap flex-wrap mb-10 sm:mb-24">
-        <aside className="hidden lg:block max-w-54">
-          <div className="flex flex-col gap-2 items-start mb-6 min-w-[110px]">
+      <div className="ctWrapper mb-10 flex flex-wrap gap-10 px-4 pb-5 sm:mb-24 md:flex-nowrap">
+        <aside className="max-w-54 hidden lg:block">
+          <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
+                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
                   selectedTab === tab.key
                     ? "bg-gunmetal"
                     : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
                 }`}
               >
                 {tab.label}
-                <span className={
-                  selectedTab === tab.key
-                    ? "block"
-                    : "hidden"
-                  }
-                >
+                <span className={selectedTab === tab.key ? "block" : "hidden"}>
                   <ArrowRightIcon height="18" width="18" />
                 </span>
               </button>
@@ -88,21 +95,21 @@ function DashboardContent() {
 
         {/* Column 1 */}
         <div className="flex-1">
-          <div className="md:hidden block">
-            <div className="mt-1 mb-4">
+          <div className="block md:hidden">
+            <div className="mb-4 mt-1">
               <PayCard />
             </div>
           </div>
 
-          <div className="max-w-4xl mx-auto">
+          <div className="mx-auto max-w-4xl">
             <section className="mb-10">
               <aside className="block lg:hidden">
-                <div className="flex flex-wrap mb-6 gap-2">
+                <div className="mb-6 flex flex-wrap gap-2">
                   {tabs.map((tab) => (
                     <button
                       key={tab.key}
                       onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px transition-colors duration-150 focus:outline-none py-[8px] px-[12px] rounded-full flex gap-2 items-center ${
+                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
                         selectedTab === tab.key
                           ? "bg-gunmetal"
                           : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -123,7 +130,7 @@ function DashboardContent() {
           </div>
         </div>
 
-        <div className="md:block hidden w-full md:w-[340px] lg:w-[400px]">
+        <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
           <div className="mb-4">
             <PayCard />
           </div>

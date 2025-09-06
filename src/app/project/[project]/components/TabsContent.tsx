@@ -1,5 +1,4 @@
-// TabContent.tsx
-"use client"
+"use client";
 import { FC } from "react";
 import { useData } from "../DataProvider";
 import { DescriptionSection } from "./sections/about/AboutSection";
@@ -35,29 +34,16 @@ export const TabContent: FC<TabContentProps> = ({
 
   return (
     <div className="pb-10">
+      {selectedTab === "about" && <DescriptionSection />}
 
-      {selectedTab === "about" && (
-        <DescriptionSection />
-      )}
-
-      {selectedTab === "activity" && (
-        <ActivityFeed />
-      )}
+      {selectedTab === "activity" && <ActivityFeed />}
 
       {analyticsData?.tokenData && (
-        <>
-          {selectedTab === "analytics" && (
-            <TokenSection />
-          )}
-        </>
+        <>{selectedTab === "analytics" && <TokenSection />}</>
       )}
 
       {analyticsData?.treasuryData && (
-        <>
-          {selectedTab === "treasury" && (
-            <TreasurySection />
-          )}
-        </>
+        <>{selectedTab === "treasury" && <TreasurySection />}</>
       )}
     </div>
   );
