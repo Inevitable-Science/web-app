@@ -49,10 +49,10 @@ export function useEnsureCorrectChain(enabled: boolean = true) {
 
   useEffect(() => {
     if (
-      !enabled || 
-      !nativeTokenChainId || 
-      !isConnected || 
-      !chainId ||  
+      !enabled ||
+      !nativeTokenChainId ||
+      !isConnected ||
+      !chainId ||
       chainId === nativeTokenChainId
     ) return;
 

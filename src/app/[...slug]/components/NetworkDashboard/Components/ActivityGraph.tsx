@@ -147,7 +147,7 @@ export default function ActivityGraph({
     view === "trendingScore" && highTrendingScore
       ? [defaultYDomain[0], Math.max(highTrendingScore, defaultYDomain[1]) * 1.05]
       : defaultYDomain;
-      
+
   const generateTicks = (range: [number, number], resolution: number) => {
     const [min, max] = range;
     if (min === max) return [min];
