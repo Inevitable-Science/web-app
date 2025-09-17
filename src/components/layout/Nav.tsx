@@ -75,7 +75,12 @@ export const Nav: React.FC = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 flex w-full items-center justify-between gap-6 px-8 pb-4 pt-6 transition-all duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"} ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"} `}
+        className={`
+          fixed top-0 z-50 flex w-full items-center justify-between
+          gap-6 px-8 pb-4 pt-6 transition-all duration-300 
+          ${isVisible ? "translate-y-0" : "-translate-y-full"}
+          ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"}
+          `}
       >
         <div className="flex items-center gap-6">
           <Link aria-label="Home" href="/">

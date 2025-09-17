@@ -13,10 +13,11 @@ const AuctionComponent: React.FC = () => {
 
   const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
   const query = `
-    query FetchVolume($chainId: Float!, $projectId: Float!) {
+    query FetchVolume($chainId: Float!, $projectId: Float!, $version: Float!) {
       project(
         chainId: $chainId,
-        projectId: $projectId
+        projectId: $projectId,
+        version: $version
       ) {
         volume
       }
@@ -31,7 +32,7 @@ const AuctionComponent: React.FC = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             query,
-            variables: { chainId: 1, projectId: 64 },
+            variables: { chainId: 1, projectId: 64, version: 4 },
           }),
         });
         if (!response.ok) throw new Error("Could not fetch project volume");

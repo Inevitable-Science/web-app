@@ -6,6 +6,8 @@ import { metadata } from "@/lib/metadata";
 import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
 
+// todo: make this fetch the data server side then pass to data provider + zod validation
+
 interface Props {
   params: Promise<{
     project: string;
