@@ -8,7 +8,6 @@ import {
   PayEvent,
   ProjectDocument,
 } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { formatTokenSymbol } from "@/lib/utils";
 import { formatDistance } from "date-fns";
 import { Ether, JB_CHAINS, JBProjectToken } from "juice-sdk-core";
@@ -17,6 +16,7 @@ import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useState, useEffect, useMemo } from "react";
 import { Address, formatEther } from "viem";

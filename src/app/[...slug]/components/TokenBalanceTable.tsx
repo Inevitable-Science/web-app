@@ -1,6 +1,6 @@
 import { JBChainId, JB_CHAINS } from "juice-sdk-core";
 import { useReadRevLoansBorrowableAmountFrom } from "revnet-sdk";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { useBendystrawQuery } from "juice-sdk-react";
 import { LoansByAccountDocument } from "@/generated/graphql";
 import { useEffect, useRef } from "react";
 import {
@@ -88,7 +88,7 @@ function TokenBalanceRow({
   );
 }
 
-export function TokenBalanceTable({
+export function TokenBalanceTable({ // review can i archive?
   balances,
   projectId,
   tokenSymbol,

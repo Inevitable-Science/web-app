@@ -4,9 +4,8 @@ import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StaticVolumeChart from "../../Components/ActivityGraph";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument } from "@/generated/graphql";
-import { useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { useJBChainId, useJBContractContext, useBendystrawQuery } from "juice-sdk-react";
 
 interface ChartSection {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;

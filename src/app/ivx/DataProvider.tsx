@@ -15,6 +15,7 @@ import {
   useJBChainId,
   useJBProjectMetadataContext,
   useJBTokenContext,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
 import {
@@ -24,7 +25,6 @@ import {
   JBProjectMetadata,
 } from "juice-sdk-core";
 import { JBContractContextData } from "juice-sdk-react";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";

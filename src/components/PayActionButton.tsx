@@ -315,7 +315,7 @@ const primaryButtonClasses =
  * A self-contained button that handles wallet connection, chain switching,
  * and then opens a Radix UI confirmation dialog before the transaction.
  */
-export function PayActionButton({
+export function PayActionButton({ // TODO Move this into [...slug] route, idk why its here
   amountA,
   amountB,
   paymentToken,

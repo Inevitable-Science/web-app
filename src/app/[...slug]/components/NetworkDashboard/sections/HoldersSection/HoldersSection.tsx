@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { ParticipantsDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
 import { ParticipantsTable } from "./ParticipantsTable";
@@ -11,6 +10,7 @@ import { useNetworkData } from "../../NetworkDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
+  useBendystrawQuery
 } from "juice-sdk-react";
 import {
   JBProjectToken,

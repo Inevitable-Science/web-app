@@ -11,7 +11,7 @@ import {
 import {
   useJBChainId,
   useJBContractContext,
-  //useWriteJbMultiTerminalPay,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -31,7 +31,6 @@ import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
 import { useIVXContext } from "../../DataProvider";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 
 const shimmerClasses = `
     relative overflow-hidden 

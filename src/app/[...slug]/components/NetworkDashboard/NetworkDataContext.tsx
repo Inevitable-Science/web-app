@@ -22,8 +22,7 @@ import {
   JBRulesetMetadata,
   JBProjectMetadata,
 } from "juice-sdk-core";
-import { JBContractContextData } from "juice-sdk-react";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { JBContractContextData, useBendystrawQuery } from "juice-sdk-react";
 import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";
