@@ -14,7 +14,6 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
-  useReadJbRulesetsAllOf,
   useJBTokenContext,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
@@ -96,9 +95,9 @@ export const IvxPageDataProvider = ({
   // Foundational Hooks
   const { address } = useAccount();
   const { token } = useJBTokenContext();
-  const { projectId, contracts: jbContracts } = useJBContractContext();
-  const chainId = useJBChainId();
+  const { projectId, contracts: jbContracts, version } = useJBContractContext();
   const { metadata } = useJBProjectMetadataContext();
+  const chainId = useJBChainId();
   const payoutWallet = useBoostRecipient();
   const selectedSucker = useSelectedSucker();
 
@@ -120,7 +119,8 @@ export const IvxPageDataProvider = ({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      skip: !chainId || !projectId,
+      version: version,
+      skip: !chainId || !projectId || !version,
     }
   );
 
@@ -201,13 +201,6 @@ export const IvxPageDataProvider = ({
       !value.rulesetMetadata ||
       !value.project)
   ) {
-    console.log("Not Found");
-    console.log(
-      value.suckers, 1,
-      value.ruleset, 2,
-      value.rulesetMetadata, 3,
-      value.project, 4
-    )
     notFound();
   }
 

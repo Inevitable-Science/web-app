@@ -3,32 +3,23 @@ import { ParticipantsDocument } from "@/generated/graphql";
 import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
-import { useState } from "react";
-import { twJoin } from "tailwind-merge";
 import { ParticipantsTable } from "./ParticipantsTable";
 import { Address, formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
 import { useNetworkData } from "../../NetworkDataContext";
 import {
-  JBChainId,
-  useReadJbControllerPendingReservedTokenBalanceOf,
   useSuckersUserTokenBalance,
-  jbControllerAbi,
   useJBContractContext,
-  useReadJbSplitsSplitsOf,
 } from "juice-sdk-react";
 import {
-  jbProjectDeploymentAddresses,
   JBProjectToken,
   JBRulesetData,
   JBRulesetMetadata,
+  jbControllerAbi,
 } from "juice-sdk-core";
-import { useWatchAsset } from "wagmi";
+import { useReadContract, useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useSelectedSucker } from "../../../PayCard/SelectedSuckerContext";
-import { useFetchProjectRulesets } from "@/hooks/useFetchProjectRulesets";
-import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
 
 type TableView = "you" | "all" | "splits";
 
@@ -40,17 +31,13 @@ export function HoldersSection() {
     ruleset,
     rulesetMetadata,
     chainId,
-    selectedSucker,
-    suckers,
   } = useNetworkData();
-  const { projectId } = useJBContractContext();
+  const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
     ruleset: ruleset as JBRulesetData,
     metadata: rulesetMetadata as JBRulesetMetadata,
     projectId: project.projectId,
   });
-
-  const [participantsView, setParticipantsView] = useState<TableView>("all");
 
   const totalOutstandingTokens = useTotalOutstandingTokens();
 
@@ -117,16 +104,13 @@ export function HoldersSection() {
     });
   };
 
-  const { data: pendingReserveTokenBalance } =
-    useReadJbControllerPendingReservedTokenBalanceOf({
-      chainId: selectedSucker?.peerChainId,
-      address: selectedSucker?.peerChainId
-        ? (jbProjectDeploymentAddresses.JBController[
-            selectedSucker.peerChainId as JBChainId
-          ] as Address)
-        : undefined,
-      args: ruleset && selectedSucker ? [projectId] : undefined,
-    });
+  const { data: pendingReserveTokenBalance } = useReadContract({
+    abi: jbControllerAbi,
+    functionName: "pendingReservedTokenBalanceOf",
+    address: contracts.controller.data ?? undefined,
+    chainId,
+    args: [projectId],
+  });
 
   return (
     <section>

@@ -1,22 +1,20 @@
 "use client"
 import { decodeRulesetMetadata } from "@/lib/utils";
 import { useIVXContext } from "../../DataProvider";
-import { useNativeTokenSurplus } from "juice-sdk-react";
+import { useJBContractContext, useNativeTokenSurplus } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
 
 export default function RuleTable() {
   const { analyticsData, ruleset: currentRuleset, project } = useIVXContext();
+  const { projectId } = useJBContractContext();
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
   
   const [nextStageIdx, setNextStageIdx] = useState<number | null>(null);
-  const [showRules, setShowRules] = useState<boolean>(true);
   
-  const { data: nativeTokenSurplus } = useNativeTokenSurplus();
-
   const { allRulesets, isLoadingAllRulesets } = useRulesetData({
-    projectId: 64, // todo fix
+    projectId: Number(projectId),
   });
 
   const sortedRulesets = useMemo(() => {
@@ -75,13 +73,13 @@ export default function RuleTable() {
   const { cyclesData, tokenData, otherRulesData } = useRulesetData({
     ruleset: displayedRuleset,
     metadata: decodedCurrentMetadata as JBRulesetMetadata | undefined,
-    projectId: 64, // todo fix
+    projectId: Number(projectId),
   });
 
   const { cyclesData: secondCycleData, tokenData: secondTokenData, otherRulesData: secondRulesData } = useRulesetData({
     ruleset: displayedRulesetSecond,
     metadata: decodedCurrentMetadata as JBRulesetMetadata | undefined,
-    projectId: 64, // todo fix
+    projectId: Number(projectId),
   });
 
   const formatLabel = (key: string) => {

@@ -13,7 +13,7 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
-  useReadJbRulesetsAllOf,
+  //useReadJbRulesetsAllOf,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
 import {
@@ -89,7 +89,7 @@ export const NetworkDataProvider = ({
 }) => {
   // Foundational Hooks
   const { address } = useAccount();
-  const { projectId, contracts: jbContracts } = useJBContractContext();
+  const { projectId, version, contracts: jbContracts } = useJBContractContext();
   const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
   const payoutWallet = useBoostRecipient();
@@ -108,7 +108,8 @@ export const NetworkDataProvider = ({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      skip: !chainId || !projectId,
+      version: Number(version),
+      skip: !chainId || !projectId || !version,
     }
   );
 

@@ -2,14 +2,13 @@
 
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
-import { DEFAULT_METADATA, NATIVE_TOKEN, SuckerPair } from "juice-sdk-core";
+import { DEFAULT_METADATA, jbMultiTerminalAbi, NATIVE_TOKEN, SuckerPair } from "juice-sdk-core";
 import {
   JBChainId,
   useJBContractContext,
-  useWriteJbMultiTerminalCashOutTokensOf,
 } from "juice-sdk-react";
 import { useEffect, useMemo } from "react";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
@@ -36,13 +35,20 @@ export function WithdrawActionButton({
   const { address, chainId } = useAccount();
   const { toast } = useToast();
 
-  const {
+  /*const {
     data: txHash,
     isPending: isWriteLoading,
     isError: isWriteError,
     error: writeError,
     writeContract,
-  } = useWriteJbMultiTerminalCashOutTokensOf();
+  } = useWriteJbMultiTerminalCashOutTokensOf();*/
+  const { 
+    data: txHash, 
+    isPending: isWriteLoading, 
+    isError: isWriteError, 
+    error: writeError,
+    writeContractAsync
+  } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
@@ -68,17 +74,35 @@ export function WithdrawActionButton({
     }
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
 
-  const handleWithdraw = () => {
+  const  handleWithdraw = async () => {
     if (
       !primaryNativeTerminal?.data ||
       !address ||
-      !writeContract ||
+      !writeContractAsync ||
       !selectedSucker ||
       !chainId
     )
       return;
+        
 
-    writeContract({
+    const args = [
+      address, // holder
+      selectedSucker.projectId, // project id (use the correct project ID for the selected chain)
+      amountToWithdraw, // token to reclaim (what you want to receive)
+      NATIVE_TOKEN,
+      0n, // min tokens reclaimed
+      address, // beneficiary
+      DEFAULT_METADATA, // metadata
+    ] as const;
+
+    await writeContractAsync?.({ // TODO:REVIEW
+      abi: jbMultiTerminalAbi,
+      functionName: "cashOutTokensOf",
+      chainId: selectedSucker?.peerChainId as JBChainId,
+      address: primaryNativeTerminal.data as `0x${string}`,
+      args,
+    }); // TODO_REVIEW
+    /*writeContract({ // old code archive
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
       args: [
@@ -90,7 +114,7 @@ export function WithdrawActionButton({
         address, // beneficiary
         DEFAULT_METADATA,
       ],
-    });
+    });*/
   };
 
   const buttonContent = useMemo(() => {

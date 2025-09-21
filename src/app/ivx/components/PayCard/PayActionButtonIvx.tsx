@@ -1,8 +1,17 @@
 import { useToast } from "@/components/ui/use-toast";
-import { JB_CHAINS, NATIVE_TOKEN, TokenAmountType } from "juice-sdk-core";
+//import { JB_CHAINS, NATIVE_TOKEN, TokenAmountType, SuckerPair } from "juice-sdk-core";
 import {
+  JB_CHAINS,
+  JBChainId,
+  jbMultiTerminalAbi,
+  SuckerPair,
+  NATIVE_TOKEN,
+  TokenAmountType,
+} from "juice-sdk-core";
+import {
+  useJBChainId,
   useJBContractContext,
-  useWriteJbMultiTerminalPay,
+  //useWriteJbMultiTerminalPay,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -10,18 +19,19 @@ import {
   useChainId,
   useSwitchChain,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { SuckerPair } from "juice-sdk-core";
-import { JBChainId } from "juice-sdk-react";
 import { Check, Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { useIVXContext } from "../../DataProvider";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
+import { useIVXContext } from "../../DataProvider";
+import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
+import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 
 const shimmerClasses = `
     relative overflow-hidden 
@@ -34,6 +44,8 @@ const shimmerClasses = `
 const primaryButtonClasses =
   "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
 
+// TODO_REVIEW
+
 /**
  * A self-contained button that handles wallet connection, chain switching,
  * and then opens a Radix UI confirmation dialog before the transaction.
@@ -41,6 +53,7 @@ const primaryButtonClasses =
 export function PayActionButton({
   amountA,
   amountB,
+  paymentToken,
   walletBalance,
   memo,
   disabled,
@@ -48,6 +61,7 @@ export function PayActionButton({
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
+  paymentToken: `0x${string}`;
   walletBalance: number | string;
   memo: string | undefined;
   disabled?: boolean;
@@ -57,6 +71,8 @@ export function PayActionButton({
   const {
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
+  const chainId = useJBChainId();
   const { address, isConnected } = useAccount();
   const { toast } = useToast();
   const { metadata } = useIVXContext();
@@ -69,13 +85,13 @@ export function PayActionButton({
   // *** THIS IS THE CORRECTED SECTION ***
   // Restored the destructuring to include `writeContract` and `isWriteError`
   //
-  const {
+   const {
     data: txHash,
     isPending: isWriteLoading,
     isError: isWriteError,
     error: writeError,
-    writeContract,
-  } = useWriteJbMultiTerminalPay();
+    writeContract
+   } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
@@ -114,17 +130,61 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError, isWriteError, writeError, toast, amountA]); */
 
-  // This now works correctly because `writeContract` is defined
+  const { data: projectData } = useBendystrawQuery(
+    ProjectDocument,
+    {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
+      version: 4 // TODO dynamic version
+    },
+    {
+      enabled: !!chainId && !!projectId,
+    },
+  );
+  const suckerGroupId = projectData?.project?.suckerGroupId;
+
+  // Get all projects in the sucker group with their token data
+  const { data: suckerGroupData } = useBendystrawQuery(
+    SuckerGroupDocument,
+    { id: suckerGroupId ?? "" },
+    { enabled: !!suckerGroupId },
+  );
+
+
+  const getTokenForChain = (targetChainId: number) => {
+    if (!suckerGroupData?.suckerGroup?.projects?.items) {
+      return paymentToken; // fallback to original paymentToken
+    }
+
+    const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
+      (project) => project.chainId === targetChainId,
+    );
+
+    if (projectForChain?.token) {
+      return projectForChain.token as `0x${string}`;
+    }
+
+    return paymentToken; // fallback to original paymentToken
+  };
+
+
+
   const handlePay = () => {
+    const value = amountA.amount.value;
+    
     if (
       !primaryNativeTerminal?.data ||
       !address ||
       !selectedSucker ||
+      !value ||
       !writeContract
     )
       return;
-    const value = amountA.amount.value;
-    writeContract({
+
+    const chainToken = getTokenForChain(selectedSucker.peerChainId);
+    const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
+    
+    /*writeContract({
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
       args: [
@@ -137,6 +197,14 @@ export function PayActionButton({
         "0x0",
       ],
       value,
+    });*/
+    writeContract?.({ // TODO:REVIEW
+      abi: jbMultiTerminalAbi,
+      functionName: "pay",
+      chainId: selectedSucker.peerChainId,
+      address: primaryNativeTerminal.data as `0x${string}`,
+      args: [selectedSucker.projectId, chainToken, value, address, 0n, memo || "", "0x0"],
+      value: isNative ? value : 0n,
     });
   };
 
@@ -263,4 +331,4 @@ export function PayActionButton({
       </Dialog.Portal>
     </Dialog.Root>
   );
-}
+};

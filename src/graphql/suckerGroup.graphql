@@ -3,5 +3,15 @@ query SuckerGroup($id: String!) {
     id
     tokenSupply
     volume
+    projects {
+      items {
+        chainId
+        projectId
+        token
+        currency
+        decimals
+        version
+      }
+    }
   }
 }

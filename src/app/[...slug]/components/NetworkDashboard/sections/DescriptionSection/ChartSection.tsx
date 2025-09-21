@@ -14,12 +14,13 @@ interface ChartSection {
 
 export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
   const chainId = useJBChainId();
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
-    skip: !chainId || !projectId,
+    version: Number(version),
+    skip: !chainId || !projectId || !version,
   });
   const suckerGroupId = project?.project?.suckerGroupId;
 

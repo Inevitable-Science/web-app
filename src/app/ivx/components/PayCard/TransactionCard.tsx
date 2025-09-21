@@ -14,11 +14,12 @@ import {
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
+import { getTokenAToBQuote, getTokenBtoAQuote, NATIVE_TOKEN } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import { PayActionButton } from "./PayActionButtonIvx";
+import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { WithdrawCard } from "./WithdrawCard";
 import { ChainSelector } from "@/components/ChainSelector";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
@@ -33,6 +34,7 @@ export function TransactionCard() {
 
   const tokenA = useTokenA();
   const { address } = useAccount(); // Get user's wallet and chain
+  const { data: accountingContext } = useProjectAccountingContext();
   const activeChain = useJBChainId();
   const { switchChain } = useSwitchChain();
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
@@ -268,6 +270,9 @@ export function TransactionCard() {
             <PayActionButton
               amountA={preparedAmountA}
               amountB={preparedAmountB}
+              paymentToken={
+                (accountingContext?.project?.token as `0x${string}`) || NATIVE_TOKEN.toLowerCase()
+              }
               walletBalance={
                 walletBalance
                   ? parseFloat(
@@ -284,20 +289,6 @@ export function TransactionCard() {
           <WithdrawCard selectedSucker={selectedSucker} />
         )}
       </div>
-
-      {/* <div className="background-color flex flex-col gap-[2px] p-[16px] rounded-xl">
-        <p className="text-sm font-light">
-          {formattedTokenIssuance}
-        </p>
-        <p className="text-xs text-muted-foreground font-light">
-          Total token supply: {new FixedInt(tokenB.totalSupply, tokenB.decimals).format(2)}
-        </p>
-        {ruleset.payoutRedemptionRate && (
-          <p className="text-xs text-muted-foreground font-light">
-            Redemption rate: {ruleset.payoutRedemptionRate.format()}%
-          </p>
-        )}
-      </div> */}
     </div>
   );
 }

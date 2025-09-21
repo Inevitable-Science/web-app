@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { SuckerPair } from "juice-sdk-core";
-import { JBChainId, jbRulesetsAbi, jbRulesetsAddress } from "juice-sdk-react";
-import { readContract } from "@wagmi/core";
 import { MAX_RULESET_COUNT } from "@/app/constants";
-import { wagmiConfig } from "@/lib/wagmiConfig";
 import { decodeRulesetMetadata, RulesetMetadata } from "@/lib/utils";
+import { wagmiConfig } from "@/lib/wagmiConfig";
+import { readContract } from "@wagmi/core";
+import { JBCoreContracts, jbRulesetsAbi, SuckerPair } from "juice-sdk-core";
+import { useJBContractContext } from "juice-sdk-react";
+import { useCallback, useEffect, useState } from "react";
 
 type RuleSet = {
   cycleNumber: number;
@@ -22,14 +22,13 @@ type SuckerPairWithRulesets = SuckerPair & {
   readonly rulesets: readonly RuleSet[];
 };
 
-export function useFetchProjectRulesets(
-  suckers: SuckerPair[] | undefined | null
-) {
+export function useFetchProjectRulesets(suckers: SuckerPair[] | undefined | null) {
   const [suckerPairsWithRulesets, setSuckerPairsWithRulesets] = useState<
     SuckerPairWithRulesets[] | undefined
   >(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<any | null>(null);
+  const { contractAddress } = useJBContractContext();
 
   const fetchRuleSets = useCallback(async () => {
     if (!suckers) return undefined;
@@ -38,13 +37,13 @@ export function useFetchProjectRulesets(
       const allRuleSets = await Promise.all(
         suckers.map((sucker) =>
           readContract(wagmiConfig, {
-            chainId: sucker.peerChainId,
-            address: jbRulesetsAddress[sucker.peerChainId as JBChainId],
+            chainId: sucker.peerChainId as 1 | 10 | 8453 | 42161,
+            address: contractAddress(JBCoreContracts.JBRulesets, sucker.peerChainId),
             abi: jbRulesetsAbi,
             functionName: "allOf",
             args: [sucker.projectId, 0n, BigInt(MAX_RULESET_COUNT)],
-          })
-        )
+          }),
+        ),
       );
       if (allRuleSets.length === 0) return undefined;
       const pairsWithRulesets = suckers.map((sucker, index) => ({
@@ -64,7 +63,7 @@ export function useFetchProjectRulesets(
     } finally {
       setIsLoading(false);
     }
-  }, [suckers]);
+  }, [suckers, contractAddress]);
 
   useEffect(() => {
     if (!suckers) return undefined;

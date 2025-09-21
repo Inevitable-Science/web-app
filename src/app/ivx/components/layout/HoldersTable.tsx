@@ -1,77 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { ParticipantsDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
-import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
-import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
-import { useState } from "react";
-import { twJoin } from "tailwind-merge";
-import { ParticipantsTable } from "@/app/[...slug]/components/ParticipantsTable";
-import { Address, formatUnits } from "viem";
-import Image from "next/image";
-import { ParticipantsPieChart } from "@/app/[...slug]/components/ParticipantsPieChart";
-import {
-  JBChainId,
-  useReadJbControllerPendingReservedTokenBalanceOf,
-  useSuckersUserTokenBalance,
-  jbControllerAbi,
-  useJBContractContext,
-  useReadJbSplitsSplitsOf,
-} from "juice-sdk-react";
-import {
-  jbProjectDeploymentAddresses,
-  JBProjectToken,
-  JBRulesetData,
-  JBRulesetMetadata,
-} from "juice-sdk-core";
-import { useWatchAsset } from "wagmi";
-import { useRulesetData } from "@/hooks/useRulesetData";
-import { useSelectedSucker } from "../../SelectedSuckerContext";
-import { useFetchProjectRulesets } from "@/hooks/useFetchProjectRulesets";
-import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
-import { useIVXContext } from "../../DataProvider";
+"use client";
 
-type TableView = "you" | "all" | "splits";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { formatNumber } from "@/lib/utils";
+import { formatUnits } from "juice-sdk-core";
+import { ParticipantsDocument } from "@/generated/graphql";
+import { JBChainId, useBendystrawQuery } from "juice-sdk-react";
+import { Address } from "viem";
+import { Loader2 } from "lucide-react";
+import { useIVXContext } from "../../DataProvider";
 
 export function HoldersTable() {
   const {
     project,
-    token,
-    metadata,
-    ruleset,
-    rulesetMetadata,
-    chainId,
-    selectedSucker,
-    suckers,
+    token
   } = useIVXContext();
-  const { projectId } = useJBContractContext();
-
-  const { tokenData: rulesetData } = useRulesetData({
-    ruleset: ruleset as JBRulesetData,
-    metadata: rulesetMetadata as JBRulesetMetadata,
-    //projectId: project.projectId,
-    projectId: 64,
-  });
-
-  const [participantsView, setParticipantsView] = useState<TableView>("all");
-
-  const totalOutstandingTokens = useTotalOutstandingTokens();
-
-  const balanceQuery = useSuckersUserTokenBalance();
-  const balances = balanceQuery?.data;
-  const totalBalance = new JBProjectToken(
-    balances?.reduce((acc, curr) => {
-      return acc + curr.balance.value;
-    }, 0n) ?? 0n
-  );
-  const tokenSymbol = formatTokenSymbol(token);
 
   const participantsQuery = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",
     orderDirection: "desc",
-    where: {
-      suckerGroupId: project.suckerGroupId,
-      balance_gt: 0,
-    },
+    where: project?.suckerGroupId
+    ? {
+        suckerGroupId: project.suckerGroupId,
+        balance_gt: 0,
+      }
+    : undefined,
   });
 
   const participantsDataAggregate =
@@ -91,7 +43,7 @@ export function HoldersTable() {
               BigInt(participant.volume ?? 0),
             chains: [
               ...(acc[participant.address]?.chains ?? []),
-              participant.chainId,
+              participant.chainId as JBChainId,
             ],
           },
         };
@@ -99,156 +51,57 @@ export function HoldersTable() {
       {} as Record<string, any>
     ) ?? {};
 
-  const { watchAsset, isSuccess, isPending } = useWatchAsset();
+  const participants = Object.values(participantsDataAggregate);
 
-  const handleAddToken = () => {
-    // Make sure token.data and necessary properties exist
-    if (!token.data?.address || !token.data?.symbol || !token.data?.decimals) {
-      console.error("Token information is incomplete.");
-      return;
-    }
-
-    watchAsset({
-      type: "ERC20",
-      options: {
-        address: token.data.address as Address,
-        symbol: token.data.symbol,
-        decimals: token.data.decimals,
-        image: metadata.data?.logoUri,
-      },
-    });
-  };
-
-  const { data: pendingReserveTokenBalance } =
-    useReadJbControllerPendingReservedTokenBalanceOf({
-      chainId: selectedSucker?.peerChainId,
-      address: selectedSucker?.peerChainId
-        ? (jbProjectDeploymentAddresses.JBController[
-            selectedSucker.peerChainId as JBChainId
-          ] as Address)
-        : undefined,
-      args: ruleset && selectedSucker ? [projectId] : undefined,
-    });
+  if (participants.length === 0)
+    return (
+      <div className="my-[15vh] flex w-full justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
 
   return (
-    <section>
-      <div className="flex w-full flex-col gap-4">
-        {token?.data && (
-          <div className="rounded-2xl bg-grey-450 p-[12px]">
-            <div className="background-color rounded-xl p-[16px]">
-              <h3 className="text-xl">
-                {totalBalance &&
-                  token.data &&
-                  formatNumber(
-                    Number(
-                      formatUnits(totalBalance.value, token.data?.decimals)
-                    ),
-                    false
-                  )}
-              </h3>
-              <p className="font-light uppercase text-muted-foreground">
-                {tokenSymbol != "$TOKEN"
-                  ? `Your ${tokenSymbol}`
-                  : "Your Balance"}
-              </p>
+    <div className="mt-2 flex flex-col rounded-2xl bg-grey-450 p-[12px]">
+      <p className="py-1 text-sm uppercase text-grey-50">Holders</p>
+      {participants.map((participant) => (
+        <div
+          key={participant?.address}
+          className="border-color flex flex-col border-b px-2 py-3"
+        >
+          <div className="text-md flex items-center justify-between font-light text-grey-50">
+            <EthereumAddress
+              address={participant?.address as Address}
+              short
+              withEnsAvatar={false}
+              avatarProps={{ size: "sm" }}
+              withEnsName
+            />
+            <div>
+              <span className="whitespace-nowrap text-sm">
+                {formatNumber(
+                  Number(
+                    formatUnits(
+                      participant.balance,
+                      token.data?.decimals ?? 18
+                    )
+                  ),
+                  true
+                )}
+                {" "}
+                IVX
+              </span>
             </div>
           </div>
-        )}
-
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
-          <div className="background-color rounded-xl p-[16px]">
-            <div className="flex items-end gap-2">
-              {/* This h3 is already correctly handling a potential lack of token.data */}
-              <h3 className="text-xl">
-                {token.data?.name ? token.data.name : metadata.data?.name}
-              </h3>
-              {token.data && (
-                <p className="text-sm font-light text-muted-foreground">
-                  {/* Use the actual token address from your data */}
-                  {truncateAddress(token.data.address as Address)}
-                </p>
-              )}
-            </div>
-            <p className="font-light uppercase text-muted-foreground">
-              Project Token
-            </p>
-            {token.data && (
-              <Button
-                variant="link"
-                className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
-                onClick={handleAddToken}
-                disabled={isPending} // Disable the button while processing
-              >
-                {isPending
-                  ? "Adding..."
-                  : isSuccess
-                    ? "Added!"
-                    : "Add To Metamask"}
-                <Image
-                  alt="Metamask Logo"
-                  src="/assets/img/logo/metamask.svg"
-                  height={16}
-                  width={16}
-                />
-              </Button>
-            )}
-          </div>
-          <div className="background-color rounded-xl p-[16px]">
-            <h3 className="text-xl">
-              {project.tokenSupply
-                ? formatNumber(Number(formatUnits(project.tokenSupply, 18)))
-                : "Token Error"}
-            </h3>
-            <p className="font-light uppercase text-muted-foreground">
-              Total Supply
-            </p>
-          </div>
         </div>
-
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
-          <div className="background-color rounded-xl p-[16px]">
-            <h3 className="text-xl">
-              {pendingReserveTokenBalance && token.data?.decimals
-                ? formatNumber(
-                    Number(
-                      formatUnits(
-                        pendingReserveTokenBalance,
-                        token.data?.decimals
-                      )
-                    ),
-                    false
-                  )
-                : 0}
-            </h3>
-            <p className="font-light uppercase text-muted-foreground">
-              Pending Reserved Tokens
-            </p>
-          </div>
-
-          <div className="background-color rounded-xl p-[16px]">
-            <h3 className="text-xl">
-              {rulesetData && rulesetData.reservedRate}
-            </h3>
-            <p className="font-light uppercase text-muted-foreground">
-              Reserved Rate
-            </p>
-          </div>
-        </div>
-
-        <div className="flex h-[400px] items-center rounded-2xl bg-grey-450 p-[12px]">
-          <ParticipantsPieChart
-            participants={Object.values(participantsDataAggregate)}
-            totalSupply={totalOutstandingTokens}
-            token={token?.data}
-          />
-        </div>
-
-        <ParticipantsTable
-          participants={Object.values(participantsDataAggregate)}
-          token={token?.data}
-          totalSupply={totalOutstandingTokens}
-        />
-      </div>
-    </section>
+      ))}
+      <style>{`
+        @media (max-width: 640px) {
+          .flex.items-center.justify-between > div:last-child {
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+      `}</style>
+    </div>
   );
 }

@@ -22,18 +22,22 @@ import {
   JB_CHAINS,
   JBChainId,
   NATIVE_TOKEN,
-  SuckerPair,
   TokenAmountType,
+  jbMultiTerminalAbi,
 } from "juice-sdk-core";
 import {
+  useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
   useSuckers,
-  useWriteJbMultiTerminalPay,
 } from "juice-sdk-react";
 import { useEffect, useState } from "react";
 import { Address } from "viem";
-import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
 
 export function PayDialog({
@@ -59,11 +63,12 @@ export function PayDialog({
     error,
     writeContract,
     isPending: isWriteLoading,
-    data,
-  } = useWriteJbMultiTerminalPay();
+    data: hash,
+  } = useWriteContract();
+
   const chainId = useJBChainId();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
-  const txHash = data;
+  const txHash = hash;
   const { isLoading: isTxLoading, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   });
@@ -99,9 +104,11 @@ export function PayDialog({
       return;
     }
 
-    writeContract?.({
+    writeContract?.({ // TODO:REVIEW
+      abi: jbMultiTerminalAbi,
+      functionName: "pay",
       chainId: selectedSucker.peerChainId,
-      address: primaryNativeTerminal?.data,
+      address: primaryNativeTerminal?.data as Address,
       args: [
         selectedSucker.projectId,
         NATIVE_TOKEN,
@@ -113,6 +120,14 @@ export function PayDialog({
       ],
       value,
     });
+    /*writeContract?.({ // old code archive
+        abi: jbMultiTerminalAbi,
+        functionName: "pay",
+        chainId: selectedSucker.peerChainId,
+        address: primaryNativeTerminal.data as `0x${string}`,
+        args: [selectedSucker.projectId, chainToken, value, address, 0n, memo || "", "0x0"],
+        value: isNative ? value : 0n,
+      });*/
   };
 
   return (

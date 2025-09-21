@@ -11,7 +11,8 @@ export default function MainIvxLayout() {
 
   return(
     <>
-      <div className="bg-[url('/assets/img/ivx_backdrop.png')] bg-cover bg-full w-screen">
+      <div className="">
+        <div className="absolute z-[-1] bg-[url('/assets/img/ivx_backdrop.png')] bg-cover bg-center w-full h-[70vh]"></div>
         <div className="ctWrapper pt-[140px]">
           <div className="grid gap-4 grid-cols-[420px_1fr]">
             <h1 className="text-5xl font-extralight">
@@ -34,9 +35,9 @@ export default function MainIvxLayout() {
                 <PortfolioPeformance />
               </div>
 
-              {/*<div>
+              <div>
                 <HoldersTable />
-              </div>*/}
+              </div>
             </div>
           </div>
         </div>

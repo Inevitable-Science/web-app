@@ -1,6 +1,4 @@
 import {
-  TokenResponse,
-  TreasuryResponse,
   TokenResponseSchema,
   TreasuryResponseSchema
 } from "@/lib/types/AnalyticTypes";
@@ -45,14 +43,14 @@ export default async function IvxTokenPage() {
 
   return (
     <>
-      <Providers chainId={1 as JBChainId} projectId={64n as bigint}>
+      <Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>
         <IvxPageDataProvider tokenData={pageData.tokenData} treasuryData={pageData.treasuryData}>
           <MainIvxLayout />
         </IvxPageDataProvider>
       </Providers>
-      <pre>
+      {/*<pre>
         {JSON.stringify(pageData, null, 2)}
-      </pre>
+      </pre>*/}
     </>
   );
 }

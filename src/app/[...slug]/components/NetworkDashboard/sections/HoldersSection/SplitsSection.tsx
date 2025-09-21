@@ -1,3 +1,5 @@
+"use client";
+
 import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
 import { ChainLogo } from "@/components/ChainLogo";
 import { EthereumAddress } from "@/components/EthereumAddress";
@@ -22,10 +24,12 @@ import { useBoostRecipient } from "@/hooks/useBoostRecipient";
 import { useFetchProjectRulesets } from "@/hooks/useFetchProjectRulesets";
 import { formatTokenSymbol } from "@/lib/utils";
 import {
+  JBCoreContracts,
   JB_CHAINS,
   SuckerPair,
   formatUnits,
-  jbProjectDeploymentAddresses,
+  jbControllerAbi,
+  jbSplitsAbi,
 } from "juice-sdk-core";
 import {
   JBChainId,
@@ -33,66 +37,65 @@ import {
   useJBContractContext,
   useJBRulesetContext,
   useJBTokenContext,
-  useReadJbControllerPendingReservedTokenBalanceOf,
-  useReadJbSplitsSplitsOf,
   useSuckers,
 } from "juice-sdk-react";
 import { useEffect, useState } from "react";
 import { twJoin } from "tailwind-merge";
 import { Address } from "viem";
+import { useReadContract } from "wagmi";
 
-export function SplitsSection() {
-  const { projectId } = useJBContractContext();
-  const chainId = useJBChainId();
+export function SplitsSection() { // archive
+  const { projectId, contractAddress } = useJBContractContext();
   const { ruleset } = useJBRulesetContext();
   const { token } = useJBTokenContext();
+  const chainId = useJBChainId();
   const boostRecipient = useBoostRecipient();
-  const [selectedSucker, setSelectedSucker] = useState<SuckerPair>();
-  const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
   const { suckerPairsWithRulesets, isLoading: isLoadingRuleSets } =
     useFetchProjectRulesets(suckers);
+
+  const [selectedSucker, setSelectedSucker] = useState<SuckerPair>();
+  const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
+  
   const selectedSuckerRulesets = suckerPairsWithRulesets?.find(
-    (sucker) => sucker.peerChainId === selectedSucker?.peerChainId
+    (sucker) => sucker.peerChainId === selectedSucker?.peerChainId,
   )?.rulesets;
   const nextStageIdx = Math.max(
-    selectedSuckerRulesets?.findIndex(
-      (stage) => stage.start > Date.now() / 1000
-    ) ?? -1,
-    1 // lower bound should be 1 (the minimum 'next stage' is 1)
+    selectedSuckerRulesets?.findIndex((stage) => stage.start > Date.now() / 1000) ?? -1,
+    1, // lower bound should be 1 (the minimum 'next stage' is 1)
   );
   const currentStageIdx = nextStageIdx - 1;
   const splitLimit =
-    selectedSuckerRulesets?.[
-      selectedStageIdx
-    ]?.metadata.reservedPercent.formatPercentage();
-  const { data: reservedTokenSplits, isLoading: isLoadingSplits } =
-    useReadJbSplitsSplitsOf({
-      chainId: selectedSucker?.peerChainId as JBChainId | undefined,
-      args:
-        ruleset &&
-        ruleset?.data &&
-        selectedSucker &&
-        selectedSuckerRulesets &&
-        suckerPairsWithRulesets?.length > 0
-          ? [
-              BigInt(selectedSucker?.projectId || projectId),
-              BigInt(selectedSuckerRulesets[selectedStageIdx]?.id || 0),
-              RESERVED_TOKEN_SPLIT_GROUP_ID,
-            ]
-          : undefined,
-    });
-  const { data: pendingReserveTokenBalance } =
-    useReadJbControllerPendingReservedTokenBalanceOf({
-      chainId: selectedSucker?.peerChainId,
-      address: selectedSucker?.peerChainId
-        ? (jbProjectDeploymentAddresses.JBController[
-            selectedSucker.peerChainId as JBChainId
-          ] as Address)
+    selectedSuckerRulesets?.[selectedStageIdx]?.metadata.reservedPercent.formatPercentage();
+  const { data: reservedTokenSplits, isLoading: isLoadingSplits } = useReadContract({
+    chainId: selectedSucker?.peerChainId as JBChainId | undefined,
+    abi: jbSplitsAbi,
+    address: contractAddress(JBCoreContracts.JBSplits, selectedSucker?.peerChainId),
+    functionName: "splitsOf",
+    args:
+      ruleset &&
+      ruleset?.data &&
+      selectedSucker &&
+      selectedSuckerRulesets &&
+      suckerPairsWithRulesets?.length > 0
+        ? [
+            BigInt(selectedSucker?.projectId || projectId),
+            BigInt(selectedSuckerRulesets[selectedStageIdx]?.id || 0),
+            RESERVED_TOKEN_SPLIT_GROUP_ID,
+          ]
         : undefined,
-      args: ruleset && ruleset?.data ? [projectId] : undefined,
-    });
+  });
+
+  const { data: pendingReserveTokenBalance } = useReadContract({
+    abi: jbControllerAbi,
+    functionName: "pendingReservedTokenBalanceOf",
+    chainId: selectedSucker?.peerChainId,
+    address: selectedSucker?.peerChainId
+      ? contractAddress(JBCoreContracts.JBController, selectedSucker.peerChainId)
+      : undefined,
+    args: ruleset && ruleset?.data ? [projectId] : undefined,
+  });
 
   useEffect(() => {
     if (chainId && suckers && !suckers.find((s) => s.peerChainId === chainId)) {

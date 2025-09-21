@@ -1,14 +1,14 @@
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
-import { useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { useBendystrawQuery, useJBChainId, useJBContractContext } from "juice-sdk-react";
 
 export function useTotalOutstandingTokens() {
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
 
   const { data } = useBendystrawQuery(ProjectDocument, {
     projectId: Number(projectId),
     chainId: Number(chainId),
+    version,
   });
 
   const { data: suckerGroup } = useBendystrawQuery(SuckerGroupDocument, {
