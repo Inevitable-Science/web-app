@@ -1,41 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FooterLoginButton } from "./FooterLoginButton";
 
-const Footer: React.FC = () => {
-  return (
-    <footer className="flex h-screen w-full flex-col bg-[url('/assets/img/layout/footer.webp')] bg-cover bg-center px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
-      {/* CENTERED SECTION */}
-      <div className="flex flex-grow flex-col items-center justify-center gap-16">
-        <Image
-          src="/assets/img/branding/icon.svg"
-          alt="Icon Logo"
-          height="70"
-          width="38"
-        />
-
-        <div className="flex flex-col flex-wrap items-center justify-center gap-8 uppercase sm:flex-row">
-          <Link href="/" aria-label="Auctions" className="hover:underline">
-            Projects
-          </Link>
-          <Link href="/vision" aria-label="Vision" className="hover:underline">
-            Vision
-          </Link>
-          <Link href="/team" aria-label="Team" className="hover:underline">
-            Team
-          </Link>
-          <Link
-            href="/articles"
-            aria-label="Articles"
-            className="hover:underline"
-          >
-            Articles
-          </Link>
-          <FooterLoginButton />
-        </div>
-      </div>
-
-      {/* BOTTOM SECTION */}
+// web-app/public/assets/img/layout/ivx/ivx_footer_image.png
+export function Footer() {
+  return(
+    <div className="relative z-[-1] -mt-[240px] flex items-end h-[600px] w-full 
+                bg-[url('/assets/img/layout/ivx/ivx_footer_image.png')] 
+                bg-cover bg-center px-12 pt-8 pb-[144px] font-light 
+                [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
+      {/*<div className="flex items-end h-[600px] w-full bg-[url('/assets/img/layout/ivx/ivx_footer_image.png')] bg-cover bg-center px-12 pt-8 pb-[144px] font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">*/}
       <div className="mb-8 flex w-full flex-col-reverse items-center justify-between gap-4 text-center text-sm md:mb-2 md:flex-row md:gap-0">
         <p>All rights reserved Inevitable 2025</p>
         <div className="flex items-center gap-4">
@@ -81,8 +54,6 @@ const Footer: React.FC = () => {
           </Link>
         </div>
       </div>
-    </footer>
-  );
-};
-
-export default Footer;
+    </div>
+  )
+}

@@ -58,7 +58,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page() {
   return (
     <div>
-      {/*<div className="bg-[url('/assets/img/home_landing.png')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
+      {/*<div className="bg-[url('/assets/img/home_landing.webp')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
       <div className="relative h-[500px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
         {/* Background Video */}
         <video
@@ -68,7 +68,7 @@ export default function Page() {
           muted
           playsInline
         >
-          <source src="/assets/img/home-hero-main.mp4" type="video/mp4" />
+          <source src="/assets/img/layout/home_hero_main.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 

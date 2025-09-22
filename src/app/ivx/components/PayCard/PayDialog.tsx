@@ -40,15 +40,15 @@ import {
 } from "wagmi";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
 
+const memo = "";
+
 export function PayDialog({
   amountA,
   amountB,
-  memo,
   disabled,
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
-  memo: string | undefined;
   primaryTerminalEth: Address;
   disabled?: boolean;
 }) {

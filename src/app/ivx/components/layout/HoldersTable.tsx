@@ -53,47 +53,54 @@ export function HoldersTable() {
 
   const participants = Object.values(participantsDataAggregate);
 
-  if (participants.length === 0)
-    return (
-      <div className="my-[15vh] flex w-full justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-
   return (
-    <div className="mt-2 flex flex-col rounded-2xl bg-grey-450 p-[12px]">
+    <div className="h-full overflow-auto flex flex-col rounded-2xl bg-grey-450 p-[12px]">
       <p className="py-1 text-sm uppercase text-grey-50">Holders</p>
-      {participants.map((participant) => (
-        <div
-          key={participant?.address}
-          className="border-color flex flex-col border-b px-2 py-3"
-        >
-          <div className="text-md flex items-center justify-between font-light text-grey-50">
-            <EthereumAddress
-              address={participant?.address as Address}
-              short
-              withEnsAvatar={false}
-              avatarProps={{ size: "sm" }}
-              withEnsName
-            />
-            <div>
-              <span className="whitespace-nowrap text-sm">
-                {formatNumber(
-                  Number(
-                    formatUnits(
-                      participant.balance,
-                      token.data?.decimals ?? 18
-                    )
-                  ),
-                  true
-                )}
-                {" "}
-                IVX
-              </span>
+      <div className="overflow-y-scroll scrollbar-hide pb-[56px]"
+        style={{
+          maskImage:
+            "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+        }}
+      >
+        {participants.length === 0 && (
+          <div className="flex w-full h-[348px] justify-center items-center activeSkeleton">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        )}
+        {participants.map((participant) => (
+          <div
+            key={participant?.address}
+            className="border-color flex flex-col border-b px-2 py-3"
+          >
+            <div className="text-md flex items-center justify-between font-light text-grey-50">
+              <EthereumAddress
+                address={participant?.address as Address}
+                short
+                withEnsAvatar={false}
+                avatarProps={{ size: "sm" }}
+                withEnsName
+              />
+              <div>
+                <span className="whitespace-nowrap text-sm">
+                  {formatNumber(
+                    Number(
+                      formatUnits(
+                        participant.balance,
+                        token.data?.decimals ?? 18
+                      )
+                    ),
+                    true
+                  )}
+                  {" "}
+                  IVX
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
       <style>{`
         @media (max-width: 640px) {
           .flex.items-center.justify-between > div:last-child {

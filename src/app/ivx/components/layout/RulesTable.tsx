@@ -92,7 +92,7 @@ export default function RuleTable() {
   return(
     <>
       <div className="">
-        <div className="bg-grey-450 rounded-2xl p-[12px]">
+        <div className="bg-grey-450 h-full rounded-2xl p-[12px]">
           <p className="text-grey-50 text-sm uppercase">Supply Schedule</p>
           <div className="">
             <div className="">
@@ -101,21 +101,6 @@ export default function RuleTable() {
             </div>
           </div>
         </div>
-
-        {Object.entries(tokenData).map(([key, value]) => (
-          <div
-            key={key}
-            className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
-          >
-            <span>{formatLabel(key)}</span>
-            <span>{value}</span>
-          </div>
-        ))}
-
-        <pre>{JSON.stringify(tokenData, null, 2)}</pre>
-        <pre>{JSON.stringify(cyclesData, null, 2)}</pre>
-        <pre>{JSON.stringify(otherRulesData, null, 2)}</pre>
-        <pre>{JSON.stringify(secondTokenData, null, 2)}</pre>
       </div>
     </>
   )

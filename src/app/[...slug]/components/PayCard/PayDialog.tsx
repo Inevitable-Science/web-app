@@ -35,7 +35,7 @@ import { Address } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import { useSelectedSucker } from "./SelectedSuckerContext";
 
-// TODO_REVIEW
+// TODO:REVIEW
 
 export function PayDialog({
   amountA,

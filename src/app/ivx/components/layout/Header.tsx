@@ -6,7 +6,7 @@ export function IvxPageHeader() {
   const { analyticsData } = useIVXContext();
   
   return(
-    <div className="grid grid-cols-3 gap-[12px]">
+    <div className="grid grid-cols-3 gap-[12px] mb-[12px]">
       <div className="flex flex-col gap-[12px] uppercase">
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
@@ -19,7 +19,7 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {analyticsData?.token?.selectedToken.averageBal}
+            {analyticsData?.token?.selectedToken.averageBal ? formatNumber(analyticsData?.token?.selectedToken.averageBal, true) : "--"}
           </h3>
           <p className="font-light text-muted-foreground">
             Average IVX Balance
@@ -28,7 +28,7 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {analyticsData?.token?.selectedToken.totalHolders}
+            {analyticsData?.token?.selectedToken.totalHolders ? formatNumber(Number(analyticsData?.token?.selectedToken.totalHolders), false) : "--"}
           </h3>
           <p className="font-light text-muted-foreground">
             Total Holders
@@ -39,7 +39,7 @@ export function IvxPageHeader() {
       <div className="flex flex-col gap-[12px] uppercase">
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            ${analyticsData?.token?.selectedToken.totalSupply ? formatNumber(analyticsData?.token?.selectedToken.totalSupply, false) : "--"}
+            {analyticsData?.token?.selectedToken.totalSupply ? formatNumber(analyticsData?.token?.selectedToken.totalSupply, false) : "--"}
           </h3>
           <p className="font-light text-muted-foreground">
             Total IVX Supply
@@ -48,7 +48,7 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {analyticsData?.token?.selectedToken.medianBal}
+            {analyticsData?.token?.selectedToken.medianBal ? formatNumber(analyticsData?.token?.selectedToken.medianBal, false) : "--"}
           </h3>
           <p className="font-light text-muted-foreground">
             Median IVX Balance
@@ -60,7 +60,7 @@ export function IvxPageHeader() {
             {formatDate(analyticsData?.treasury?.lastUpdated)}
           </h3>
           <p className="font-light text-muted-foreground">
-            Total Holders
+            Last Updated
           </p>
         </div>
       </div>

@@ -16,7 +16,6 @@ import { formatTokenSymbol } from "@/lib/utils";
 export function PayForm() {
   const tokenA = useTokenA();
   const { token } = useJBTokenContext();
-  const [memo, setMemo] = useState<string>();
 
   const [amountA, setAmountA] = useState<string>("");
   const [amountB, setAmountB] = useState<string>("");
@@ -145,7 +144,6 @@ export function PayForm() {
             <PayDialog
               amountA={_amountA}
               amountB={_amountB}
-              memo={memo}
               primaryTerminalEth={primaryNativeTerminal?.data}
               disabled={!amountA}
             />

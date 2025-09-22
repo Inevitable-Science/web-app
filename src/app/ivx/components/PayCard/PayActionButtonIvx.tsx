@@ -32,18 +32,27 @@ import { formatUnits } from "viem";
 import { useIVXContext } from "../../DataProvider";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 
-const shimmerClasses = `
+/*const shimmerClasses = `
     relative overflow-hidden 
     before:content-[''] before:absolute before:inset-0 
     before:-translate-x-full before:animate-[shimmer_2s_infinite] 
     before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent
-  `;
+  `;*/
+const shimmerClasses = `
+  relative overflow-hidden
+  before:content-[''] before:absolute before:inset-0
+  before:-translate-x-full before:animate-[shimmer_2s_infinite]
+  before:bg-gradient-to-r before:from-transparent before:via-black/20 before:to-transparent
+`;
+
 
 // Define shared styles for the main action button for consistency
 const primaryButtonClasses =
-  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
+  "w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-none disabled:opacity-50";
 
-// TODO_REVIEW
+const memo = "";
+
+// TODO:REVIEW
 
 /**
  * A self-contained button that handles wallet connection, chain switching,
@@ -54,7 +63,6 @@ export function PayActionButton({
   amountB,
   paymentToken,
   walletBalance,
-  memo,
   disabled,
   selectedSucker,
 }: {
@@ -62,7 +70,6 @@ export function PayActionButton({
   amountB: TokenAmountType;
   paymentToken: `0x${string}`;
   walletBalance: number | string;
-  memo: string | undefined;
   disabled?: boolean;
   selectedSucker?: SuckerPair | undefined;
 }) {
@@ -217,7 +224,7 @@ export function PayActionButton({
           <Button
             onClick={show}
             loading={isConnecting}
-            className={twMerge(primaryButtonClasses, shimmerClasses)}
+            className={primaryButtonClasses}
           >
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </Button>
@@ -232,7 +239,7 @@ export function PayActionButton({
       <Button
         onClick={() => switchChain({ chainId: targetChainId })}
         loading={isSwitchingChain}
-        className={twMerge(primaryButtonClasses, shimmerClasses)}
+        className={primaryButtonClasses}
       >
         {isSwitchingChain ? "Switching..." : `Switch to ${targetChainName}`}
       </Button>
@@ -248,7 +255,7 @@ export function PayActionButton({
   ) {
     return (
       <Button
-        className={twMerge(primaryButtonClasses, shimmerClasses)}
+        className={primaryButtonClasses}
         disabled={true}
       >
         Insufficient Funds

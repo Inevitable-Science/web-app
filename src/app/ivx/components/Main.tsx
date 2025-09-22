@@ -5,6 +5,9 @@ import { IvxTreasuryAnalytics } from "./layout/TreasuryAnalytics";
 import RuleTable from "./layout/RulesTable";
 import { PortfolioPeformance } from "./layout/PortfolioPeformance";
 import { HoldersTable } from "./layout/HoldersTable";
+import { Footer } from "./layout/Footer";
+import { TransactionTable } from "./layout/TransactionTable";
+import { AccordionComponent } from "./layout/AccordionComponent";
 
 export default function MainIvxLayout() {
   const { analyticsData, ruleset: currentRuleset, project } = useIVXContext();
@@ -12,7 +15,7 @@ export default function MainIvxLayout() {
   return(
     <>
       <div className="">
-        <div className="absolute z-[-1] bg-[url('/assets/img/ivx_backdrop.png')] bg-cover bg-center w-full h-[70vh]"></div>
+        <div className="absolute z-[-1] bg-[url('/assets/img/layout/ivx/ivx_backdrop.png')] bg-cover bg-center w-full h-[70vh]"></div>
         <div className="ctWrapper pt-[140px]">
           <div className="grid gap-4 grid-cols-[420px_1fr]">
             <h1 className="text-5xl font-extralight">
@@ -29,19 +32,39 @@ export default function MainIvxLayout() {
             <div className="flex flex-col gap-[12px]">
               <IvxTreasuryAnalytics />
 
-              <div className="">
+              <div className="h-[300px] grid grid-cols-2 gap-[12px]">
                 <RuleTable />
 
                 <PortfolioPeformance />
               </div>
 
-              <div>
+              <div className="h-[400px] grid grid-cols-2 gap-[12px]">
                 <HoldersTable />
+
+                <TransactionTable />
               </div>
             </div>
+
+            <AccordionComponent />
           </div>
         </div>
+
+        <Footer />
       </div>
+      <style>{`
+      /* Hide Base Navbar - Only Show ConnectKit Button */
+      .navMinMD > * {
+        display: none;
+      }
+
+      .navMinMD > button {
+        display: block;
+      }
+
+      footer{
+        display: none !important;
+      }
+      `}</style>
     </>
   )
 }

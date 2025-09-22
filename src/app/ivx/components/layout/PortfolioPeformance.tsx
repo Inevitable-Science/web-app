@@ -6,7 +6,7 @@ export function PortfolioPeformance() {
   return(
     <>
       {analyticsData?.treasury?.historicalReturns && (
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="rounded-2xl h-full bg-grey-450 p-[12px]">
           <h3 className="py-1 text-sm uppercase text-grey-50">
             Portfolio Peformance
           </h3>

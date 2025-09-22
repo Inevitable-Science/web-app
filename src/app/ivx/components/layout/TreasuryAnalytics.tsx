@@ -7,11 +7,11 @@ export function IvxTreasuryAnalytics() {
   const { analyticsData } = useIVXContext();
 
   return(
-    <div className="grid grid-cols-2 gap-[12px]">
-      <div className="bg-grey-450 rounded-2xl p-[12px]">
+    <div className="grid grid-cols-2 gap-[12px] h-[420px]">
+      <div className="bg-grey-450 h-full rounded-2xl p-[12px]">
         <p className="text-grey-50 text-sm uppercase">Treasury Holdings</p>
         <div 
-          className="scrollbar-hide mt-2 h-full overflow-y-auto pb-12"
+          className="scrollbar-hide overflow-y-scroll max-h-[376px] pb-12"
           style={{
             maskImage:
               "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",

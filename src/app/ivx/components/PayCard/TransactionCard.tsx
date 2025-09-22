@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
 import {
   JBChainId,
@@ -20,17 +19,14 @@ import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import { PayActionButton } from "./PayActionButtonIvx";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
-import { WithdrawCard } from "./WithdrawCard";
-import { ChainSelector } from "@/components/ChainSelector";
+import { ChainSelector } from "./ChainSelect";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
 import { useIVXContext } from "../../DataProvider";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 
-export function TransactionCard() {
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
+export function TransactionCard() { // TODO: Disallow negative numbers
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
-  const [memo, setMemo] = useState("");
 
   const tokenA = useTokenA();
   const { address } = useAccount(); // Get user's wallet and chain
@@ -156,138 +152,95 @@ export function TransactionCard() {
 
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => setActiveTab("buy")}
-            className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
-              activeTab === "buy"
-                ? "border-cerulean text-white"
-                : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Buy
-          </Button>
-          {rulesetMetadata?.useTotalSurplusForCashOuts && (
-            <Button
-              onClick={() => setActiveTab("withdraw")}
-              className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
-                activeTab === "withdraw"
-                  ? "border-cerulean text-white"
-                  : "border-transparent text-muted-foreground"
-              }`}
-            >
-              Withdraw
-            </Button>
-          )}
-        </div>
-
-        {/* 8. Add the ChainSelector to the UI */}
-        <ChainSelector
-          disabled={!suckers || suckers.length <= 1}
-          value={selectedSucker?.peerChainId as JBChainId}
-          onChange={handleChainChange}
-          options={suckers?.map((s) => s.peerChainId) ?? []}
-        />
-      </div>
-
-      <div className="my-4">
-        {activeTab === "buy" ? (
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
-                <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm font-light text-muted-foreground">
-                    YOU PAY
-                  </p>
-                  <input
-                    type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
-                    placeholder="0.00"
-                    value={amountA}
-                    onChange={handlePayAmountChange}
-                  />
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                  <div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">
-                    <Image
-                      src="/assets/img/logo/mainnet.svg"
-                      className="rounded-full"
-                      height={22}
-                      width={22}
-                      alt="ETH Icon"
-                    />
-                    <p className="text-lg font-light">{tokenA.symbol}</p>
-                  </div>
-                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
-                    Balance:{" "}
-                    {walletBalance
-                      ? parseFloat(
-                          formatUnits(walletBalance.value, tokenA.decimals)
-                        ).toFixed(4)
-                      : "0.00"}
-                  </p>
-                </div>
-              </div>
-              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
-                <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm font-light text-muted-foreground">
-                    YOU RECEIVE
-                  </p>
-                  <input
-                    type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
-                    placeholder="0.00"
-                    value={amountB}
-                    onChange={handleReceiveAmountChange}
-                  />
-                </div>
-                <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
-                  <Image
-                    src={
-                      metadata.data?.logoUri
-                        ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                        : "/assets/img/logo/mainnet.svg"
-                    }
-                    className="rounded-full"
-                    height={22}
-                    width={22}
-                    alt="Token Icon"
-                  />
-                  <p className="text-lg font-light">
-                    {formatTokenSymbol(tokenB.symbol)}
-                  </p>
-                </div>
-              </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+            <div className="flex flex-col gap-[2px]">
+              <p className="text-sm font-light text-muted-foreground">
+                YOU PAY
+              </p>
+              <input
+                type="number"
+                className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+                placeholder="0.00"
+                value={amountA}
+                onChange={handlePayAmountChange}
+              />
             </div>
-            <input
-              type="text"
-              className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-              onChange={(e) => setMemo(e.target.value)}
-              value={memo}
-              placeholder="Add a note... (optional)"
-            />
-            <PayActionButton
-              amountA={preparedAmountA}
-              amountB={preparedAmountB}
-              paymentToken={
-                (accountingContext?.project?.token as `0x${string}`) || NATIVE_TOKEN.toLowerCase()
-              }
-              walletBalance={
-                walletBalance
+            <div className="flex flex-col items-end gap-1">
+              {/*<div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">*/}
+                {/*<Image
+                  src="/assets/img/logo/mainnet.svg"
+                  className="rounded-full"
+                  height={22}
+                  width={22}
+                  alt="ETH Icon"
+                />
+                <p className="text-lg font-light">{tokenA.symbol}</p>*/}
+                <ChainSelector
+                  disabled={!suckers || suckers.length <= 1}
+                  value={selectedSucker?.peerChainId as JBChainId}
+                  onChange={handleChainChange}
+                  options={suckers?.map((s) => s.peerChainId) ?? []}
+                />
+              {/*</div>*/}
+              <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+                Balance:{" "}
+                {walletBalance
                   ? parseFloat(
                       formatUnits(walletBalance.value, tokenA.decimals)
                     ).toFixed(4)
-                  : 0
-              }
-              memo={memo}
-              disabled={!amountA || parseFloat(amountA) === 0}
-              selectedSucker={selectedSucker}
-            />
+                  : "0.00"}
+              </p>
+            </div>
           </div>
-        ) : (
-          <WithdrawCard selectedSucker={selectedSucker} />
-        )}
+          <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+            <div className="flex flex-col gap-[2px]">
+              <p className="text-sm font-light text-muted-foreground">
+                YOU RECEIVE
+              </p>
+              <input
+                type="number"
+                className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+                placeholder="0.00"
+                value={amountB}
+                onChange={handleReceiveAmountChange}
+              />
+            </div>
+            <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
+              <Image
+                src={
+                  metadata.data?.logoUri
+                    ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                    : "/assets/img/logo/mainnet.svg"
+                }
+                className="rounded-full"
+                height={22}
+                width={22}
+                alt="Token Icon"
+              />
+              <p className="text-lg font-light">
+                {formatTokenSymbol(tokenB.symbol)}
+              </p>
+            </div>
+          </div>
+        </div>
+        <PayActionButton
+          amountA={preparedAmountA}
+          amountB={preparedAmountB}
+          paymentToken={
+            (accountingContext?.project?.token as `0x${string}`) || NATIVE_TOKEN.toLowerCase()
+          }
+          walletBalance={
+            walletBalance
+              ? parseFloat(
+                  formatUnits(walletBalance.value, tokenA.decimals)
+                ).toFixed(4)
+              : 0
+          }
+          disabled={!amountA || parseFloat(amountA) === 0}
+          selectedSucker={selectedSucker}
+        />
       </div>
     </div>
   );
