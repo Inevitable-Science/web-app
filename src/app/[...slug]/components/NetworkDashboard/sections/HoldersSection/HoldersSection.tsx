@@ -10,7 +10,7 @@ import { useNetworkData } from "../../NetworkDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
-  useBendystrawQuery
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import {
   JBProjectToken,
@@ -24,14 +24,8 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
-  const {
-    project,
-    token,
-    metadata,
-    ruleset,
-    rulesetMetadata,
-    chainId,
-  } = useNetworkData();
+  const { project, token, metadata, ruleset, rulesetMetadata, chainId } =
+    useNetworkData();
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
     ruleset: ruleset as JBRulesetData,

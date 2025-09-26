@@ -88,7 +88,8 @@ function TokenBalanceRow({
   );
 }
 
-export function TokenBalanceTable({ // review can i archive?
+export function TokenBalanceTable({
+  // review can i archive?
   balances,
   projectId,
   tokenSymbol,

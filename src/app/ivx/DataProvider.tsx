@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   createContext,
   useContext,
@@ -45,7 +45,6 @@ import {
 } from "./SelectedSuckerContext";
 import { z } from "zod";
 
-
 export interface AnalyticsData {
   token: TokenResponse | null;
   treasury: TreasuryResponse | null;
@@ -85,7 +84,7 @@ export const IvxPageDataProvider = ({
   children,
   //token,
   tokenData,
-  treasuryData
+  treasuryData,
 }: {
   children: ReactNode;
   //token: AsyncData<GetTokenReturnType | undefined>;
@@ -140,7 +139,6 @@ export const IvxPageDataProvider = ({
     endTimestamp: loadTimestamp,
   });
 
-  
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =
     isBalanceLoading ||

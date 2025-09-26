@@ -17,10 +17,17 @@ export function useHasBorrowPermission({
 }) {
   const { version } = useJBContractContext();
 
-  const operator = chainId ? getRevnetLoanContract(version, chainId) : undefined;
+  const operator = chainId
+    ? getRevnetLoanContract(version, chainId)
+    : undefined;
 
   const querySkip =
-    skip || !address || !projectId || !chainId || !resolvedPermissionsAddress || !operator;
+    skip ||
+    !address ||
+    !projectId ||
+    !chainId ||
+    !resolvedPermissionsAddress ||
+    !operator;
 
   const { data } = useBendystrawQuery(HasPermissionDocument, {
     skip: querySkip,

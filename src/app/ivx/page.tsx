@@ -1,6 +1,6 @@
 import {
   TokenResponseSchema,
-  TreasuryResponseSchema
+  TreasuryResponseSchema,
 } from "@/lib/types/AnalyticTypes";
 import { Providers } from "./Providers";
 import { IvxPageDataProvider } from "./DataProvider";
@@ -8,7 +8,7 @@ import { JBChainId } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import MainIvxLayout from "./components/Main";
 
-async function fetchIvxData(){
+async function fetchIvxData() {
   try {
     const [tokenRes, treasuryRes] = await Promise.all([
       fetch(`https://inev.profiler.bio/token/hydra`),
@@ -21,13 +21,13 @@ async function fetchIvxData(){
 
     const [tokenData, treasuryData] = await Promise.all([
       tokenRes.json(),
-      treasuryRes.json()
-    ])
+      treasuryRes.json(),
+    ]);
 
-    return({
+    return {
       tokenData: TokenResponseSchema.parse(tokenData),
-      treasuryData: TreasuryResponseSchema.parse(treasuryData)
-    });
+      treasuryData: TreasuryResponseSchema.parse(treasuryData),
+    };
   } catch (err) {
     console.log(err);
     return null;
@@ -37,14 +37,16 @@ async function fetchIvxData(){
 // export const revalidate = 300;
 
 export default async function IvxTokenPage() {
-
   const pageData = await fetchIvxData();
   if (!pageData) return notFound();
 
   return (
     <>
       <Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>
-        <IvxPageDataProvider tokenData={pageData.tokenData} treasuryData={pageData.treasuryData}>
+        <IvxPageDataProvider
+          tokenData={pageData.tokenData}
+          treasuryData={pageData.treasuryData}
+        >
           <MainIvxLayout />
         </IvxPageDataProvider>
       </Providers>

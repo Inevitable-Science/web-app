@@ -266,7 +266,6 @@ export function PayActionButton({
 }
 */
 
-
 import { useToast } from "@/components/ui/use-toast";
 import {
   JB_CHAINS,
@@ -276,10 +275,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import {
-  useJBChainId,
-  useJBContractContext,
-} from "juice-sdk-react";
+import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 import { useMemo, useState } from "react";
 import {
   useAccount,
@@ -315,7 +311,8 @@ const primaryButtonClasses =
  * A self-contained button that handles wallet connection, chain switching,
  * and then opens a Radix UI confirmation dialog before the transaction.
  */
-export function PayActionButton({ // TODO Move this into [...slug] route, idk why its here
+export function PayActionButton({
+  // TODO Move this into [...slug] route, idk why its here
   amountA,
   amountB,
   paymentToken,
@@ -350,13 +347,13 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
   // *** THIS IS THE CORRECTED SECTION ***
   // Restored the destructuring to include `writeContract` and `isWriteError`
   //
-   const {
+  const {
     data: txHash,
     isPending: isWriteLoading,
     isError: isWriteError,
     error: writeError,
-    writeContract
-   } = useWriteContract();
+    writeContract,
+  } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
@@ -400,11 +397,11 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      version: 4 // TODO dynamic version
+      version: 4, // TODO dynamic version
     },
     {
       enabled: !!chainId && !!projectId,
-    },
+    }
   );
   const suckerGroupId = projectData?.project?.suckerGroupId;
 
@@ -412,9 +409,8 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
     { id: suckerGroupId ?? "" },
-    { enabled: !!suckerGroupId },
+    { enabled: !!suckerGroupId }
   );
-
 
   const getTokenForChain = (targetChainId: number) => {
     if (!suckerGroupData?.suckerGroup?.projects?.items) {
@@ -422,7 +418,7 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
     }
 
     const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
-      (project) => project.chainId === targetChainId,
+      (project) => project.chainId === targetChainId
     );
 
     if (projectForChain?.token) {
@@ -432,11 +428,9 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
     return paymentToken; // fallback to original paymentToken
   };
 
-
-
   const handlePay = () => {
     const value = amountA.amount.value;
-    
+
     if (
       !primaryNativeTerminal?.data ||
       !address ||
@@ -448,7 +442,7 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
 
     const chainToken = getTokenForChain(selectedSucker.peerChainId);
     const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
-    
+
     /*writeContract({ // old code archive
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
@@ -463,12 +457,21 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
       ],
       value,
     });*/
-    writeContract?.({ // TODO:REVIEW
+    writeContract?.({
+      // TODO:REVIEW
       abi: jbMultiTerminalAbi,
       functionName: "pay",
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data as `0x${string}`,
-      args: [selectedSucker.projectId, chainToken, value, address, 0n, memo || "", "0x0"],
+      args: [
+        selectedSucker.projectId,
+        chainToken,
+        value,
+        address,
+        0n,
+        memo || "",
+        "0x0",
+      ],
       value: isNative ? value : 0n,
     });
   };
@@ -596,4 +599,4 @@ export function PayActionButton({ // TODO Move this into [...slug] route, idk wh
       </Dialog.Portal>
     </Dialog.Root>
   );
-};
+}

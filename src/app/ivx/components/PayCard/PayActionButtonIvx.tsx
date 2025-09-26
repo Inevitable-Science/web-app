@@ -45,7 +45,6 @@ const shimmerClasses = `
   before:bg-gradient-to-r before:from-transparent before:via-black/20 before:to-transparent
 `;
 
-
 // Define shared styles for the main action button for consistency
 const primaryButtonClasses =
   "w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-none disabled:opacity-50";
@@ -91,13 +90,13 @@ export function PayActionButton({
   // *** THIS IS THE CORRECTED SECTION ***
   // Restored the destructuring to include `writeContract` and `isWriteError`
   //
-   const {
+  const {
     data: txHash,
     isPending: isWriteLoading,
     isError: isWriteError,
     error: writeError,
-    writeContract
-   } = useWriteContract();
+    writeContract,
+  } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
@@ -141,11 +140,11 @@ export function PayActionButton({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      version: 4 // TODO dynamic version
+      version: 4, // TODO dynamic version
     },
     {
       enabled: !!chainId && !!projectId,
-    },
+    }
   );
   const suckerGroupId = projectData?.project?.suckerGroupId;
 
@@ -153,9 +152,8 @@ export function PayActionButton({
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
     { id: suckerGroupId ?? "" },
-    { enabled: !!suckerGroupId },
+    { enabled: !!suckerGroupId }
   );
-
 
   const getTokenForChain = (targetChainId: number) => {
     if (!suckerGroupData?.suckerGroup?.projects?.items) {
@@ -163,7 +161,7 @@ export function PayActionButton({
     }
 
     const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
-      (project) => project.chainId === targetChainId,
+      (project) => project.chainId === targetChainId
     );
 
     if (projectForChain?.token) {
@@ -173,11 +171,9 @@ export function PayActionButton({
     return paymentToken; // fallback to original paymentToken
   };
 
-
-
   const handlePay = () => {
     const value = amountA.amount.value;
-    
+
     if (
       !primaryNativeTerminal?.data ||
       !address ||
@@ -189,7 +185,7 @@ export function PayActionButton({
 
     const chainToken = getTokenForChain(selectedSucker.peerChainId);
     const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
-    
+
     /*writeContract({
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
@@ -204,12 +200,21 @@ export function PayActionButton({
       ],
       value,
     });*/
-    writeContract?.({ // TODO:REVIEW
+    writeContract?.({
+      // TODO:REVIEW
       abi: jbMultiTerminalAbi,
       functionName: "pay",
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data as `0x${string}`,
-      args: [selectedSucker.projectId, chainToken, value, address, 0n, memo || "", "0x0"],
+      args: [
+        selectedSucker.projectId,
+        chainToken,
+        value,
+        address,
+        0n,
+        memo || "",
+        "0x0",
+      ],
       value: isNative ? value : 0n,
     });
   };
@@ -254,10 +259,7 @@ export function PayActionButton({
       Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
   ) {
     return (
-      <Button
-        className={primaryButtonClasses}
-        disabled={true}
-      >
+      <Button className={primaryButtonClasses} disabled={true}>
         Insufficient Funds
       </Button>
     );
@@ -337,4 +339,4 @@ export function PayActionButton({
       </Dialog.Portal>
     </Dialog.Root>
   );
-};
+}

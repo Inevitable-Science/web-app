@@ -73,13 +73,7 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
     }
   }, [params.slug]);
 
-  if (
-    initialized && 
-      (notFound || 
-      !projectId || 
-      !chainId || 
-      !version
-    )) {
+  if (initialized && (notFound || !projectId || !chainId || !version)) {
     triggerNotFound();
   }
 

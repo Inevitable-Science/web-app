@@ -62,7 +62,6 @@ export function PayOnSelect() {
 }
 */
 
-
 import { useEffect } from "react";
 import { JB_CHAINS } from "juice-sdk-core";
 import { JBChainId, useJBChainId, useSuckers } from "juice-sdk-react";
@@ -98,7 +97,9 @@ export function PayOnSelect() {
       <Select
         onValueChange={(value: string) => {
           setSelectedSucker(
-            suckers?.find((sucker) => sucker.peerChainId === Number(value) as JBChainId) || undefined
+            suckers?.find(
+              (sucker) => sucker.peerChainId === (Number(value) as JBChainId)
+            ) || undefined
           );
         }}
         defaultValue={selectedSucker?.peerChainId.toString()}
@@ -108,7 +109,10 @@ export function PayOnSelect() {
         </SelectTrigger>
         <SelectContent>
           {suckers?.map((sucker) => (
-            <SelectItem key={sucker.peerChainId} value={sucker.peerChainId.toString()}>
+            <SelectItem
+              key={sucker.peerChainId}
+              value={sucker.peerChainId.toString()}
+            >
               <div className="flex items-center gap-2">
                 <ChainLogo
                   chainId={sucker.peerChainId as JBChainId}

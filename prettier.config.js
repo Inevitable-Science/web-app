@@ -1,7 +1,7 @@
 // prettier.config.js or .prettierrc.js
 
 /** @type {import("prettier").Config} */
-const config = {
+module.exports = {
   // General Formatting
   printWidth: 80,
   tabWidth: 2,
@@ -20,5 +20,3 @@ const config = {
 
   plugins: ["prettier-plugin-tailwindcss"],
 };
-
-export default config;

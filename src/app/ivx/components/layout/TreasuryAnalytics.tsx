@@ -6,12 +6,12 @@ import TreasuryPieChart from "@/app/[...slug]/components/NetworkDashboard/sectio
 export function IvxTreasuryAnalytics() {
   const { analyticsData } = useIVXContext();
 
-  return(
-    <div className="grid grid-cols-2 gap-[12px] h-[420px]">
-      <div className="bg-grey-450 h-full rounded-2xl p-[12px]">
-        <p className="text-grey-50 text-sm uppercase">Treasury Holdings</p>
-        <div 
-          className="scrollbar-hide overflow-y-scroll max-h-[376px] pb-12"
+  return (
+    <div className="grid h-[420px] grid-cols-2 gap-[12px]">
+      <div className="h-full rounded-2xl bg-grey-450 p-[12px]">
+        <p className="text-sm uppercase text-grey-50">Treasury Holdings</p>
+        <div
+          className="scrollbar-hide max-h-[376px] overflow-y-scroll pb-12"
           style={{
             maskImage:
               "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
@@ -25,7 +25,11 @@ export function IvxTreasuryAnalytics() {
             .map((token, index) => {
               const percentage =
                 token.totalValue > 0
-                  ? ((token.totalValue / (analyticsData?.treasury?.treasuryValue ?? 1)) * 100).toFixed(2)
+                  ? (
+                      (token.totalValue /
+                        (analyticsData?.treasury?.treasuryValue ?? 1)) *
+                      100
+                    ).toFixed(2)
                   : "0.00";
 
               return (
@@ -49,12 +53,14 @@ export function IvxTreasuryAnalytics() {
         </div>
       </div>
 
-      <div className="bg-grey-450 rounded-2xl p-[16px] h-full">
-        <p className="text-grey-50 text-sm uppercase">Treasury Holdings</p>
-        <div className="flex h-[calc(100%-20px)] justify-center items-center">
-          {analyticsData?.treasury?.treasuryTokens &&
-            <TreasuryPieChart filteredData={analyticsData?.treasury?.treasuryTokens} />
-          }
+      <div className="h-full rounded-2xl bg-grey-450 p-[16px]">
+        <p className="text-sm uppercase text-grey-50">Treasury Holdings</p>
+        <div className="flex h-[calc(100%-20px)] items-center justify-center">
+          {analyticsData?.treasury?.treasuryTokens && (
+            <TreasuryPieChart
+              filteredData={analyticsData?.treasury?.treasuryTokens}
+            />
+          )}
         </div>
       </div>
     </div>

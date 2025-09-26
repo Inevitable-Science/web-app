@@ -17,15 +17,14 @@ export function Providers({
   version: JBVersion;
   children: React.ReactNode;
 }) {
-
   const url = process.env.NEXT_PUBLIC_BENDYSTRAW_URL;
-  if(!url) return notFound();
+  if (!url) return notFound();
 
   const pathname = new URL(url).pathname;
   const bendystrawApiKey = pathname.replace("/", "");
 
   const bendystrawProvider = {
-    apiKey: bendystrawApiKey
+    apiKey: bendystrawApiKey,
   };
 
   return (

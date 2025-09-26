@@ -32,7 +32,11 @@ import {
 } from "juice-sdk-react";
 import { useEffect } from "react";
 import { Address } from "viem";
-import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { useSelectedSucker } from "./SelectedSuckerContext";
 
 // TODO:REVIEW
@@ -100,7 +104,8 @@ export function PayDialog({
       return;
     }
 
-    writeContract?.({ // TODO:REVIEW
+    writeContract?.({
+      // TODO:REVIEW
       abi: jbMultiTerminalAbi,
       functionName: "pay",
       chainId: selectedSucker.peerChainId,

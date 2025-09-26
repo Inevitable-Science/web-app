@@ -10,20 +10,17 @@ import { Loader2 } from "lucide-react";
 import { useIVXContext } from "../../DataProvider";
 
 export function HoldersTable() {
-  const {
-    project,
-    token
-  } = useIVXContext();
+  const { project, token } = useIVXContext();
 
   const participantsQuery = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",
     orderDirection: "desc",
     where: project?.suckerGroupId
-    ? {
-        suckerGroupId: project.suckerGroupId,
-        balance_gt: 0,
-      }
-    : undefined,
+      ? {
+          suckerGroupId: project.suckerGroupId,
+          balance_gt: 0,
+        }
+      : undefined,
   });
 
   const participantsDataAggregate =
@@ -54,9 +51,10 @@ export function HoldersTable() {
   const participants = Object.values(participantsDataAggregate);
 
   return (
-    <div className="h-full overflow-auto flex flex-col rounded-2xl bg-grey-450 p-[12px]">
+    <div className="flex h-full flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px]">
       <p className="py-1 text-sm uppercase text-grey-50">Holders</p>
-      <div className="overflow-y-scroll scrollbar-hide pb-[56px]"
+      <div
+        className="scrollbar-hide overflow-y-scroll pb-[56px]"
         style={{
           maskImage:
             "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
@@ -65,7 +63,7 @@ export function HoldersTable() {
         }}
       >
         {participants.length === 0 && (
-          <div className="flex w-full h-[348px] justify-center items-center activeSkeleton">
+          <div className="activeSkeleton flex h-[348px] w-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin" />
           </div>
         )}
@@ -92,8 +90,7 @@ export function HoldersTable() {
                       )
                     ),
                     true
-                  )}
-                  {" "}
+                  )}{" "}
                   IVX
                 </span>
               </div>

@@ -13,7 +13,11 @@ import {
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote, NATIVE_TOKEN } from "juice-sdk-core";
+import {
+  getTokenAToBQuote,
+  getTokenBtoAQuote,
+  NATIVE_TOKEN,
+} from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
@@ -24,7 +28,8 @@ import { useSelectedSucker } from "../../SelectedSuckerContext";
 import { useIVXContext } from "../../DataProvider";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 
-export function TransactionCard() { // TODO: Disallow negative numbers
+export function TransactionCard() {
+  // TODO: Disallow negative numbers
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
 
@@ -169,7 +174,7 @@ export function TransactionCard() { // TODO: Disallow negative numbers
             </div>
             <div className="flex flex-col items-end gap-1">
               {/*<div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">*/}
-                {/*<Image
+              {/*<Image
                   src="/assets/img/logo/mainnet.svg"
                   className="rounded-full"
                   height={22}
@@ -177,12 +182,12 @@ export function TransactionCard() { // TODO: Disallow negative numbers
                   alt="ETH Icon"
                 />
                 <p className="text-lg font-light">{tokenA.symbol}</p>*/}
-                <ChainSelector
-                  disabled={!suckers || suckers.length <= 1}
-                  value={selectedSucker?.peerChainId as JBChainId}
-                  onChange={handleChainChange}
-                  options={suckers?.map((s) => s.peerChainId) ?? []}
-                />
+              <ChainSelector
+                disabled={!suckers || suckers.length <= 1}
+                value={selectedSucker?.peerChainId as JBChainId}
+                onChange={handleChainChange}
+                options={suckers?.map((s) => s.peerChainId) ?? []}
+              />
               {/*</div>*/}
               <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
                 Balance:{" "}
@@ -229,7 +234,8 @@ export function TransactionCard() { // TODO: Disallow negative numbers
           amountA={preparedAmountA}
           amountB={preparedAmountB}
           paymentToken={
-            (accountingContext?.project?.token as `0x${string}`) || NATIVE_TOKEN.toLowerCase()
+            (accountingContext?.project?.token as `0x${string}`) ||
+            NATIVE_TOKEN.toLowerCase()
           }
           walletBalance={
             walletBalance

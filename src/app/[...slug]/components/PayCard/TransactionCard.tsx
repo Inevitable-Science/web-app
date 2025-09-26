@@ -14,7 +14,11 @@ import {
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote, NATIVE_TOKEN } from "juice-sdk-core";
+import {
+  getTokenAToBQuote,
+  getTokenBtoAQuote,
+  NATIVE_TOKEN,
+} from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
@@ -271,7 +275,8 @@ export function TransactionCard() {
               amountA={preparedAmountA}
               amountB={preparedAmountB}
               paymentToken={
-                (accountingContext?.project?.token as `0x${string}`) || NATIVE_TOKEN.toLowerCase()
+                (accountingContext?.project?.token as `0x${string}`) ||
+                NATIVE_TOKEN.toLowerCase()
               }
               walletBalance={
                 walletBalance

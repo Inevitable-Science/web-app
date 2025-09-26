@@ -1,5 +1,9 @@
 import { ProjectAccountingContextDocument } from "@/generated/graphql";
-import { useJBChainId, useJBContractContext, useBendystrawQuery } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useBendystrawQuery,
+} from "juice-sdk-react";
 
 export function useProjectAccountingContext() {
   const { projectId } = useJBContractContext();
@@ -8,6 +12,6 @@ export function useProjectAccountingContext() {
   return useBendystrawQuery(ProjectAccountingContextDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
-    version: 4 // TODO dynamic version
+    version: 4, // TODO dynamic version
   });
 }

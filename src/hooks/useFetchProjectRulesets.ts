@@ -22,7 +22,9 @@ type SuckerPairWithRulesets = SuckerPair & {
   readonly rulesets: readonly RuleSet[];
 };
 
-export function useFetchProjectRulesets(suckers: SuckerPair[] | undefined | null) {
+export function useFetchProjectRulesets(
+  suckers: SuckerPair[] | undefined | null
+) {
   const [suckerPairsWithRulesets, setSuckerPairsWithRulesets] = useState<
     SuckerPairWithRulesets[] | undefined
   >(undefined);
@@ -38,12 +40,15 @@ export function useFetchProjectRulesets(suckers: SuckerPair[] | undefined | null
         suckers.map((sucker) =>
           readContract(wagmiConfig, {
             chainId: sucker.peerChainId as 1 | 10 | 8453 | 42161,
-            address: contractAddress(JBCoreContracts.JBRulesets, sucker.peerChainId),
+            address: contractAddress(
+              JBCoreContracts.JBRulesets,
+              sucker.peerChainId
+            ),
             abi: jbRulesetsAbi,
             functionName: "allOf",
             args: [sucker.projectId, 0n, BigInt(MAX_RULESET_COUNT)],
-          }),
-        ),
+          })
+        )
       );
       if (allRuleSets.length === 0) return undefined;
       const pairsWithRulesets = suckers.map((sucker, index) => ({

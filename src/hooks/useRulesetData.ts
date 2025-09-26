@@ -18,7 +18,11 @@ import {
   RulesetWeight,
   WeightCutPercent,
 } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { useReadContract } from "wagmi";
 
@@ -62,27 +66,30 @@ export function useRulesetData({
 
   const project = projectId ? projectId : fetchedProjectId;
 
-  const { data: allRulesets, isLoading: isLoadingAllRulesets } = useReadContract({
-    abi: jbRulesetsAbi,
-    functionName: "allOf",
-    address: contractAddress(JBCoreContracts.JBRulesets),
-    chainId,
-    args: [fetchedProjectId, 0n, BigInt(MAX_RULESET_COUNT)],
-    query: {
-      select(data) {
-        return data
-          .map((ruleset) => {
-            return {
-              ...ruleset,
-              weight: new RulesetWeight(ruleset.weight),
-              weightCutPercent: new WeightCutPercent(ruleset.weightCutPercent),
-            };
-          })
-          .reverse();
+  const { data: allRulesets, isLoading: isLoadingAllRulesets } =
+    useReadContract({
+      abi: jbRulesetsAbi,
+      functionName: "allOf",
+      address: contractAddress(JBCoreContracts.JBRulesets),
+      chainId,
+      args: [fetchedProjectId, 0n, BigInt(MAX_RULESET_COUNT)],
+      query: {
+        select(data) {
+          return data
+            .map((ruleset) => {
+              return {
+                ...ruleset,
+                weight: new RulesetWeight(ruleset.weight),
+                weightCutPercent: new WeightCutPercent(
+                  ruleset.weightCutPercent
+                ),
+              };
+            })
+            .reverse();
+        },
       },
-    },
-  });
-  
+    });
+
   /*const { data: allRulesets, isLoading: isLoadingAllRulesets } =
     useReadJbRulesetsAllOf({
       // The arguments for the contract read.

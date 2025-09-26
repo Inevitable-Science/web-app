@@ -2,13 +2,19 @@
 
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
-import { DEFAULT_METADATA, jbMultiTerminalAbi, NATIVE_TOKEN, SuckerPair } from "juice-sdk-core";
 import {
-  JBChainId,
-  useJBContractContext,
-} from "juice-sdk-react";
+  DEFAULT_METADATA,
+  jbMultiTerminalAbi,
+  NATIVE_TOKEN,
+  SuckerPair,
+} from "juice-sdk-core";
+import { JBChainId, useJBContractContext } from "juice-sdk-react";
 import { useEffect, useMemo } from "react";
-import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 import { Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
@@ -42,12 +48,12 @@ export function WithdrawActionButton({
     error: writeError,
     writeContract,
   } = useWriteJbMultiTerminalCashOutTokensOf();*/
-  const { 
-    data: txHash, 
-    isPending: isWriteLoading, 
-    isError: isWriteError, 
+  const {
+    data: txHash,
+    isPending: isWriteLoading,
+    isError: isWriteError,
     error: writeError,
-    writeContractAsync
+    writeContractAsync,
   } = useWriteContract();
 
   const {
@@ -74,7 +80,7 @@ export function WithdrawActionButton({
     }
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
 
-  const  handleWithdraw = async () => {
+  const handleWithdraw = async () => {
     if (
       !primaryNativeTerminal?.data ||
       !address ||
@@ -83,7 +89,6 @@ export function WithdrawActionButton({
       !chainId
     )
       return;
-        
 
     const args = [
       address, // holder
@@ -95,7 +100,8 @@ export function WithdrawActionButton({
       DEFAULT_METADATA, // metadata
     ] as const;
 
-    await writeContractAsync?.({ // TODO:REVIEW
+    await writeContractAsync?.({
+      // TODO:REVIEW
       abi: jbMultiTerminalAbi,
       functionName: "cashOutTokensOf",
       chainId: selectedSucker?.peerChainId as JBChainId,

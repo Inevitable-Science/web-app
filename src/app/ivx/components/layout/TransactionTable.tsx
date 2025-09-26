@@ -54,10 +54,9 @@ function PayActivityItem(
     addSuffix: true,
   });
 
-
   return (
     <div className="border-color border-b pb-2">
-      <div className="flex items-center my-1 justify-between">
+      <div className="my-1 flex items-center justify-between">
         <h3 className="font-light text-grey-50">IN</h3>
         <div className="text-md font-light text-grey-50">
           <EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
@@ -151,7 +150,6 @@ export function TransactionTable() {
   const chainId = useJBChainId();
   const [isOpen, setIsOpen] = useState(true);
 
-
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
@@ -183,7 +181,7 @@ export function TransactionTable() {
   );
 
   return (
-    <div className="bg-grey-450 h-full rounded-2xl p-[12px] relative flex flex-col">
+    <div className="relative flex h-full flex-col rounded-2xl bg-grey-450 p-[12px]">
       <p className="py-1 text-sm uppercase text-grey-50">Transactions</p>
 
       <FarcasterProfilesProvider
@@ -199,7 +197,8 @@ export function TransactionTable() {
         }
       >
         {isOpen && (
-          <div className="overflow-y-scroll scrollbar-hide pb-[48px] flex flex-col gap-1 max-h-[340px]"
+          <div
+            className="scrollbar-hide flex max-h-[340px] flex-col gap-1 overflow-y-scroll pb-[48px]"
             style={{
               maskImage:
                 "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
@@ -208,7 +207,7 @@ export function TransactionTable() {
             }}
           >
             {isLoading ? (
-              <div className="flex w-full h-[348px] justify-center items-center">
+              <div className="flex h-[348px] w-full items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
             ) : activityEvents?.activityEvents.items &&
@@ -235,7 +234,7 @@ export function TransactionTable() {
                 return null;
               })
             ) : (
-              <span className="text-md text-muted-foreground text-center mt-24">
+              <span className="text-md mt-24 text-center text-muted-foreground">
                 No activity yet.
               </span>
             )}

@@ -40,9 +40,12 @@ export function useExitFloorPrice() {
   });
 
   const totalSupplyFormatted =
-    totalTokenSupply && token?.data ? formatUnits(totalTokenSupply, token.data.decimals) : null;
+    totalTokenSupply && token?.data
+      ? formatUnits(totalTokenSupply, token.data.decimals)
+      : null;
 
-  const exitLeadingZeroes = totalSupplyFormatted?.split(".")[1]?.match(/^0+/)?.[0]?.length ?? 0;
+  const exitLeadingZeroes =
+    totalSupplyFormatted?.split(".")[1]?.match(/^0+/)?.[0]?.length ?? 0;
 
   // if total supply is less than 1, use a decimal for the exit price base unit (0.1, 0.01, 0.001, etc.)
   // if total supply is greater than 1, use 1 for the exit price base unit.
@@ -66,10 +69,12 @@ export function useExitFloorPrice() {
             {
               overflowWei: nativeTokenSurplus,
               totalSupply: totalTokenSupply,
-              cashOutTaxRate: Number(rulesetMetadata?.data?.cashOutTaxRate.value ?? 0n),
+              cashOutTaxRate: Number(
+                rulesetMetadata?.data?.cashOutTaxRate.value ?? 0n
+              ),
               tokensReserved,
-            },
-          ),
+            }
+          )
         ) * 10n
       : null;
 

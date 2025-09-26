@@ -104,7 +104,8 @@ export function PayDialog({
       return;
     }
 
-    writeContract?.({ // TODO:REVIEW
+    writeContract?.({
+      // TODO:REVIEW
       abi: jbMultiTerminalAbi,
       functionName: "pay",
       chainId: selectedSucker.peerChainId,

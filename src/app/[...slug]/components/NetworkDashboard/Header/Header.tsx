@@ -3,7 +3,10 @@
 import { ParticipantsDocument, SuckerGroupDocument } from "@/generated/graphql";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatDate } from "@/lib/utils";
-import { useJBProjectMetadataContext, useBendystrawQuery } from "juice-sdk-react";
+import {
+  useJBProjectMetadataContext,
+  useBendystrawQuery,
+} from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";

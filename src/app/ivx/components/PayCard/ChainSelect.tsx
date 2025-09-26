@@ -6,8 +6,8 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue }
-from "@/components/ui/select";
+  SelectValue,
+} from "@/components/ui/select";
 import { sortChains } from "@/lib/utils";
 
 interface ChainSelectorProps {
@@ -34,7 +34,7 @@ export const ChainSelector = ({
       defaultValue={String(value)}
     >
       <SelectTrigger
-        className="bg-grey-450 text-color h-fit w-fit rounded-full border-none p-1.5 text-xs"
+        className="text-color h-fit w-fit rounded-full border-none bg-grey-450 p-1.5 text-xs"
         aria-label="Select Chain"
       >
         <SelectValue placeholder="Select chain">
@@ -45,7 +45,9 @@ export const ChainSelector = ({
                 height={24}
                 width={24}
               />
-              <p className="text-[18px] mr-1">{JB_CHAINS[value].nativeTokenSymbol}</p>
+              <p className="mr-1 text-[18px]">
+                {JB_CHAINS[value].nativeTokenSymbol}
+              </p>
             </div>
           ) : (
             <span>Select chain</span>

@@ -1,4 +1,8 @@
-import { jbMultiTerminalAbi, NATIVE_TOKEN, NATIVE_TOKEN_DECIMALS } from "juice-sdk-core";
+import {
+  jbMultiTerminalAbi,
+  NATIVE_TOKEN,
+  NATIVE_TOKEN_DECIMALS,
+} from "juice-sdk-core";
 import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 import { useReadContract } from "wagmi";
 
