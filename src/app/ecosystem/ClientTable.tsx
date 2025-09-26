@@ -108,11 +108,12 @@ export default function ClientTable() {
       const endpoint = "https://bendystraw.xyz/schema";
 
       const query = `
-        query MyQuery($chainId: Float!, $projectId: Float!, $address: String!) {
+        query MyQuery($chainId: Float!, $projectId: Float!, $address: String!, $version: Float!) {
           participant(
             projectId: $projectId,
             address: $address,
-            chainId: $chainId
+            chainId: $chainId,
+            version: $version
           ) {
             balance
             erc20Balance
@@ -132,7 +133,7 @@ export default function ClientTable() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   query,
-                  variables: { chainId, projectId: projectID, address },
+                  variables: { chainId, projectId: projectID, address, version: 4 },
                 }),
               });
 
