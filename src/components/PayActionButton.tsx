@@ -275,7 +275,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { useJBChainId, useJBContractContext, useBendystrawQuery } from "juice-sdk-react";
 import { useMemo, useState } from "react";
 import {
   useAccount,
@@ -294,7 +294,6 @@ import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
 import { useNetworkData } from "@/app/[...slug]/components/NetworkDashboard/NetworkDataContext";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 
 const shimmerClasses = `
     relative overflow-hidden 

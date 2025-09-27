@@ -40,7 +40,7 @@ export default function MainIvxLayout() {
               <IvxTreasuryAnalytics />
 
               <div className="grid h-[300px] grid-cols-2 gap-[12px]">
-                {/*<RulesTable />*/}
+                <RulesTable />
 
                 <PortfolioPeformance />
               </div>

@@ -1,4 +1,4 @@
-/*"use client"
+"use client"
 import { decodeRulesetMetadata } from "@/lib/utils";
 import { useIVXContext } from "../../DataProvider";
 import { useJBChainId, useJBContractContext, useJBRulesetContext, useJBTokenContext, useNativeTokenSurplus } from "juice-sdk-react";
@@ -11,7 +11,7 @@ import { commaNumber } from "@/lib/number";
 import { useReadContract } from "wagmi";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 
-export default function RuleTable() {
+export function RulesTable() {
   const { analyticsData, ruleset: currentRuleset, project } = useIVXContext();
     const {
     projectId,
@@ -126,8 +126,8 @@ export default function RuleTable() {
 
   const devTax = rulesetMetadata?.data?.reservedPercent;
 
-  const selectedStageBoost = selectedStateReservedTokenSplits?.[0];
-  const reservedPercent = selectedStageMetadata?.data?.reservedPercent;
+  //const selectedStageBoost = selectedStateReservedTokenSplits?.[0];
+  //const reservedPercent = selectedStageMetadata?.data?.reservedPercent;
 
   const issuance = useFormattedTokenIssuance({
     weight: selectedStage?.weight,
@@ -165,19 +165,23 @@ export default function RuleTable() {
           <p>
             {issuance} cut {selectedStage.weightCutPercent.formatPercentage()}% every{" "}
               {(selectedStage.duration / 86400).toString()} days
-              {selectedStageBoost ? (
+              {/*{selectedStageBoost ? (
                 <span className="text-md leading-6 text-zinc-700">
                   , split limit of {reservedPercent?.formatPercentage()}%.
                 </span>
-              ) : null}
+              ) : null}*/}
           </p>
           )}
         </div>
       </div>
     </>
   )
-}*/
+}
 
+
+
+
+/*
 "use client";
 
 import {
@@ -599,3 +603,4 @@ export function RulesTable() {
     </div>
   );
 }
+*/
