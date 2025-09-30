@@ -63,15 +63,15 @@ export function AccordionComponent() {
             {/* Question row */}
             <button
               onClick={() => toggleAccordion(index)}
-              className="flex w-full items-center justify-between text-left"
+              className="flex w-full items-center justify-between gap-[12px] text-left"
             >
               <span
-                className={`${openIndex === index && "py-8 text-primary"} text-lg transition-all`}
+                className={`${openIndex === index && "py-8 text-primary"} text-md md:text-lg transition-all`}
               >
                 {faq.question}
               </span>
               <ChevronDown
-                className={`h-8 w-8 transition-transform duration-300 ${
+                className={`size-6 md:size-8 transition-transform duration-300 ${
                   openIndex === index ? "rotate-180 text-primary" : ""
                 }`}
               />

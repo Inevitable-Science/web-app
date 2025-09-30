@@ -7,7 +7,7 @@ export function PortfolioPeformance() {
     <>
       {analyticsData?.treasury?.historicalReturns && (
         <div className="h-full rounded-2xl bg-grey-450 p-[12px]">
-          <h3 className="py-1 text-sm uppercase text-grey-50">
+          <h3 className="py-1 text-sm uppercase text-muted-foreground">
             Portfolio Peformance
           </h3>
           <div className="flex flex-col text-sm font-light">
@@ -22,7 +22,7 @@ export function PortfolioPeformance() {
                   key={label}
                   className="flex items-center justify-between border-b border-[#282828] py-1 py-4"
                 >
-                  <p className="w-8 text-grey-50">{label}</p>
+                  <p className="w-8 text-muted-foreground">{label}</p>
                   <p className={`min-w-24 text-center ${textColor}`}>
                     {isPositive === true && "+"}
                     {value.dollarReturn}

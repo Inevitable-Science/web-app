@@ -1,5 +1,4 @@
 import { useToast } from "@/components/ui/use-toast";
-//import { JB_CHAINS, NATIVE_TOKEN, TokenAmountType, SuckerPair } from "juice-sdk-core";
 import {
   JB_CHAINS,
   JBChainId,
@@ -32,12 +31,6 @@ import { formatUnits } from "viem";
 import { useIVXContext } from "../../DataProvider";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 
-/*const shimmerClasses = `
-    relative overflow-hidden 
-    before:content-[''] before:absolute before:inset-0 
-    before:-translate-x-full before:animate-[shimmer_2s_infinite] 
-    before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent
-  `;*/
 const shimmerClasses = `
   relative overflow-hidden
   before:content-[''] before:absolute before:inset-0
@@ -140,7 +133,7 @@ export function PayActionButton({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      version: 4, // TODO dynamic version
+      version: Number(version), // TODO dynamic version
     },
     {
       enabled: !!chainId && !!projectId,
@@ -313,7 +306,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium font-semibold leading-none cursor-pointer select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>

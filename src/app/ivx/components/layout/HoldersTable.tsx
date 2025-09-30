@@ -51,8 +51,8 @@ export function HoldersTable() {
   const participants = Object.values(participantsDataAggregate);
 
   return (
-    <div className="flex h-full flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px]">
-      <p className="py-1 text-sm uppercase text-grey-50">Holders</p>
+    <div className="flex h-[400px] lg:h-full flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px]">
+      <p className="py-1 text-sm uppercase text-muted-foreground">Holders</p>
       <div
         className="scrollbar-hide overflow-y-scroll pb-[56px]"
         style={{
@@ -72,7 +72,7 @@ export function HoldersTable() {
             key={participant?.address}
             className="border-color flex flex-col border-b px-2 py-3"
           >
-            <div className="text-md flex items-center justify-between font-light text-grey-50">
+            <div className="text-md flex items-center justify-between font-light text-muted-foreground">
               <EthereumAddress
                 address={participant?.address as Address}
                 short

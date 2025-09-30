@@ -6,12 +6,18 @@ import {
 } from "juice-sdk-react";
 
 export function useProjectAccountingContext() {
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
 
-  return useBendystrawQuery(ProjectAccountingContextDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
-    version: 4, // TODO dynamic version
-  });
+  return useBendystrawQuery(
+    ProjectAccountingContextDocument,
+    {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
+      version: Number(version),
+    },
+    {
+      enabled: !!chainId && !!projectId && !!version,
+    },
+  );
 }

@@ -1,23 +1,21 @@
 "use client";
-import { useIVXContext } from "../DataProvider";
 import { IvxPageHeader } from "./layout/Header";
 import { IvxTreasuryAnalytics } from "./layout/TreasuryAnalytics";
-import { RulesTable } from "./layout/RulesTable";
 import { PortfolioPeformance } from "./layout/PortfolioPeformance";
 import { HoldersTable } from "./layout/HoldersTable";
 import { Footer } from "./layout/Footer";
 import { TransactionTable } from "./layout/TransactionTable";
 import { AccordionComponent } from "./layout/AccordionComponent";
+import { RulesTable } from "./layout/RulesTable";
 
 export default function MainIvxLayout() {
-  const { analyticsData, ruleset: currentRuleset, project } = useIVXContext();
 
   return (
     <>
-      <div className="">
+      <div>
         <div className="absolute z-[-1] h-[70vh] w-full bg-[url('/assets/img/layout/ivx/ivx_backdrop.png')] bg-cover bg-center"></div>
         <div className="ctWrapper pt-[140px]">
-          <div className="grid grid-cols-[420px_1fr] gap-4">
+          <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[420px_1fr]">
             <h1 className="text-5xl font-extralight">
               This Is Where the <span className="text-primary">Impossible</span>{" "}
               Begins.
@@ -39,13 +37,19 @@ export default function MainIvxLayout() {
             <div className="flex flex-col gap-[12px]">
               <IvxTreasuryAnalytics />
 
-              <div className="grid h-[300px] grid-cols-2 gap-[12px]">
+              <div className="
+                flex flex-col-reverse gap-[12px]
+                lg:grid lg:grid-cols-2
+              ">
                 <RulesTable />
 
                 <PortfolioPeformance />
               </div>
 
-              <div className="grid h-[400px] grid-cols-2 gap-[12px]">
+              <div className="
+                flex flex-col gap-[12px]
+                lg:grid lg:h-[400px] lg:grid-cols-2
+              ">
                 <HoldersTable />
 
                 <TransactionTable />

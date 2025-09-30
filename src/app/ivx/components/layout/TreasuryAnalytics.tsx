@@ -7,9 +7,13 @@ export function IvxTreasuryAnalytics() {
   const { analyticsData } = useIVXContext();
 
   return (
-    <div className="grid h-[420px] grid-cols-2 gap-[12px]">
+    <div className="
+      flex flex-col-reverse
+      lg:grid lg:h-[420px] lg:grid-cols-2
+      gap-[12px]
+    ">
       <div className="h-full rounded-2xl bg-grey-450 p-[12px]">
-        <p className="text-sm uppercase text-grey-50">Treasury Holdings</p>
+        <p className="text-sm uppercase text-muted-foreground">Treasury Holdings</p>
         <div
           className="scrollbar-hide max-h-[376px] overflow-y-scroll pb-12"
           style={{
@@ -34,7 +38,7 @@ export function IvxTreasuryAnalytics() {
 
               return (
                 <div key={index} className="border-color border-b py-3">
-                  <div className="flex items-center justify-between font-light text-grey-50">
+                  <div className="flex items-center justify-between font-light text-muted-foreground">
                     <p>
                       {token.contractAddress
                         ? truncateAddress(token.contractAddress as Address)
@@ -53,16 +57,17 @@ export function IvxTreasuryAnalytics() {
         </div>
       </div>
 
-      <div className="h-full rounded-2xl bg-grey-450 p-[16px]">
-        <p className="text-sm uppercase text-grey-50">Treasury Holdings</p>
-        <div className="flex h-[calc(100%-20px)] items-center justify-center">
-          {analyticsData?.treasury?.treasuryTokens && (
-            <TreasuryPieChart
-              filteredData={analyticsData?.treasury?.treasuryTokens}
-            />
-          )}
+      {analyticsData?.treasury?.treasuryTokens && (
+        <div className="h-full rounded-2xl bg-grey-450 p-[16px]">
+          <p className="text-sm uppercase text-muted-foreground">Treasury Holdings</p>
+          <div className="flex h-[calc(100%-20px)] items-center justify-center my-[24px] lg:my-0">
+            
+              <TreasuryPieChart
+                filteredData={analyticsData?.treasury?.treasuryTokens}
+              />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

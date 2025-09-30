@@ -90,9 +90,21 @@ export function TransactionCard() {
   const ruleset = rulesetContext.data;
   const rulesetMetadata = rulesetMetadataContext.data;
 
+  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === '-' || e.key === 'Minus') {
+      e.preventDefault();
+    }
+  };
+
   // --- CORE LOGIC (CALCULATION HANDLERS) ---
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    if (value.startsWith("-")) {
+    setAmountA("0");
+    return;
+  }
+
     setAmountA(value);
     if (!value || value === ".") {
       setAmountB("");
@@ -156,8 +168,7 @@ export function TransactionCard() {
   const isChainMismatched = activeChain !== selectedSucker?.peerChainId;
 
   return (
-    <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
         <div className="flex flex-col gap-2">
           <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
             <div className="flex flex-col gap-[2px]">
@@ -170,6 +181,7 @@ export function TransactionCard() {
                 placeholder="0.00"
                 value={amountA}
                 onChange={handlePayAmountChange}
+                onKeyDown={preventMinusKey}
               />
             </div>
             <div className="flex flex-col items-end gap-1">
@@ -195,7 +207,7 @@ export function TransactionCard() {
                   ? parseFloat(
                       formatUnits(walletBalance.value, tokenA.decimals)
                     ).toFixed(4)
-                  : "0.00"}
+                  : "--"}
               </p>
             </div>
           </div>
@@ -210,9 +222,10 @@ export function TransactionCard() {
                 placeholder="0.00"
                 value={amountB}
                 onChange={handleReceiveAmountChange}
+                onKeyDown={preventMinusKey}
               />
             </div>
-            <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
+            <div className="flex w-fit min-w-fit items-center gap-1 rounded-full bg-grey-450 px-1.5 py-1">
               <Image
                 src={
                   metadata.data?.logoUri
@@ -220,8 +233,8 @@ export function TransactionCard() {
                     : "/assets/img/logo/mainnet.svg"
                 }
                 className="rounded-full"
-                height={22}
-                width={22}
+                height={24}
+                width={24}
                 alt="Token Icon"
               />
               <p className="text-lg font-light">
@@ -229,7 +242,6 @@ export function TransactionCard() {
               </p>
             </div>
           </div>
-        </div>
         <PayActionButton
           amountA={preparedAmountA}
           amountB={preparedAmountB}

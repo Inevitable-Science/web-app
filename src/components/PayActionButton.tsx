@@ -396,10 +396,10 @@ export function PayActionButton({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      version: 4, // TODO dynamic version
+      version: Number(version),
     },
     {
-      enabled: !!chainId && !!projectId,
+      enabled: !!chainId && !!projectId && !!version,
     }
   );
   const suckerGroupId = projectData?.project?.suckerGroupId;
@@ -572,7 +572,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium font-semibold leading-none cursor-pointer select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>

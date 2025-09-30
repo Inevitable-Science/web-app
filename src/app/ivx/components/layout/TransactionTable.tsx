@@ -17,7 +17,6 @@ import {
   useJBTokenContext,
   useBendystrawQuery,
 } from "juice-sdk-react";
-import { useState } from "react";
 import { Address } from "viem";
 
 import { Loader2 } from "lucide-react";
@@ -57,8 +56,8 @@ function PayActivityItem(
   return (
     <div className="border-color border-b pb-2">
       <div className="my-1 flex items-center justify-between">
-        <h3 className="font-light text-grey-50">IN</h3>
-        <div className="text-md font-light text-grey-50">
+        <h3 className="font-light text-muted-foreground">IN</h3>
+        <div className="text-md font-light text-muted-foreground">
           <EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
             {formattedDate}
           </EtherscanLink>
@@ -112,9 +111,9 @@ function RedeemActivityItem(
     <div className="border-color mb-1 border-b pb-2">
       <div className="flex items-center justify-between">
         <div className="text-md mb-2 text-zinc-500">
-          <h3 className="font-light text-grey-50">WITHDREW</h3>
+          <h3 className="font-light text-muted-foreground">WITHDREW</h3>
         </div>
-        <div className="text-md mb-2 flex items-center gap-1 font-light text-grey-50">
+        <div className="text-md mb-2 flex items-center gap-1 font-light text-muted-foreground">
           <EtherscanLink
             className="hover:underline"
             type="tx"
@@ -148,7 +147,6 @@ function RedeemActivityItem(
 export function TransactionTable() {
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
-  const [isOpen, setIsOpen] = useState(true);
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
@@ -161,7 +159,6 @@ export function TransactionTable() {
   const {
     data: activityEvents,
     isLoading,
-    isFetching, // optional if you want to show loading on polling
   } = useBendystrawQuery(
     ActivityEventsDocument,
     {
@@ -182,7 +179,7 @@ export function TransactionTable() {
 
   return (
     <div className="relative flex h-full flex-col rounded-2xl bg-grey-450 p-[12px]">
-      <p className="py-1 text-sm uppercase text-grey-50">Transactions</p>
+      <p className="py-1 text-sm uppercase text-muted-foreground">Transactions</p>
 
       <FarcasterProfilesProvider
         addresses={
@@ -196,50 +193,48 @@ export function TransactionTable() {
           ) ?? []
         }
       >
-        {isOpen && (
-          <div
-            className="scrollbar-hide flex max-h-[340px] flex-col gap-1 overflow-y-scroll pb-[48px]"
-            style={{
-              maskImage:
-                "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
-              WebkitMaskImage:
-                "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
-            }}
-          >
-            {isLoading ? (
-              <div className="flex h-[348px] w-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </div>
-            ) : activityEvents?.activityEvents.items &&
-              activityEvents.activityEvents.items.length > 0 ? (
-              activityEvents.activityEvents.items.map((event) => {
-                if (event?.payEvent) {
-                  return (
-                    <PayActivityItem
-                      key={event.id}
-                      chainId={event.chainId as JBChainId}
-                      {...event.payEvent}
-                    />
-                  );
-                }
-                if (event?.cashOutTokensEvent) {
-                  return (
-                    <RedeemActivityItem
-                      key={event.id}
-                      chainId={event.chainId as JBChainId}
-                      {...event.cashOutTokensEvent}
-                    />
-                  );
-                }
-                return null;
-              })
-            ) : (
-              <span className="text-md mt-24 text-center text-muted-foreground">
-                No activity yet.
-              </span>
-            )}
-          </div>
-        )}
+        <div
+          className="scrollbar-hide flex max-h-[340px] flex-col gap-1 overflow-y-scroll pb-[48px]"
+          style={{
+            maskImage:
+              "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+          }}
+        >
+          {isLoading ? (
+            <div className="flex h-[348px] w-full items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          ) : activityEvents?.activityEvents.items &&
+            activityEvents.activityEvents.items.length > 0 ? (
+            activityEvents.activityEvents.items.map((event) => {
+              if (event?.payEvent) {
+                return (
+                  <PayActivityItem
+                    key={event.id}
+                    chainId={event.chainId as JBChainId}
+                    {...event.payEvent}
+                  />
+                );
+              }
+              if (event?.cashOutTokensEvent) {
+                return (
+                  <RedeemActivityItem
+                    key={event.id}
+                    chainId={event.chainId as JBChainId}
+                    {...event.cashOutTokensEvent}
+                  />
+                );
+              }
+              return null;
+            })
+          ) : (
+            <span className="text-md mt-24 text-center text-muted-foreground">
+              No activity yet.
+            </span>
+          )}
+        </div>
       </FarcasterProfilesProvider>
     </div>
   );
