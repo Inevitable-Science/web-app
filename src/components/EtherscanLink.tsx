@@ -10,11 +10,11 @@ const EtherscanLink: React.FC<
     className?: string;
     type?: "tx" | "address" | "token";
     truncateTo?: number;
-    chain?: Chain
+    chain?: Chain;
   }>
 > = ({ className, value, type = "address", truncateTo, chain, children }) => {
   const connectedChain = useChain();
-  const chainToLink = chain || connectedChain
+  const chainToLink = chain || connectedChain;
   if (!value) return null;
 
   const renderValue = truncateTo

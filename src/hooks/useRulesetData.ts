@@ -1,14 +1,35 @@
 import { useMemo } from "react";
 import { useFormattedTokenIssuance } from "./useFormattedTokenIssuance";
-import { JBRulesetData, JBRulesetMetadata, RulesetWeight, WeightCutPercent } from "juice-sdk-core";
+import {
+  JBRulesetData,
+  JBRulesetMetadata,
+  //RulesetWeight,
+  //WeightCutPercent,
+} from "juice-sdk-core";
 import { format } from "date-fns";
-import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+//import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+import {
+  CashOutTaxRate,
+  jbControllerAbi,
+  JBCoreContracts,
+  jbRulesetsAbi,
+  jbSplitsAbi,
+  ReservedPercent,
+  RulesetWeight,
+  WeightCutPercent,
+} from "juice-sdk-core";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { MAX_RULESET_COUNT } from "@/app/constants";
+import { useReadContract } from "wagmi";
 
 type UseRulesetDataProps = {
   ruleset?: JBRulesetData;
   metadata?: JBRulesetMetadata;
-  projectId: number;
+  projectId?: number;
 };
 
 /**
@@ -22,7 +43,11 @@ type UseRulesetDataProps = {
  * - `cyclesData`, `tokenData`, `otherRulesData`: Formatted data for the specific ruleset passed in.
  * - `allRulesets`: An array of all semi-processed rulesets for the project.
  */
-export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataProps) {
+export function useRulesetData({
+  ruleset,
+  metadata,
+  projectId,
+}: UseRulesetDataProps) {
   // This section formats the SINGLE ruleset passed as a prop
   const formattedTokenIssuance = useFormattedTokenIssuance({
     weight: ruleset?.weight,
@@ -32,27 +57,62 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
   const start = ruleset?.start ? Number(ruleset.start) * 1000 : 0;
 
   // This new section fetches ALL rulesets for the project
-  const { data: allRulesets, isLoading: isLoadingAllRulesets } = useReadJbRulesetsAllOf({
-    // The arguments for the contract read.
-    // We need a projectId to fetch the rulesets.
-    args: projectId ? [BigInt(projectId), 0n, BigInt(MAX_RULESET_COUNT)] : undefined,
-    query: {
-      // Only run the query if projectId is valid.
-      enabled: !!projectId,
-      // The `select` function transforms the data returned by the hook.
-      // Here, we're converting BigInts to the SDK's class instances for easier use.
-      select(data) {
-        return data.map((rs) => {
-          return {
-            ...rs,
-            weight: new RulesetWeight(rs.weight),
-            weightCutPercent: new WeightCutPercent(rs.weightCutPercent),
-          };
-        });
-      },
-    },
-  });
+  const {
+    projectId: fetchedProjectId,
+    contracts: { controller },
+    contractAddress,
+  } = useJBContractContext();
+  const chainId = useJBChainId();
 
+  const project = projectId ? projectId : fetchedProjectId;
+
+  const { data: allRulesets, isLoading: isLoadingAllRulesets } =
+    useReadContract({
+      abi: jbRulesetsAbi,
+      functionName: "allOf",
+      address: contractAddress(JBCoreContracts.JBRulesets),
+      chainId,
+      args: [fetchedProjectId, 0n, BigInt(MAX_RULESET_COUNT)],
+      query: {
+        select(data) {
+          return data
+            .map((ruleset) => {
+              return {
+                ...ruleset,
+                weight: new RulesetWeight(ruleset.weight),
+                weightCutPercent: new WeightCutPercent(
+                  ruleset.weightCutPercent
+                ),
+              };
+            })
+            .reverse();
+        },
+      },
+    });
+
+  /*const { data: allRulesets, isLoading: isLoadingAllRulesets } =
+    useReadJbRulesetsAllOf({
+      // The arguments for the contract read.
+      // We need a projectId to fetch the rulesets.
+      args: projectId
+        ? [BigInt(projectId), 0n, BigInt(MAX_RULESET_COUNT)]
+        : undefined,
+      query: {
+        // Only run the query if projectId is valid.
+        enabled: !!projectId,
+        // The `select` function transforms the data returned by the hook.
+        // Here, we're converting BigInts to the SDK's class instances for easier use.
+        select(data) {
+          return data.map((rs) => {
+            return {
+              ...rs,
+              weight: new RulesetWeight(rs.weight),
+              weightCutPercent: new WeightCutPercent(rs.weightCutPercent),
+            };
+          });
+        },
+      },
+    });*/
 
   // Memoize the formatted cycles data for the single ruleset
   const cyclesData = useMemo(() => {
@@ -68,13 +128,19 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
   const tokenData = useMemo(() => {
     return {
       payerIssuanceRate: formattedTokenIssuance,
-      redemptionRate: metadata?.cashOutTaxRate ? `~${(BigInt(10_000) - metadata.cashOutTaxRate.value) / BigInt(100)}%` : "-",
+      redemptionRate: metadata?.cashOutTaxRate
+        ? `~${(BigInt(10_000) - metadata.cashOutTaxRate.value) / BigInt(100)}%`
+        : "-",
       /* cashOutTax: metadata?.cashOutTaxRate ? `${metadata.cashOutTaxRate.value / BigInt(100)}%` : '-', */
-      reservedRate: metadata?.reservedPercent ? `${metadata.reservedPercent.value / BigInt(100)}%` : "-",
+      reservedRate: metadata?.reservedPercent
+        ? `${metadata.reservedPercent.value / BigInt(100)}%`
+        : "-",
       /* issuanceReductionRate: ruleset?.weightCutPercent ? `${ruleset.weightCutPercent.value / BigInt(1e7)}%` : '-', */
       ownerTokenMinting: metadata?.allowOwnerMinting ? "Enabled" : "Disabled",
       /* creditTransfers: metadata?.pauseCreditTransfers ? 'Enabled' : 'Disabled', */
-      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts ? "Enabled" : "Disabled",
+      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts
+        ? "Enabled"
+        : "Disabled",
     };
   }, [formattedTokenIssuance, metadata, ruleset]);
 
@@ -83,7 +149,7 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
     const formatBool = (val: boolean | undefined) => (val ? "Yes" : "No");
     return {
       paysHalted: formatBool(metadata?.pausePay),
-/*       holdFees: formatBool(metadata?.holdFees),
+      /*       holdFees: formatBool(metadata?.holdFees),
       canAddAccountingContexts: formatBool(metadata?.allowAddAccountingContext),
       ownerMustSendPayouts: formatBool(metadata?.ownerMustSendPayouts),
       canAddPriceFeed: formatBool(metadata?.allowAddPriceFeed),
@@ -99,5 +165,11 @@ export function useRulesetData({ ruleset, metadata, projectId }: UseRulesetDataP
 
   // The hook now returns the formatted data for the single ruleset,
   // AND the array of all rulesets for the project.
-  return { cyclesData, tokenData, otherRulesData, allRulesets, isLoadingAllRulesets };
+  return {
+    cyclesData,
+    tokenData,
+    otherRulesData,
+    allRulesets,
+    isLoadingAllRulesets,
+  };
 }

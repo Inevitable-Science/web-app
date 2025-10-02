@@ -1,6 +1,4 @@
 import { sdk } from "@farcaster/frame-sdk";
-import Image from "next/image";
-import { ChainLogo } from "@/components/ChainLogo";
 import EtherscanLink from "@/components/EtherscanLink";
 import FarcasterAvatar from "@/components/FarcasterAvatar";
 import { FarcasterProfilesProvider } from "@/components/FarcasterAvatarContext";
@@ -10,7 +8,6 @@ import {
   PayEvent,
   ProjectDocument,
 } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { formatTokenSymbol } from "@/lib/utils";
 import { formatDistance } from "date-fns";
 import { Ether, JB_CHAINS, JBProjectToken } from "juice-sdk-core";
@@ -19,44 +16,20 @@ import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useState, useEffect, useMemo } from "react";
 import { Address, formatEther } from "viem";
 
 import { Loader2 } from "lucide-react";
-import StaticVolumeChart, { ProjectTimelineRange, ProjectTimelineView } from "./NetworkDashboard/Components/ActivityGraph";
+import StaticVolumeChart, {
+  ProjectTimelineRange,
+  ProjectTimelineView,
+} from "./NetworkDashboard/Components/ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
 import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
-// DATA_TODO: Add functionality to view changes to the project rules
-
-type ProjectTimelinePoint = {
-  timestamp: number
-  volume: number
-  balance: number
-  trendingScore: number
-}
-
-const sampleData: ProjectTimelinePoint[] = [
-  { timestamp: Math.floor(Date.now() / 1000) - 30 * 24 * 3600, volume: 5, balance: 10, trendingScore: 200 },
-  { timestamp: Math.floor(Date.now() / 1000) - 25 * 24 * 3600, volume: 7, balance: 12, trendingScore: 250 },
-  { timestamp: Math.floor(Date.now() / 1000) - 20 * 24 * 3600, volume: 10, balance: 15, trendingScore: 300 },
-  { timestamp: Math.floor(Date.now() / 1000) - 15 * 24 * 3600, volume: 8, balance: 13, trendingScore: 280 },
-  { timestamp: Math.floor(Date.now() / 1000) - 10 * 24 * 3600, volume: 12, balance: 18, trendingScore: 320 },
-  { timestamp: Math.floor(Date.now() / 1000) - 5 * 24 * 3600, volume: 15, balance: 20, trendingScore: 350 },
-  { timestamp: Math.floor(Date.now() / 1000), volume: 18, balance: 22, trendingScore: 400 },
-]
-
-
-
-type PayActivityItemData = {
-  id: string;
-  amount: Ether;
-  beneficiary: Address;
-  beneficiaryTokenCount?: JBProjectToken;
-  timestamp: number;
-  txHash: string;
-};
+// todo cleanup
 
 function PayActivityItem(
   payEvent: Pick<
@@ -110,22 +83,22 @@ function PayActivityItem(
   const embedUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
-    <div className="border-b border-color pb-2 mb-1 min-h-[80px]">
+    <div className="border-color mb-1 min-h-[80px] border-b pb-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-grey-50 font-light">PAID</h3>
-        <div className="text-md font-light text-grey-50 mb-2">
+        <h3 className="font-light text-grey-50">PAID</h3>
+        <div className="text-md mb-2 font-light text-grey-50">
           <EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
             {formattedDate}
           </EtherscanLink>
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div className="text-color font-light">
           Ξ{activityItemData.amount.format(6)}
         </div>
 
-        <div className="flex items-center gap-1 font-light text-grey-100 text-md flex-wrap">
+        <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
           <FarcasterAvatar
             address={activityItemData.beneficiary as Address}
             withAvatar={false}
@@ -136,7 +109,7 @@ function PayActivityItem(
       </div>
 
       {activityItemData.memo && (
-        <div className="pb-4 mt-1">
+        <div className="mt-1 pb-4">
           {isMiniApp ? (
             <button
               onClick={() =>
@@ -145,12 +118,12 @@ function PayActivityItem(
                   embeds: [embedUrl],
                 })
               }
-              className="text-sm text-grey-50 font-light text-left hover:underline"
+              className="text-left text-sm font-light text-grey-50 hover:underline"
             >
               {activityItemData.memo}
             </button>
           ) : (
-            <div className="text-sm text-grey-50 font-light">
+            <div className="text-sm font-light text-grey-50">
               "{activityItemData.memo}"
             </div>
           )}
@@ -205,24 +178,30 @@ function RedeemActivityItem(
   const embedUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
-    <div className="border-b border-color pb-2 mb-1">
+    <div className="border-color mb-1 border-b pb-2">
       <div className="flex items-center justify-between">
-        <div className="text-md text-zinc-500 mb-2">
-          <h3 className="text-grey-50 font-light">WITHDREW</h3>
+        <div className="text-md mb-2 text-zinc-500">
+          <h3 className="font-light text-grey-50">WITHDREW</h3>
         </div>
-        <div className="flex items-center gap-1 text-md font-light text-grey-50 mb-2">
-          <EtherscanLink className="hover:underline" type="tx" value={cashOutEvent.txHash}>
+        <div className="text-md mb-2 flex items-center gap-1 font-light text-grey-50">
+          <EtherscanLink
+            className="hover:underline"
+            type="tx"
+            value={cashOutEvent.txHash}
+          >
             {formattedDate}
           </EtherscanLink>
         </div>
       </div>
-      <div className="flex items-center justify-between pb-4 gap-1 text-md flex-wrap">
-        <div className="flex items-center gap-1 text-color font-light">
+      <div className="text-md flex flex-wrap items-center justify-between gap-1 pb-4">
+        <div className="text-color flex items-center gap-1 font-light">
           {activityItemData.cashOutCount?.format(6)}{" "}
-          {formatTokenSymbol(token?.data?.symbol ? token?.data?.symbol : metadata?.data?.name)}
+          {formatTokenSymbol(
+            token?.data?.symbol ? token?.data?.symbol : metadata?.data?.name
+          )}
         </div>
 
-        <div className="font-light text-grey-100 text-md">
+        <div className="text-md font-light text-grey-100">
           <FarcasterAvatar
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
@@ -236,7 +215,7 @@ function RedeemActivityItem(
 }
 
 export function ActivityFeed() {
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -247,7 +226,8 @@ export function ActivityFeed() {
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
-    skip: !chainId || !projectId,
+    version: Number(version),
+    skip: !chainId || !projectId || !version,
   });
   const suckerGroupId = project?.project?.suckerGroupId;
 
@@ -266,7 +246,7 @@ export function ActivityFeed() {
 
   // --- 3. Format the fetched data for the chart ---
   const formattedChartData = useMemo(() => {
-    return dailyTotals.map(day => ({
+    return dailyTotals.map((day) => ({
       timestamp: Math.floor(day.date.getTime() / 1000),
       volume: Number(formatEther(day.volume)),
       // You can add logic for these later if needed
@@ -310,20 +290,18 @@ export function ActivityFeed() {
         ) ?? []
       }
     >
-      <section className="flex flex-col mb-6 bg-grey-450 p-[16px] rounded-2xl">
-        <StaticVolumeChart
-          suckerGroupId={suckerGroupId}
-        />
+      <section className="mb-6 flex flex-col rounded-2xl bg-grey-450 p-[16px]">
+        <StaticVolumeChart suckerGroupId={suckerGroupId} />
       </section>
 
       {isOpen && (
         <div className="flex flex-col gap-1">
           {isLoading ? (
-            <div className="w-full flex justify-center my-[15vh]">
+            <div className="my-[15vh] flex w-full justify-center">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
           ) : activityEvents?.activityEvents.items &&
-          activityEvents.activityEvents.items.length > 0 ? (
+            activityEvents.activityEvents.items.length > 0 ? (
             activityEvents.activityEvents.items?.map((event) => {
               if (event?.payEvent) {
                 return (
@@ -347,7 +325,9 @@ export function ActivityFeed() {
               return null;
             })
           ) : (
-            <span className="text-muted-foreground text-md">No activity yet.</span>
+            <span className="text-md text-muted-foreground">
+              No activity yet.
+            </span>
           )}
         </div>
       )}

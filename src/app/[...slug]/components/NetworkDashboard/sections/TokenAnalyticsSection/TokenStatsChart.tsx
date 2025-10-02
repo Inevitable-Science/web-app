@@ -262,27 +262,39 @@ interface ChartData {
   value: number;
 }
 
-const cache = new Map<string, { data: ChartData[] | null; timestamp: number }>();
+const cache = new Map<
+  string,
+  { data: ChartData[] | null; timestamp: number }
+>();
 
-const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName }) => {
+const TokenStatsChart: React.FC<TokenStatsProps> = ({
+  organisation,
+  tokenName,
+}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">("1");
-  const [chartType, setChartType] = useState<"volume" | "holders" | "marketCap">("volume");
+  const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">(
+    "1"
+  );
+  const [chartType, setChartType] = useState<
+    "volume" | "holders" | "marketCap"
+  >("volume");
   const [dataFound, setDataFound] = useState<boolean>(true);
   const [passedData, setPassedData] = useState<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
 
-  const fetchData = async (range: string, type: string): Promise<ChartData[] | null> => {
+  const fetchData = async (
+    range: string,
+    type: string
+  ): Promise<ChartData[] | null> => {
     try {
       const apiUrl =
         type === "marketCap" || type === "volume"
-        //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
-        //  : `https://api.profiler.bio/api/holders/${tokenName}`;
-          ? `https://inev.profiler.bio/chart/${organisation}-${range}`
+          ? //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
+            //  : `https://api.profiler.bio/api/holders/${tokenName}`;
+            `https://inev.profiler.bio/chart/${organisation}-${range}`
           : `https://inev.profiler.bio/charts/holders/${tokenName}`;
-
 
       const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
       const cacheEntry = cache.get(cacheKey);
@@ -300,12 +312,16 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
       setDataFound(true);
       const data = await response.json();
 
-      const seriesData = (
-        type === "marketCap" ? data?.market_caps : type === "volume" ? data?.total_volumes : data?.holders
-      )?.map(([timestamp, value]: [number, number]) => ({
-        time: Math.floor(timestamp / 1000) as Time,
-        value,
-      })) ?? null;
+      const seriesData =
+        (type === "marketCap"
+          ? data?.market_caps
+          : type === "volume"
+            ? data?.total_volumes
+            : data?.holders
+        )?.map(([timestamp, value]: [number, number]) => ({
+          time: Math.floor(timestamp / 1000) as Time,
+          value,
+        })) ?? null;
 
       cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
       return seriesData;
@@ -325,7 +341,9 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
 
     if (isMountedRef.current && Array.isArray(prices) && prices.length > 0) {
       prices.sort((a, b) => (a.time as number) - (b.time as number));
-      const uniquePrices = Array.from(new Map(prices.map((item) => [item.time, item])).values());
+      const uniquePrices = Array.from(
+        new Map(prices.map((item) => [item.time, item])).values()
+      );
       if (lineSeriesRef.current) {
         lineSeriesRef.current.setData(uniquePrices);
         chartRef.current?.timeScale().fitContent();
@@ -391,7 +409,9 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
     chartRef.current = chart;
 
     // Create line series
-    const lineSeries = chart.addLineSeries({ color: "#FBE8BD" } as LineSeriesOptions);
+    const lineSeries = chart.addLineSeries({
+      color: "#FBE8BD",
+    } as LineSeriesOptions);
     lineSeriesRef.current = lineSeries;
 
     // Adjust timeRange for holders chart
@@ -411,61 +431,61 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
 
   return (
     <div>
-      <div className="flex items-center justify-between gap-x-6 gap-y-2 flex-wrap w-full mb-4">
-        <div className="flex items-center flex-wrap gap-2">
+      <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
             onClick={() => setChartType("volume")}
             disabled={chartType === "volume"}
           >
             VOL
           </button>
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
             onClick={() => setChartType("holders")}
             disabled={chartType === "holders"}
           >
             HOLDERS
           </button>
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
             onClick={() => setChartType("marketCap")}
             disabled={chartType === "marketCap"}
           >
             MARKET CAP
           </button>
         </div>
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("1")}
             disabled={chartType === "holders" || timeRange === "1"}
           >
             24h
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("7")}
             disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("30")}
             disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("max")}
             disabled={chartType === "holders" || timeRange === "max"}
           >
@@ -474,21 +494,23 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
         </div>
       </div>
 
+      {/*<div
+        ref={chartContainerRef}
+        className={dataFound ? "" : "hidden"}
+        style={{ width: "100%", height: "400px", maxHeight: "400px" }}
+      />
+
+      <div className={`${dataFound ? "hidden" : ""} text-center my-12 font-light`}>
+        <h3>Unable to fetch data</h3>
+        <h5>We are unable to fetch data for this token right now.</h5>
+      </div>
+
+      <div className={`activeSkeleton w-full h-[376px] rounded-lg ${passedData ? "hidden" : "block"}`} />*/}
+
+      {dataFound ? (
         <div
           ref={chartContainerRef}
-          className={dataFound ? "" : "hidden"}
-          style={{ width: "100%", height: "400px", maxHeight: "400px" }}
-        />
-
-        <div className={`${dataFound ? "hidden" : ""} text-center my-12 font-light`}>
-          <h3>Unable to fetch data</h3>
-          <h5>We are unable to fetch data for this token right now.</h5>
-        </div>
-
-      {/*{dataFound ? (
-        <div
-          ref={chartContainerRef}
-          className={`chartOverrideShow-token ${passedData ? "opacity-1" : "opacity-0 !h-[1px]"}`}
+          className={`chartOverrideShow-token ${passedData ? "opacity-1" : "!h-[1px] opacity-0"}`}
           style={{ width: "100%", height: "400px", maxHeight: "400px" }}
         />
       ) : (
@@ -496,9 +518,7 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
           <h3>Unable to fetch data</h3>
           <h5>We are unable to fetch data for this token right now.</h5>
         </div>
-      )}*/}
-
-      <div className={`activeSkeleton w-full h-[376px] rounded-lg ${passedData ? "hidden" : "block"}`} />
+      )}
 
       <style>{`
         #tv-attr-logo { display: none; }

@@ -52,7 +52,6 @@ export const geistSans = localFont({
   display: "swap",
 });
 
-
 export const optima = localFont({
   src: [
     {

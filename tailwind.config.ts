@@ -1,46 +1,3 @@
-/*const defaultTheme = require("tailwindcss/defaultTheme");
-
-/** @type {import('tailwindcss').Config} * /
-module.exports = {
-  darkMode: ["class"],
-  content: [
-    "./components/** /*.{ts,tsx}",
-    "./app/** /*.{ts,tsx}",
-    "./src/** /*.{ts,tsx}",
-  ],
-  theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1225px",
-      },
-    },
-    extend: {
-      fontFamily: {
-        sans: ["var(--font-simplon-norm)", ...defaultTheme.fontFamily.sans],
-        mono: ["var(--font-simplon-mono)", ...defaultTheme.fontFamily.mono],
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-    },
-  },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/forms")],
-};
-*/
-
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
@@ -86,8 +43,8 @@ module.exports = {
         // Accent Colors
         "light-gold": "var(--light-gold)",
         "dark-slate-grey": "var(--dark-slate-grey)",
-        "gunmetal": "var(--gunmetal)",
-        "cerulean": "var(--cerulean)",
+        gunmetal: "var(--gunmetal)",
+        cerulean: "var(--cerulean)",
         "columbia-blue": "var(--columbia-blue)",
 
         // Tone Colors
@@ -121,7 +78,7 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "shimmer": "shimmer 2s infinite",
+        shimmer: "shimmer 2s infinite",
       },
     },
   },

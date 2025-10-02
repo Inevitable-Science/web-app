@@ -107,6 +107,7 @@ export type Query_SuckerArgs = {
   address: Scalars['String']['input'];
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -258,6 +259,7 @@ export type QueryLiquidateLoanEventsArgs = {
 export type QueryLoanArgs = {
   chainId: Scalars['Float']['input'];
   id: Scalars['BigInt']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -305,12 +307,14 @@ export type QueryNftArgs = {
   chainId: Scalars['Float']['input'];
   hook: Scalars['String']['input'];
   tokenId: Scalars['BigInt']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
 export type QueryNftHookArgs = {
   address: Scalars['String']['input'];
   chainId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -328,6 +332,7 @@ export type QueryNftTierArgs = {
   chainId: Scalars['Float']['input'];
   hook: Scalars['String']['input'];
   tierId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -355,6 +360,7 @@ export type QueryParticipantArgs = {
   address: Scalars['String']['input'];
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -362,6 +368,7 @@ export type QueryParticipantSnapshotArgs = {
   address: Scalars['String']['input'];
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -405,6 +412,7 @@ export type QueryPermissionHolderArgs = {
   chainId: Scalars['Float']['input'];
   operator: Scalars['String']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -421,6 +429,7 @@ export type QueryPermissionHoldersArgs = {
 export type QueryProjectArgs = {
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -443,6 +452,7 @@ export type QueryProjectMomentArgs = {
   block: Scalars['Float']['input'];
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -579,6 +589,7 @@ export type QuerySuckerGroupArgs = {
 export type QuerySuckerGroupMomentArgs = {
   block: Scalars['Float']['input'];
   suckerGroupId: Scalars['String']['input'];
+  version: Scalars['Float']['input'];
 };
 
 
@@ -636,6 +647,7 @@ export type _Sucker = {
   chainId: Scalars['Int']['output'];
   project: Maybe<Project>;
   projectId: Scalars['Int']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type _SuckerFilter = {
@@ -667,6 +679,14 @@ export type _SuckerFilter = {
   projectId_lte?: InputMaybe<Scalars['Int']['input']>;
   projectId_not?: InputMaybe<Scalars['Int']['input']>;
   projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type _SuckerPage = {
@@ -690,6 +710,7 @@ export type ActivityEvent = {
   mintNftEvent: Maybe<MintNftEvent>;
   mintTokensEvent: Maybe<MintTokensEvent>;
   payEvent: Maybe<PayEvent>;
+  project: Maybe<Project>;
   projectCreateEvent: Maybe<ProjectCreateEvent>;
   projectId: Scalars['Int']['output'];
   reallocateLoanEvent: Maybe<ReallocateLoanEvent>;
@@ -704,6 +725,7 @@ export type ActivityEvent = {
   txHash: Scalars['String']['output'];
   type: Maybe<ActivityEventType>;
   useAllowanceEvent: Maybe<UseAllowanceEvent>;
+  version: Scalars['Int']['output'];
 };
 
 export type ActivityEventFilter = {
@@ -967,6 +989,14 @@ export type ActivityEventFilter = {
   useAllowanceEvent_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   useAllowanceEvent_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   useAllowanceEvent_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type ActivityEventPage = {
@@ -1012,6 +1042,7 @@ export type AddToBalanceEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type AddToBalanceEventFilter = {
@@ -1135,6 +1166,14 @@ export type AddToBalanceEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type AddToBalanceEventPage = {
@@ -1156,6 +1195,7 @@ export type AutoIssueEvent = {
   stageId: Scalars['BigInt']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type AutoIssueEventFilter = {
@@ -1259,6 +1299,14 @@ export type AutoIssueEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type AutoIssueEventPage = {
@@ -1286,6 +1334,7 @@ export type BorrowLoanEvent = {
   timestamp: Scalars['Int']['output'];
   token: Scalars['String']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type BorrowLoanEventFilter = {
@@ -1443,6 +1492,14 @@ export type BorrowLoanEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type BorrowLoanEventPage = {
@@ -1463,6 +1520,7 @@ export type BurnEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type BurnEventFilter = {
@@ -1556,6 +1614,14 @@ export type BurnEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type BurnEventPage = {
@@ -1584,6 +1650,7 @@ export type CashOutTokensEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type CashOutTokensEventFilter = {
@@ -1749,6 +1816,14 @@ export type CashOutTokensEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type CashOutTokensEventPage = {
@@ -1771,6 +1846,7 @@ export type DecorateBannyEvent = {
   tokenUri: Maybe<Scalars['String']['output']>;
   tokenUriMetadata: Maybe<Scalars['JSON']['output']>;
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type DecorateBannyEventFilter = {
@@ -1870,6 +1946,14 @@ export type DecorateBannyEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type DecorateBannyEventPage = {
@@ -1892,6 +1976,7 @@ export type DeployErc20Event = {
   timestamp: Scalars['Int']['output'];
   token: Scalars['String']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type DeployErc20EventFilter = {
@@ -2009,6 +2094,14 @@ export type DeployErc20EventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type DeployErc20EventPage = {
@@ -2030,6 +2123,7 @@ export type LiquidateLoanEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type LiquidateLoanEventFilter = {
@@ -2133,6 +2227,14 @@ export type LiquidateLoanEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type LiquidateLoanEventPage = {
@@ -2157,6 +2259,7 @@ export type Loan = {
   terminal: Scalars['String']['output'];
   token: Scalars['String']['output'];
   tokenUri: Maybe<Scalars['String']['output']>;
+  version: Scalars['Int']['output'];
 };
 
 export type LoanFilter = {
@@ -2284,6 +2387,14 @@ export type LoanFilter = {
   token_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   token_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type LoanPage = {
@@ -2310,6 +2421,7 @@ export type MintNftEvent = {
   tokenId: Scalars['BigInt']['output'];
   totalAmountPaid: Scalars['BigInt']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type MintNftEventFilter = {
@@ -2441,6 +2553,14 @@ export type MintNftEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type MintNftEventPage = {
@@ -2465,6 +2585,7 @@ export type MintTokensEvent = {
   timestamp: Scalars['Int']['output'];
   tokenCount: Scalars['BigInt']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type MintTokensEventFilter = {
@@ -2596,6 +2717,14 @@ export type MintTokensEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type MintTokensEventPage = {
@@ -2620,6 +2749,7 @@ export type Nft = {
   tierId: Scalars['Int']['output'];
   tokenId: Scalars['BigInt']['output'];
   tokenUri: Maybe<Scalars['String']['output']>;
+  version: Scalars['Int']['output'];
   wallet: Maybe<Wallet>;
 };
 
@@ -2726,6 +2856,14 @@ export type NftFilter = {
   tokenUri_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   tokenUri_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   tokenUri_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type NftHook = {
@@ -2738,6 +2876,7 @@ export type NftHook = {
   project: Maybe<Project>;
   projectId: Scalars['Int']['output'];
   symbol: Maybe<Scalars['String']['output']>;
+  version: Scalars['Int']['output'];
 };
 
 
@@ -2817,6 +2956,14 @@ export type NftHookFilter = {
   symbol_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   symbol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   symbol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type NftHookPage = {
@@ -2832,7 +2979,7 @@ export type NftPage = {
 };
 
 export type NftTier = {
-  allowOnwerMint: Maybe<Scalars['Boolean']['output']>;
+  allowOwnerMint: Maybe<Scalars['Boolean']['output']>;
   cannotBeRemoved: Maybe<Scalars['Boolean']['output']>;
   category: Scalars['Int']['output'];
   chainId: Scalars['Int']['output'];
@@ -2852,6 +2999,7 @@ export type NftTier = {
   svg: Maybe<Scalars['String']['output']>;
   tierId: Scalars['Int']['output'];
   transfersPausable: Maybe<Scalars['Boolean']['output']>;
+  version: Scalars['Int']['output'];
   votingUnits: Maybe<Scalars['BigInt']['output']>;
 };
 
@@ -2868,10 +3016,10 @@ export type NftTierNftsArgs = {
 export type NftTierFilter = {
   AND?: InputMaybe<Array<InputMaybe<NftTierFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<NftTierFilter>>>;
-  allowOnwerMint?: InputMaybe<Scalars['Boolean']['input']>;
-  allowOnwerMint_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
-  allowOnwerMint_not?: InputMaybe<Scalars['Boolean']['input']>;
-  allowOnwerMint_not_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
+  allowOwnerMint?: InputMaybe<Scalars['Boolean']['input']>;
+  allowOwnerMint_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
+  allowOwnerMint_not?: InputMaybe<Scalars['Boolean']['input']>;
+  allowOwnerMint_not_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
   cannotBeRemoved?: InputMaybe<Scalars['Boolean']['input']>;
   cannotBeRemoved_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
   cannotBeRemoved_not?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3002,6 +3150,14 @@ export type NftTierFilter = {
   transfersPausable_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
   transfersPausable_not?: InputMaybe<Scalars['Boolean']['input']>;
   transfersPausable_not_in?: InputMaybe<Array<InputMaybe<Scalars['Boolean']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   votingUnits?: InputMaybe<Scalars['BigInt']['input']>;
   votingUnits_gt?: InputMaybe<Scalars['BigInt']['input']>;
   votingUnits_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3033,6 +3189,7 @@ export type Participant = {
   projectId: Scalars['Int']['output'];
   suckerGroup: Maybe<SuckerGroup>;
   suckerGroupId: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
   wallet: Maybe<Wallet>;
@@ -3139,6 +3296,14 @@ export type ParticipantFilter = {
   suckerGroupId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   suckerGroupId_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   suckerGroupId_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   volume?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3173,6 +3338,7 @@ export type ParticipantSnapshot = {
   projectId: Scalars['Int']['output'];
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
 };
@@ -3256,6 +3422,14 @@ export type ParticipantSnapshotFilter = {
   timestamp_lte?: InputMaybe<Scalars['Int']['input']>;
   timestamp_not?: InputMaybe<Scalars['Int']['input']>;
   timestamp_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   volume?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3298,6 +3472,7 @@ export type PayEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type PayEventFilter = {
@@ -3445,6 +3620,14 @@ export type PayEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type PayEventPage = {
@@ -3460,6 +3643,7 @@ export type PermissionHolder = {
   permissions: Maybe<Array<Scalars['Int']['output']>>;
   project: Maybe<Project>;
   projectId: Scalars['Int']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type PermissionHolderFilter = {
@@ -3505,6 +3689,14 @@ export type PermissionHolderFilter = {
   projectId_lte?: InputMaybe<Scalars['Int']['input']>;
   projectId_not?: InputMaybe<Scalars['Int']['input']>;
   projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type PermissionHolderPage = {
@@ -3514,8 +3706,11 @@ export type PermissionHolderPage = {
 };
 
 export type Project = {
+  activityEvents: Maybe<ActivityEventPage>;
   addToBalanceEvents: Maybe<AddToBalanceEventPage>;
+  autoIssueEvents: Maybe<AutoIssueEventPage>;
   balance: Scalars['BigInt']['output'];
+  borrowLoanEvents: Maybe<BorrowLoanEventPage>;
   burnEvents: Maybe<BurnEventPage>;
   cashOutTokensEvents: Maybe<CashOutTokensEventPage>;
   chainId: Scalars['Int']['output'];
@@ -3524,6 +3719,8 @@ export type Project = {
   createdAt: Scalars['Int']['output'];
   createdWithinTrendingWindow: Maybe<Scalars['Boolean']['output']>;
   creator: Scalars['String']['output'];
+  currency: Maybe<Scalars['BigInt']['output']>;
+  decimals: Maybe<Scalars['Int']['output']>;
   deployErc20Events: Maybe<DeployErc20EventPage>;
   deployer: Scalars['String']['output'];
   description: Maybe<Scalars['String']['output']>;
@@ -3533,6 +3730,7 @@ export type Project = {
   id: Scalars['String']['output'];
   infoUri: Maybe<Scalars['String']['output']>;
   isRevnet: Maybe<Scalars['Boolean']['output']>;
+  liquidateLoanEvents: Maybe<LiquidateLoanEventPage>;
   logoUri: Maybe<Scalars['String']['output']>;
   metadata: Maybe<Scalars['JSON']['output']>;
   metadataUri: Maybe<Scalars['String']['output']>;
@@ -3548,30 +3746,46 @@ export type Project = {
   payEvents: Maybe<PayEventPage>;
   paymentsCount: Scalars['Int']['output'];
   permissionHolders: Maybe<PermissionHolderPage>;
+  projectCreateEvents: Maybe<ProjectCreateEventPage>;
   projectId: Scalars['Int']['output'];
   projectMoments: Maybe<ProjectMomentPage>;
   projectTagline: Maybe<Scalars['String']['output']>;
+  reallocateLoanEvents: Maybe<ReallocateLoanEventPage>;
   redeemCount: Scalars['Int']['output'];
   redeemVolume: Scalars['BigInt']['output'];
   redeemVolumeUsd: Scalars['BigInt']['output'];
+  repayLoanEvents: Maybe<RepayLoanEventPage>;
   sendPayoutToSplitEvents: Maybe<SendPayoutToSplitEventPage>;
   sendPayoutsEvents: Maybe<SendPayoutsEventPage>;
   sendReservedTokensToSplitEvents: Maybe<SendReservedTokensToSplitEventPage>;
   sendReservedTokensToSplitsEvents: Maybe<SendReservedTokensToSplitsEventPage>;
+  storeAutoIssuanceAmountEvent: Maybe<StoreAutoIssuanceAmountEventPage>;
   suckerGroup: Maybe<SuckerGroup>;
   suckerGroupId: Scalars['String']['output'];
   tags: Maybe<Array<Scalars['String']['output']>>;
   telegram: Maybe<Scalars['String']['output']>;
+  token: Maybe<Scalars['String']['output']>;
   tokenSupply: Scalars['BigInt']['output'];
   tokens: Maybe<Array<Scalars['String']['output']>>;
   trendingPaymentsCount: Scalars['Int']['output'];
   trendingScore: Scalars['BigInt']['output'];
   trendingVolume: Scalars['BigInt']['output'];
+  trendingVolumeUsd: Scalars['BigInt']['output'];
   twitter: Maybe<Scalars['String']['output']>;
   useAllowanceEvents: Maybe<UseAllowanceEventPage>;
-  version: Maybe<Scalars['Int']['output']>;
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
+};
+
+
+export type ProjectActivityEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<ActivityEventFilter>;
 };
 
 
@@ -3582,6 +3796,26 @@ export type ProjectAddToBalanceEventsArgs = {
   orderBy?: InputMaybe<Scalars['String']['input']>;
   orderDirection?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AddToBalanceEventFilter>;
+};
+
+
+export type ProjectAutoIssueEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<AutoIssueEventFilter>;
+};
+
+
+export type ProjectBorrowLoanEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<BorrowLoanEventFilter>;
 };
 
 
@@ -3612,6 +3846,16 @@ export type ProjectDeployErc20EventsArgs = {
   orderBy?: InputMaybe<Scalars['String']['input']>;
   orderDirection?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<DeployErc20EventFilter>;
+};
+
+
+export type ProjectLiquidateLoanEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<LiquidateLoanEventFilter>;
 };
 
 
@@ -3685,6 +3929,16 @@ export type ProjectPermissionHoldersArgs = {
 };
 
 
+export type ProjectProjectCreateEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<ProjectCreateEventFilter>;
+};
+
+
 export type ProjectProjectMomentsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3692,6 +3946,26 @@ export type ProjectProjectMomentsArgs = {
   orderBy?: InputMaybe<Scalars['String']['input']>;
   orderDirection?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<ProjectMomentFilter>;
+};
+
+
+export type ProjectReallocateLoanEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<ReallocateLoanEventFilter>;
+};
+
+
+export type ProjectRepayLoanEventsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<RepayLoanEventFilter>;
 };
 
 
@@ -3735,6 +4009,16 @@ export type ProjectSendReservedTokensToSplitsEventsArgs = {
 };
 
 
+export type ProjectStoreAutoIssuanceAmountEventArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Scalars['String']['input']>;
+  orderDirection?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<StoreAutoIssuanceAmountEventFilter>;
+};
+
+
 export type ProjectUseAllowanceEventsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -3755,6 +4039,7 @@ export type ProjectCreateEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type ProjectCreateEventFilter = {
@@ -3842,6 +4127,14 @@ export type ProjectCreateEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type ProjectCreateEventPage = {
@@ -3909,6 +4202,22 @@ export type ProjectFilter = {
   creator_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   creator_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   creator_starts_with?: InputMaybe<Scalars['String']['input']>;
+  currency?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  currency_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_not?: InputMaybe<Scalars['BigInt']['input']>;
+  currency_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  decimals?: InputMaybe<Scalars['Int']['input']>;
+  decimals_gt?: InputMaybe<Scalars['Int']['input']>;
+  decimals_gte?: InputMaybe<Scalars['Int']['input']>;
+  decimals_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  decimals_lt?: InputMaybe<Scalars['Int']['input']>;
+  decimals_lte?: InputMaybe<Scalars['Int']['input']>;
+  decimals_not?: InputMaybe<Scalars['Int']['input']>;
+  decimals_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   deployer?: InputMaybe<Scalars['String']['input']>;
   deployer_contains?: InputMaybe<Scalars['String']['input']>;
   deployer_ends_with?: InputMaybe<Scalars['String']['input']>;
@@ -4115,6 +4424,7 @@ export type ProjectFilter = {
   telegram_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   telegram_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   telegram_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['String']['input']>;
   tokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4123,6 +4433,15 @@ export type ProjectFilter = {
   tokenSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  token_contains?: InputMaybe<Scalars['String']['input']>;
+  token_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  token_not?: InputMaybe<Scalars['String']['input']>;
+  token_not_contains?: InputMaybe<Scalars['String']['input']>;
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  token_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  token_starts_with?: InputMaybe<Scalars['String']['input']>;
   tokens?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   tokens_has?: InputMaybe<Scalars['String']['input']>;
   tokens_not?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -4144,6 +4463,14 @@ export type ProjectFilter = {
   trendingScore_not?: InputMaybe<Scalars['BigInt']['input']>;
   trendingScore_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   trendingVolume?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  trendingVolumeUsd_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_not?: InputMaybe<Scalars['BigInt']['input']>;
+  trendingVolumeUsd_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   trendingVolume_gt?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_gte?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
@@ -4195,6 +4522,7 @@ export type ProjectMoment = {
   projectId: Scalars['Int']['output'];
   timestamp: Scalars['Int']['output'];
   trendingScore: Scalars['BigInt']['output'];
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
 };
@@ -4250,6 +4578,14 @@ export type ProjectMomentFilter = {
   trendingScore_lte?: InputMaybe<Scalars['BigInt']['input']>;
   trendingScore_not?: InputMaybe<Scalars['BigInt']['input']>;
   trendingScore_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   volume?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4294,6 +4630,7 @@ export type ReallocateLoanEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type ReallocateLoanEventFilter = {
@@ -4405,6 +4742,14 @@ export type ReallocateLoanEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type ReallocateLoanEventPage = {
@@ -4428,6 +4773,7 @@ export type RepayLoanEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type RepayLoanEventFilter = {
@@ -4547,6 +4893,14 @@ export type RepayLoanEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type RepayLoanEventPage = {
@@ -4577,6 +4931,7 @@ export type SendPayoutToSplitEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type SendPayoutToSplitEventFilter = {
@@ -4752,6 +5107,14 @@ export type SendPayoutToSplitEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type SendPayoutToSplitEventPage = {
@@ -4780,6 +5143,7 @@ export type SendPayoutsEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type SendPayoutsEventFilter = {
@@ -4939,6 +5303,14 @@ export type SendPayoutsEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type SendPayoutsEventPage = {
@@ -4967,6 +5339,7 @@ export type SendReservedTokensToSplitEvent = {
   timestamp: Scalars['Int']['output'];
   tokenCount: Scalars['BigInt']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type SendReservedTokensToSplitEventFilter = {
@@ -5126,6 +5499,14 @@ export type SendReservedTokensToSplitEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type SendReservedTokensToSplitEventPage = {
@@ -5150,6 +5531,7 @@ export type SendReservedTokensToSplitsEvent = {
   timestamp: Scalars['Int']['output'];
   tokenCount: Scalars['BigInt']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type SendReservedTokensToSplitsEventFilter = {
@@ -5279,6 +5661,14 @@ export type SendReservedTokensToSplitsEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type SendReservedTokensToSplitsEventPage = {
@@ -5300,6 +5690,7 @@ export type StoreAutoIssuanceAmountEvent = {
   stageId: Scalars['BigInt']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type StoreAutoIssuanceAmountEventFilter = {
@@ -5403,6 +5794,14 @@ export type StoreAutoIssuanceAmountEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type StoreAutoIssuanceAmountEventPage = {
@@ -5427,6 +5826,7 @@ export type SuckerGroup = {
   trendingPaymentsCount: Scalars['Int']['output'];
   trendingScore: Scalars['BigInt']['output'];
   trendingVolume: Scalars['BigInt']['output'];
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
 };
@@ -5558,6 +5958,14 @@ export type SuckerGroupFilter = {
   trendingVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_not?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   volume?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -5591,6 +5999,7 @@ export type SuckerGroupMoment = {
   trendingPaymentsCount: Scalars['Int']['output'];
   trendingScore: Scalars['BigInt']['output'];
   trendingVolume: Scalars['BigInt']['output'];
+  version: Scalars['Int']['output'];
   volume: Scalars['BigInt']['output'];
   volumeUsd: Scalars['BigInt']['output'];
 };
@@ -5712,6 +6121,14 @@ export type SuckerGroupMomentFilter = {
   trendingVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_not?: InputMaybe<Scalars['BigInt']['input']>;
   trendingVolume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   volume?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd?: InputMaybe<Scalars['BigInt']['input']>;
   volumeUsd_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -5761,6 +6178,7 @@ export type UseAllowanceEvent = {
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   txHash: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type UseAllowanceEventFilter = {
@@ -5918,6 +6336,14 @@ export type UseAllowanceEventFilter = {
   txHash_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   txHash_not_starts_with?: InputMaybe<Scalars['String']['input']>;
   txHash_starts_with?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
+  version_gt?: InputMaybe<Scalars['Int']['input']>;
+  version_gte?: InputMaybe<Scalars['Int']['input']>;
+  version_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  version_lt?: InputMaybe<Scalars['Int']['input']>;
+  version_lte?: InputMaybe<Scalars['Int']['input']>;
+  version_not?: InputMaybe<Scalars['Int']['input']>;
+  version_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export type UseAllowanceEventPage = {
@@ -6038,6 +6464,7 @@ export type HasPermissionQueryVariables = Exact<{
   account: Scalars['String']['input'];
   chainId: Scalars['Float']['input'];
   projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
   operator: Scalars['String']['input'];
 }>;
 
@@ -6047,6 +6474,7 @@ export type HasPermissionQuery = { permissionHolder: { permissions: Array<number
 export type ProjectQueryVariables = Exact<{
   projectId: Scalars['Float']['input'];
   chainId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
 }>;
 
 
@@ -6065,6 +6493,15 @@ export type ProjectsQueryVariables = Exact<{
 
 
 export type ProjectsQuery = { projects: { items: Array<{ projectId: number, metadataUri: string | null, handle: string | null, createdAt: number, suckerGroupId: string, participants: { totalCount: number } | null }> } };
+
+export type ProjectAccountingContextQueryVariables = Exact<{
+  chainId: Scalars['Float']['input'];
+  projectId: Scalars['Float']['input'];
+  version: Scalars['Float']['input'];
+}>;
+
+
+export type ProjectAccountingContextQuery = { project: { token: string | null, decimals: number | null, currency: any | null } | null };
 
 export type ProjectCreateEventQueryVariables = Exact<{
   where?: InputMaybe<ProjectCreateEventFilter>;
@@ -6096,18 +6533,19 @@ export type SuckerGroupQueryVariables = Exact<{
 }>;
 
 
-export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any, volume: any } | null };
+export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any, volume: any, projects: { items: Array<{ chainId: number, projectId: number, token: string | null, currency: any | null, decimals: number | null, version: number }> } | null } | null };
 
 
 export const ActivityEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ActivityEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"activityEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activityEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1000"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"payEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"memo"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"feeFromProject"}},{"kind":"Field","name":{"kind":"Name","value":"newlyIssuedTokenCount"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"amountUsd"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}},{"kind":"Field","name":{"kind":"Name","value":"distributionFromProjectId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cashOutTokensEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"reclaimAmount"}},{"kind":"Field","name":{"kind":"Name","value":"cashOutCount"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ActivityEventsQuery, ActivityEventsQueryVariables>;
 export const LoansByAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoansByAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"owner"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loans"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner"},"value":{"kind":"Variable","name":{"kind":"Name","value":"owner"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"borrowAmount"}},{"kind":"Field","name":{"kind":"Name","value":"collateral"}},{"kind":"Field","name":{"kind":"Name","value":"prepaidDuration"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"terminal"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<LoansByAccountQuery, LoansByAccountQueryVariables>;
 export const LoansDetailsByAccountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"LoansDetailsByAccount"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"owner"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"loans"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"owner"},"value":{"kind":"Variable","name":{"kind":"Name","value":"owner"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"borrowAmount"}},{"kind":"Field","name":{"kind":"Name","value":"collateral"}},{"kind":"Field","name":{"kind":"Name","value":"prepaidDuration"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"terminal"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<LoansDetailsByAccountQuery, LoansDetailsByAccountQueryVariables>;
 export const ParticipantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Participants"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"participantFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participants"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"lastPaidTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"erc20Balance"}},{"kind":"Field","name":{"kind":"Name","value":"creditBalance"}}]}}]}}]}}]} as unknown as DocumentNode<ParticipantsQuery, ParticipantsQueryVariables>;
-export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"account"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"operator"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionHolder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"account"},"value":{"kind":"Variable","name":{"kind":"Name","value":"account"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}},{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"operator"},"value":{"kind":"Variable","name":{"kind":"Name","value":"operator"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"}}]}}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
-export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}},{"kind":"Field","name":{"kind":"Name","value":"owner"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"paymentsCount"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;
+export const HasPermissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"HasPermission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"account"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"version"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"operator"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionHolder"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"account"},"value":{"kind":"Variable","name":{"kind":"Name","value":"account"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}},{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"version"},"value":{"kind":"Variable","name":{"kind":"Name","value":"version"}}},{"kind":"Argument","name":{"kind":"Name","value":"operator"},"value":{"kind":"Variable","name":{"kind":"Name","value":"operator"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissions"}}]}}]}}]} as unknown as DocumentNode<HasPermissionQuery, HasPermissionQueryVariables>;
+export const ProjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Project"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"version"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}},{"kind":"Argument","name":{"kind":"Name","value":"version"},"value":{"kind":"Variable","name":{"kind":"Name","value":"version"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}},{"kind":"Field","name":{"kind":"Name","value":"owner"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"paymentsCount"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}}]}}]}}]} as unknown as DocumentNode<ProjectQuery, ProjectQueryVariables>;
 export const ParticipantSnapshotsInRangeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ParticipantSnapshotsInRange"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"participantSnapshotFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"participantSnapshots"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1000"}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"StringValue","value":"timestamp","block":false}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"StringValue","value":"asc","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<ParticipantSnapshotsInRangeQuery, ParticipantSnapshotsInRangeQueryVariables>;
 export const ProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Projects"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"metadataUri"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}},{"kind":"Field","name":{"kind":"Name","value":"participants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProjectsQuery, ProjectsQueryVariables>;
+export const ProjectAccountingContextDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectAccountingContext"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"version"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"chainId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"chainId"}}},{"kind":"Argument","name":{"kind":"Name","value":"projectId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectId"}}},{"kind":"Argument","name":{"kind":"Name","value":"version"},"value":{"kind":"Variable","name":{"kind":"Name","value":"version"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]} as unknown as DocumentNode<ProjectAccountingContextQuery, ProjectAccountingContextQueryVariables>;
 export const ProjectCreateEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectCreateEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectCreateEventFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectCreateEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectCreateEventQuery, ProjectCreateEventQueryVariables>;
 export const StoreAutoIssuanceAmountEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoreAutoIssuanceAmountEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"storeAutoIssuanceAmountEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storeAutoIssuanceAmountEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<StoreAutoIssuanceAmountEventsQuery, StoreAutoIssuanceAmountEventsQueryVariables>;
 export const AutoIssueEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AutoIssueEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"autoIssueEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"autoIssueEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<AutoIssueEventsQuery, AutoIssueEventsQueryVariables>;
-export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;
+export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;

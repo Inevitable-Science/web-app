@@ -23,12 +23,12 @@ export function formatSeconds(seconds: number, precision = 2, compact = false) {
     seconds > 31536000
       ? ["years", "months", "days"]
       : seconds > 2592000
-      ? ["months", "days", "hours"]
-      : seconds > 86400
-      ? ["days", "hours", "minutes"]
-      : seconds > 3600
-      ? ["hours", "minutes", "seconds"]
-      : ["minutes", "seconds"]
+        ? ["months", "days", "hours"]
+        : seconds > 86400
+          ? ["days", "hours", "minutes"]
+          : seconds > 3600
+            ? ["hours", "minutes", "seconds"]
+            : ["minutes", "seconds"]
   ) as (keyof Duration)[];
 
   const format = fullFormat.slice(0, precision);
@@ -43,9 +43,12 @@ export function truncateAddress(address: Address) {
   if (address === null) return "-- --";
   if (address.length <= 10) return address;
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
+}
 
-export function formatNumber(num: number | null, compact: boolean = false): string {
+export function formatNumber(
+  num: number | null,
+  compact: boolean = false
+): string {
   if (num === null || isNaN(num)) return "--";
 
   if (num === 0) return "0";
@@ -72,7 +75,10 @@ export function formatNumber(num: number | null, compact: boolean = false): stri
     }
 
     const digits = 2;
-    const factor = Math.pow(10, digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+    const factor = Math.pow(
+      10,
+      digits - Math.floor(Math.log10(Math.abs(num))) - 1
+    );
     const rounded = Math.round(num * factor) / factor;
 
     return rounded.toString();
@@ -194,7 +200,7 @@ export const formatHexEther = (
 
 export function sortChains(chainIds: JBChainId[]): JBChainId[] {
   return [...chainIds].sort((a, b) => {
-    const aOrder = chainSortOrder.get(a) ?? 0
+    const aOrder = chainSortOrder.get(a) ?? 0;
     const bOrder = chainSortOrder.get(b) ?? 0;
     return aOrder - bOrder;
   });
@@ -205,25 +211,25 @@ export function sortChains(chainIds: JBChainId[]): JBChainId[] {
  * @see https://github.com/Bananapus/nana-core/blob/main/src/libraries/JBRulesetMetadataResolver.sol
  */
 export type RulesetMetadata = {
-  reservedPercent: ReservedPercent;      // bits 4-19
-  cashOutTaxRate: CashOutTaxRate;       // bits 20-35
-  baseCurrency: number;         // bits 36-67
-  pausePay: boolean;            // bit 68
-  pauseCreditTransfers: boolean;// bit 69
-  allowOwnerMinting: boolean;   // bit 70
+  reservedPercent: ReservedPercent; // bits 4-19
+  cashOutTaxRate: CashOutTaxRate; // bits 20-35
+  baseCurrency: number; // bits 36-67
+  pausePay: boolean; // bit 68
+  pauseCreditTransfers: boolean; // bit 69
+  allowOwnerMinting: boolean; // bit 70
   allowSetCustomToken: boolean; // bit 71
   allowTerminalMigration: boolean; // bit 72
-  allowSetTerminals: boolean;   // bit 73
-  allowSetController: boolean;  // bit 74
+  allowSetTerminals: boolean; // bit 73
+  allowSetController: boolean; // bit 74
   allowAddAccountingContext: boolean; // bit 75
-  allowAddPriceFeed: boolean;   // bit 76
-  ownerMustSendPayouts: boolean;// bit 77
-  holdFees: boolean;            // bit 78
+  allowAddPriceFeed: boolean; // bit 76
+  ownerMustSendPayouts: boolean; // bit 77
+  holdFees: boolean; // bit 78
   useTotalSurplusForCashOuts: boolean; // bit 79
-  useDataHookForPay: boolean;   // bit 80
+  useDataHookForPay: boolean; // bit 80
   useDataHookForCashOut: boolean; // bit 81
-  dataHook: Address;            // bits 82-241
-  metadata: number;             // bits 242-255
+  dataHook: Address; // bits 82-241
+  metadata: number; // bits 242-255
 };
 
 /**
@@ -234,8 +240,12 @@ export type RulesetMetadata = {
  */
 export function decodeRulesetMetadata(packed: bigint): RulesetMetadata {
   return {
-    reservedPercent: new ReservedPercent(Number((packed >> 4n) & ((1n << 16n) - 1n))),
-    cashOutTaxRate: new CashOutTaxRate(Number((packed >> 20n) & ((1n << 16n) - 1n))),
+    reservedPercent: new ReservedPercent(
+      Number((packed >> 4n) & ((1n << 16n) - 1n))
+    ),
+    cashOutTaxRate: new CashOutTaxRate(
+      Number((packed >> 20n) & ((1n << 16n) - 1n))
+    ),
     baseCurrency: Number((packed >> 36n) & ((1n << 32n) - 1n)),
 
     // Boolean flags
@@ -255,10 +265,11 @@ export function decodeRulesetMetadata(packed: bigint): RulesetMetadata {
     useDataHookForCashOut: Boolean((packed >> 81n) & 1n),
 
     // Address
-    dataHook: `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}` as Address,
+    dataHook:
+      `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}` as Address,
 
     // Final metadata (14 bits)
-    metadata: Number((packed >> 242n) & ((1n << 14n) - 1n))
+    metadata: Number((packed >> 242n) & ((1n << 14n) - 1n)),
   };
 }
 
@@ -266,14 +277,14 @@ export function decodeRulesetMetadata(packed: bigint): RulesetMetadata {
  * Create a beneficiary set from an address for multiple chains
  */
 export function makeBeneficiarySet(addr: string, chains: number[]) {
-  return chains.map(chainId => ({ chainId, address: addr }));
+  return chains.map((chainId) => ({ chainId, address: addr }));
 }
 
 /**
  * Create an operator set from an address for multiple chains
  */
 export function makeOperatorSet(addr: string, chains: number[]) {
-  return chains.map(chainId => ({ chainId, address: addr }));
+  return chains.map((chainId) => ({ chainId, address: addr }));
 }
 
 /**

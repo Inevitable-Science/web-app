@@ -10,7 +10,8 @@ const JB_CHAINS: Record<ChainId, { name: string }> = {
 };
 
 export async function GET(req: Request) {
-  const baseUrl = process.env.NEXT_PUBLIC_BENDYSTRAW_URL?.replace(/\/$/, "") + "/graphql";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BENDYSTRAW_URL?.replace(/\/$/, "") + "/graphql";
   const { searchParams } = new URL(req.url);
   const projectId = parseInt(searchParams.get("projectId") ?? "");
 
@@ -20,11 +21,17 @@ export async function GET(req: Request) {
     : (Object.keys(JB_CHAINS).map(Number) as ChainId[]);
 
   if (!baseUrl) {
-    return NextResponse.json({ error: "Missing BendyStraw URL" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Missing BendyStraw URL" },
+      { status: 500 }
+    );
   }
 
   if (isNaN(projectId)) {
-    return NextResponse.json({ error: "Missing or invalid projectId" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing or invalid projectId" },
+      { status: 400 }
+    );
   }
 
   let totalBalance = 0;
@@ -49,14 +56,20 @@ export async function GET(req: Request) {
       });
 
       if (!suckerIdRes.ok) {
-        return NextResponse.json({ error: "Failed to fetch suckerId" }, { status: 500 });
+        return NextResponse.json(
+          { error: "Failed to fetch suckerId" },
+          { status: 500 }
+        );
       }
 
       const suckerIdText = await suckerIdRes.text();
       const suckerIdJson = JSON.parse(suckerIdText);
       const suckerGroupId = suckerIdJson.data?.project?.suckerGroupId;
       if (!suckerGroupId) {
-        return NextResponse.json({ error: "Project not found on BendyStraw" }, { status: 404 });
+        return NextResponse.json(
+          { error: "Project not found on BendyStraw" },
+          { status: 404 }
+        );
       }
 
       const surplusQuery = `
@@ -101,13 +114,17 @@ export async function GET(req: Request) {
       });
 
       if (!surplusRes.ok) {
-        return NextResponse.json({ error: "Failed to fetch nativeTokenSurplus" }, { status: 500 });
+        return NextResponse.json(
+          { error: "Failed to fetch nativeTokenSurplus" },
+          { status: 500 }
+        );
       }
 
       const surplusJson = await surplusRes.json();
       const items = surplusJson.data.suckerGroup?.projects?.items ?? [];
 
-      projectName = surplusJson.data.suckerGroup?.projects?.items?.[0]?.name ?? projectName;
+      projectName =
+        surplusJson.data.suckerGroup?.projects?.items?.[0]?.name ?? projectName;
       for (const item of items) {
         const itemBalance = parseFloat(item.balance ?? "0") / 1e18;
         totalBalance += itemBalance;
@@ -122,14 +139,19 @@ export async function GET(req: Request) {
         });
       }
     } catch (err) {
-      return NextResponse.json({ error: "Error fetching data" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Error fetching data" },
+        { status: 500 }
+      );
     }
   }
 
   // Fetch ETH price
   let ethPrice = 0;
   try {
-    const priceRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+    const priceRes = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+    );
     const priceJson = await priceRes.json();
     ethPrice = priceJson.ethereum.usd;
   } catch {}

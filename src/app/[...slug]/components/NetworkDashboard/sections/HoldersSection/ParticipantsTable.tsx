@@ -17,24 +17,22 @@ export function ParticipantsTable({
   token: UseTokenReturnType["data"] | null;
   totalSupply: bigint;
 }) {
-  if (participants.length === 0) return (
-   <div className="w-full flex justify-center my-[15vh]">
-      <Loader2 className="h-8 w-8 animate-spin" />
-    </div>
-  );
+  if (participants.length === 0)
+    return (
+      <div className="my-[15vh] flex w-full justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
 
   return (
-    <div className="flex flex-col mt-2">
-      <h3 className="text-xl">
-        {formatTokenSymbol(token?.symbol)}{" "}
-        Holders
-      </h3>
+    <div className="mt-2 flex flex-col">
+      <h3 className="text-xl">{formatTokenSymbol(token?.symbol)} Holders</h3>
       {participants.map((participant) => (
         <div
           key={participant?.address}
-          className="flex flex-col text-white px-2 pb-4 pt-3 border-b border-color"
+          className="border-color flex flex-col border-b px-2 pb-4 pt-3 text-white"
         >
-          <div className="flex items-center justify-between text-md font-light text-grey-50">
+          <div className="text-md flex items-center justify-between font-light text-grey-50">
             <EthereumAddress
               address={participant?.address as Address}
               short
@@ -60,8 +58,9 @@ export function ParticipantsTable({
             </div>
           </div>
 
-          <div className="font-light text-grey-100 text-xs uppercase">
-            Ξ{formatUnits(participant.volume, 18, { fractionDigits: 3 })} Contributed
+          <div className="text-xs font-light uppercase text-grey-100">
+            Ξ{formatUnits(participant.volume, 18, { fractionDigits: 3 })}{" "}
+            Contributed
           </div>
         </div>
       ))}

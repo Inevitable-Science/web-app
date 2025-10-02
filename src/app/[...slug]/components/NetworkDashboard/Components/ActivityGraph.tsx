@@ -51,7 +51,10 @@ export default function ActivityGraph({
 
   // 3. Internal data fetching logic
   const loadTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [range]); // Recalculate when range changes to force refetch
-  const startTimestamp = useMemo(() => loadTimestamp - range * 24 * 60 * 60, [loadTimestamp, range]);
+  const startTimestamp = useMemo(
+    () => loadTimestamp - range * 24 * 60 * 60,
+    [loadTimestamp, range]
+  );
 
   const { dailyTotals, isLoading } = useVolumeData({
     suckerGroupId,
@@ -64,7 +67,7 @@ export default function ActivityGraph({
     // 1. Create a lookup map from the sparse data for efficient access.
     // The key will be a 'YYYY-MM-DD' string.
     const volumeMap = new Map<string, number>();
-    dailyTotals.forEach(day => {
+    dailyTotals.forEach((day) => {
       // Normalize the date to a string key to avoid timezone issues.
       const dateKey = day.date.toISOString().split("T")[0];
       volumeMap.set(dateKey, Number(formatEther(day.volume)));
@@ -73,8 +76,8 @@ export default function ActivityGraph({
     const fullData: ProjectTimelinePoint[] = [];
 
     let initialCumulativeVolume = dailyTotals
-    .filter(day => day.date.getTime() < startTimestamp)
-    .reduce((sum, day) => sum + Number(formatEther(day.volume)), 0);
+      .filter((day) => day.date.getTime() < startTimestamp)
+      .reduce((sum, day) => sum + Number(formatEther(day.volume)), 0);
 
     // 2. Loop through every day in the selected date range.
     for (let i = 0; i <= range; i++) {
@@ -104,7 +107,6 @@ export default function ActivityGraph({
     return fullData;
   }, [dailyTotals, range, startTimestamp, loadTimestamp]);
 
-
   // --- All chart rendering logic from here down is mostly unchanged ---
 
   const colors = {
@@ -119,7 +121,18 @@ export default function ActivityGraph({
   const fontSize = "0.65rem";
   const highTrendingScore = 1000;
 
-  const defaultYDomain = useMemo((): [number, number] => {
+  const now = Date.now().valueOf();
+  const daysToMS = (days: number) => days * 24 * 60 * 60 * 1000;
+  const xDomain = useMemo(
+    () =>
+      [Math.floor((now - daysToMS(range)) / 1000), Math.floor(now / 1000)] as [
+        number,
+        number,
+      ],
+    [range, now]
+  );
+
+  /*const defaultYDomain = useMemo((): [number, number] => {
     if (data.length === 0) return [0, 100];
     const values = data.map(p => p[view]);
     const min = Math.min(...values);
@@ -135,13 +148,6 @@ export default function ActivityGraph({
       ? [defaultYDomain[0], Math.max(highTrendingScore, defaultYDomain[1]) * 1.05]
       : defaultYDomain;
 
-  const now = Date.now().valueOf();
-  const daysToMS = (days: number) => days * 24 * 60 * 60 * 1000;
-  const xDomain = useMemo(
-    () => [ Math.floor((now - daysToMS(range)) / 1000), Math.floor(now / 1000) ] as [number, number],
-    [range, now]
-  );
-
   const generateTicks = (range: [number, number], resolution: number) => {
     const [min, max] = range;
     if (min === max) return [min];
@@ -155,18 +161,64 @@ export default function ActivityGraph({
   const dateStringForBlockTime = (timestampSecs: number) => {
     const date = new Date(timestampSecs * 1000);
     return `${date.getMonth() + 1}/${date.getDate()}`;
+  };*/
+
+  const generateTicks = (range: [number, number], resolution: number) => {
+    const [min, max] = range;
+    if (!Number.isFinite(min) || !Number.isFinite(max)) return [0];
+    if (min === max) return [min];
+    const step = (max - min) / resolution;
+    const ticks = Array.from(
+      { length: resolution + 1 },
+      (_, i) => min + i * step
+    );
+    return [...new Set(ticks.map((tick) => Math.round(tick)))].filter(
+      Number.isFinite
+    );
+  };
+
+  const defaultYDomain = useMemo((): [number, number] => {
+    if (data.length === 0) return [0, 100];
+    const values = data
+      .map((p) => p[view])
+      .filter((val) => Number.isFinite(val));
+    if (values.length === 0) return [0, 100];
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return [
+      Number.isFinite(min) ? Math.floor(min * 0.95) : 0,
+      Number.isFinite(max) ? Math.ceil(max * 1.05) : 100,
+    ];
+  }, [data, view]);
+
+  const yDomain: [number, number] =
+    view === "trendingScore" && Number.isFinite(highTrendingScore)
+      ? [
+          defaultYDomain[0],
+          Math.max(highTrendingScore, defaultYDomain[1]) * 1.05,
+        ]
+      : defaultYDomain;
+
+  const xTicks = generateTicks(xDomain, 7);
+  const yTicks = generateTicks(yDomain, 5);
+
+  const dateStringForBlockTime = (timestampSecs: number) => {
+    const date = new Date(timestampSecs * 1000);
+    return `${date.getMonth() + 1}/${date.getDate()}`;
   };
 
   return (
     <div>
-      <div className="mb-4 flex items-baseline justify-between activityGraphHeader">
+      <div className="activityGraphHeader mb-4 flex items-baseline justify-between">
         <div className="flex gap-3">
           {["volume", "trendingScore"].map((v) => (
             <div
               key={v}
               className={twMerge(
-                "cursor-pointer text-sm border-b pb-2 px-2",
-                v === view ? "font-medium border-primary" : "font-light text-muted-foreground border-transparent"
+                "cursor-pointer border-b px-2 pb-2 text-sm",
+                v === view
+                  ? "border-primary font-medium"
+                  : "border-transparent font-light text-muted-foreground"
               )}
               // 5. Connect UI controls to internal state setters
               onClick={() => setView(v as ProjectTimelineView)}
@@ -184,7 +236,7 @@ export default function ActivityGraph({
           }}
         >
           <SelectTrigger
-            className="w-[5.6rem] h-fit rounded border-none background-color rounded-full px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
+            className="background-color h-fit w-[5.6rem] rounded rounded-full border-none px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
             aria-label="Select Time Range"
           >
             <SelectValue placeholder="Select range" />
@@ -206,8 +258,15 @@ export default function ActivityGraph({
               </div>
             </div>
           ) : (
-            <LineChart margin={{ top: 5, right: 20, bottom: 5, left: 20 }} data={data}>
-              <CartesianGrid stroke={stroke} strokeDasharray="1 2" vertical={false} />
+            <LineChart
+              margin={{ top: 5, right: 20, bottom: 5, left: 20 }}
+              data={data}
+            >
+              <CartesianGrid
+                stroke={stroke}
+                strokeDasharray="1 2"
+                vertical={false}
+              />
               <YAxis
                 stroke={stroke}
                 tickLine={false}
@@ -261,13 +320,23 @@ export default function ActivityGraph({
                 dataKey="timestamp"
                 scale="time"
               />
-              {view === "trendingScore" && highTrendingScore && data.length > 0 && (
-                <ReferenceLine
-                  label={<Label fill={color} style={{ fontSize, fontWeight: 500 }} position="insideTopLeft" offset={8} value="Current #1 trending" />}
-                  stroke={color}
-                  y={highTrendingScore}
-                />
-              )}
+              {view === "trendingScore" &&
+                highTrendingScore &&
+                data.length > 0 && (
+                  <ReferenceLine
+                    label={
+                      <Label
+                        fill={color}
+                        style={{ fontSize, fontWeight: 500 }}
+                        position="insideTopLeft"
+                        offset={8}
+                        value="Current #1 trending"
+                      />
+                    }
+                    stroke={color}
+                    y={highTrendingScore}
+                  />
+                )}
               {data.length > 0 && (
                 <Line
                   dot={false}
@@ -275,7 +344,11 @@ export default function ActivityGraph({
                   strokeWidth={2}
                   type="monotone"
                   dataKey={view}
-                  activeDot={{ r: 6, fill: colors.primary[400], stroke: undefined }}
+                  activeDot={{
+                    r: 6,
+                    fill: colors.primary[400],
+                    stroke: undefined,
+                  }}
                   animationDuration={750}
                 />
               )}
@@ -287,10 +360,13 @@ export default function ActivityGraph({
                   const amount = point[view];
                   return (
                     <div className="rounded bg-transparent p-2 text-sm">
-                      <div className="text-grey-400">{dateStringForBlockTime(point.timestamp)}</div>
+                      <div className="text-grey-400">
+                        {dateStringForBlockTime(point.timestamp)}
+                      </div>
                       {view !== "trendingScore" && (
                         <div className="font-medium">
-                          Ξ{amount.toFixed(amount > 10 ? 1 : amount > 1 ? 2 : 4)}
+                          Ξ
+                          {amount.toFixed(amount > 10 ? 1 : amount > 1 ? 2 : 4)}
                         </div>
                       )}
                     </div>

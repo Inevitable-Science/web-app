@@ -4,21 +4,19 @@ import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
 import { useData } from "../DataProvider";
 
-
 export function Header() {
   const { analyticsData } = useData();
 
   return (
     <header>
       <div className="ctWrapper">
-        <div className="relative sm:h-[215px] h-[235px]">
-          <div className="absolute top-0 w-full h-[328px] overflow-hidden z-[-1] rounded">
-            {/* "FE_TODO: You may need to adjust these sizes." */}
+        <div className="relative h-[235px] sm:h-[215px]">
+          <div className="absolute top-0 z-[-1] h-[328px] w-full overflow-hidden rounded">
             {analyticsData?.daoData?.logo ? (
               <Image
                 src={analyticsData?.daoData?.backdrop}
                 alt={"Project Logo"}
-                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
                 width={600}
                 height={400}
               />
@@ -26,7 +24,7 @@ export function Header() {
               <Image
                 src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
                 alt="placeholder header image"
-                className="inset-0 w-full h-full object-cover mt-[90px] rounded"
+                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
                 width={600}
                 height={400}
               />
@@ -34,23 +32,23 @@ export function Header() {
           </div>
         </div>
       </div>
-      <div className="ctWrapper flex flex-col items-start items-start gap-2 sm:mb-6 mb-4">
+      <div className="ctWrapper mb-4 flex flex-col items-start gap-2 sm:mb-6">
         <div className="mx-4">
           {analyticsData?.daoData?.logo ? (
             <>
               <div className="sm:hidden">
                 <Image
                   src={analyticsData?.daoData?.logo}
-                  className="overflow-hidden bg-[var(--card)] block border-[3px] border-background rounded-xl"
+                  className="block overflow-hidden rounded-xl border-[3px] border-background bg-[var(--card)]"
                   alt={"Project Logo"}
                   width={120}
                   height={10}
                 />
               </div>
-              <div className="sm:block hidden">
+              <div className="hidden sm:block">
                 <Image
                   src={analyticsData?.daoData?.logo}
-                  className="overflow-hidden bg-[var(--card)] block border-[4px] border-background rounded-2xl"
+                  className="block overflow-hidden rounded-2xl border-[4px] border-background bg-[var(--card)]"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -58,23 +56,25 @@ export function Header() {
               </div>
             </>
           ) : (
-            <div className="rounded bg-[var(--card)] h-36 w-36 flex items-center justify-center">
+            <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
               <Image
-                  src="./assets/img/branding/icon.svg"
-                  alt={"Inevitable Logo"}
-                  width={24}
-                  height={24}
+                src="./assets/img/branding/icon.svg"
+                alt={"Inevitable Logo"}
+                width={24}
+                height={24}
               />
             </div>
           )}
         </div>
 
         <div className="w-full">
-          <div className="flex items-center justify-between gap-x-12 gap-y-2 mb-4 flex-wrap">
-            <div className="flex flex-col items-baseline sm:flex-row sm:gap-2 mb-2">
-              <div className="text-sm flex flex-wrap gap-x-2 items-baseline">
-                <h1 className="text-2xl sm:text-3xl font-light">{analyticsData?.daoData?.name}</h1>
-                <h5 className="text-cerulean text-base">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-x-12 gap-y-2">
+            <div className="mb-2 flex flex-col items-baseline sm:flex-row sm:gap-2">
+              <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
+                <h1 className="text-2xl font-light sm:text-3xl">
+                  {analyticsData?.daoData?.name}
+                </h1>
+                <h5 className="text-base text-cerulean">
                   <a
                     href={`https://x.com/@${analyticsData?.daoData?.socials.x}`}
                     target="_blank"
@@ -86,61 +86,68 @@ export function Header() {
               </div>
             </div>
           </div>
-          <div className="flex sm:flex-row flex-col sm:items-center items-leading sm:gap-4 items-start">
-            <div className="w-full grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
-              <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="h-fit flex items-center">
+          <div className="items-leading flex flex-col items-start sm:flex-row sm:items-center sm:gap-4">
+            <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
+              <div className="rounded-2xl bg-grey-450 p-[20px]">
+                <div className="flex h-fit items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
                     Ξ{analyticsData?.daoData?.eth_raised}
                   </h3>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Raised</p>
+                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                  Raised
+                </p>
               </div>
 
-              <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="h-fit flex items-center">
-                  <h3 className="text-2xl font-semibold tracking-wider w-full">
+              <div className="rounded-2xl bg-grey-450 p-[20px]">
+                <div className="flex h-fit items-center">
+                  <h3 className="w-full text-2xl font-semibold tracking-wider">
                     {analyticsData?.daoData?.payments}
                   </h3>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Payments</p>
+                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                  Payments
+                </p>
               </div>
 
-              <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="h-fit flex items-center">
+              <div className="rounded-2xl bg-grey-450 p-[20px]">
+                <div className="flex h-fit items-center">
                   <h3 className="w-full">
                     {analyticsData?.treasuryData?.treasury.address ? (
-                    <EthereumAddress
-                      address={analyticsData?.treasuryData?.treasury.address as Address}
-                      short
-                      withEnsAvatar={false}
-                      withEnsName
-                      avatarProps={{ size: "sm" }}
-                      className="text-xl font-light"
-                    />
+                      <EthereumAddress
+                        address={
+                          analyticsData?.treasuryData?.treasury
+                            .address as Address
+                        }
+                        short
+                        withEnsAvatar={false}
+                        withEnsName
+                        avatarProps={{ size: "sm" }}
+                        className="text-xl font-light"
+                      />
                     ) : (
-                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
-                    )
-                    }
+                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
+                    )}
                   </h3>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Owner</p>
+                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                  Owner
+                </p>
               </div>
 
-              <div className="bg-grey-450 p-[20px] rounded-2xl">
-                <div className="h-fit flex items-center">
+              <div className="rounded-2xl bg-grey-450 p-[20px]">
+                <div className="flex h-fit items-center">
                   <h3 className="text-xl font-light">
                     {analyticsData?.daoData?.description ? (
-                      <>
-                        {analyticsData.daoData.date_created}
-                      </>
+                      <>{analyticsData.daoData.date_created}</>
                     ) : (
-                      <div className="activeSkeleton h-[28px] max-w-[142px] w-full rounded-md"/>
-                    )
-                    }
+                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
+                    )}
                   </h3>
                 </div>
-                <p className="uppercase text-muted-foreground font-light text-sm mt-1.5">Date Created</p>
+                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                  Date Created
+                </p>
               </div>
             </div>
           </div>
@@ -148,25 +155,25 @@ export function Header() {
       </div>
 
       <div
-          className="absolute z-[-10] max-w-screen flex justify-center items-center overflow-hidden"
-          style={{ transform: "translateY(-60%)" }}
-        >
-          {/* Left cloud - shifted slightly right */}
-          <img
-            className="z-[-10] select-none w-screen"
-            src="/assets/img/clouds/dao_cloud_left.webp"
-            style={{ transform: "translateX(-40%)" }}
-            alt=""
-          />
+        className="max-w-screen absolute z-[-10] flex items-center justify-center overflow-hidden"
+        style={{ transform: "translateY(-60%)" }}
+      >
+        {/* Left cloud - shifted slightly right */}
+        <img
+          className="z-[-10] w-screen select-none"
+          src="/assets/img/clouds/dao_cloud_left.webp"
+          style={{ transform: "translateX(-40%)" }}
+          alt=""
+        />
 
-          {/* Right cloud - shifted slightly left */}
-          <img
-            className="z-[-10] select-none w-screen"
-            src="/assets/img/clouds/dao_cloud_right.webp"
-            style={{ transform: "translateX(40%)" }}
-            alt=""
-          />
-        </div>
+        {/* Right cloud - shifted slightly left */}
+        <img
+          className="z-[-10] w-screen select-none"
+          src="/assets/img/clouds/dao_cloud_right.webp"
+          style={{ transform: "translateX(40%)" }}
+          alt=""
+        />
+      </div>
     </header>
   );
 }

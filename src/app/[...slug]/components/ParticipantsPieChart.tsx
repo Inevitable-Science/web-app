@@ -48,7 +48,7 @@ const CustomTooltip = ({
   const portion = formatPortion(item.balance.value, totalSupply);
 
   return (
-    <div className="bg-white px-5 py-3 text-sm border border-zinc-200 shadow-md">
+    <div className="border border-zinc-200 bg-white px-5 py-3 text-sm shadow-md">
       <EthereumAddress address={item.address} short />
       <div className="text-zinc-500">
         {item.balance.format()} tokens ({portion}%)
@@ -87,7 +87,7 @@ export function ParticipantsPieChart({
   if (totalBalance === 0n) return null;
 
   return (
-    <div className="w-full sm:h-[200px] h-[140px]">
+    <div className="h-[140px] w-full sm:h-[200px]">
       <ResponsiveContainer height="100%" width="100%">
         <PieChart>
           <Pie

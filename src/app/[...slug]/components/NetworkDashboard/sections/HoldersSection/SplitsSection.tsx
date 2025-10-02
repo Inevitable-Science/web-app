@@ -1,3 +1,5 @@
+"use client";
+
 import { RESERVED_TOKEN_SPLIT_GROUP_ID } from "@/app/constants";
 import { ChainLogo } from "@/components/ChainLogo";
 import { EthereumAddress } from "@/components/EthereumAddress";
@@ -22,10 +24,12 @@ import { useBoostRecipient } from "@/hooks/useBoostRecipient";
 import { useFetchProjectRulesets } from "@/hooks/useFetchProjectRulesets";
 import { formatTokenSymbol } from "@/lib/utils";
 import {
+  JBCoreContracts,
   JB_CHAINS,
   SuckerPair,
   formatUnits,
-  jbProjectDeploymentAddresses,
+  jbControllerAbi,
+  jbSplitsAbi,
 } from "juice-sdk-core";
 import {
   JBChainId,
@@ -33,68 +37,92 @@ import {
   useJBContractContext,
   useJBRulesetContext,
   useJBTokenContext,
-  useReadJbControllerPendingReservedTokenBalanceOf,
-  useReadJbSplitsSplitsOf,
   useSuckers,
 } from "juice-sdk-react";
 import { useEffect, useState } from "react";
 import { twJoin } from "tailwind-merge";
 import { Address } from "viem";
+import { useReadContract } from "wagmi";
 
 export function SplitsSection() {
-  const { projectId } = useJBContractContext();
-  const chainId = useJBChainId();
+  // archive
+  const { projectId, contractAddress } = useJBContractContext();
   const { ruleset } = useJBRulesetContext();
   const { token } = useJBTokenContext();
+  const chainId = useJBChainId();
   const boostRecipient = useBoostRecipient();
-  const [selectedSucker, setSelectedSucker] = useState<SuckerPair>();
-  const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
-  const { suckerPairsWithRulesets, isLoading: isLoadingRuleSets } = useFetchProjectRulesets(suckers);
-  const selectedSuckerRulesets = suckerPairsWithRulesets?.find((sucker) => sucker.peerChainId === selectedSucker?.peerChainId)?.rulesets;
+  const { suckerPairsWithRulesets, isLoading: isLoadingRuleSets } =
+    useFetchProjectRulesets(suckers);
+
+  const [selectedSucker, setSelectedSucker] = useState<SuckerPair>();
+  const [selectedStageIdx, setSelectedStageIdx] = useState<number>(0);
+
+  const selectedSuckerRulesets = suckerPairsWithRulesets?.find(
+    (sucker) => sucker.peerChainId === selectedSucker?.peerChainId
+  )?.rulesets;
   const nextStageIdx = Math.max(
-    selectedSuckerRulesets?.findIndex((stage) => stage.start > Date.now() / 1000) ?? -1,
+    selectedSuckerRulesets?.findIndex(
+      (stage) => stage.start > Date.now() / 1000
+    ) ?? -1,
     1 // lower bound should be 1 (the minimum 'next stage' is 1)
   );
   const currentStageIdx = nextStageIdx - 1;
-  const splitLimit = selectedSuckerRulesets?.[selectedStageIdx]?.metadata.reservedPercent.formatPercentage();
-  const { data: reservedTokenSplits, isLoading: isLoadingSplits } = useReadJbSplitsSplitsOf({
-    chainId: selectedSucker?.peerChainId as JBChainId | undefined,
-    args:
-      ruleset && ruleset?.data && selectedSucker && selectedSuckerRulesets && suckerPairsWithRulesets?.length > 0
-        ? [
-            BigInt(selectedSucker?.projectId || projectId),
-            BigInt(selectedSuckerRulesets[selectedStageIdx]?.id || 0),
-            RESERVED_TOKEN_SPLIT_GROUP_ID
-          ]
-        : undefined,
-  });
-  const { data: pendingReserveTokenBalance } =
-    useReadJbControllerPendingReservedTokenBalanceOf({
-      chainId: selectedSucker?.peerChainId,
-      address: selectedSucker?.peerChainId
-        ? (jbProjectDeploymentAddresses.JBController[
-            selectedSucker.peerChainId as JBChainId
-          ] as Address)
-        : undefined,
-      args: ruleset && ruleset?.data ? [projectId] : undefined,
+  const splitLimit =
+    selectedSuckerRulesets?.[
+      selectedStageIdx
+    ]?.metadata.reservedPercent.formatPercentage();
+  const { data: reservedTokenSplits, isLoading: isLoadingSplits } =
+    useReadContract({
+      chainId: selectedSucker?.peerChainId as JBChainId | undefined,
+      abi: jbSplitsAbi,
+      address: contractAddress(
+        JBCoreContracts.JBSplits,
+        selectedSucker?.peerChainId
+      ),
+      functionName: "splitsOf",
+      args:
+        ruleset &&
+        ruleset?.data &&
+        selectedSucker &&
+        selectedSuckerRulesets &&
+        suckerPairsWithRulesets?.length > 0
+          ? [
+              BigInt(selectedSucker?.projectId || projectId),
+              BigInt(selectedSuckerRulesets[selectedStageIdx]?.id || 0),
+              RESERVED_TOKEN_SPLIT_GROUP_ID,
+            ]
+          : undefined,
     });
 
-    useEffect(() => {
-      if (chainId && suckers && !suckers.find((s) => s.peerChainId === chainId)) {
-        suckers.push({ projectId, peerChainId: chainId });
-      }
-      if (suckers && !selectedSucker) {
-        const i = suckers.findIndex((s) => s.peerChainId === chainId);
-        setSelectedSucker(suckers[i]);
-      }
-    }, [suckers, chainId, projectId, selectedSucker]);
+  const { data: pendingReserveTokenBalance } = useReadContract({
+    abi: jbControllerAbi,
+    functionName: "pendingReservedTokenBalanceOf",
+    chainId: selectedSucker?.peerChainId,
+    address: selectedSucker?.peerChainId
+      ? contractAddress(
+          JBCoreContracts.JBController,
+          selectedSucker.peerChainId
+        )
+      : undefined,
+    args: ruleset && ruleset?.data ? [projectId] : undefined,
+  });
+
+  useEffect(() => {
+    if (chainId && suckers && !suckers.find((s) => s.peerChainId === chainId)) {
+      suckers.push({ projectId, peerChainId: chainId });
+    }
+    if (suckers && !selectedSucker) {
+      const i = suckers.findIndex((s) => s.peerChainId === chainId);
+      setSelectedSucker(suckers[i]);
+    }
+  }, [suckers, chainId, projectId, selectedSucker]);
 
   return (
     <>
       {suckers && suckers.length > 1 && (
-        <div className="mt-2 mb-4">
+        <div className="mb-4 mt-2">
           <div className="text-sm text-zinc-500">See splits on</div>
           <Select
             onValueChange={(v) => setSelectedSucker(suckers[parseInt(v)])}
@@ -122,11 +150,13 @@ export function SplitsSection() {
               ))}
             </SelectContent>
           </Select>
-          <div className="flex gap-4 my-2">
+          <div className="my-2 flex gap-4">
             {selectedSuckerRulesets?.map((ruleset, idx) => {
               return (
                 <Button
-                  variant={selectedStageIdx === idx ? "tab-selected" : "bottomline"}
+                  variant={
+                    selectedStageIdx === idx ? "tab-selected" : "bottomline"
+                  }
                   className={twJoin(
                     "text-md text-zinc-400",
                     selectedStageIdx === idx && "text-inherit"
@@ -135,8 +165,8 @@ export function SplitsSection() {
                   onClick={() => setSelectedStageIdx(idx)}
                 >
                   Stage {idx + 1}
-                  {idx ===  currentStageIdx && (
-                    <span className="rounded-full h-2 w-2 bg-orange-400 border-[2px] border-orange-200 ml-1"></span>
+                  {idx === currentStageIdx && (
+                    <span className="ml-1 h-2 w-2 rounded-full border-[2px] border-orange-200 bg-orange-400"></span>
                   )}
                 </Button>
               );
@@ -144,14 +174,18 @@ export function SplitsSection() {
           </div>
         </div>
       )}
-      <div className="max-h-96 mb-4">
+      <div className="mb-4 max-h-96">
         <div className="background-color flex flex-col p-2">
           <Table className="background-color">
             <TableHeader>
               <TableRow>
                 <TableHead className="w-auto md:w-1/2">Account</TableHead>
-                <TableHead className="text-sm text-muted-foreground font-light uppercase">Percentage</TableHead>
-                <TableHead className="text-sm text-muted-foreground font-light uppercase">Pending Splits</TableHead>
+                <TableHead className="text-sm font-light uppercase text-muted-foreground">
+                  Percentage
+                </TableHead>
+                <TableHead className="text-sm font-light uppercase text-muted-foreground">
+                  Pending Splits
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -166,7 +200,7 @@ export function SplitsSection() {
                   (split: { beneficiary: Address; percent: number }) => (
                     <TableRow key={split.beneficiary}>
                       <TableCell>
-                        <div className="flex flex-col sm:flex-row text-sm">
+                        <div className="flex flex-col text-sm sm:flex-row">
                           <EthereumAddress
                             address={split.beneficiary}
                             chain={
@@ -175,8 +209,8 @@ export function SplitsSection() {
                                     selectedSucker.peerChainId as JBChainId
                                   ].chain
                                 : chainId
-                                ? JB_CHAINS[chainId].chain
-                                : undefined
+                                  ? JB_CHAINS[chainId].chain
+                                  : undefined
                             }
                             short
                             withEnsAvatar
@@ -191,8 +225,8 @@ export function SplitsSection() {
                                     selectedSucker.peerChainId as JBChainId
                                   ].chain
                                 : chainId
-                                ? JB_CHAINS[chainId].chain
-                                : undefined
+                                  ? JB_CHAINS[chainId].chain
+                                  : undefined
                             }
                             short
                             avatarProps={{ size: "sm" }}
@@ -203,11 +237,18 @@ export function SplitsSection() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {formatUnits(BigInt(split.percent * Number(splitLimit) / 100), 7)}%
-                        <span className="text-zinc-500 ml-2">({formatUnits(BigInt(split.percent), 7)}% of limit)</span>
+                        {formatUnits(
+                          BigInt((split.percent * Number(splitLimit)) / 100),
+                          7
+                        )}
+                        %
+                        <span className="ml-2 text-zinc-500">
+                          ({formatUnits(BigInt(split.percent), 7)}% of limit)
+                        </span>
                       </TableCell>
                       <TableCell>
-                        {pendingReserveTokenBalance || pendingReserveTokenBalance === 0n
+                        {pendingReserveTokenBalance ||
+                        pendingReserveTokenBalance === 0n
                           ? `
                           ${formatUnits(
                             (pendingReserveTokenBalance *
@@ -228,17 +269,18 @@ export function SplitsSection() {
         </div>
       </div>
       <div className="flex space-y-4 pb-0 sm:pb-2">
-        <p className="text-sm text-muted-foreground text-muted-foreground font-light uppercasefont-light italic">
-          Splits can be adjusted by the Operator at any time, within the permanent split limit of a stage.
-          <p className="text-sm text-muted-foreground text-muted-foreground font-light uppercasefont-light italic">
-          Operator is currently{" "}
+        <p className="uppercasefont-light text-sm font-light italic text-muted-foreground">
+          Splits can be adjusted by the Operator at any time, within the
+          permanent split limit of a stage.
+          <p className="uppercasefont-light text-sm font-light italic text-muted-foreground">
+            Operator is currently{" "}
             <EtherscanLink
               value={boostRecipient}
               type="address"
               chain={chainId ? JB_CHAINS[chainId].chain : undefined}
               truncateTo={6}
             />
-            </p>
+          </p>
         </p>
       </div>
     </>

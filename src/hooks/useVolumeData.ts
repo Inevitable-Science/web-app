@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { useBendystrawQuery } from "juice-sdk-react";
 import { ParticipantSnapshotsInRangeDocument } from "@/generated/graphql";
 
 // Define the shape of the data our hook will return
@@ -22,13 +22,20 @@ type UseVolumeDataProps = {
  * @param endTimestamp - The end of the date range (Unix timestamp in seconds).
  * @returns An object containing the processed daily volume data and a loading state.
  */
-export function useVolumeData({ suckerGroupId, startTimestamp, endTimestamp }: UseVolumeDataProps) {
+export function useVolumeData({
+  suckerGroupId,
+  startTimestamp,
+  endTimestamp,
+}: UseVolumeDataProps) {
   // 1. Memoize the `where` clause to ensure the query is stable
-  const whereClause = useMemo(() => ({
-    suckerGroupId,
-    timestamp_gt: startTimestamp,
-    timestamp_lt: endTimestamp,
-  }), [suckerGroupId, startTimestamp, endTimestamp]);
+  const whereClause = useMemo(
+    () => ({
+      suckerGroupId,
+      timestamp_gt: startTimestamp,
+      timestamp_lt: endTimestamp,
+    }),
+    [suckerGroupId, startTimestamp, endTimestamp]
+  );
 
   // 2. Fetch all snapshots for the entire period in a single query
   const { data: snapshotData, isLoading } = useBendystrawQuery(
@@ -52,7 +59,9 @@ export function useVolumeData({ suckerGroupId, startTimestamp, endTimestamp }: U
 
     for (const snapshot of items) {
       // Normalize the timestamp to the start of the day (in UTC)
-      const day = new Date(snapshot.timestamp * 1000).toISOString().split("T")[0];
+      const day = new Date(snapshot.timestamp * 1000)
+        .toISOString()
+        .split("T")[0];
 
       const currentVolume = volumeByDay.get(day) ?? 0n;
       volumeByDay.set(day, currentVolume + BigInt(snapshot.volume));
@@ -65,7 +74,6 @@ export function useVolumeData({ suckerGroupId, startTimestamp, endTimestamp }: U
         volume,
       }))
       .sort((a, b) => a.date.getTime() - b.date.getTime());
-
   }, [snapshotData, isLoading]);
 
   return { dailyTotals, isLoading };

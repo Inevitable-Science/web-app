@@ -5,15 +5,15 @@ const PartnersComponent: React.FC = () => {
     <div className="ctWrapper mt-32 hidden">
       <div className="flex flex-col items-center gap-2">
         <p className="font-optima text-xl uppercase">Inevitable</p>
-        <h3 className="sm:text-6xl text-4xl font-light text-primary mb-12">
+        <h3 className="mb-12 text-4xl font-light text-primary sm:text-6xl">
           Partners
         </h3>
 
-        <div className="flex items-center justify-center flex-wrap gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-6">
           <div className="text-center">
             <Image
               src="/assets/img/partner.webp"
-              className="md:w-48 w-32 opacity-60 mb-4"
+              className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
               alt="Partner Image"
@@ -24,7 +24,7 @@ const PartnersComponent: React.FC = () => {
           <div className="text-center">
             <Image
               src="/assets/img/partner.webp"
-              className="md:w-48 w-32 opacity-60 mb-4"
+              className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
               alt="Partner Image"
@@ -35,7 +35,7 @@ const PartnersComponent: React.FC = () => {
           <div className="text-center">
             <Image
               src="/assets/img/partner.webp"
-              className="md:w-48 w-32 opacity-60 mb-4"
+              className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
               alt="Partner Image"
@@ -46,7 +46,7 @@ const PartnersComponent: React.FC = () => {
           <div className="text-center">
             <Image
               src="/assets/img/partner.webp"
-              className="md:w-48 w-32 opacity-60 mb-4"
+              className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
               alt="Partner Image"
@@ -57,7 +57,7 @@ const PartnersComponent: React.FC = () => {
           <div className="text-center">
             <Image
               src="/assets/img/partner.webp"
-              className="md:w-48 w-32 opacity-60 mb-4"
+              className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
               alt="Partner Image"

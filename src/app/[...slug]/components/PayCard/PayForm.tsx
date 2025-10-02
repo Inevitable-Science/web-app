@@ -1,10 +1,7 @@
 import { useTokenA } from "@/hooks/useTokenA";
 import { FixedInt } from "fpnum";
 import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
-import {
-  Field,
-  Formik,
-} from "formik";
+import { Field, Formik } from "formik";
 import {
   useJBContractContext,
   useJBRulesetContext,
@@ -28,11 +25,16 @@ export function PayForm() {
   const {
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
-  const { ruleset, rulesetMetadata} = useJBRulesetContext();
+  const { ruleset, rulesetMetadata } = useJBRulesetContext();
 
   const tokenB = token?.data;
 
-  if (token.isLoading || ruleset.isLoading || rulesetMetadata.isLoading || !tokenB) {
+  if (
+    token.isLoading ||
+    ruleset.isLoading ||
+    rulesetMetadata.isLoading ||
+    !tokenB
+  ) {
     return "Loading...";
   }
 
@@ -52,8 +54,8 @@ export function PayForm() {
   }
 
   return (
-    <div className="bg-grey-450 max-w-[550px] p-[8px] rounded-2xl">
-      <div className="flex justify-center items-center flex-col">
+    <div className="max-w-[550px] rounded-2xl bg-grey-450 p-[8px]">
+      <div className="flex flex-col items-center justify-center">
         <PayInput
           withPayOnSelect
           label="Buy"
@@ -82,7 +84,9 @@ export function PayForm() {
             );
 
             setAmountB(formatUnits(amountBQuote.payerTokens, tokenB.decimals));
-            setAmountC(formatUnits(amountBQuote.reservedTokens, tokenB.decimals));
+            setAmountC(
+              formatUnits(amountBQuote.reservedTokens, tokenB.decimals)
+            );
           }}
           value={amountA}
           currency={tokenA?.symbol}
@@ -114,7 +118,7 @@ export function PayForm() {
           value={amountB}
           currency={formatTokenSymbol(token)}
         />
-        <div className="flex gap-1 p-3 bg-[var(--primary)] mb-4 border-color rounded-b border-r border-l w-full text-md text-primary-foreground overflow-x-auto whitespace-nowrap">
+        <div className="border-color text-md mb-4 flex w-full gap-1 overflow-x-auto whitespace-nowrap rounded-b border-l border-r bg-[var(--primary)] p-3 text-primary-foreground">
           Splits get {amountC || 0} {formatTokenSymbol(tokenB.symbol)}
         </div>
       </div>
@@ -136,7 +140,7 @@ export function PayForm() {
             placeholder="Leave a note"
           />
         </Formik>*/}
-        <div className="w-full flex">
+        <div className="flex w-full">
           {primaryNativeTerminal?.data ? (
             <PayDialog
               amountA={_amountA}

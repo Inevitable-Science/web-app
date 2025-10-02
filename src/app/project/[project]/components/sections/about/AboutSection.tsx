@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 import Image from "next/image";
 import { useData } from "../../../DataProvider";
+import { Globe } from "lucide-react";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -23,7 +24,7 @@ const RichPreview = ({ source }: { source: string }) => {
     // Convert markdown links [text](url) → <a href="url">text</a>
     const withLinks = source.replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      "<a href=\"$2\">$1</a>"
+      '<a href="$2">$1</a>'
     );
 
     // Sanitize the generated HTML
@@ -31,7 +32,7 @@ const RichPreview = ({ source }: { source: string }) => {
 
     return (
       <div
-        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:break-all [&_a]:text-cerulean [&_a:hover]:underline"
+        className="w-[calc(100vw-48px)] break-words sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -50,27 +51,39 @@ export function DescriptionSection() {
     <div className="text-sm">
       <RichPreview source={analyticsData?.daoData?.description || "..."} />
 
-      <div className="bg-grey-450 p-[12px] mt-6 flex flex-col gap-2 rounded-2xl">
-        {analyticsData?.daoData?.socials.discord && (
+      <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
+        {analyticsData?.daoData?.socials.site && (
           <a
-            className="background-color p-[16px] flex gap-2 rounded-2xl items-center"
-            href={analyticsData?.daoData?.socials.discord}
+            className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
+            href={analyticsData?.daoData?.socials.site}
             target="_blank"
             rel="noopener noreferrer"
           >
-          <Image
-            src="/assets/img/logo/socials/discord.svg"
-            alt="Join Discord"
-            height="20"
-            width="20"
-          />
-          Join our Discord
-        </a>
+            <Globe height="20" width="20" />
+            View our Website
+          </a>
         )}
 
         {analyticsData?.daoData?.socials.discord && (
           <a
-            className="background-color p-[16px] flex gap-2 rounded-2xl items-center"
+            className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
+            href={analyticsData?.daoData?.socials.discord}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src="/assets/img/logo/socials/discord.svg"
+              alt="Join Discord"
+              height="20"
+              width="20"
+            />
+            Join our Discord
+          </a>
+        )}
+
+        {analyticsData?.daoData?.socials.discord && (
+          <a
+            className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
             href={`https://x.com/${analyticsData?.daoData?.socials.x}`}
             target="_blank"
             rel="noopener noreferrer"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
@@ -25,7 +25,7 @@ const RichPreview = ({ source }: { source: string }) => {
     // Convert markdown links [text](url) → <a href="url">text</a>
     const withLinks = source.replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      "<a href=\"$2\">$1</a>"
+      '<a href="$2">$1</a>'
     );
 
     // Sanitize the generated HTML
@@ -33,7 +33,7 @@ const RichPreview = ({ source }: { source: string }) => {
 
     return (
       <div
-        className="w-[calc(100vw-48px)] sm:w-full break-words [&_a]:break-all [&_a]:text-cerulean [&_a:hover]:underline"
+        className="w-[calc(100vw-48px)] break-words sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -44,7 +44,6 @@ const RichPreview = ({ source }: { source: string }) => {
     return <div className="break-words">{source}</div>;
   }
 };
-
 
 interface DaoData {
   treasuryHoldings: string;
@@ -60,25 +59,27 @@ interface DescriptionSectionProps {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DescriptionSection({ setSelectedTab }: DescriptionSectionProps) {
+export function DescriptionSection({
+  setSelectedTab,
+}: DescriptionSectionProps) {
   const { metadata } = useJBProjectMetadataContext();
 
   const { description, name } = metadata?.data ?? {};
 
   return (
-      <div className="text-sm">
-        <ChartSection setSelectedTab={setSelectedTab} />
+    <div className="text-sm">
+      <ChartSection setSelectedTab={setSelectedTab} />
 
-        {/* TODO: No idea why this is showing a "0" when not loading. */}
-        {/* {!analyticsError && data?.latestMarketCap && (
+      {/* TODO: No idea why this is showing a "0" when not loading. */}
+      {/* {!analyticsError && data?.latestMarketCap && (
           <DaoData data={data} setSelectedTab={setSelectedTab} />
         )} */}
 
-        <div className="mt-6">
-          <RichPreview source={description || name || "..."} />
-        </div>
-
-        <SocialLinks {...metadata}/>
+      <div className="mt-6">
+        <RichPreview source={description || name || "..."} />
       </div>
+
+      <SocialLinks {...metadata} />
+    </div>
   );
 }

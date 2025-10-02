@@ -1,15 +1,16 @@
 "use client";
+import React from "react";
+import dynamic from "next/dynamic";
 
+import { usePathname } from "next/navigation";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectKitProvider } from "connectkit";
 import { wagmiConfig } from "@/lib/wagmiConfig";
-import React from "react";
-import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
 import { WagmiProvider } from "wagmi";
 
 const DynamicAppSpecificProviders = dynamic(
-  () => import("./AppSpecificProviders").then(mod => mod.AppSpecificProviders),
+  () =>
+    import("./AppSpecificProviders").then((mod) => mod.AppSpecificProviders),
   {
     ssr: false,
     loading: () => null,
@@ -33,7 +34,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             customTheme={{
               "--ck-font-family": "var(--font-simplon-norm)",
               "--ck-connectbutton-border-radius": "0",
-              "--ck-accent-color": "#14B8A6",
+              "--ck-accent-color": "#2978a0",
               "--ck-accent-text-color": "#ffffff",
             }}
           >

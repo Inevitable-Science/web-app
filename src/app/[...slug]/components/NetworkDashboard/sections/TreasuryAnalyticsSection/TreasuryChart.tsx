@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { createChart, IChartApi, ISeriesApi, LineSeriesOptions, Time, LineData } from "lightweight-charts";
+import {
+  createChart,
+  IChartApi,
+  ISeriesApi,
+  LineSeriesOptions,
+  Time,
+  LineData,
+} from "lightweight-charts";
 
 interface TreasuryChartProps {
   organisation: string;
@@ -27,7 +34,9 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
       setLoading(true);
       try {
         //const response = await fetch(`https://api.profiler.bio/api/historical/treasury/${organisation}`);
-        const response = await fetch(`https://inev.profiler.bio/charts/treasury/${organisation}`);
+        const response = await fetch(
+          `https://inev.profiler.bio/charts/treasury/${organisation}`
+        );
         const jsonData: ChartData = await response.json();
         setData(jsonData);
       } catch (error) {
@@ -77,9 +86,15 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
     });
     chartRef.current = chart;
 
-    const treasurySeries = chart.addLineSeries({ color: "#FBE8BD" } as LineSeriesOptions);
-    const assetsSeries = chart.addLineSeries({ color: "#BB4430" } as LineSeriesOptions);
-    const totalAssetsSeries = chart.addLineSeries({ color: "#2978A0" } as LineSeriesOptions);
+    const treasurySeries = chart.addLineSeries({
+      color: "#FBE8BD",
+    } as LineSeriesOptions);
+    const assetsSeries = chart.addLineSeries({
+      color: "#BB4430",
+    } as LineSeriesOptions);
+    const totalAssetsSeries = chart.addLineSeries({
+      color: "#2978A0",
+    } as LineSeriesOptions);
 
     treasuryLineSeriesRef.current = treasurySeries;
     assetLineSeriesRef.current = assetsSeries;
@@ -88,7 +103,9 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
       if (!Array.isArray(data)) return [];
 
       return data.map(([timestamp, value]) => ({
-        time: (Number.isFinite(timestamp) ? Math.floor(timestamp / 1000) : 0) as Time,
+        time: (Number.isFinite(timestamp)
+          ? Math.floor(timestamp / 1000)
+          : 0) as Time,
         value: value ?? 0,
       }));
     };
@@ -161,7 +178,7 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
     <>
       <div
         ref={chartContainerRef}
-        className={data ? "opacity-1" : "opacity-0 !h-[1px]"}
+        className={data ? "opacity-1" : "!h-[1px] opacity-0"}
         style={{
           width: "100%",
           height: "400px",
@@ -169,7 +186,9 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
       />
       <style>{"#tv-attr-logo { display: none; }"}</style>
 
-      <div className={`activeSkeleton w-full h-[376px] rounded-lg ${data ? "hidden" : "block"}`} />
+      <div
+        className={`activeSkeleton h-[376px] w-full rounded-lg ${data ? "hidden" : "block"}`}
+      />
     </>
   );
 };

@@ -1,23 +1,22 @@
 // src/components/NetworkDetailsTable.tsx
 import { Button } from "@/components/ui/button";
-import {
-  JBRulesetData,
-  JBRulesetMetadata,
-} from "juice-sdk-core";
-import {
-  useNativeTokenSurplus,
-} from "juice-sdk-react";
+import { JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
+import { useNativeTokenSurplus } from "juice-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
-import { ChevronDownIcon, ChevronUpIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import { formatEther } from "viem";
 import { SplitsSection } from "./NetworkDashboard/sections/HoldersSection/SplitsSection";
 import { ChevronRightIcon } from "lucide-react";
-import { decodeRulesetMetadata} from "@/lib/utils";
+import { decodeRulesetMetadata } from "@/lib/utils";
 
 interface NetworkDetailsParams {
   analyticsError: string | null;
@@ -33,7 +32,7 @@ export function NetworkDetailsTable() {
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
 
   const { allRulesets, isLoadingAllRulesets } = useRulesetData({
-    projectId: project.projectId
+    projectId: project.projectId,
   });
 
   const sortedRulesets = useMemo(() => {
@@ -42,30 +41,35 @@ export function NetworkDetailsTable() {
   }, [allRulesets]);
 
   useEffect(() => {
-  // FIX: Only set the index if data is ready AND the index hasn't been set yet.
-  if (sortedRulesets && currentRuleset && selectedStageIdx === null) {
-    const currentIndex = sortedRulesets.findIndex(rs => rs.cycleNumber === currentRuleset.cycleNumber);
+    // FIX: Only set the index if data is ready AND the index hasn't been set yet.
+    if (sortedRulesets && currentRuleset && selectedStageIdx === null) {
+      const currentIndex = sortedRulesets.findIndex(
+        (rs) => rs.cycleNumber === currentRuleset.cycleNumber
+      );
 
-    if (currentIndex !== -1) {
-      setSelectedStageIdx(currentIndex);
-    } else {
-      // Fallback: If current can't be found (edge case), default to the latest cycle.
-      setSelectedStageIdx(sortedRulesets.length > 0 ? sortedRulesets.length - 1 : 0);
+      if (currentIndex !== -1) {
+        setSelectedStageIdx(currentIndex);
+      } else {
+        // Fallback: If current can't be found (edge case), default to the latest cycle.
+        setSelectedStageIdx(
+          sortedRulesets.length > 0 ? sortedRulesets.length - 1 : 0
+        );
+      }
     }
-  }
-  // The dependency array is now safer because the logic inside prevents re-triggers.
-}, [sortedRulesets, currentRuleset, selectedStageIdx]);
+    // The dependency array is now safer because the logic inside prevents re-triggers.
+  }, [sortedRulesets, currentRuleset, selectedStageIdx]);
 
   const displayedRuleset = useMemo(() => {
-  // FIX: Handle the case where selectedStageIdx is null
-  if (sortedRulesets === undefined || selectedStageIdx === null) return undefined;
-  return sortedRulesets[selectedStageIdx] as JBRulesetData | undefined;
-}, [sortedRulesets, selectedStageIdx]);
+    // FIX: Handle the case where selectedStageIdx is null
+    if (sortedRulesets === undefined || selectedStageIdx === null)
+      return undefined;
+    return sortedRulesets[selectedStageIdx] as JBRulesetData | undefined;
+  }, [sortedRulesets, selectedStageIdx]);
 
-  const decodedCurrentMetadata = useMemo (() => {
+  const decodedCurrentMetadata = useMemo(() => {
     if (allRulesets && displayedRuleset) {
-    const decoded = decodeRulesetMetadata(displayedRuleset.metadata);
-    return decoded;
+      const decoded = decodeRulesetMetadata(displayedRuleset.metadata);
+      return decoded;
     }
   }, [displayedRuleset, allRulesets]);
 
@@ -73,7 +77,7 @@ export function NetworkDetailsTable() {
   const { cyclesData, tokenData, otherRulesData } = useRulesetData({
     ruleset: displayedRuleset,
     metadata: decodedCurrentMetadata as JBRulesetMetadata | undefined,
-    projectId: project.projectId
+    projectId: project.projectId,
   });
 
   // FIX 1: Make the target date for the countdown hook dynamic
@@ -98,9 +102,11 @@ export function NetworkDetailsTable() {
     return new Date((start + duration) * 1000);
   }, [displayedRuleset]);
 
-  const countdownOutput = useFormatDaysAndHours(useCountdownToDate(targetDateForCountdownHook) || 0);
+  const countdownOutput = useFormatDaysAndHours(
+    useCountdownToDate(targetDateForCountdownHook) || 0
+  );
 
-    // FIX 2: Create a final display string that handles all cycle states
+  // FIX 2: Create a final display string that handles all cycle states
   const displayTimeRemaining = useMemo(() => {
     if (!displayedRuleset) return "-";
 
@@ -128,66 +134,97 @@ export function NetworkDetailsTable() {
     // Case 4: Cycle is active.
     // The `countdownOutput` is correctly counting down to the end time.
     return countdownOutput ?? "...";
-
   }, [displayedRuleset, countdownOutput]);
 
   const availableToPayout = useMemo(() => {
     if (!nativeTokenSurplus || !tokenData?.reservedRate) return 0;
     const surplusInEther = parseFloat(formatEther(nativeTokenSurplus));
-    const reservedRateNumber = parseFloat(tokenData.reservedRate.replace("%", ""));
+    const reservedRateNumber = parseFloat(
+      tokenData.reservedRate.replace("%", "")
+    );
     if (isNaN(reservedRateNumber)) return 0;
-    const payoutMultiplier = 1 - (reservedRateNumber / 100);
+    const payoutMultiplier = 1 - reservedRateNumber / 100;
     return surplusInEther * payoutMultiplier;
   }, [nativeTokenSurplus, tokenData?.reservedRate]);
 
   const formatLabel = (key: string) => {
-    return key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()).trim();
+    return key
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase())
+      .trim();
   };
 
   // NEW: Handlers for the cycle navigation buttons
   const handleNextCycle = () => {
-    setSelectedStageIdx(prev => (prev != undefined && prev != 0) ? Math.max(0, prev - 1) : null);
+    setSelectedStageIdx((prev) =>
+      prev != undefined && prev != 0 ? Math.max(0, prev - 1) : null
+    );
   };
 
   return (
     <div>
-      <div className="bg-grey-450 p-[12px] rounded-2xl mb-4">
+      <div className="mb-4 rounded-2xl bg-grey-450 p-[12px]">
         {/* Top grid with cycle #, status, etc. */}
-        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           {/* NEW: Updated Cycle # display and wired up buttons */}
-          <div className="background-color p-[16px] rounded-xl flex items-center justify-between">
+          <div className="background-color flex items-center justify-between rounded-xl p-[16px]">
             <div className="flex flex-col">
-              <p className="text-sm text-muted-foreground font-light uppercase">Cycle</p>
+              <p className="text-sm font-light uppercase text-muted-foreground">
+                Cycle
+              </p>
               <h3 className="text-xl">
                 {displayedRuleset?.cycleNumber ?? "-"}
               </h3>
             </div>
             <div className="flex gap-1">
-              <Button variant={"ghost"} className="w-8 h-8 p-0 rounded" onClick={handleNextCycle} disabled={selectedStageIdx === null}>
+              <Button
+                variant={"ghost"}
+                className="h-8 w-8 rounded p-0"
+                onClick={handleNextCycle}
+                disabled={selectedStageIdx === null}
+              >
                 <ChevronRightIcon height="24" width="24" />
               </Button>
             </div>
           </div>
-          <div className="background-color p-[16px] rounded-xl">
+          <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
-              {displayedRuleset ? (Number(displayedRuleset.start) <= (Date.now() / 1000) ? "Active" : "Upcoming") : "-"}
+              {displayedRuleset
+                ? Number(displayedRuleset.start) <= Date.now() / 1000
+                  ? "Active"
+                  : "Upcoming"
+                : "-"}
             </h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">Status</p>
+            <p className="text-sm font-light uppercase text-muted-foreground">
+              Status
+            </p>
           </div>
-          <div className="background-color p-[16px] rounded-xl flex items-center justify-center">
-            <h3 className="text-sm text-center">{displayTimeRemaining ?? "-"}</h3>
+          <div className="background-color flex items-center justify-center rounded-xl p-[16px]">
+            <h3 className="text-center text-sm">
+              {displayTimeRemaining ?? "-"}
+            </h3>
           </div>
         </div>
 
         {/* Rules section */}
-        <div className="background-color p-[16px] rounded-xl mt-3">
+        <div className="background-color mt-3 rounded-xl p-[16px]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground font-light uppercase">Rules for this cycle</p>
+              <p className="text-sm font-light uppercase text-muted-foreground">
+                Rules for this cycle
+              </p>
               <h3 className="text-xl">Details</h3>
             </div>
-            <Button variant={"ghost"} className="w-8 h-8 p-0 rounded" onClick={() => setShowRules(prev => !prev)}>
-              {showRules ? <ChevronDownIcon height="24" width="24" /> : <ChevronUpIcon height="24" width="24" />}
+            <Button
+              variant={"ghost"}
+              className="h-8 w-8 rounded p-0"
+              onClick={() => setShowRules((prev) => !prev)}
+            >
+              {showRules ? (
+                <ChevronDownIcon height="24" width="24" />
+              ) : (
+                <ChevronUpIcon height="24" width="24" />
+              )}
             </Button>
           </div>
 
@@ -195,10 +232,13 @@ export function NetworkDetailsTable() {
             <>
               {/* Cycles Section */}
               <div className="mb-6">
-                <h2 className="text-grey-50 mt-4">CYCLES</h2>
+                <h2 className="mt-4 text-grey-50">CYCLES</h2>
                 <div>
                   {Object.entries(cyclesData).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <div
+                      key={key}
+                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                    >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
@@ -208,10 +248,13 @@ export function NetworkDetailsTable() {
 
               {/* Token Section */}
               <div className="mb-6">
-                <h2 className="text-grey-50 mt-4">TOKEN</h2>
+                <h2 className="mt-4 text-grey-50">TOKEN</h2>
                 <div>
                   {Object.entries(tokenData).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <div
+                      key={key}
+                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                    >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
@@ -221,10 +264,13 @@ export function NetworkDetailsTable() {
 
               {/* Other Rules Section */}
               <div>
-                <h2 className="text-grey-50 mt-4">OTHER RULES</h2>
+                <h2 className="mt-4 text-grey-50">OTHER RULES</h2>
                 <div>
                   {Object.entries(otherRulesData).map(([key, value]) => (
-                    <div key={key} className="flex justify-between items-center text-sm py-3 border-b border-grey-450 text-grey-50 font-light">
+                    <div
+                      key={key}
+                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                    >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
                     </div>
@@ -238,15 +284,21 @@ export function NetworkDetailsTable() {
 
       {/* --- The rest of the component remains the same --- */}
 
-      <div className="bg-grey-450 p-[12px] rounded-2xl flex flex-col gap-3">
-        <div className="grid gap-3 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-          <div className="background-color p-[16px] rounded-xl">
-            <h3 className="text-xl">Ξ{parseFloat(formatEther(project.volume)).toFixed(2)}</h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">Total Raised</p>
+      <div className="flex flex-col gap-3 rounded-2xl bg-grey-450 p-[12px]">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+          <div className="background-color rounded-xl p-[16px]">
+            <h3 className="text-xl">
+              Ξ{parseFloat(formatEther(project.volume)).toFixed(2)}
+            </h3>
+            <p className="text-sm font-light uppercase text-muted-foreground">
+              Total Raised
+            </p>
           </div>
-          <div className="background-color p-[16px] rounded-xl">
+          <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">Ξ{availableToPayout.toFixed(2)}</h3>
-            <p className="text-sm text-muted-foreground font-light uppercase">Overflow</p>
+            <p className="text-sm font-light uppercase text-muted-foreground">
+              Overflow
+            </p>
           </div>
         </div>
         {/*<div className="background-color p-[16px] rounded-xl">

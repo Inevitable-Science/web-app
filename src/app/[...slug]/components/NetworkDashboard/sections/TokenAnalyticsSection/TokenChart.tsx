@@ -307,7 +307,9 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">("1");
+  const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">(
+    "1"
+  );
   const [priceData, setPriceData] = useState<ReturnData | null>(null);
   const [dataFound, setDataFound] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -365,15 +367,16 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
       }
 
       setDataFound(true);
-      if(error === true) setError(false);
+      if (error === true) setError(false);
 
       const data = await response.json();
 
       const processedData: PriceData = {
-        prices: data?.prices?.map(([timestamp, value]: [number, number]) => ({
-          time: Math.floor(timestamp / 1000) as Time,
-          value,
-        })) ?? [],
+        prices:
+          data?.prices?.map(([timestamp, value]: [number, number]) => ({
+            time: Math.floor(timestamp / 1000) as Time,
+            value,
+          })) ?? [],
       };
 
       cache.set(apiUrl, { data: processedData, timestamp: now });
@@ -405,7 +408,9 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     const { prices } = await fetchData(range);
     if (isMountedRef.current && prices?.length > 0) {
       prices.sort((a, b) => (a.time as number) - (b.time as number));
-      const uniquePrices = Array.from(new Map(prices.map((item) => [item.time, item])).values());
+      const uniquePrices = Array.from(
+        new Map(prices.map((item) => [item.time, item])).values()
+      );
       if (lineSeriesRef.current) {
         lineSeriesRef.current.setData(uniquePrices);
         chartRef.current?.timeScale().fitContent();
@@ -460,7 +465,9 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     chartRef.current = chart;
 
     // Create line series
-    const lineSeries = chart.addLineSeries({ color: "#FBE8BD" } as LineSeriesOptions);
+    const lineSeries = chart.addLineSeries({
+      color: "#FBE8BD",
+    } as LineSeriesOptions);
     lineSeriesRef.current = lineSeries;
 
     // Update chart with data
@@ -485,21 +492,22 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
       }
     }
 
-    return clippedValue.toFixed(clippedValue < 0.01 ? (clippedValue < 0.0001 ? 6 : 4) : 2);
+    return clippedValue.toFixed(
+      clippedValue < 0.01 ? (clippedValue < 0.0001 ? 6 : 4) : 2
+    );
   };
 
   return (
     <div>
-      <div className="flex items-center justify-between flex-wrap gap-x-6 gap-y-2 w-full mb-2">
+      <div className="mb-2 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div>
           {priceData ? (
-            <div className="flex flex-col justify-center w-fit">
-              <h3 className="text-xl">${latest24hPrice ? formatClippedPrice(latest24hPrice) : "--"}</h3>
+            <div className="flex w-fit flex-col justify-center">
+              <h3 className="text-xl">
+                ${latest24hPrice ? formatClippedPrice(latest24hPrice) : "--"}
+              </h3>
               <p
-                className={`
-                text-sm text-center
-                ${priceData.returnPercentage > 0 ? "text-green-500" : "text-red-500"}
-              `}
+                className={`text-center text-sm ${priceData.returnPercentage > 0 ? "text-green-500" : "text-red-500"} `}
               >
                 {priceData.returnPercentage > 0
                   ? `+${priceData.returnPercentage.toFixed(2)}`
@@ -513,37 +521,37 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
             </div>
           )}
         </div>
-        <div className="flex items-center flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("1")}
             disabled={timeRange === "1"}
           >
             24h
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("7")}
             disabled={timeRange === "7"}
           >
             7d
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("30")}
             disabled={timeRange === "30"}
           >
             1m
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
             onClick={() => setTimeRange("max")}
             disabled={timeRange === "max"}
           >
@@ -552,7 +560,7 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
         </div>
       </div>
 
-      <div
+      {/*<div
         ref={chartContainerRef}
         className={dataFound === true ? "" : "hidden"}
         style={{ width: "100%", height: "400px", maxHeight: "400px" }}
@@ -565,6 +573,19 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
 
       {error === false && (
         <div className={`activeSkeleton w-full h-[376px] rounded-lg ${priceData ? "hidden" : "block"}`} />
+      )}*/}
+
+      {dataFound ? (
+        <div
+          ref={chartContainerRef}
+          className="chartOverrideShow-token"
+          style={{ width: "100%", height: "400px", maxHeight: "400px" }}
+        />
+      ) : (
+        <div className="hitboxUTFD-chart">
+          <h3>Unable to fetch data</h3>
+          <h5>We are unable to fetch data for this token right now.</h5>
+        </div>
       )}
 
       <style>{`

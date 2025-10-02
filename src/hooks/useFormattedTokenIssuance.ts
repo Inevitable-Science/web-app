@@ -1,7 +1,11 @@
 import { FixedInt } from "fpnum";
 import { useJBRulesetContext, useJBTokenContext } from "juice-sdk-react";
 import { useTokenA } from "./useTokenA";
-import { ReservedPercent, RulesetWeight, getTokenAToBQuote } from "juice-sdk-core";
+import {
+  ReservedPercent,
+  RulesetWeight,
+  getTokenAToBQuote,
+} from "juice-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { formatTokenSymbol } from "@/lib/utils";
 
@@ -25,16 +29,18 @@ export function useFormattedTokenIssuance(params?: TokenIssuanceParams) {
     return;
   }
   const weight = params?.weight || ruleset.data.weight;
-  const reservedPercent = params?.reservedPercent || rulesetMetadata.data.reservedPercent;
+  const reservedPercent =
+    params?.reservedPercent || rulesetMetadata.data.reservedPercent;
   const quote = getTokenAToBQuote(
-    new FixedInt(parseUnits("1", tokenA.decimals), tokenA.decimals), {
+    new FixedInt(parseUnits("1", tokenA.decimals), tokenA.decimals),
+    {
       weight,
-      reservedPercent
+      reservedPercent,
     }
   );
   const amount = formatUnits(quote.payerTokens, tokenA.decimals);
   const formattedAmount = new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 3
+    maximumFractionDigits: 3,
   }).format(Number(amount));
   return `${formattedAmount} ${formatTokenSymbol(tokenB)} / ${tokenA.symbol}`;
 }

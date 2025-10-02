@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import DynamicArticleCarousel from "../ArticleCarousel";
-import articleSchema, { Article } from "../Articles"; // Adjust path as needed
+import articleSchema, { Article } from "../Articles";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 
@@ -19,8 +19,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const origin = `${proto}://${host}`;
 
   // Find the article by slug
-  const article = articleSchema.articles.find((a) =>
-    a.title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "") === params.article
+  const article = articleSchema.articles.find(
+    (a) =>
+      a.title
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^a-z0-9-]/g, "") === params.article
   );
 
   // Default metadata if article not found
@@ -33,7 +37,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         title: "Article Not Found | Inevitable Protocol",
         description: "The requested article could not be found.",
         siteName: "Inevitable Protocol",
-        images: [{ url: `${origin}/assets/img/branding/seo_banner.png`, width: 700, height: 370, alt: "Inevitable preview image" }],
+        images: [
+          {
+            url: `${origin}/assets/img/branding/seo_banner.png`,
+            width: 700,
+            height: 370,
+            alt: "Inevitable preview image",
+          },
+        ],
         url: `${origin}/articles`,
         type: "website",
       },
@@ -51,9 +62,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const fullPath = `/articles/${params.article}`;
   const url = new URL(fullPath, origin);
 
-
-  const imgUrl = article.image.startsWith("http") ? article.image : `${origin}${article.image}`;
-
+  const imgUrl = article.image.startsWith("http")
+    ? article.image
+    : `${origin}${article.image}`;
 
   return {
     title: `${article.title} | Inevitable Protocol`,
@@ -63,7 +74,14 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       title: `${article.title} | Inevitable Protocol`,
       description: article.overview,
       siteName: "Inevitable Protocol",
-      images: [{ url: imgUrl, width: 700, height: 370, alt: `${article.title} preview image` }],
+      images: [
+        {
+          url: imgUrl,
+          width: 700,
+          height: 370,
+          alt: `${article.title} preview image`,
+        },
+      ],
       url,
       type: "article",
     },
@@ -77,20 +95,24 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-const ArticlePage: FC<Props> = async props => {
-  const params = await props.params;
-  console.log(params.article);
+//const ArticlePage: FC<Props> = async props => {
+export default async function ArticlePage({ params }: Props) {
+  const { article } = await params;
 
-  const article = articleSchema.articles.find((a) =>
-    a.title.toLowerCase().replace(/ /g, "-").replace(/[^a-z0-9-]/g, "") === params.article
+  const fetchedArticle = articleSchema.articles.find(
+    (a) =>
+      a.title
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^a-z0-9-]/g, "") === article
   );
 
-  if (!article) {
+  if (!fetchedArticle) {
     return (
-      <div className="text-white text-center h-screen flex items-center justify-center flex-col">
-        <div className="flex gap-2 items-center">
+      <div className="flex h-screen flex-col items-center justify-center text-center text-white">
+        <div className="flex items-center gap-2">
           <h1 className="text-5xl font-semibold">404</h1>
-          <div className="border-l border-color h-16 w-1" />
+          <div className="border-color h-16 w-1 border-l" />
           <p>Article Not Found</p>
         </div>
 
@@ -103,7 +125,7 @@ const ArticlePage: FC<Props> = async props => {
     );
   }
 
-  const date = new Date(article.date);
+  const date = new Date(fetchedArticle.date);
   const relativeDate = (() => {
     const diffMs = new Date().getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -118,7 +140,11 @@ const ArticlePage: FC<Props> = async props => {
   })();
 
   const relatedArticles = articleSchema.articles
-    .filter((a) => a !== article && a.category.some((cat) => article.category.includes(cat)))
+    .filter(
+      (a) =>
+        a !== fetchedArticle &&
+        a.category.some((cat) => fetchedArticle.category.includes(cat))
+    )
     .slice(0, 4) // Limit to 4 related articles
     .map((a: Article) => ({
       img: a.image,
@@ -128,21 +154,21 @@ const ArticlePage: FC<Props> = async props => {
 
   return (
     <div className="ctWrapper">
-      <div className="max-w-[960px] mx-auto">
+      <div className="mx-auto max-w-[960px]">
         <div className="mt-28">
-          <h1 className="sm:text-5xl text-3xl font-extralight text-primary">
-            {article.title}
+          <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
+            {fetchedArticle.title}
           </h1>
 
-          <p className="capitalize font-light my-4">
-            {article.author} | {relativeDate}
+          <p className="my-4 font-light capitalize">
+            {fetchedArticle.author} | {relativeDate}
           </p>
 
-          <div className="flex items-center gap-2 max-w-full overflow-x-auto whitespace-nowrap">
-            {article.category.map((cat) => (
+          <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap">
+            {fetchedArticle.category.map((cat) => (
               <span
                 key={cat}
-                className="bg-gunmetal focus:outline-none py-[6px] px-[12px] text-sm rounded-full"
+                className="rounded-full bg-gunmetal px-[12px] py-[6px] text-sm focus:outline-none"
               >
                 {cat}
               </span>
@@ -151,32 +177,33 @@ const ArticlePage: FC<Props> = async props => {
         </div>
 
         <section>
-          <div className="w-full h-auto">
+          <div className="h-auto w-full">
             <img
-              className="w-full h-auto my-4 rounded"
-              src={article.image}
-              alt={`${article.title} image`}
+              className="my-4 h-auto w-full rounded"
+              src={fetchedArticle.image}
+              alt={`${fetchedArticle.title} image`}
             />
           </div>
 
           <div className="flex flex-col gap-6 font-light">
-            <p className="sm:text-xl">
-              {article.overview}
-            </p>
+            <p className="sm:text-xl">{fetchedArticle.overview}</p>
 
             <div
               className="sm:text-xl"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: fetchedArticle.content }}
             />
           </div>
         </section>
       </div>
 
       <div className="mt-16 sm:mt-24 md:pt-12">
-        <DynamicArticleCarousel category="More articles" slides={relatedArticles} />
+        <DynamicArticleCarousel
+          category="More articles"
+          slides={relatedArticles}
+        />
       </div>
     </div>
   );
-};
+}
 
-export default ArticlePage;
+//export default ArticlePage;

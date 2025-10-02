@@ -63,7 +63,8 @@ export default function FarcasterAvatar({
     ? profile.avatar
     : ensAvatarUrlForAddress(address, { size: avatarDimensions });
 
-  const isSvg = avatarSrc.endsWith(".svg") || avatarSrc.includes("image/svg+xml");
+  const isSvg =
+    avatarSrc.endsWith(".svg") || avatarSrc.includes("image/svg+xml");
 
   useEffect(() => {
     if (isSvg) setUseImgFallback(true);
@@ -75,7 +76,7 @@ export default function FarcasterAvatar({
       alt={profile?.identity ?? address}
       className={twMerge(
         "inline-block rounded-full",
-        avatarSize === "md" ? "w-9 h-9" : "w-6 h-6",
+        avatarSize === "md" ? "h-9 w-9" : "h-6 w-6",
         withAvatar && !profile?.social?.uid ? "mr-2" : ""
       )}
       width={avatarDimensions}
@@ -87,7 +88,7 @@ export default function FarcasterAvatar({
       alt={profile?.identity ?? address}
       className={twMerge(
         "inline-block rounded-full",
-        avatarSize === "md" ? "w-9 h-9" : "w-6 h-6",
+        avatarSize === "md" ? "h-9 w-9" : "h-6 w-6",
         withAvatar && !profile?.social?.uid ? "mr-2" : ""
       )}
       width={avatarDimensions}
@@ -98,9 +99,13 @@ export default function FarcasterAvatar({
 
   return (
     <div className={twMerge("inline-flex items-center", className)}>
-      {withAvatar && profile?.platform === "farcaster" && profile.social?.uid ? (
+      {withAvatar &&
+      profile?.platform === "farcaster" &&
+      profile.social?.uid ? (
         <button
-          onClick={() => sdk.actions.viewProfile({ fid: Number(profile.social!.uid!) })} // Updated onClick
+          onClick={() =>
+            sdk.actions.viewProfile({ fid: Number(profile.social!.uid!) })
+          } // Updated onClick
           className="mr-2"
         >
           {avatarElement}

@@ -39,7 +39,9 @@ type FarcasterProfile = {
 
 type FarcasterProfilesContextType = Record<string, FarcasterProfile | null>;
 
-const FarcasterProfilesContext = createContext<FarcasterProfilesContextType>({});
+const FarcasterProfilesContext = createContext<FarcasterProfilesContextType>(
+  {}
+);
 
 export function FarcasterProfilesProvider({
   addresses,
@@ -68,7 +70,7 @@ export function FarcasterProfilesProvider({
           lookupMap[lower] = lower;
           return [`farcaster,${addr}`, `ethereum,${addr}`, `ens,${addr}`];
         });
-       /*  const url = `/api/farcaster/profile?batch=${encodeURIComponent(
+        /*  const url = `/api/farcaster/profile?batch=${encodeURIComponent(
           JSON.stringify(ids)
         )}`; */
         const url = `https://api.web3.bio/profile/batch/${encodeURIComponent(JSON.stringify(ids))}`;
@@ -76,9 +78,10 @@ export function FarcasterProfilesProvider({
           const res = await fetch(url);
           const data = await res.json();
           for (const item of data) {
-            const match = Object.keys(lookupMap).find(
-              (lookupAddr) => item.address?.toLowerCase() === lookupAddr
-            ) ?? item.address?.toLowerCase();
+            const match =
+              Object.keys(lookupMap).find(
+                (lookupAddr) => item.address?.toLowerCase() === lookupAddr
+              ) ?? item.address?.toLowerCase();
 
             if (!match) continue;
 
@@ -88,8 +91,12 @@ export function FarcasterProfilesProvider({
               ethereum: 1,
             };
             const current = result[match];
-            const currentPriority = current?.platform ? platformPriority[current.platform] || 0 : 0;
-            const newPriority = item.platform ? platformPriority[item.platform] || 0 : 0;
+            const currentPriority = current?.platform
+              ? platformPriority[current.platform] || 0
+              : 0;
+            const newPriority = item.platform
+              ? platformPriority[item.platform] || 0
+              : 0;
 
             if (!current || newPriority > currentPriority) {
               result[match] = item;
@@ -103,7 +110,10 @@ export function FarcasterProfilesProvider({
     };
 
     fetchProfiles();
-  }, [JSON.stringify([...new Set(addresses.map((a) => a.toLowerCase()))].sort()), addresses]);
+  }, [
+    JSON.stringify([...new Set(addresses.map((a) => a.toLowerCase()))].sort()),
+    addresses,
+  ]);
 
   return (
     <FarcasterProfilesContext.Provider value={profiles}>
@@ -121,5 +131,7 @@ export function useFarcasterProfile(address?: Address) {
   // Allow Farcaster profile even if the address doesn't match
   if (profile.platform === "farcaster") return profile;
 
-  return profile.address?.toLowerCase() === address.toLowerCase() ? profile : null;
+  return profile.address?.toLowerCase() === address.toLowerCase()
+    ? profile
+    : null;
 }

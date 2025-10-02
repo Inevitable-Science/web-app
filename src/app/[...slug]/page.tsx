@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, use } from "react";
-import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
 import { sdk } from "@farcaster/frame-sdk";
@@ -10,19 +10,28 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = use(props.params);
   const [projectId, setProjectId] = useState<bigint | undefined>(undefined);
   const [chainId, setChainId] = useState<JBChainId | undefined>(undefined);
+  const [version, setVersion] = useState<JBVersion>(4);
   const [notFound, setNotFound] = useState(false);
 
   const [initialized, setInitialized] = useState(false);
 
-  const [user, setUser] = useState<{ fid: number; pfp: string; userName: string } | null>(null);
+  const [user, setUser] = useState<{
+    fid: number;
+    pfp: string;
+    userName: string;
+  } | null>(null);
 
   useEffect(() => {
     if (user) return;
     const fetchUser = async () => {
       await sdk.actions.ready();
-      const ctx = await (await sdk.context);
+      const ctx = await await sdk.context;
       if (ctx && ctx.user && typeof ctx.user.fid === "number") {
-        setUser({ fid: ctx.user.fid, pfp: ctx.user.pfpUrl || "", userName: ctx.user.username || "" });
+        setUser({
+          fid: ctx.user.fid,
+          pfp: ctx.user.pfpUrl || "",
+          userName: ctx.user.username || "",
+        });
       }
     };
     fetchUser();
@@ -38,21 +47,12 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
       // Sanitize input by removing query strings and trimming whitespace
       const sanitizedSlug = raw.split("?")[0].trim();
 
-      /*const decoded = decodeURIComponent(sanitizedSlug);
-      const urn = jbUrn(decoded);
-
-      if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
-        throw new Error("Invalid URN format or unknown chain");
-      }
-
-      setProjectId(urn.projectId);
-      setChainId(urn.chainId);*/
-
       const decoded = decodeURIComponent(sanitizedSlug);
 
       if (decoded == "@stasis") {
         setProjectId(64n);
         setChainId(1);
+        setVersion(4);
       } else {
         const urn = jbUrn(decoded);
         if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
@@ -61,34 +61,25 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
 
         setProjectId(urn.projectId);
         setChainId(urn.chainId);
+        setVersion(urn.version);
       }
 
       setNotFound(false);
     } catch (error) {
       console.warn("URN decoding error:", error);
       setNotFound(true);
-      setProjectId(undefined);
-      setChainId(undefined);
     } finally {
-    setInitialized(true);
-  }
+      setInitialized(true);
+    }
   }, [params.slug]);
 
-  if (initialized && (notFound || !projectId || !chainId)) {
+  if (initialized && (notFound || !projectId || !chainId || !version)) {
     triggerNotFound();
   }
 
-  /*if (notFound || !projectId || !chainId) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center">
-        {notFound ? "Not found" : "Loading..."}
-      </div>
-    );
-  }*/
-
   if (initialized && chainId && projectId) {
     return (
-      <Providers chainId={chainId} projectId={projectId}>
+      <Providers chainId={chainId} projectId={projectId} version={version}>
         <NetworkDashboard />
       </Providers>
     );

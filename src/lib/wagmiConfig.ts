@@ -1,4 +1,6 @@
-/*import {
+/*
+// Include Testnets
+import {
   arbitrum,
   arbitrumSepolia,
   base,
@@ -76,15 +78,10 @@ export const wagmiConfig = createConfig({
   });
 */
 
-import {
-  arbitrum,
-  base,
-  mainnet,
-  optimism,
-} from "viem/chains";
+import { arbitrum, base, mainnet, optimism } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
 import { coinbaseWallet, safe, walletConnect } from "wagmi/connectors";
-import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector"
+import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector";
 
 const safeConnector = safe({
   allowedDomains: [/^app\.safe\.global$/],
@@ -92,43 +89,63 @@ const safeConnector = safe({
   shimDisconnect: true,
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const wagmiConfig = createConfig({
-    chains: [mainnet, optimism, arbitrum, base],
-    connectors: [
-      miniAppConnector(),
-      safeConnector,
-      coinbaseWallet({
-        appName: "REVNET",
-        appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
-      }),
-      walletConnect({
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-        showQrModal: false,
-        metadata: {
-          name: "Inevitable Sciences",
-          description: "Fund radical science.",
-          url: "https://app.inevitable.science",
-          icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
-        },
-      }),
-    ],
-    transports: {
-      [mainnet.id]: fallback([
-        http(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-        http("https://eth-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
-      ]),
-      [optimism.id]: fallback([
-        http(`https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-        http("https://opt-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
-      ]),
-      [base.id]: fallback([
-        http(`https://base-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-        http(`https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_BASE_ID}`),
-        http("https://base-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
-      ]),
-      [arbitrum.id]: fallback([
-        http(`https://arbitrum-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-        http("https://arb-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
-      ]),
-    },
-  });
+  chains: [mainnet, optimism, arbitrum, base],
+  connectors: [
+    miniAppConnector(),
+    safeConnector,
+    coinbaseWallet({
+      appName: "Inevitable Protocol",
+      appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
+    }),
+    walletConnect({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+      showQrModal: false,
+      metadata: {
+        name: "Inevitable Sciences",
+        description: "Fund radical science.",
+        url: isProduction
+          ? "https://inevitable.science"
+          : "http://localhost:3000",
+        icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
+      },
+    }),
+  ],
+  transports: {
+    [mainnet.id]: fallback([
+      http(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
+      http(
+        "https://eth-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+      ),
+    ]),
+    [optimism.id]: fallback([
+      http(
+        `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+      ),
+      http(
+        "https://opt-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+      ),
+    ]),
+    [base.id]: fallback([
+      http(
+        `https://base-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+      ),
+      http(
+        `https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_BASE_ID}`
+      ),
+      http(
+        "https://base-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+      ),
+    ]),
+    [arbitrum.id]: fallback([
+      http(
+        `https://arbitrum-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+      ),
+      http(
+        "https://arb-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+      ),
+    ]),
+  },
+});

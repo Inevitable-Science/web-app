@@ -10,22 +10,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
+        default: "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
         destructive:
           "bg-red-500 text-zinc-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90",
-        outline:
-          "border border-color rounded-lg",
+        outline: "border border-color rounded-lg",
         bottomline:
           "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         "tab-selected":
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         secondary:
           "bg-zinc-100 text-zinc-900 hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80",
-        ghost:
-          "hover:bg-grey-450",
+        ghost: "rounded hover:text-white hover:bg-grey-450",
         link: "font-light text-base !p-0 hover:underline",
       },
       size: {

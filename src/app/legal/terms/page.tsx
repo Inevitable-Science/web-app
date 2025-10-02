@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata"
+import { metadata } from "@/lib/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -45,13 +45,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Terms() {
-
-  const loremParagraph = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?";
+  const loremParagraph =
+    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?";
 
   return (
     <section className="ctWrapper">
-      <div className="mt-[128px] mb-[28px] flex flex-col gap-[18px]">
-        <h1 className="sm:text-5xl text-3xl font-extralight text-primary">
+      <div className="mb-[28px] mt-[128px] flex flex-col gap-[18px]">
+        <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
           Terms and Conditions
         </h1>
 
@@ -66,24 +66,28 @@ export default function Terms() {
           <li>ut labore et dolore magna aliqua.</li>
         </ol>
 
-        <br/>
+        <br />
 
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation <a href="https://www.link.com">www.link.com</a> laboris nisi ut aliquip ex ea commodo consequat.
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-          sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation{" "}
+          <a href="https://www.link.com">www.link.com</a> laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
         </p>
 
-        <br/>
+        <br />
 
         <h2>Sub heading</h2>
 
-        <br/>
+        <br />
 
         <p>{loremParagraph}</p>
 
-        <br/>
+        <br />
 
         <ul>
           <li>m exercitationem ullam corporis</li>
@@ -92,11 +96,13 @@ export default function Terms() {
           <li>eum iure reprehenderit qui in ea</li>
         </ul>
 
-        <br/>
+        <br />
 
         {/* Repeat the lorem paragraph as per the image */}
-        <p>{loremParagraph}</p><br/>
-        <p>{loremParagraph}</p><br/>
+        <p>{loremParagraph}</p>
+        <br />
+        <p>{loremParagraph}</p>
+        <br />
         <p>{loremParagraph}</p>
       </div>
 

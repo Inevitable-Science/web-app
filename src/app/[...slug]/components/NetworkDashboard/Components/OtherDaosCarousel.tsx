@@ -2,7 +2,11 @@
 
 import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
-import { PrevButton, NextButton, usePrevNextButtons } from "@/components/home/ArrowButtons";
+import {
+  PrevButton,
+  NextButton,
+  usePrevNextButtons,
+} from "@/components/home/ArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 
@@ -23,19 +27,22 @@ const DEFAULT_SLIDES: SlideType[] = [
     img: "/assets/img/daos/cryo.webp",
     href: "cryodao",
     title: "CryoDAO",
-    description: "DAO specialized in advancing high-impact cryopreservation research.",
+    description:
+      "DAO specialized in advancing high-impact cryopreservation research.",
   },
   {
     img: "/assets/img/daos/hydra.webp",
     href: "hydradao",
     title: "HydraDAO",
-    description: "Funding and incubating replacement research to extend human lifespan.",
+    description:
+      "Funding and incubating replacement research to extend human lifespan.",
   },
   {
     img: "/assets/img/daos/erectus.webp",
     href: "erectusdao",
     title: "Erectus",
-    description: "Community owned collective funding and promoting male sexual health research.",
+    description:
+      "Community owned collective funding and promoting male sexual health research.",
   },
   {
     img: "/assets/img/daos/cryorat.webp",
@@ -47,17 +54,28 @@ const DEFAULT_SLIDES: SlideType[] = [
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, options = DEFAULT_OPTIONS }) => {
+const OtherDaosCarousel: React.FC<PropType> = ({
+  slides = DEFAULT_SLIDES,
+  options = DEFAULT_OPTIONS,
+}) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
-    <section className="w-full mx-auto">
-      <div className="absolute z-[-10] left-0 right-0 flex justify-center overflow-hidden" style={{ transform: "translateY(-50%)" }}>
-        <div className="w-full max-w-[1500px] hidden md:flex justify-center items-center mx-auto">
+    <section className="mx-auto w-full">
+      <div
+        className="absolute left-0 right-0 z-[-10] flex justify-center overflow-hidden"
+        style={{ transform: "translateY(-50%)" }}
+      >
+        <div className="mx-auto hidden w-full max-w-[1500px] items-center justify-center md:flex">
           {/* Left cloud - shifted slightly right */}
           <img
-            className="z-[-10] select-none w-full"
+            className="z-[-10] w-full select-none"
             src="/assets/img/clouds/dao_cloud_bottom_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
@@ -65,7 +83,7 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
 
           {/* Right cloud - shifted slightly left */}
           <img
-            className="z-[-10] select-none w-full"
+            className="z-[-10] w-full select-none"
             src="/assets/img/clouds/dao_cloud_bottom_right.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""
@@ -74,29 +92,37 @@ const OtherDaosCarousel: React.FC<PropType> = ({ slides = DEFAULT_SLIDES, option
       </div>
 
       <div className="ctWrapper">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="sm:text-4xl text-2xl font-extralight">More Inevitable DAOs</h3>
-          <div className="flex gap-4 items-center">
-            <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-            <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-2xl font-extralight sm:text-4xl">
+            More Inevitable DAOs
+          </h3>
+          <div className="flex items-center gap-4">
+            <PrevButton
+              onClick={onPrevButtonClick}
+              disabled={prevBtnDisabled}
+            />
+            <NextButton
+              onClick={onNextButtonClick}
+              disabled={nextBtnDisabled}
+            />
           </div>
         </div>
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex touch-pan-y -ml-4">
+          <div className="-ml-4 flex touch-pan-y">
             {slides.map((slide, index) => (
-              <Link 
-                key={index} 
-                href={`/project/${slide.href}`} 
-                className="flex min-w-[280px] sm:min-w-[440px] pl-4"
+              <Link
+                key={index}
+                href={`/project/${slide.href}`}
+                className="flex min-w-[280px] pl-4 sm:min-w-[440px]"
               >
                 <div
-                  className="flex flex-col items-start justify-between h-full min-h-[370px] p-4 bg-background rounded-2xl select-none bg-cover bg-center"
+                  className="flex h-full min-h-[370px] select-none flex-col items-start justify-between rounded-2xl bg-background bg-cover bg-center p-4"
                   style={{ backgroundImage: `url(${slide.img})` }}
                 >
                   <div />
-                  <div className="rounded-lg p-2 w-full">
-                    <h4 className="text-xl font-optima mt-2">{slide.title}</h4>
-                    <p className="text-sm line-clamp-2">{slide.description}</p>
+                  <div className="w-full rounded-lg p-2">
+                    <h4 className="mt-2 font-optima text-xl">{slide.title}</h4>
+                    <p className="line-clamp-2 text-sm">{slide.description}</p>
                   </div>
                 </div>
               </Link>
