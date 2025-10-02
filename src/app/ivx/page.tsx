@@ -52,7 +52,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     manifest: metadata.manifest,
   };
-};
+}
 
 async function fetchIvxData() {
   try {

@@ -9,13 +9,13 @@ import { TabContent } from "./TabsContent";
 import { ArrowRightIcon } from "lucide-react";
 
 export function DaoPage() {
-  const { analyticsData, isLoading } = useData();
+  const { analyticsData } = useData();
   const [selectedTab, setSelectedTab] = useState("about");
 
   const tabs = [
     { key: "about", label: "About" },
     { key: "activity", label: "Activity" },
-    ...(analyticsData?.daoData === null && isLoading === false // Intended to prevent CLS
+    ...(analyticsData?.daoData === null
       ? []
       : [
           ...(analyticsData?.tokenData
