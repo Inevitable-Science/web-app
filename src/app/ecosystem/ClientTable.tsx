@@ -133,7 +133,12 @@ export default function ClientTable() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                   query,
-                  variables: { chainId, projectId: projectID, address, version: 4 },
+                  variables: {
+                    chainId,
+                    projectId: projectID,
+                    address,
+                    version: 4,
+                  },
                 }),
               });
 

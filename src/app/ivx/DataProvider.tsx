@@ -1,12 +1,5 @@
 "use client";
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import {
   useJBRulesetContext,
@@ -17,7 +10,6 @@ import {
   useJBTokenContext,
   useBendystrawQuery,
 } from "juice-sdk-react";
-import { Loader2 } from "lucide-react";
 import {
   SuckerPair,
   JBRulesetData,
@@ -30,9 +22,7 @@ import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";
 import {
   TokenResponse,
-  DaoResponse,
   TreasuryResponse,
-  MarketChartResponse,
   TokenResponseSchema,
   TreasuryResponseSchema,
 } from "@/lib/types/AnalyticTypes";
@@ -182,14 +172,6 @@ export const IvxPageDataProvider = ({
     analyticsData,
     token,
   ]);
-
-  /*if (isInitialLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin" />
-      </div>
-    );
-  }*/
 
   if (
     !isInitialLoading &&

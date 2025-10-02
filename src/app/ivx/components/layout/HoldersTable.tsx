@@ -6,7 +6,6 @@ import { formatUnits } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery } from "juice-sdk-react";
 import { Address } from "viem";
-import { Loader2 } from "lucide-react";
 import { useIVXContext } from "../../DataProvider";
 
 export function HoldersTable() {
@@ -51,7 +50,7 @@ export function HoldersTable() {
   const participants = Object.values(participantsDataAggregate);
 
   return (
-    <div className="flex h-[400px] lg:h-full flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px]">
+    <div className="flex h-[400px] flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px] lg:h-full">
       <p className="py-1 text-sm uppercase text-muted-foreground">Holders</p>
       <div
         className="scrollbar-hide overflow-y-scroll pb-[56px]"
@@ -63,9 +62,7 @@ export function HoldersTable() {
         }}
       >
         {participants.length === 0 && (
-          <div className="activeSkeleton flex h-[348px] w-full items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
+          <div className="activeSkeleton mt-2 flex h-[348px] w-full items-center justify-center rounded-xl" />
         )}
         {participants.map((participant) => (
           <div
@@ -98,14 +95,6 @@ export function HoldersTable() {
           </div>
         ))}
       </div>
-      <style>{`
-        @media (max-width: 640px) {
-          .flex.items-center.justify-between > div:last-child {
-            flex-direction: column;
-            gap: 4px;
-          }
-        }
-      `}</style>
     </div>
   );
 }

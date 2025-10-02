@@ -1,8 +1,20 @@
-"use client"
+"use client";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
 import { useProjectBaseToken } from "@/hooks/useTokenBaseToken";
-import { ReservedPercent, JBCoreContracts, jbRulesetsAbi, RulesetWeight, WeightCutPercent, formatUnits, CashOutTaxRate } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  ReservedPercent,
+  JBCoreContracts,
+  jbRulesetsAbi,
+  RulesetWeight,
+  WeightCutPercent,
+  formatUnits,
+  CashOutTaxRate,
+} from "juice-sdk-core";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { useReadContract } from "wagmi";
 import { useIVXContext } from "../../DataProvider";
 import { MAX_RULESET_COUNT } from "@/app/constants";
@@ -11,17 +23,11 @@ import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { differenceInDays, formatDate } from "date-fns";
 
+export function RulesTable() {
+  const { ruleset: primaryRuleset, rulesetMetadata: primaryRulesetMetadata } =
+    useIVXContext();
 
-export function RulesTable({ className }: { className?: string }) {
-  const { 
-    ruleset: primaryRuleset,
-    rulesetMetadata: primaryRulesetMetadata,
-  } = useIVXContext();
-  
-  const {
-    projectId,
-    contractAddress,
-  } = useJBContractContext();
+  const { projectId, contractAddress } = useJBContractContext();
 
   const { token } = useJBTokenContext();
   const chainId = useJBChainId();
@@ -32,7 +38,7 @@ export function RulesTable({ className }: { className?: string }) {
     reservedPercent: new ReservedPercent(0),
   });
 
-  const { data: rulesets } = useReadContract({
+  const { data: rulesets, isLoading } = useReadContract({
     abi: jbRulesetsAbi,
     functionName: "allOf",
     address: contractAddress(JBCoreContracts.JBRulesets),
@@ -53,27 +59,36 @@ export function RulesTable({ className }: { className?: string }) {
     },
   });
 
-
-  if (!primaryRuleset || !primaryRulesetMetadata) {
-    return "Something went wrong";
+  if (!primaryRuleset || !primaryRulesetMetadata || isLoading) {
+    return (
+      <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <p className="py-1 text-sm uppercase text-muted-foreground">
+          Supply Schedule
+        </p>
+        <div className="activeSkeleton h-[calc(100%-28px)] w-full items-center justify-center rounded-xl" />
+      </div>
+    );
   }
 
   const devTax = primaryRulesetMetadata.reservedPercent;
 
   const contributeAmount =
-    Number(formatUnits(primaryRuleset.weight._value, token.data?.decimals ?? 18)) 
-    / 100 
-    * (100 - devTax.formatPercentage());
-
+    (Number(
+      formatUnits(primaryRuleset.weight._value, token.data?.decimals ?? 18)
+    ) /
+      100) *
+    (100 - devTax.formatPercentage());
 
   const getAutoIssuancesTotalForCurrentStage = () => {
     if (!autoIssuances) return 0;
-    const stageautoIssuances = autoIssuances.filter((a) => a.stage === primaryRuleset.cycleNumber + 1);
+    const stageautoIssuances = autoIssuances.filter(
+      (a) => a.stage === primaryRuleset.cycleNumber + 1
+    );
     return commaNumber(
       formatUnits(
         stageautoIssuances.reduce((acc, curr) => acc + BigInt(curr.count), 0n),
-        token?.data?.decimals || 18,
-      ),
+        token?.data?.decimals || 18
+      )
     );
   };
 
@@ -102,66 +117,72 @@ export function RulesTable({ className }: { className?: string }) {
 
   return (
     <>
-      <div className="bg-grey-450 rounded-2xl p-[12px]">
-        <p className="py-1 text-sm text-muted-foreground uppercase">Supply Schedule</p>
+      <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <p className="py-1 text-sm uppercase text-muted-foreground">
+          Supply Schedule
+        </p>
 
-        <div className="grid grid-cols-2 gap-[12px] mt-1">
-          <div className="background-color p-[12px] rounded-xl">
-            <p className="text-md text-muted-foreground font-light uppercase">Issuing</p>
-            <h3 className="text-lg">
-              {issuance}
-            </h3>
+        <div className="mt-1 flex flex-col gap-[8px] md:grid md:grid-cols-2 md:gap-[12px]">
+          <div className="background-color rounded-xl p-[12px]">
+            <p className="text-md font-light uppercase text-muted-foreground">
+              Issuing
+            </p>
+            <h3 className="text-lg">{issuance}</h3>
           </div>
 
-          <div className="background-color p-[12px] rounded-xl">
-            <p className="text-md text-muted-foreground font-light uppercase">Receive</p>
+          <div className="background-color rounded-xl p-[12px]">
+            <p className="text-md font-light uppercase text-muted-foreground">
+              Receive
+            </p>
             <h3 className="text-lg">
-              {formatNumber(contributeAmount, false)} {formatTokenSymbol(token.data?.symbol)} / {nativeToken.symbol}
+              {formatNumber(contributeAmount, false)}{" "}
+              {formatTokenSymbol(token.data?.symbol)} / {nativeToken.symbol}
             </h3>
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground py-2 pl-1">
-          {devTax.formatPercentage().toFixed(2)}%{" "}
-          of issuance and buybacks to splits.
+        <p className="py-2 pl-1 text-sm text-muted-foreground">
+          {devTax.formatPercentage().toFixed(2)}% of issuance and buybacks to
+          splits.
         </p>
 
-        <div className="background-color p-[12px] rounded-2xl">
-          <p className="text-sm text-muted-foreground py-1">
-            IVX's issuance and cash out terms change automatically in permanent sequential stages.
+        <div className="background-color rounded-2xl p-[12px]">
+          <p className="py-1 text-sm text-muted-foreground">
+            IVX's issuance and cash out terms change automatically in permanent
+            sequential stages.
           </p>
-          <div className="
-            mt-2 bg-grey-450 p-[12px] rounded-xl
-            flex flex-col gap-0.5
-            text-sm text-muted-foreground
-          ">
+          <div className="mt-2 flex flex-col gap-1 rounded-xl bg-grey-450 p-[12px] text-sm text-muted-foreground md:gap-0.5">
             <p className="mb-1 uppercase">
-              Stage {primaryRuleset.cycleNumber}{": "}
-              {formatDate(new Date(Number(primaryRuleset.start) * 1000), "MMM dd, yyyy")} -{" "}
-              {stageNextStart()}
+              Stage {primaryRuleset.cycleNumber}
+              {": "}
+              {formatDate(
+                new Date(Number(primaryRuleset.start) * 1000),
+                "MMM dd, yyyy"
+              )}{" "}
+              - {stageNextStart()}
               {stageDayDiff()}
             </p>
 
             <p>
-              Paid Issuance:{" "}
-              {issuance} cut {primaryRuleset.weightCutPercent.formatPercentage()}% every{" "}
+              Paid Issuance: {issuance} cut{" "}
+              {primaryRuleset.weightCutPercent.formatPercentage()}% every{" "}
               {(primaryRuleset.duration / 86400).toString()} days
             </p>
 
             <p>
-              Auto Issuance:{" "}
-              {getAutoIssuancesTotalForCurrentStage()} {formatTokenSymbol(token.data?.symbol)}
+              Auto Issuance: {getAutoIssuancesTotalForCurrentStage()}{" "}
+              {formatTokenSymbol(token.data?.symbol)}
             </p>
 
             <p>
               Cash Out Tax Rate:{" "}
               {new CashOutTaxRate(
-                  Number(primaryRulesetMetadata?.cashOutTaxRate.value ?? 0n),
-                ).format()}
+                Number(primaryRulesetMetadata?.cashOutTaxRate.value ?? 0n)
+              ).format()}
             </p>
           </div>
         </div>
       </div>
     </>
   );
-};
+}

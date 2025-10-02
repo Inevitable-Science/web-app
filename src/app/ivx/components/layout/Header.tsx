@@ -7,12 +7,7 @@ export function IvxPageHeader() {
 
   return (
     <div className="mb-[12px] flex flex-col-reverse gap-[12px] lg:grid lg:grid-cols-3">
-      <div className="
-        flex flex-col
-        md:grid md:grid-cols-3
-        lg:flex lg:flex-col
-        gap-[12px] uppercase
-      ">
+      <div className="flex flex-col gap-[12px] uppercase md:grid md:grid-cols-3 lg:flex lg:h-[254px] lg:flex-col">
         <div className="rounded-2xl bg-grey-450 p-[12px]">
           <h3 className="text-xl">
             $
@@ -50,12 +45,7 @@ export function IvxPageHeader() {
         </div>
       </div>
 
-      <div className="
-        hidden
-        md:grid md:grid-cols-3
-        lg:flex lg:flex-col
-        gap-[12px] uppercase
-      ">
+      <div className="hidden gap-[12px] uppercase md:grid md:grid-cols-3 lg:flex lg:flex-col">
         <div className="rounded-2xl bg-grey-450 p-[12px]">
           <h3 className="text-xl">
             {analyticsData?.token?.selectedToken.totalSupply

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react"; // optional for arrow icon
+import { ChevronDown } from "lucide-react";
 
 interface FaqQuestion {
   question: string;
@@ -66,12 +66,12 @@ export function AccordionComponent() {
               className="flex w-full items-center justify-between gap-[12px] text-left"
             >
               <span
-                className={`${openIndex === index && "py-8 text-primary"} text-md md:text-lg transition-all`}
+                className={`${openIndex === index && "py-8 text-primary"} text-md transition-all md:text-lg`}
               >
                 {faq.question}
               </span>
               <ChevronDown
-                className={`size-6 md:size-8 transition-transform duration-300 ${
+                className={`h-6 min-w-10 transition-transform duration-300 md:h-8 ${
                   openIndex === index ? "rotate-180 text-primary" : ""
                 }`}
               />

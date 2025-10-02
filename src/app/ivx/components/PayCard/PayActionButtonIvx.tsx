@@ -128,6 +128,24 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError, isWriteError, writeError, toast, amountA]); */
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Success",
+        description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
+      });
+      setIsModalOpen(false);
+      setAgreedToTerms(false);
+    }
+    if (isTxError || isWriteError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Transaction unsuccessful.",
+      });
+    }
+  }, [isSuccess, isTxError, isWriteError]);
+
   const { data: projectData } = useBendystrawQuery(
     ProjectDocument,
     {
@@ -306,7 +324,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="text-sm font-medium font-semibold leading-none cursor-pointer select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="cursor-pointer select-none text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>

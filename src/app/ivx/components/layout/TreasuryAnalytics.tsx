@@ -7,13 +7,11 @@ export function IvxTreasuryAnalytics() {
   const { analyticsData } = useIVXContext();
 
   return (
-    <div className="
-      flex flex-col-reverse
-      lg:grid lg:h-[420px] lg:grid-cols-2
-      gap-[12px]
-    ">
+    <div className="flex flex-col-reverse gap-[12px] lg:grid lg:h-[420px] lg:grid-cols-2">
       <div className="h-full rounded-2xl bg-grey-450 p-[12px]">
-        <p className="text-sm uppercase text-muted-foreground">Treasury Holdings</p>
+        <p className="text-sm uppercase text-muted-foreground">
+          Treasury Holdings
+        </p>
         <div
           className="scrollbar-hide max-h-[376px] overflow-y-scroll pb-12"
           style={{
@@ -59,12 +57,13 @@ export function IvxTreasuryAnalytics() {
 
       {analyticsData?.treasury?.treasuryTokens && (
         <div className="h-full rounded-2xl bg-grey-450 p-[16px]">
-          <p className="text-sm uppercase text-muted-foreground">Treasury Holdings</p>
-          <div className="flex h-[calc(100%-20px)] items-center justify-center my-[24px] lg:my-0">
-            
-              <TreasuryPieChart
-                filteredData={analyticsData?.treasury?.treasuryTokens}
-              />
+          <p className="text-sm uppercase text-muted-foreground">
+            Treasury Holdings
+          </p>
+          <div className="my-[24px] flex h-[calc(100%-20px)] items-center justify-center lg:my-0">
+            <TreasuryPieChart
+              filteredData={analyticsData?.treasury?.treasuryTokens}
+            />
           </div>
         </div>
       )}

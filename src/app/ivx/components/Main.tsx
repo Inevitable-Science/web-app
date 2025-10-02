@@ -9,7 +9,6 @@ import { AccordionComponent } from "./layout/AccordionComponent";
 import { RulesTable } from "./layout/RulesTable";
 
 export default function MainIvxLayout() {
-
   return (
     <>
       <div>
@@ -37,19 +36,13 @@ export default function MainIvxLayout() {
             <div className="flex flex-col gap-[12px]">
               <IvxTreasuryAnalytics />
 
-              <div className="
-                flex flex-col-reverse gap-[12px]
-                lg:grid lg:grid-cols-2
-              ">
+              <div className="flex flex-col-reverse gap-[12px] lg:grid lg:grid-cols-2">
                 <RulesTable />
 
                 <PortfolioPeformance />
               </div>
 
-              <div className="
-                flex flex-col gap-[12px]
-                lg:grid lg:h-[400px] lg:grid-cols-2
-              ">
+              <div className="flex flex-col gap-[12px] lg:grid lg:h-[400px] lg:grid-cols-2">
                 <HoldersTable />
 
                 <TransactionTable />

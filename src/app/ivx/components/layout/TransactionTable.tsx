@@ -1,26 +1,22 @@
 import EtherscanLink from "@/components/EtherscanLink";
-import FarcasterAvatar from "@/components/FarcasterAvatar";
-import { FarcasterProfilesProvider } from "@/components/FarcasterAvatarContext";
 import {
   ActivityEventsDocument,
   CashOutTokensEvent,
   PayEvent,
-  ProjectDocument,
 } from "@/generated/graphql";
 import { formatTokenSymbol } from "@/lib/utils";
 import { formatDistance } from "date-fns";
 import { Ether, JB_CHAINS, JBProjectToken } from "juice-sdk-core";
 import {
   JBChainId,
-  useJBChainId,
-  useJBContractContext,
   useJBTokenContext,
   useBendystrawQuery,
 } from "juice-sdk-react";
-import { Address } from "viem";
+import { Address, Chain } from "viem";
 
 import { Loader2 } from "lucide-react";
 import { useIVXContext } from "../../DataProvider";
+import { EthereumAddress } from "@/components/EthereumAddress";
 
 // todo cleanup
 
@@ -70,11 +66,12 @@ function PayActivityItem(
         </div>
 
         <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
-          <FarcasterAvatar
+          <EthereumAddress
+            className="hover:underline"
             address={activityItemData.beneficiary as Address}
-            withAvatar={false}
-            short
             chain={chain}
+            withEnsName
+            short
           />
         </div>
       </div>
@@ -97,6 +94,7 @@ function RedeemActivityItem(
     amount: new Ether(BigInt(cashOutEvent.reclaimAmount)),
     beneficiary: cashOutEvent.beneficiary,
     cashOutCount: new JBProjectToken(BigInt(cashOutEvent.cashOutCount)),
+    chain: cashOutEvent.chainId,
   };
 
   const formattedDate = formatDistance(
@@ -132,10 +130,11 @@ function RedeemActivityItem(
         </div>
 
         <div className="text-md font-light text-grey-100">
-          <FarcasterAvatar
+          <EthereumAddress
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
-            withAvatar={false}
+            chain={JB_CHAINS[activityItemData.chain].chain}
+            withEnsName
             short
           />
         </div>
@@ -145,21 +144,10 @@ function RedeemActivityItem(
 }
 
 export function TransactionTable() {
-  const { projectId, version } = useJBContractContext();
-  const chainId = useJBChainId();
+  const { project } = useIVXContext();
+  const suckerGroupId = project?.suckerGroupId;
 
-  const { data: project } = useBendystrawQuery(ProjectDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
-    version: Number(version),
-    skip: !chainId || !projectId || !version,
-  });
-  const suckerGroupId = project?.project?.suckerGroupId;
-
-  const {
-    data: activityEvents,
-    isLoading,
-  } = useBendystrawQuery(
+  const { data: activityEvents, isLoading } = useBendystrawQuery(
     ActivityEventsDocument,
     {
       orderBy: "timestamp",
@@ -179,36 +167,23 @@ export function TransactionTable() {
 
   return (
     <div className="relative flex h-full flex-col rounded-2xl bg-grey-450 p-[12px]">
-      <p className="py-1 text-sm uppercase text-muted-foreground">Transactions</p>
-
-      <FarcasterProfilesProvider
-        addresses={
-          activityEvents?.activityEvents.items?.flatMap((e) =>
-            e?.payEvent || e?.cashOutTokensEvent
-              ? [
-                  (e?.payEvent?.beneficiary ||
-                    e?.cashOutTokensEvent?.beneficiary) as `0x${string}`,
-                ]
-              : []
-          ) ?? []
-        }
+      <p className="py-1 text-sm uppercase text-muted-foreground">
+        Transactions
+      </p>
+      <div
+        className="scrollbar-hide flex max-h-[340px] flex-col gap-1 overflow-y-scroll"
+        style={{
+          maskImage:
+            "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
+        }}
       >
-        <div
-          className="scrollbar-hide flex max-h-[340px] flex-col gap-1 overflow-y-scroll pb-[48px]"
-          style={{
-            maskImage:
-              "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
-          }}
-        >
-          {isLoading ? (
-            <div className="flex h-[348px] w-full items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin" />
-            </div>
-          ) : activityEvents?.activityEvents.items &&
-            activityEvents.activityEvents.items.length > 0 ? (
-            activityEvents.activityEvents.items.map((event) => {
+        {isLoading || !activityEvents ? (
+          <div className="activeSkeleton mt-2 flex h-[348px] w-full items-center justify-center rounded-xl" />
+        ) : activityEvents.activityEvents.items?.length > 0 ? (
+          <div className="pb-[48px]">
+            {activityEvents.activityEvents.items.map((event) => {
               if (event?.payEvent) {
                 return (
                   <PayActivityItem
@@ -228,14 +203,14 @@ export function TransactionTable() {
                 );
               }
               return null;
-            })
-          ) : (
-            <span className="text-md mt-24 text-center text-muted-foreground">
-              No activity yet.
-            </span>
-          )}
-        </div>
-      </FarcasterProfilesProvider>
+            })}
+          </div>
+        ) : (
+          <span className="text-md my-24 text-center text-muted-foreground">
+            No activity yet.
+          </span>
+        )}
+      </div>
     </div>
   );
 }

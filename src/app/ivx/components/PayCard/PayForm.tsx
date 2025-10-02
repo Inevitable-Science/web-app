@@ -1,7 +1,6 @@
 import { useTokenA } from "@/hooks/useTokenA";
 import { FixedInt } from "fpnum";
 import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
-import { Field, Formik } from "formik";
 import {
   useJBContractContext,
   useJBRulesetContext,

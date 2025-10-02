@@ -18,6 +18,6 @@ export function useProjectAccountingContext() {
     },
     {
       enabled: !!chainId && !!projectId && !!version,
-    },
+    }
   );
 }

@@ -50,9 +50,6 @@ export default async function IvxTokenPage() {
           <MainIvxLayout />
         </IvxPageDataProvider>
       </Providers>
-      {/*<pre>
-        {JSON.stringify(pageData, null, 2)}
-      </pre>*/}
     </>
   );
 }

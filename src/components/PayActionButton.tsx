@@ -275,7 +275,11 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useBendystrawQuery } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useBendystrawQuery,
+} from "juice-sdk-react";
 import { useMemo, useState } from "react";
 import {
   useAccount,
@@ -572,7 +576,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="text-sm font-medium font-semibold leading-none cursor-pointer select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="cursor-pointer select-none text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>

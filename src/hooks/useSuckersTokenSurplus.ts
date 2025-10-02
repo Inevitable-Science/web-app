@@ -5,7 +5,11 @@ import {
   jbDirectoryAbi,
   jbMultiTerminalAbi,
 } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useSuckers } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useSuckers,
+} from "juice-sdk-react";
 import { Address, getContract } from "viem";
 import { useConfig } from "wagmi";
 import { useQuery } from "wagmi/query";
@@ -14,7 +18,10 @@ import { useQuery } from "wagmi/query";
  * Return the current surplus of JB token (can be different per chain) across each sucker on all chains for the current project.
  */
 export function useSuckersTokenSurplus(
-  tokenMap: Record<JBChainId, { token: Address; currency: number; decimals: number }>,
+  tokenMap: Record<
+    JBChainId,
+    { token: Address; currency: number; decimals: number }
+  >
 ) {
   const config = useConfig();
 
@@ -30,7 +37,7 @@ export function useSuckersTokenSurplus(
           .sort(([a], [b]) => Number(a) - Number(b))
           .map(
             ([chainId, config]) =>
-              `${chainId}:${config.token}:${config.currency}:${config.decimals}`,
+              `${chainId}:${config.token}:${config.currency}:${config.decimals}`
           )
           .join(",")
       : "empty";
@@ -72,7 +79,11 @@ export function useSuckersTokenSurplus(
           const { token, currency, decimals } = tokenConfig;
 
           const directory = getContract({
-            address: getJBContractAddress(JBCoreContracts.JBDirectory, version, chainId),
+            address: getJBContractAddress(
+              JBCoreContracts.JBDirectory,
+              version,
+              chainId
+            ),
             abi: jbDirectoryAbi,
             client: config.getClient({ chainId: peerChainId }),
           });
@@ -92,16 +103,23 @@ export function useSuckersTokenSurplus(
             ]);
             return { surplus, chainId: peerChainId, projectId };
           } catch (error) {
-            console.error(`Error getting surplus for chain ${peerChainId}:`, error);
+            console.error(
+              `Error getting surplus for chain ${peerChainId}:`,
+              error
+            );
             return { surplus: null, chainId: peerChainId, projectId };
           }
-        }),
+        })
       );
 
       return surpluses;
     },
     enabled:
-      !!chainId && !!projectId && !!pairs && pairs.length > 0 && Object.keys(tokenMap).length > 0,
+      !!chainId &&
+      !!projectId &&
+      !!pairs &&
+      pairs.length > 0 &&
+      Object.keys(tokenMap).length > 0,
     retry: 3, // Retry up to 3 times
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
     staleTime: 30000, // Consider data stale after 30 seconds
