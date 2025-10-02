@@ -1,10 +1,12 @@
 "use client";
 
 import { ParticipantsDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatDate } from "@/lib/utils";
-import { useJBProjectMetadataContext } from "juice-sdk-react";
+import {
+  useJBProjectMetadataContext,
+  useBendystrawQuery,
+} from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";

@@ -3,17 +3,33 @@ import { useFormattedTokenIssuance } from "./useFormattedTokenIssuance";
 import {
   JBRulesetData,
   JBRulesetMetadata,
+  //RulesetWeight,
+  //WeightCutPercent,
+} from "juice-sdk-core";
+import { format } from "date-fns";
+//import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+import {
+  CashOutTaxRate,
+  jbControllerAbi,
+  JBCoreContracts,
+  jbRulesetsAbi,
+  jbSplitsAbi,
+  ReservedPercent,
   RulesetWeight,
   WeightCutPercent,
 } from "juice-sdk-core";
-import { format } from "date-fns";
-import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { MAX_RULESET_COUNT } from "@/app/constants";
+import { useReadContract } from "wagmi";
 
 type UseRulesetDataProps = {
   ruleset?: JBRulesetData;
   metadata?: JBRulesetMetadata;
-  projectId: number;
+  projectId?: number;
 };
 
 /**
@@ -41,7 +57,40 @@ export function useRulesetData({
   const start = ruleset?.start ? Number(ruleset.start) * 1000 : 0;
 
   // This new section fetches ALL rulesets for the project
+  const {
+    projectId: fetchedProjectId,
+    contracts: { controller },
+    contractAddress,
+  } = useJBContractContext();
+  const chainId = useJBChainId();
+
+  const project = projectId ? projectId : fetchedProjectId;
+
   const { data: allRulesets, isLoading: isLoadingAllRulesets } =
+    useReadContract({
+      abi: jbRulesetsAbi,
+      functionName: "allOf",
+      address: contractAddress(JBCoreContracts.JBRulesets),
+      chainId,
+      args: [fetchedProjectId, 0n, BigInt(MAX_RULESET_COUNT)],
+      query: {
+        select(data) {
+          return data
+            .map((ruleset) => {
+              return {
+                ...ruleset,
+                weight: new RulesetWeight(ruleset.weight),
+                weightCutPercent: new WeightCutPercent(
+                  ruleset.weightCutPercent
+                ),
+              };
+            })
+            .reverse();
+        },
+      },
+    });
+
+  /*const { data: allRulesets, isLoading: isLoadingAllRulesets } =
     useReadJbRulesetsAllOf({
       // The arguments for the contract read.
       // We need a projectId to fetch the rulesets.
@@ -63,7 +112,7 @@ export function useRulesetData({
           });
         },
       },
-    });
+    });*/
 
   // Memoize the formatted cycles data for the single ruleset
   const cyclesData = useMemo(() => {

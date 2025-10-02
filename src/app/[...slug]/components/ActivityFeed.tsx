@@ -1,6 +1,4 @@
 import { sdk } from "@farcaster/frame-sdk";
-import Image from "next/image";
-import { ChainLogo } from "@/components/ChainLogo";
 import EtherscanLink from "@/components/EtherscanLink";
 import FarcasterAvatar from "@/components/FarcasterAvatar";
 import { FarcasterProfilesProvider } from "@/components/FarcasterAvatarContext";
@@ -10,7 +8,6 @@ import {
   PayEvent,
   ProjectDocument,
 } from "@/generated/graphql";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { formatTokenSymbol } from "@/lib/utils";
 import { formatDistance } from "date-fns";
 import { Ether, JB_CHAINS, JBProjectToken } from "juice-sdk-core";
@@ -19,6 +16,7 @@ import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useState, useEffect, useMemo } from "react";
 import { Address, formatEther } from "viem";
@@ -31,68 +29,7 @@ import StaticVolumeChart, {
 import { useVolumeData } from "@/hooks/useVolumeData";
 import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
 
-// DATA_TODO: Add functionality to view changes to the project rules
-
-type ProjectTimelinePoint = {
-  timestamp: number;
-  volume: number;
-  balance: number;
-  trendingScore: number;
-};
-
-const sampleData: ProjectTimelinePoint[] = [
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 30 * 24 * 3600,
-    volume: 5,
-    balance: 10,
-    trendingScore: 200,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 25 * 24 * 3600,
-    volume: 7,
-    balance: 12,
-    trendingScore: 250,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 20 * 24 * 3600,
-    volume: 10,
-    balance: 15,
-    trendingScore: 300,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 15 * 24 * 3600,
-    volume: 8,
-    balance: 13,
-    trendingScore: 280,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 10 * 24 * 3600,
-    volume: 12,
-    balance: 18,
-    trendingScore: 320,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000) - 5 * 24 * 3600,
-    volume: 15,
-    balance: 20,
-    trendingScore: 350,
-  },
-  {
-    timestamp: Math.floor(Date.now() / 1000),
-    volume: 18,
-    balance: 22,
-    trendingScore: 400,
-  },
-];
-
-type PayActivityItemData = {
-  id: string;
-  amount: Ether;
-  beneficiary: Address;
-  beneficiaryTokenCount?: JBProjectToken;
-  timestamp: number;
-  txHash: string;
-};
+// todo cleanup
 
 function PayActivityItem(
   payEvent: Pick<
@@ -278,7 +215,7 @@ function RedeemActivityItem(
 }
 
 export function ActivityFeed() {
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
   const [isOpen, setIsOpen] = useState(true);
 
@@ -289,7 +226,8 @@ export function ActivityFeed() {
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
-    skip: !chainId || !projectId,
+    version: Number(version),
+    skip: !chainId || !projectId || !version,
   });
   const suckerGroupId = project?.project?.suckerGroupId;
 

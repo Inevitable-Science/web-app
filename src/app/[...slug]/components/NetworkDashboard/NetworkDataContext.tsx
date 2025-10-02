@@ -13,7 +13,7 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
-  useReadJbRulesetsAllOf,
+  //useReadJbRulesetsAllOf,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
 import {
@@ -22,8 +22,7 @@ import {
   JBRulesetMetadata,
   JBProjectMetadata,
 } from "juice-sdk-core";
-import { JBContractContextData } from "juice-sdk-react";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
+import { JBContractContextData, useBendystrawQuery } from "juice-sdk-react";
 import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";
@@ -89,7 +88,7 @@ export const NetworkDataProvider = ({
 }) => {
   // Foundational Hooks
   const { address } = useAccount();
-  const { projectId, contracts: jbContracts } = useJBContractContext();
+  const { projectId, version, contracts: jbContracts } = useJBContractContext();
   const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
   const payoutWallet = useBoostRecipient();
@@ -108,7 +107,8 @@ export const NetworkDataProvider = ({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      skip: !chainId || !projectId,
+      version: Number(version),
+      skip: !chainId || !projectId || !version,
     }
   );
 

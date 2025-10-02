@@ -14,7 +14,11 @@ import {
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
+import {
+  getTokenAToBQuote,
+  getTokenBtoAQuote,
+  NATIVE_TOKEN,
+} from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
@@ -24,6 +28,7 @@ import { ChainSelector } from "@/components/ChainSelector";
 import { useSelectedSucker } from "./SelectedSuckerContext";
 import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 
 export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
@@ -49,6 +54,7 @@ export function TransactionCard() {
     isError: isSuckerError,
   } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+  const { data: accountingContext } = useProjectAccountingContext();
   const { metadata } = useNetworkData();
 
   // 6. Effect to initialize the context with a default chain
@@ -268,6 +274,10 @@ export function TransactionCard() {
             <PayActionButton
               amountA={preparedAmountA}
               amountB={preparedAmountB}
+              paymentToken={
+                (accountingContext?.project?.token as `0x${string}`) ||
+                NATIVE_TOKEN.toLowerCase()
+              }
               walletBalance={
                 walletBalance
                   ? parseFloat(

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, use } from "react";
-import { JB_CHAINS, JBChainId, jbUrn } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { Providers } from "./Providers";
 import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
 import { sdk } from "@farcaster/frame-sdk";
@@ -10,6 +10,7 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
   const params = use(props.params);
   const [projectId, setProjectId] = useState<bigint | undefined>(undefined);
   const [chainId, setChainId] = useState<JBChainId | undefined>(undefined);
+  const [version, setVersion] = useState<JBVersion>(4);
   const [notFound, setNotFound] = useState(false);
 
   const [initialized, setInitialized] = useState(false);
@@ -51,6 +52,7 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
       if (decoded == "@stasis") {
         setProjectId(64n);
         setChainId(1);
+        setVersion(4);
       } else {
         const urn = jbUrn(decoded);
         if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
@@ -59,26 +61,25 @@ export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
 
         setProjectId(urn.projectId);
         setChainId(urn.chainId);
+        setVersion(urn.version);
       }
 
       setNotFound(false);
     } catch (error) {
       console.warn("URN decoding error:", error);
       setNotFound(true);
-      setProjectId(undefined);
-      setChainId(undefined);
     } finally {
       setInitialized(true);
     }
   }, [params.slug]);
 
-  if (initialized && (notFound || !projectId || !chainId)) {
+  if (initialized && (notFound || !projectId || !chainId || !version)) {
     triggerNotFound();
   }
 
   if (initialized && chainId && projectId) {
     return (
-      <Providers chainId={chainId} projectId={projectId}>
+      <Providers chainId={chainId} projectId={projectId} version={version}>
         <NetworkDashboard />
       </Providers>
     );

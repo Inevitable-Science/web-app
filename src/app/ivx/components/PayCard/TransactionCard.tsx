@@ -3,53 +3,50 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
-import {
-  JBChainId,
-  useJBChainId,
-  useJBRulesetContext,
-  useJBTokenContext,
-  useSuckers,
-} from "juice-sdk-react";
+import { JBChainId, useJBChainId } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { formatUnits, parseEther, parseUnits } from "viem";
-import { getTokenAToBQuote, getTokenBtoAQuote } from "juice-sdk-core";
+import {
+  getTokenAToBQuote,
+  getTokenBtoAQuote,
+  NATIVE_TOKEN,
+} from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import { PayActionButton } from "./PayActionButtonIvx";
-import { WithdrawCard } from "./WithdrawCard";
-import { ChainSelector } from "@/components/ChainSelector";
+import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
+import { ChainSelector } from "./ChainSelect";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
 import { useIVXContext } from "../../DataProvider";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { PayCardSkeleton } from "./PayCardSkeleton";
 
 export function TransactionCard() {
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
+  // TODO: Disallow negative numbers
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
-  const [memo, setMemo] = useState("");
 
   const tokenA = useTokenA();
   const { address } = useAccount(); // Get user's wallet and chain
+  const { data: accountingContext } = useProjectAccountingContext();
   const activeChain = useJBChainId();
   const { switchChain } = useSwitchChain();
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
     address,
   });
 
-  const { token: tokenBContext } = useJBTokenContext();
-  const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } =
-    useJBRulesetContext();
+  //const { token: tokenBContext } = useJBTokenContext();
+  //const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
 
-  const {
-    data: suckers,
-    isLoading: areSuckersLoading,
-    isError: isSuckerError,
-  } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
-  const { metadata } = useIVXContext();
+  const {
+    metadata,
+    suckers,
+    token: tokenBContext,
+    ruleset: rulesetContext,
+    rulesetMetadata: rulesetMetadataContext,
+  } = useIVXContext();
 
   // 6. Effect to initialize the context with a default chain
   useEffect(() => {
@@ -63,33 +60,34 @@ export function TransactionCard() {
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
   // Updated Load Guard
-  if (
-    isBalanceLoading ||
-    areSuckersLoading ||
-    rulesetContext.isLoading ||
-    rulesetMetadataContext.isLoading ||
-    !rulesetContext.data ||
-    !rulesetMetadataContext.data
-  ) {
-    return (
-      <div className="flex h-[450px] flex-col items-center justify-center rounded-xl bg-grey-450 p-[12px]">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+  if (isBalanceLoading || !suckers) {
+    return <PayCardSkeleton />;
   }
 
   const defaultToken = {
-    symbol: "TOKENS",
+    symbol: "IVX",
     decimals: 18,
   };
 
   const tokenB = tokenBContext.data || defaultToken;
-  const ruleset = rulesetContext.data;
-  const rulesetMetadata = rulesetMetadataContext.data;
+  const ruleset = rulesetContext;
+  const rulesetMetadata = rulesetMetadataContext;
+
+  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "-" || e.key === "Minus") {
+      e.preventDefault();
+    }
+  };
 
   // --- CORE LOGIC (CALCULATION HANDLERS) ---
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    if (value.startsWith("-")) {
+      setAmountA("0");
+      return;
+    }
+
     setAmountA(value);
     if (!value || value === ".") {
       setAmountB("");
@@ -150,154 +148,86 @@ export function TransactionCard() {
     symbol: formatTokenSymbol(tokenB.symbol),
   };
 
-  const isChainMismatched = activeChain !== selectedSucker?.peerChainId;
-
   return (
-    <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            onClick={() => setActiveTab("buy")}
-            className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
-              activeTab === "buy"
-                ? "border-cerulean text-white"
-                : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Buy
-          </Button>
-          {rulesetMetadata?.useTotalSurplusForCashOuts && (
-            <Button
-              onClick={() => setActiveTab("withdraw")}
-              className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
-                activeTab === "withdraw"
-                  ? "border-cerulean text-white"
-                  : "border-transparent text-muted-foreground"
-              }`}
-            >
-              Withdraw
-            </Button>
-          )}
-        </div>
-
-        {/* 8. Add the ChainSelector to the UI */}
-        <ChainSelector
-          disabled={!suckers || suckers.length <= 1}
-          value={selectedSucker?.peerChainId as JBChainId}
-          onChange={handleChainChange}
-          options={suckers?.map((s) => s.peerChainId) ?? []}
-        />
-      </div>
-
-      <div className="my-4">
-        {activeTab === "buy" ? (
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
-                <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm font-light text-muted-foreground">
-                    YOU PAY
-                  </p>
-                  <input
-                    type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
-                    placeholder="0.00"
-                    value={amountA}
-                    onChange={handlePayAmountChange}
-                  />
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                  <div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">
-                    <Image
-                      src="/assets/img/logo/mainnet.svg"
-                      className="rounded-full"
-                      height={22}
-                      width={22}
-                      alt="ETH Icon"
-                    />
-                    <p className="text-lg font-light">{tokenA.symbol}</p>
-                  </div>
-                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
-                    Balance:{" "}
-                    {walletBalance
-                      ? parseFloat(
-                          formatUnits(walletBalance.value, tokenA.decimals)
-                        ).toFixed(4)
-                      : "0.00"}
-                  </p>
-                </div>
-              </div>
-              <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
-                <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm font-light text-muted-foreground">
-                    YOU RECEIVE
-                  </p>
-                  <input
-                    type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
-                    placeholder="0.00"
-                    value={amountB}
-                    onChange={handleReceiveAmountChange}
-                  />
-                </div>
-                <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
-                  <Image
-                    src={
-                      metadata.data?.logoUri
-                        ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                        : "/assets/img/logo/mainnet.svg"
-                    }
-                    className="rounded-full"
-                    height={22}
-                    width={22}
-                    alt="Token Icon"
-                  />
-                  <p className="text-lg font-light">
-                    {formatTokenSymbol(tokenB.symbol)}
-                  </p>
-                </div>
-              </div>
-            </div>
+    <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
+      <div className="flex flex-col gap-2">
+        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+          <div className="flex flex-col gap-[2px]">
+            <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
             <input
-              type="text"
-              className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-              onChange={(e) => setMemo(e.target.value)}
-              value={memo}
-              placeholder="Add a note... (optional)"
-            />
-            <PayActionButton
-              amountA={preparedAmountA}
-              amountB={preparedAmountB}
-              walletBalance={
-                walletBalance
-                  ? parseFloat(
-                      formatUnits(walletBalance.value, tokenA.decimals)
-                    ).toFixed(4)
-                  : 0
-              }
-              memo={memo}
-              disabled={!amountA || parseFloat(amountA) === 0}
-              selectedSucker={selectedSucker}
+              type="number"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              placeholder="0.00"
+              value={amountA}
+              onChange={handlePayAmountChange}
+              onKeyDown={preventMinusKey}
             />
           </div>
-        ) : (
-          <WithdrawCard selectedSucker={selectedSucker} />
-        )}
+          <div className="flex flex-col items-end gap-1">
+            <ChainSelector
+              disabled={!suckers || suckers.length <= 1}
+              value={selectedSucker?.peerChainId as JBChainId}
+              onChange={handleChainChange}
+              options={suckers?.map((s) => s.peerChainId) ?? []}
+            />
+            {/*</div>*/}
+            <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+              Balance:{" "}
+              {walletBalance
+                ? parseFloat(
+                    formatUnits(walletBalance.value, tokenA.decimals)
+                  ).toFixed(4)
+                : "--"}
+            </p>
+          </div>
+        </div>
+        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+          <div className="flex flex-col gap-[2px]">
+            <p className="text-sm font-light text-muted-foreground">
+              YOU RECEIVE
+            </p>
+            <input
+              type="number"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              placeholder="0.00"
+              value={amountB}
+              onChange={handleReceiveAmountChange}
+              onKeyDown={preventMinusKey}
+            />
+          </div>
+          <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 py-1 pl-1.5 pr-3">
+            <Image
+              src={
+                metadata.data?.logoUri
+                  ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                  : "/assets/img/logo/mainnet.svg"
+              }
+              className="rounded-full"
+              height={24}
+              width={24}
+              alt="Token Icon"
+            />
+            <p className="text-lg font-light">{tokenB.symbol}</p>
+          </div>
+        </div>
+        <PayActionButton
+          amountA={preparedAmountA}
+          amountB={preparedAmountB}
+          paymentToken={
+            (accountingContext?.project?.token as `0x${string}`) ||
+            NATIVE_TOKEN.toLowerCase()
+          }
+          walletBalance={
+            walletBalance
+              ? parseFloat(
+                  formatUnits(walletBalance.value, tokenA.decimals)
+                ).toFixed(4)
+              : 0
+          }
+          disabled={!amountA || parseFloat(amountA) === 0}
+          selectedSucker={selectedSucker}
+        />
       </div>
-
-      {/* <div className="background-color flex flex-col gap-[2px] p-[16px] rounded-xl">
-        <p className="text-sm font-light">
-          {formattedTokenIssuance}
-        </p>
-        <p className="text-xs text-muted-foreground font-light">
-          Total token supply: {new FixedInt(tokenB.totalSupply, tokenB.decimals).format(2)}
-        </p>
-        {ruleset.payoutRedemptionRate && (
-          <p className="text-xs text-muted-foreground font-light">
-            Redemption rate: {ruleset.payoutRedemptionRate.format()}%
-          </p>
-        )}
-      </div> */}
     </div>
   );
 }

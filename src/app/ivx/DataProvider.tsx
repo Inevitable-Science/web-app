@@ -1,12 +1,5 @@
-"use client"
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useMemo,
-  useState,
-  useEffect,
-} from "react";
+"use client";
+import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import {
   useJBRulesetContext,
@@ -14,10 +7,9 @@ import {
   useJBContractContext,
   useJBChainId,
   useJBProjectMetadataContext,
-  useReadJbRulesetsAllOf,
   useJBTokenContext,
+  useBendystrawQuery,
 } from "juice-sdk-react";
-import { Loader2 } from "lucide-react";
 import {
   SuckerPair,
   JBRulesetData,
@@ -25,15 +17,12 @@ import {
   JBProjectMetadata,
 } from "juice-sdk-core";
 import { JBContractContextData } from "juice-sdk-react";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";
 import {
   TokenResponse,
-  DaoResponse,
   TreasuryResponse,
-  MarketChartResponse,
   TokenResponseSchema,
   TreasuryResponseSchema,
 } from "@/lib/types/AnalyticTypes";
@@ -45,7 +34,6 @@ import {
   useSelectedSucker,
 } from "./SelectedSuckerContext";
 import { z } from "zod";
-
 
 export interface AnalyticsData {
   token: TokenResponse | null;
@@ -86,7 +74,7 @@ export const IvxPageDataProvider = ({
   children,
   //token,
   tokenData,
-  treasuryData
+  treasuryData,
 }: {
   children: ReactNode;
   //token: AsyncData<GetTokenReturnType | undefined>;
@@ -96,9 +84,9 @@ export const IvxPageDataProvider = ({
   // Foundational Hooks
   const { address } = useAccount();
   const { token } = useJBTokenContext();
-  const { projectId, contracts: jbContracts } = useJBContractContext();
-  const chainId = useJBChainId();
+  const { projectId, contracts: jbContracts, version } = useJBContractContext();
   const { metadata } = useJBProjectMetadataContext();
+  const chainId = useJBChainId();
   const payoutWallet = useBoostRecipient();
   const selectedSucker = useSelectedSucker();
 
@@ -120,7 +108,8 @@ export const IvxPageDataProvider = ({
     {
       chainId: Number(chainId),
       projectId: Number(projectId),
-      skip: !chainId || !projectId,
+      version: version,
+      skip: !chainId || !projectId || !version,
     }
   );
 
@@ -140,7 +129,6 @@ export const IvxPageDataProvider = ({
     endTimestamp: loadTimestamp,
   });
 
-  
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =
     isBalanceLoading ||
@@ -185,14 +173,6 @@ export const IvxPageDataProvider = ({
     token,
   ]);
 
-  /*if (isInitialLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin" />
-      </div>
-    );
-  }*/
-
   if (
     !isInitialLoading &&
     !isFetching &&
@@ -201,13 +181,6 @@ export const IvxPageDataProvider = ({
       !value.rulesetMetadata ||
       !value.project)
   ) {
-    console.log("Not Found");
-    console.log(
-      value.suckers, 1,
-      value.ruleset, 2,
-      value.rulesetMetadata, 3,
-      value.project, 4
-    )
     notFound();
   }
 

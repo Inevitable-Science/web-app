@@ -1,4 +1,4 @@
-import { useNativeTokenSymbol } from "@/hooks/useNativeTokenSymbol";
+import { useProjectBaseToken } from "./useTokenBaseToken";
 
 /**
  * Token A is the token used to buy the project's token (Token B).
@@ -7,6 +7,6 @@ import { useNativeTokenSymbol } from "@/hooks/useNativeTokenSymbol";
  * In theory, it could be any token (USDC etc.), so this should be updated to reflect that.
  */
 export function useTokenA() {
-  const nativeTokenSymbol = useNativeTokenSymbol();
-  return { symbol: nativeTokenSymbol, decimals: 18 };
+  const nativeToken = useProjectBaseToken();
+  return { symbol: nativeToken.symbol, decimals: nativeToken.decimals };
 }

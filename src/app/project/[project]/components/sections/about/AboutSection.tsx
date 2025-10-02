@@ -24,7 +24,7 @@ const RichPreview = ({ source }: { source: string }) => {
     // Convert markdown links [text](url) → <a href="url">text</a>
     const withLinks = source.replace(
       /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      "<a href=\"$2\">$1</a>"
+      '<a href="$2">$1</a>'
     );
 
     // Sanitize the generated HTML

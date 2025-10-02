@@ -4,9 +4,12 @@ import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StaticVolumeChart from "../../Components/ActivityGraph";
-import { useBendystrawQuery } from "@/graphql/useBendystrawQuery";
 import { ProjectDocument } from "@/generated/graphql";
-import { useJBChainId, useJBContractContext } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useBendystrawQuery,
+} from "juice-sdk-react";
 
 interface ChartSection {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
@@ -14,12 +17,13 @@ interface ChartSection {
 
 export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
   const chainId = useJBChainId();
-  const { projectId } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
     projectId: Number(projectId),
-    skip: !chainId || !projectId,
+    version: Number(version),
+    skip: !chainId || !projectId || !version,
   });
   const suckerGroupId = project?.project?.suckerGroupId;
 

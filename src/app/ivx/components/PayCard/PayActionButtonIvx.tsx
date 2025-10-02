@@ -1,8 +1,16 @@
 import { useToast } from "@/components/ui/use-toast";
-import { JB_CHAINS, NATIVE_TOKEN, TokenAmountType } from "juice-sdk-core";
 import {
+  JB_CHAINS,
+  JBChainId,
+  jbMultiTerminalAbi,
+  SuckerPair,
+  NATIVE_TOKEN,
+  TokenAmountType,
+} from "juice-sdk-core";
+import {
+  useJBChainId,
   useJBContractContext,
-  useWriteJbMultiTerminalPay,
+  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -10,29 +18,33 @@ import {
   useChainId,
   useSwitchChain,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { SuckerPair } from "juice-sdk-core";
-import { JBChainId } from "juice-sdk-react";
 import { Check, Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { useIVXContext } from "../../DataProvider";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
+import { useIVXContext } from "../../DataProvider";
+import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 
 const shimmerClasses = `
-    relative overflow-hidden 
-    before:content-[''] before:absolute before:inset-0 
-    before:-translate-x-full before:animate-[shimmer_2s_infinite] 
-    before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent
-  `;
+  relative overflow-hidden
+  before:content-[''] before:absolute before:inset-0
+  before:-translate-x-full before:animate-[shimmer_2s_infinite]
+  before:bg-gradient-to-r before:from-transparent before:via-black/20 before:to-transparent
+`;
 
 // Define shared styles for the main action button for consistency
 const primaryButtonClasses =
-  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
+  "w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-none disabled:opacity-50";
+
+const memo = "";
+
+// TODO:REVIEW
 
 /**
  * A self-contained button that handles wallet connection, chain switching,
@@ -41,15 +53,15 @@ const primaryButtonClasses =
 export function PayActionButton({
   amountA,
   amountB,
+  paymentToken,
   walletBalance,
-  memo,
   disabled,
   selectedSucker,
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
+  paymentToken: `0x${string}`;
   walletBalance: number | string;
-  memo: string | undefined;
   disabled?: boolean;
   selectedSucker?: SuckerPair | undefined;
 }) {
@@ -57,6 +69,8 @@ export function PayActionButton({
   const {
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
+  const { projectId, version } = useJBContractContext();
+  const chainId = useJBChainId();
   const { address, isConnected } = useAccount();
   const { toast } = useToast();
   const { metadata } = useIVXContext();
@@ -75,7 +89,7 @@ export function PayActionButton({
     isError: isWriteError,
     error: writeError,
     writeContract,
-  } = useWriteJbMultiTerminalPay();
+  } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
@@ -114,17 +128,76 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError, isWriteError, writeError, toast, amountA]); */
 
-  // This now works correctly because `writeContract` is defined
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Success",
+        description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
+      });
+      setIsModalOpen(false);
+      setAgreedToTerms(false);
+    }
+    if (isTxError || isWriteError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Transaction unsuccessful.",
+      });
+    }
+  }, [isSuccess, isTxError, isWriteError]);
+
+  const { data: projectData } = useBendystrawQuery(
+    ProjectDocument,
+    {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
+      version: Number(version), // TODO dynamic version
+    },
+    {
+      enabled: !!chainId && !!projectId,
+    }
+  );
+  const suckerGroupId = projectData?.project?.suckerGroupId;
+
+  // Get all projects in the sucker group with their token data
+  const { data: suckerGroupData } = useBendystrawQuery(
+    SuckerGroupDocument,
+    { id: suckerGroupId ?? "" },
+    { enabled: !!suckerGroupId }
+  );
+
+  const getTokenForChain = (targetChainId: number) => {
+    if (!suckerGroupData?.suckerGroup?.projects?.items) {
+      return paymentToken; // fallback to original paymentToken
+    }
+
+    const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
+      (project) => project.chainId === targetChainId
+    );
+
+    if (projectForChain?.token) {
+      return projectForChain.token as `0x${string}`;
+    }
+
+    return paymentToken; // fallback to original paymentToken
+  };
+
   const handlePay = () => {
+    const value = amountA.amount.value;
+
     if (
       !primaryNativeTerminal?.data ||
       !address ||
       !selectedSucker ||
+      !value ||
       !writeContract
     )
       return;
-    const value = amountA.amount.value;
-    writeContract({
+
+    const chainToken = getTokenForChain(selectedSucker.peerChainId);
+    const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
+
+    /*writeContract({
       chainId: selectedSucker.peerChainId,
       address: primaryNativeTerminal.data,
       args: [
@@ -137,6 +210,23 @@ export function PayActionButton({
         "0x0",
       ],
       value,
+    });*/
+    writeContract?.({
+      // TODO:REVIEW
+      abi: jbMultiTerminalAbi,
+      functionName: "pay",
+      chainId: selectedSucker.peerChainId,
+      address: primaryNativeTerminal.data as `0x${string}`,
+      args: [
+        selectedSucker.projectId,
+        chainToken,
+        value,
+        address,
+        0n,
+        memo || "",
+        "0x0",
+      ],
+      value: isNative ? value : 0n,
     });
   };
 
@@ -150,7 +240,7 @@ export function PayActionButton({
           <Button
             onClick={show}
             loading={isConnecting}
-            className={twMerge(primaryButtonClasses, shimmerClasses)}
+            className={primaryButtonClasses}
           >
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </Button>
@@ -165,7 +255,7 @@ export function PayActionButton({
       <Button
         onClick={() => switchChain({ chainId: targetChainId })}
         loading={isSwitchingChain}
-        className={twMerge(primaryButtonClasses, shimmerClasses)}
+        className={primaryButtonClasses}
       >
         {isSwitchingChain ? "Switching..." : `Switch to ${targetChainName}`}
       </Button>
@@ -180,10 +270,7 @@ export function PayActionButton({
       Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
   ) {
     return (
-      <Button
-        className={twMerge(primaryButtonClasses, shimmerClasses)}
-        disabled={true}
-      >
+      <Button className={primaryButtonClasses} disabled={true}>
         Insufficient Funds
       </Button>
     );
@@ -237,7 +324,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="cursor-pointer select-none text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>

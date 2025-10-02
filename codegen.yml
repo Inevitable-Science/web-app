@@ -1,12 +1,12 @@
 overwrite: true
 schema: https://bendystraw.xyz/schema
-documents: 'src/graphql/**/*.graphql'
+documents: "src/graphql/**/*.graphql"
 generates:
   src/generated/:
-    preset: 'client'
+    preset: "client"
   ./graphql.schema.json:
     plugins:
-      - 'introspection'
+      - "introspection"
 config:
   namingConvention:
     enumValues: keep
