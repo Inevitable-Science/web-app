@@ -9,6 +9,7 @@ query Project($projectId: Float!, $chainId: Float!, $version: Float!) {
     volume
     paymentsCount
     tokenSupply
+    name
   }
 }
 

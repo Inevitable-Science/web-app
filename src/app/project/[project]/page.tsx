@@ -37,70 +37,39 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const fullPath = `/project/${params.project}`;
   const url = new URL(fullPath, origin);
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   const pageData = await getProjectData(params.project);
   const projectData = pageData?.projectData;
 
-  if (!projectData) {
-    return {
-      title: "Page Not Found | Inevitable Protocol",
-      description: metadata.description,
-      alternates: {
-        canonical: url,
-      },
-      openGraph: {
-        title: "Page Not Found | Inevitable Protocol",
-        description: metadata.description,
-        siteName: metadata.siteName,
-        images: [
-          {
-            url: imgUrl,
-            width: 700,
-            height: 370,
-            alt: "Inevitable preview image",
-          },
-        ],
-        url: url,
-        type: "website",
-      },
-      twitter: {
-        title: "Page Not Found | Inevitable Protocol",
-        description: metadata.description,
-        card: "summary_large_image",
-        images: [imgUrl],
-      },
-      manifest: metadata.manifest,
-    };
-  } else {
-    return {
+  if (!projectData) return notFound();
+
+  return {
+    title: `${projectData.name} | Inevitable Protocol`,
+    description: projectData.description,
+    alternates: { canonical: url },
+    openGraph: {
       title: `${projectData.name} | Inevitable Protocol`,
       description: projectData.description,
-      alternates: { canonical: url },
-      openGraph: {
-        title: `${projectData.name} | Inevitable Protocol`,
-        description: projectData.description,
-        siteName: "Inevitable Protocol",
-        images: [
-          {
-            url: projectData.logo,
-            width: 800,
-            height: 800,
-            alt: "preview image",
-          },
-        ],
-        url,
-        type: "article",
-      },
-      twitter: {
-        title: `${projectData.name} | Inevitable Protocol`,
-        description: projectData.description,
-        card: "summary_large_image",
-        images: [projectData.logo],
-      },
-      manifest: metadata.manifest,
-    };
-  }
+      siteName: "Inevitable Protocol",
+      images: [
+        {
+          url: projectData.logo,
+          width: 800,
+          height: 800,
+          alt: "preview image",
+        },
+      ],
+      url,
+      type: "website",
+    },
+    twitter: {
+      title: `${projectData.name} | Inevitable Protocol`,
+      description: projectData.description,
+      card: "summary_large_image",
+      images: [projectData.logo],
+    },
+    manifest: metadata.manifest,
+  };
 }
 
 async function getProjectData(projectName: string): Promise<PageData | null> {

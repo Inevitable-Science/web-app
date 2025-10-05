@@ -1,6 +1,6 @@
 // TabContent.tsx
 "use client";
-import { FC, useState, useEffect } from "react";
+import { FC } from "react";
 import { ActivityFeed } from "../ActivityFeed";
 import { NetworkDetailsTable } from "../NetworkDetailsTable";
 import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
@@ -35,11 +35,11 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export const TabContent: FC<TabContentProps> = ({
+export function TabContent({
   selectedTab,
   setSelectedTab,
-}) => {
-  const { token, analyticsData, analyticsError } = useNetworkData();
+}: TabContentProps) {
+  const { token, analyticsData/*, analyticsError*/ } = useNetworkData();
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback
@@ -56,8 +56,8 @@ export const TabContent: FC<TabContentProps> = ({
       {selectedTab === "activity" && <ActivityFeed />}
       {selectedTab === "cycles" && <NetworkDetailsTable />}
 
-      {!analyticsError &&
-        analyticsData?.tokenData &&
+      {/*{!analyticsError &&*/}
+        {analyticsData?.tokenData &&
         analyticsData?.treasuryData && (
           <>
             {token?.data && (

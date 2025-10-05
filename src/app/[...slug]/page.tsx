@@ -1,87 +1,101 @@
-"use client";
-import { useEffect, useState, use } from "react";
-import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { Providers } from "./Providers";
-import { NetworkDashboard } from "./components/NetworkDashboard/NetworkDashboard";
-import { sdk } from "@farcaster/frame-sdk";
-import { notFound as triggerNotFound } from "next/navigation";
+import { DashboardContent } from "./components/NetworkDashboard/NetworkDashboard";
+import { notFound } from "next/navigation";
+import { ProjectQuery } from "@/generated/graphql";
+import { NetworkDataProvider } from "./components/NetworkDashboard/NetworkDataContext";
+import { headers } from "next/headers";
+import { Metadata } from "next";
+import { metadata } from "@/lib/metadata";
+import { fetchProjectAnalytics, fetchProjectData, parseSlug, resolveIpfsLogo } from "./ProjectHelpers";
 
-export default function Page(props: { params: Promise<{ slug?: string[] }> }) {
-  const params = use(props.params);
-  const [projectId, setProjectId] = useState<bigint | undefined>(undefined);
-  const [chainId, setChainId] = useState<JBChainId | undefined>(undefined);
-  const [version, setVersion] = useState<JBVersion>(4);
-  const [notFound, setNotFound] = useState(false);
+interface Props {
+  params: Promise<{slug?: string}>;
+};
 
-  const [initialized, setInitialized] = useState(false);
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const proto = headersList.get("x-forwarded-proto") || "http";
+  const origin = `${proto}://${host}`;
 
-  const [user, setUser] = useState<{
-    fid: number;
-    pfp: string;
-    userName: string;
-  } | null>(null);
+  const fullPath = `/${decodeURIComponent(params.slug || "")}`;
+  const url = new URL(fullPath, origin);
+  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
-  useEffect(() => {
-    if (user) return;
-    const fetchUser = async () => {
-      await sdk.actions.ready();
-      const ctx = await await sdk.context;
-      if (ctx && ctx.user && typeof ctx.user.fid === "number") {
-        setUser({
-          fid: ctx.user.fid,
-          pfp: ctx.user.pfpUrl || "",
-          userName: ctx.user.username || "",
-        });
-      }
-    };
-    fetchUser();
-  }, [user]);
+  let config;
+  let projectData: ProjectQuery["project"] | null;
+  try {
+    config = parseSlug(params.slug);
+    const projectResponse = await fetchProjectData(config);
+    projectData = projectResponse.project;
+  } catch (err) {
+    console.error(err);
+    return notFound();
+  };
 
-  useEffect(() => {
-    try {
-      const raw = params.slug?.[0];
-      if (!raw || typeof raw !== "string") {
-        throw new Error("Missing or invalid slug param");
-      }
+  if (!config || !projectData) {
+    return notFound();
+  };
 
-      // Sanitize input by removing query strings and trimming whitespace
-      const sanitizedSlug = raw.split("?")[0].trim();
+  const projectLogo = await resolveIpfsLogo(projectData.metadataUri, imgUrl)
 
-      const decoded = decodeURIComponent(sanitizedSlug);
+  return {
+    title: `${projectData.name} | Inevitable Protocol`,
+    description: "Begin your journey. Build the future of life—together.",
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${projectData.name} | Inevitable Protocol`,
+      description: "Begin your journey. Build the future of life—together.",
+      siteName: "Inevitable Protocol",
+      images: [
+        {
+          url: projectLogo,
+          width: 800,
+          height: 800,
+          alt: `${projectData.name} | Inevitable Protocol preview image`,
+        },
+      ],
+      url,
+      type: "website",
+    },
+    twitter: {
+      title: `${projectData.name} | Inevitable Protocol`,
+      description: "Begin your journey. Build the future of life—together.",
+      card: "summary_large_image",
+      images: [projectLogo],
+    },
+    manifest: metadata.manifest,
+  };
+};
 
-      if (decoded == "@stasis") {
-        setProjectId(64n);
-        setChainId(1);
-        setVersion(4);
-      } else {
-        const urn = jbUrn(decoded);
-        if (!urn?.projectId || !urn?.chainId || !JB_CHAINS[urn.chainId]) {
-          throw new Error("Invalid URN format or unknown chain");
-        }
 
-        setProjectId(urn.projectId);
-        setChainId(urn.chainId);
-        setVersion(urn.version);
-      }
+export default async function Page(props: Props) {
+  const params = await props.params;
 
-      setNotFound(false);
-    } catch (error) {
-      console.warn("URN decoding error:", error);
-      setNotFound(true);
-    } finally {
-      setInitialized(true);
-    }
-  }, [params.slug]);
+  let config;
+  let project: ProjectQuery | null;
+  try {
+    config = parseSlug(params.slug);
+    project = await fetchProjectData(config);
 
-  if (initialized && (notFound || !projectId || !chainId || !version)) {
-    triggerNotFound();
-  }
+    console.log(project);
+  } catch (err) {
+    console.error(err);
+    return notFound();
+  };
 
-  if (initialized && chainId && projectId) {
-    return (
-      <Providers chainId={chainId} projectId={projectId} version={version}>
-        <NetworkDashboard />
-      </Providers>
-    );
-  }
+  if (!config || !project.project?.name) {
+    return notFound();
+  };
+
+  const analytics = await fetchProjectAnalytics(project.project?.name);
+
+  return (
+    <Providers {...config}>
+      <NetworkDataProvider projectData={project} analyticsData={analytics}>
+        <DashboardContent />
+      </NetworkDataProvider>
+    </Providers>
+  );
 }

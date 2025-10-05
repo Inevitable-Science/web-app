@@ -4,7 +4,7 @@ import { ConnectKitButton } from "connectkit";
 import { formatEthAddress } from "@/lib/utils";
 import { Button } from "../ui/button";
 
-export const FooterLoginButton: React.FC = () => {
+export function FooterLoginButton() {
   return (
     <>
       <ConnectKitButton.Custom>

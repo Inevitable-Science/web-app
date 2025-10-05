@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
 import { Menu, X } from "lucide-react";
 
-export const Nav: React.FC = () => {
+export function Nav() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isPastViewport, setIsPastViewport] = useState(false);

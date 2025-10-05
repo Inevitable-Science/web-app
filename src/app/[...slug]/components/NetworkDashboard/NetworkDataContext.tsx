@@ -1,19 +1,16 @@
+"use client"
 import {
   createContext,
   useContext,
   ReactNode,
   useMemo,
   useState,
-  useEffect,
 } from "react";
-import { useAccount, useBalance } from "wagmi";
 import {
   useJBRulesetContext,
   useSuckers,
-  useJBContractContext,
-  useJBChainId,
   useJBProjectMetadataContext,
-  //useReadJbRulesetsAllOf,
+  useJBTokenContext,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
 import {
@@ -22,55 +19,36 @@ import {
   JBRulesetMetadata,
   JBProjectMetadata,
 } from "juice-sdk-core";
-import { JBContractContextData, useBendystrawQuery } from "juice-sdk-react";
-import { ProjectDocument, ProjectQuery } from "@/generated/graphql";
+import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import { notFound } from "next/navigation";
 import {
   TokenResponse,
   DaoResponse,
   TreasuryResponse,
-  MarketChartResponse,
 } from "@/lib/types/AnalyticTypes";
 import { AsyncData } from "juice-sdk-react/dist/contexts/types";
 import { type GetTokenReturnType } from "@wagmi/core";
-import { useBoostRecipient } from "@/hooks/useBoostRecipient";
 import {
   SelectedSuckerContextType,
   useSelectedSucker,
 } from "../PayCard/SelectedSuckerContext";
 
-export interface AnalyticsData {
-  tokenData: TokenResponse | null;
-  daoData: DaoResponse | null;
-  treasuryData: TreasuryResponse | null;
-  marketData: MarketChartResponse | null;
+interface AnalyticsDataProp {
+  daoData: DaoResponse,
+  treasuryData: TreasuryResponse | null,
+  tokenData: TokenResponse | null,
 }
 
 interface NetworkDataContextType {
   suckers: SuckerPair[];
-  walletBalance: ReturnType<typeof useBalance>["data"];
   ruleset: JBRulesetData;
   rulesetMetadata: JBRulesetMetadata;
-  contracts: JBContractContextData;
   project: NonNullable<ProjectQuery["project"]>;
   dailyTotals: DailyVolume[];
   isRefetching: boolean;
-  analyticsData: AnalyticsData | null;
-  isAnalyticsLoading: boolean;
-  analyticsError: string | null;
+  analyticsData: AnalyticsDataProp | null;
   token: AsyncData<GetTokenReturnType | undefined>;
-  chainId:
-    | 1
-    | 10
-    | 8453
-    | 42161
-    | 84532
-    | 421614
-    | 11155111
-    | 11155420
-    | undefined;
-  payoutWallet: `0x${string}` | undefined;
   metadata: AsyncData<JBProjectMetadata>;
   selectedSucker: SelectedSuckerContextType;
 }
@@ -81,39 +59,24 @@ const NetworkDataContext = createContext<NetworkDataContextType | undefined>(
 
 export const NetworkDataProvider = ({
   children,
-  token,
+  projectData,
+  analyticsData,
 }: {
   children: ReactNode;
-  token: AsyncData<GetTokenReturnType | undefined>;
+  projectData: ProjectQuery;
+  analyticsData: AnalyticsDataProp | null;
 }) => {
   // Foundational Hooks
-  const { address } = useAccount();
-  const { projectId, version, contracts: jbContracts } = useJBContractContext();
-  const chainId = useJBChainId();
   const { metadata } = useJBProjectMetadataContext();
-  const payoutWallet = useBoostRecipient();
+  const { token } = useJBTokenContext();
   const selectedSucker = useSelectedSucker();
 
-  // Primary Data Fetching Hooks
-  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
-    address,
-  });
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
 
-  // Dependent Data Fetching Hooks
-  const { data: projectData, isLoading: isProjectLoading } = useBendystrawQuery(
-    ProjectDocument,
-    {
-      chainId: Number(chainId),
-      projectId: Number(projectId),
-      version: Number(version),
-      skip: !chainId || !projectId || !version,
-    }
-  );
-
   // NOTE: `project` will hold the current or stale data from the query hook.
   const project = projectData?.project;
+
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
   const twoWeeksAgo = useMemo(
@@ -127,87 +90,12 @@ export const NetworkDataProvider = ({
     endTimestamp: loadTimestamp,
   });
 
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
-    null
-  );
-  const [isAnalyticsLoading, setIsAnalyticsLoading] = useState<boolean>(false);
-  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Only fetch if we have the necessary project details and are not already fetching.
-    const daoName = metadata.data?.name;
-    const tokenName = token.data?.name; // Assuming token symbol is used as the ID. Adjust if needed.
-
-    if (!daoName /*|| !tokenName*/) {
-      // TODO: allow for tokenless projects
-      return;
-    }
-
-    const fetchAnalyticsData = async () => {
-      setIsAnalyticsLoading(true);
-      setAnalyticsError(null);
-      try {
-        // Use Promise.all to fetch data in parallel for better performance
-
-        /*const responses = await Promise.all([
-          fetch(`https://inev.profiler.bio/dao/${daoName}`),
-          fetch(`https://inev.profiler.bio/token/${tokenName}`),
-          fetch(`https://inev.profiler.bio/treasury/${daoName}`),
-          fetch(`https://inev.profiler.bio/chart/${tokenName}-7`)
-        ]);*/
-
-        // TODO:
-        /*const responses = await Promise.all([
-          fetch(`https://inev.profiler.bio/dao/hydradao`),
-          fetch(`https://inev.profiler.bio/token/hydra`), // only fetch if project is not tokenless
-          fetch(`https://inev.profiler.bio/treasury/hydradao`),
-          fetch(`https://inev.profiler.bio/chart/hydra-7`) // only fetch if project is not tokenless
-        ]);*/
-
-        const responses = await Promise.all([
-          fetch("https://inev.profiler.bio/dao/hydradao"),
-          fetch("https://inev.profiler.bio/token/hydra"),
-          fetch("https://inev.profiler.bio/treasury/hydradao"),
-          fetch("https://inev.profiler.bio/chart/hydra-7"),
-        ]); // Temporary remove in production
-
-        // Check if all responses are OK
-        for (const response of responses) {
-          if (!response.ok) {
-            throw new Error(
-              `Failed to fetch analytics data (status: ${response.status})`
-            );
-          }
-        }
-
-        const [daoResult, tokenResult, treasuryResult, marketResult] =
-          await Promise.all(responses.map((res) => res.json()));
-
-        setAnalyticsData({
-          daoData: daoResult,
-          tokenData: tokenResult,
-          treasuryData: treasuryResult,
-          marketData: marketResult,
-        });
-      } catch (err) {
-        setAnalyticsError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-      } finally {
-        setIsAnalyticsLoading(false);
-      }
-    };
-
-    fetchAnalyticsData();
-  }, [metadata.data?.name, token.data?.symbol]);
 
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =
-    isBalanceLoading ||
     areSuckersLoading ||
     ruleset.isLoading ||
     rulesetMetadata.isLoading ||
-    isProjectLoading ||
     (!!project?.suckerGroupId && isVolumeLoading);
 
   const isInitialLoading = isFetching && !project;
@@ -218,34 +106,24 @@ export const NetworkDataProvider = ({
   const value = useMemo(() => {
     return {
       suckers,
-      walletBalance,
       ruleset: ruleset.data,
       rulesetMetadata: rulesetMetadata.data,
-      contracts: { projectId, contracts: jbContracts },
       project,
       dailyTotals,
       isRefetching,
       analyticsData,
-      isAnalyticsLoading,
-      analyticsError,
       token,
-      payoutWallet,
       metadata,
       selectedSucker,
     };
   }, [
     suckers,
-    walletBalance,
     ruleset.data,
     rulesetMetadata.data,
-    projectId,
-    jbContracts,
     project,
     dailyTotals,
     isRefetching,
     analyticsData,
-    isAnalyticsLoading,
-    analyticsError,
     token,
   ]);
 

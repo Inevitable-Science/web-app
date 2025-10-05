@@ -11,6 +11,7 @@ import {
   useSuckersUserTokenBalance,
   useJBContractContext,
   useBendystrawQuery,
+  useJBChainId,
 } from "juice-sdk-react";
 import {
   JBProjectToken,
@@ -24,7 +25,7 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
-  const { project, token, metadata, ruleset, rulesetMetadata, chainId } =
+  const { project, token, metadata, ruleset, rulesetMetadata } =
     useNetworkData();
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
@@ -32,6 +33,7 @@ export function HoldersSection() {
     metadata: rulesetMetadata as JBRulesetMetadata,
     projectId: project.projectId,
   });
+  const chainId = useJBChainId();
 
   const totalOutstandingTokens = useTotalOutstandingTokens();
 
@@ -102,7 +104,7 @@ export function HoldersSection() {
     abi: jbControllerAbi,
     functionName: "pendingReservedTokenBalanceOf",
     address: contracts.controller.data ?? undefined,
-    chainId,
+    chainId: chainId,
     args: [projectId],
   });
 

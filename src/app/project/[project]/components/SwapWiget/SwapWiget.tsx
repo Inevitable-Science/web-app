@@ -7,18 +7,14 @@ import {
   EthereumProvider,
   TradeType,
 } from "@cowprotocol/widget-react";
-//import { useAccount, useConnectorClient } from "wagmi";
-//import { useData } from "../../DataProvider";
 import { useEip1193Provider } from "@/hooks/useEip1193Provider";
 
 interface TokenState {
   token: string;
 }
 
-// DATA_TODO: Make this component work with the web3 provider, view https://widget.cow.fi/
 
 export function SwapWidget({ token }: TokenState) {
-  //const provider = window.ethereum;
   const provider = useEip1193Provider();
 
   const params: CowSwapWidgetParams = {
@@ -44,12 +40,12 @@ export function SwapWidget({ token }: TokenState) {
     hideOrdersTable: false,
     images: {},
     sounds: {},
-    customTokens: [], //tokenList,
+    customTokens: [],
   };
 
   return (
     <div>
-      <CowSwapWidget params={params} provider={provider} />
+      <CowSwapWidget params={params} provider={provider as EthereumProvider} />
     </div>
   );
 }

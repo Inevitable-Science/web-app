@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Header } from "./Header";
 import { SwapWidget } from "./SwapWiget/SwapWiget";
-import OtherDaosCarousel from "@/app/[...slug]/components/NetworkDashboard/Components/OtherDaosCarousel";
 import { useData } from "../DataProvider";
 import { TabContent } from "./TabsContent";
+import OtherDaosCarousel from "@/app/[...slug]/components/NetworkDashboard/Components/OtherDaosCarousel";
 
 import { ArrowRightIcon } from "lucide-react";
 

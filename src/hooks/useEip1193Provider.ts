@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { useConfig } from "wagmi";
 import type { EthereumProvider } from "@cowprotocol/widget-react";

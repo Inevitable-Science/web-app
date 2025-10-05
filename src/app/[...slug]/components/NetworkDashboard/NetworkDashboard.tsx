@@ -2,6 +2,7 @@
 
 import { formatTokenSymbol } from "@/lib/utils";
 import {
+  useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
 } from "juice-sdk-react";
@@ -22,24 +23,24 @@ import { SelectedSuckerProvider } from "../PayCard/SelectedSuckerContext";
  * The top-level component. Its ONLY job is to render the provider,
  * making the shared data available to all children.
  */
-export function NetworkDashboard() {
-  const { token } = useJBTokenContext();
+{/*export function NetworkDashboard() {
   return (
-    <NetworkDataProvider token={token}>
+    <NetworkDataProvider>
       <DashboardContent />
     </NetworkDataProvider>
   );
-}
+}*/}
 
-function DashboardContent() {
+export function DashboardContent() {
   const {
-    contracts,
+    //contracts,
     token,
     analyticsData,
-    isAnalyticsLoading,
-    analyticsError,
+    //isAnalyticsLoading,
+    //analyticsError,
     metadata,
   } = useNetworkData();
+  const { contracts } = useJBContractContext();
 
   // UI-specific state remains in this component.
   const [selectedTab, setSelectedTab] = useState("about");
@@ -49,7 +50,7 @@ function DashboardContent() {
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    ...(analyticsData?.daoData === null && isAnalyticsLoading === false // Intended to prevent CLS
+    ...(analyticsData?.daoData === null //&& isAnalyticsLoading === false // Intended to prevent CLS
       ? []
       : [
           ...(token.data && analyticsData?.tokenData
@@ -61,7 +62,7 @@ function DashboardContent() {
         ]),
   ];
 
-  if (contracts.contracts.controller.data === zeroAddress) {
+  if (contracts.controller.data === zeroAddress) {
     notFound();
   }
 

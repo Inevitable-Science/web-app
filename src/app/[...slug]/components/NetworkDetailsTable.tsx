@@ -18,11 +18,6 @@ import { SplitsSection } from "./NetworkDashboard/sections/HoldersSection/Splits
 import { ChevronRightIcon } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 
-interface NetworkDetailsParams {
-  analyticsError: string | null;
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
   const [showRules, setShowRules] = useState<boolean>(true);

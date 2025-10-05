@@ -12,6 +12,8 @@ import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
 
+export const revalidate = 900; // Revalidate every 15 minutes
+
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
   const host = headersList.get("host");
@@ -56,31 +58,33 @@ export async function generateMetadata(): Promise<Metadata> {
 
 async function fetchIvxData() {
   try {
-    const [tokenRes, treasuryRes] = await Promise.all([
-      fetch(`https://inev.profiler.bio/token/hydra`),
+    const [treasuryRes, tokenRes] = await Promise.all([
       fetch(`https://inev.profiler.bio/treasury/hydra`),
+      fetch(`https://inev.profiler.bio/token/hydra`),
     ]);
 
-    if (!tokenRes.ok || !treasuryRes.ok) {
+    if (!treasuryRes.ok || !tokenRes.ok) {
       throw new Error("Unable to fetch data");
     }
 
-    const [tokenData, treasuryData] = await Promise.all([
-      tokenRes.json(),
+    const [treasuryData, tokenData] = await Promise.all([
       treasuryRes.json(),
+      tokenRes.json(),
     ]);
 
+    const validatedTreasuryData = TreasuryResponseSchema.parse(treasuryData);
+    const validatedTokenData = TokenResponseSchema.parse(tokenData);
+
+
     return {
-      tokenData: TokenResponseSchema.parse(tokenData),
-      treasuryData: TreasuryResponseSchema.parse(treasuryData),
+      treasuryData: validatedTreasuryData,
+      tokenData: validatedTokenData,
     };
   } catch (err) {
     console.log(err);
     return null;
   }
 }
-
-// export const revalidate = 300;
 
 export default async function IvxTokenPage() {
   const pageData = await fetchIvxData();
