@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FooterLoginButton } from "./FooterLoginButton";
 
-const Footer: React.FC = () => {
+export default function Footer() {
   return (
     <footer className="flex h-screen w-full flex-col bg-[url('/assets/img/layout/footer.webp')] bg-cover bg-center px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
       {/* CENTERED SECTION */}
@@ -84,5 +84,3 @@ const Footer: React.FC = () => {
     </footer>
   );
 };
-
-export default Footer;

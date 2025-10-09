@@ -6,10 +6,12 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 
-const AuctionComponent: React.FC = () => {
+export default function AuctionComponent() {
   const [projectVolume, setProjectVolume] = useState<
     bigint | null | undefined
   >();
+
+  // TODO: Lean out
 
   const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
   const query = `
@@ -132,5 +134,3 @@ const AuctionComponent: React.FC = () => {
     </section>
   );
 };
-
-export default AuctionComponent;

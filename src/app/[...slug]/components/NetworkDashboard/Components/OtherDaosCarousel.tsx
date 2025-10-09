@@ -54,10 +54,10 @@ const DEFAULT_SLIDES: SlideType[] = [
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-const OtherDaosCarousel: React.FC<PropType> = ({
+export default function OtherDaosCarousel({
   slides = DEFAULT_SLIDES,
   options = DEFAULT_OPTIONS,
-}) => {
+}: PropType) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const {
     prevBtnDisabled,
@@ -133,5 +133,3 @@ const OtherDaosCarousel: React.FC<PropType> = ({
     </section>
   );
 };
-
-export default OtherDaosCarousel;

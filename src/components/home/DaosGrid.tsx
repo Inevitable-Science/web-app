@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 
-const DaosGrid: React.FC = () => {
+export default function DaosGrid() {
   // Create refs for each cloud container
   const cloudTopRef = useRef<HTMLDivElement>(null);
   const cloudMidRef = useRef<HTMLDivElement>(null);
@@ -314,5 +314,3 @@ const DaosGrid: React.FC = () => {
     </section>
   );
 };
-
-export default DaosGrid;
