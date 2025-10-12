@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
-import { useJBProjectMetadataContext } from "juice-sdk-react";
-import { DaoData } from "./AnalyticsPreview";
+//import { useJBChainId, useJBProjectMetadataContext } from "juice-sdk-react";
+//import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
+//import { useUserPermissions } from "@/hooks/useUserPermissions";
+//import { EditMetadataDialog } from "./EditMetadataDialog";
+import { useNetworkData } from "../../NetworkDataContext";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -45,16 +48,6 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 };
 
-interface DaoData {
-  treasuryHoldings: string;
-  assetsUnderManagement: string | number;
-  totalHolders: string;
-  totalSupply: string | number;
-  latestPrice: number;
-  latestMarketCap: number;
-  tokenName: string;
-}
-
 interface DescriptionSectionProps {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -62,22 +55,30 @@ interface DescriptionSectionProps {
 export function DescriptionSection({
   setSelectedTab,
 }: DescriptionSectionProps) {
-  const { metadata } = useJBProjectMetadataContext();
+  const { metadata } = useNetworkData();
+  //const { hasPermission } = useUserPermissions();
 
   const { description, name } = metadata?.data ?? {};
+
+
+  //const canEditMetadata = hasPermission("SET_PROJECT_URI");
+
+  //const suckerGroup = await getSuckerGroup(project.suckerGroupId, chainId);
+  //if (!suckerGroup) notFound();
 
   return (
     <div className="text-sm">
       <ChartSection setSelectedTab={setSelectedTab} />
 
-      {/* TODO: No idea why this is showing a "0" when not loading. */}
-      {/* {!analyticsError && data?.latestMarketCap && (
-          <DaoData data={data} setSelectedTab={setSelectedTab} />
-        )} */}
-
       <div className="mt-6">
         <RichPreview source={description || name || "..."} />
       </div>
+
+      {/*{canEditMetadata && (
+        <div className="mt-4">
+          <EditMetadataDialog projects={suckersGroup.projects?.items ?? []} />
+        </div>
+      )}*/}
 
       <SocialLinks {...metadata} />
     </div>

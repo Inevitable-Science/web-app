@@ -43,6 +43,7 @@
     "embla-carousel-react": "^8.6.0",
     "forge-run-parser": "^1.0.3",
     "formik": "^2.4.5",
+    "formik-validator-zod": "^2.2.0",
     "fpnum": "^1.0.0",
     "framer-motion": "^12.23.11",
     "graphql": "^16.8.0",

@@ -44,3 +44,19 @@ query ProjectAccountingContext($chainId: Float!, $projectId: Float!, $version: F
     currency
   }
 }
+
+query ProjectWithPermissions($projectId: Float!, $chainId: Float!, $version: Float!) {
+  project(projectId: $projectId, chainId: $chainId, version: $version) {
+    projectId
+    chainId
+    version
+    owner
+    permissionHolders {
+      items {
+        account
+        operator
+        permissions
+      }
+    }
+  }
+}

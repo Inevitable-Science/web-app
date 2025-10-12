@@ -1,6 +1,6 @@
 import { JBChainId, JB_CHAINS } from "juice-sdk-core";
 import { useReadRevLoansBorrowableAmountFrom } from "revnet-sdk";
-import { useBendystrawQuery } from "juice-sdk-react";
+import { useBendystrawQuery, useJBContractContext } from "juice-sdk-react";
 import { LoansByAccountDocument } from "@/generated/graphql";
 import { useEffect, useRef } from "react";
 import {
@@ -117,8 +117,10 @@ export function TokenBalanceTable({
   onCheckRow?: (chainId: number, checked: boolean) => void;
   onAutoselectRow?: (chainId: number) => void;
 }) {
+  const { version } = useJBContractContext();
   const { data } = useBendystrawQuery(LoansByAccountDocument, {
     owner: address,
+    version: version,
   });
 
   function summarizeLoansByChain(
