@@ -1,19 +1,21 @@
 // src/components/PayCard/TransactionCard.tsx
 
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { useTokenA } from "@/hooks/useTokenA";
-import { JBChainId, useJBChainId } from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext, useSuckers } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
-import { formatUnits, parseEther, parseUnits } from "viem";
+import { Address, formatUnits, parseEther, parseUnits } from "viem";
 import {
+  ETH_CURRENCY_ID,
   getTokenAToBQuote,
   getTokenBtoAQuote,
   NATIVE_TOKEN,
+  USD_CURRENCY_ID,
 } from "juice-sdk-core";
-import { formatTokenSymbol } from "@/lib/utils";
-import { useAccount, useBalance, useSwitchChain } from "wagmi";
+import { formatNumber, formatTokenSymbol } from "@/lib/utils";
+import { useAccount, useBalance, useChainId, useSwitchChain } from "wagmi";
 import { PayActionButton } from "./PayActionButtonIvx";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { ChainSelector } from "./ChainSelect";
@@ -21,6 +23,11 @@ import { useSelectedSucker } from "../../SelectedSuckerContext";
 import { useIVXContext } from "../../DataProvider";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { PayCardSkeleton } from "./PayCardSkeleton";
+import { USDC_ADDRESSES } from "@/app/constants";
+import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
+import { determineConversion, toProjectCurrencyAmount, usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
+import { useTokenBalances } from "@/hooks/useTokenBalances";
+import { useCurrencyPrice } from "@/hooks/PaymentTerminal/useCurrencyPrice";
 
 export function TransactionCard() {
   // TODO: Disallow negative numbers
@@ -31,15 +38,13 @@ export function TransactionCard() {
   const { address } = useAccount(); // Get user's wallet and chain
   const { data: accountingContext } = useProjectAccountingContext();
   const activeChain = useJBChainId();
+  const chainId = useChainId();
   const { switchChain } = useSwitchChain();
-  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
-    address,
-  });
-
-  //const { token: tokenBContext } = useJBTokenContext();
-  //const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
-
+  const { version } = useJBContractContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+
+  const { tokenAToBQuote, tokenBtoAQuote } = usePaymentQuote(selectedSucker.peerChainId);
+
   const {
     metadata,
     suckers,
@@ -48,40 +53,36 @@ export function TransactionCard() {
     rulesetMetadata: rulesetMetadataContext,
   } = useIVXContext();
 
-  // 6. Effect to initialize the context with a default chain
+  const { data: newSuckers } = useSuckers();
+
+
+  const tokens = useMemo(() => getTokensForChain(selectedSucker?.peerChainId), [selectedSucker?.peerChainId]);
+  const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
+
   useEffect(() => {
-    // Only set default if context has no value and suckers have loaded
-    if (!selectedSucker && suckers && suckers.length > 0) {
-      const defaultSucker = activeChain
-        ? suckers.find((s) => s.peerChainId === activeChain)
-        : undefined;
-      setSelectedSucker(defaultSucker || suckers[0]);
-    }
-  }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
+    setSelectedToken((s) => tokens.find((t) => t.address === s.address) || tokens[0]);
+  }, [tokens]);
 
-  // Updated Load Guard
-  if (isBalanceLoading || !suckers) {
-    return <PayCardSkeleton />;
-  }
+  const payTokenAddress = accountingContext?.project?.token;
+  const isTokenANative = payTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  const selectedTokenIsNative = selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase();
 
-  const defaultToken = {
-    symbol: "IVX",
-    decimals: 18,
-  };
+  const USDC_ADDRESS = activeChain ? USDC_ADDRESSES[chainId] : null;
 
-  const tokenB = tokenBContext.data || defaultToken;
-  const ruleset = rulesetContext;
-  const rulesetMetadata = rulesetMetadataContext;
+  const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
+    address,
+    token: isTokenANative ? undefined : USDC_ADDRESS as Address,
+    chainId: chainId,
+  });
 
-  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "-" || e.key === "Minus") {
-      e.preventDefault();
-    }
-  };
+  const { balances } = useTokenBalances(tokens, selectedSucker.peerChainId);
 
-  // --- CORE LOGIC (CALCULATION HANDLERS) ---
-  const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+
+  //const { token: tokenBContext } = useJBTokenContext();
+  //const { ruleset: rulesetContext, rulesetMetadata: rulesetMetadataContext } = useJBRulesetContext();
+
+  const handlePayAmountChange = (value: string) => {
+    //const value = e.target.value;
 
     if (value.startsWith("-")) {
       setAmountA("0");
@@ -93,14 +94,25 @@ export function TransactionCard() {
       setAmountB("");
       return;
     }
-    const quote = getTokenAToBQuote(
-      new FixedInt(parseEther(value), tokenA.decimals),
-      {
-        weight: ruleset.weight,
-        reservedPercent: rulesetMetadata.reservedPercent,
-      }
-    );
-    setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
+    
+    if (version === 4) {
+      const quote = getTokenAToBQuote(
+        //new FixedInt(parseEther(value), tokenA.decimals),
+        new FixedInt(parseUnits(value || "0", tokenA.decimals), tokenA.decimals),
+        {
+          weight: ruleset.weight,
+          reservedPercent: rulesetMetadata.reservedPercent,
+        }
+      );
+      //const { payerTokens, reservedTokens } = tokenAToBQuote(value, selectedToken)
+      setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
+      return;
+    } else {
+      const { payerTokens, reservedTokens } = tokenAToBQuote(value, selectedToken);
+      setAmountB(payerTokens);
+      return;
+    }
+    //setAmountB(payerTokens);
   };
 
   const handleReceiveAmountChange = (
@@ -114,31 +126,91 @@ export function TransactionCard() {
     }
     const quote = getTokenBtoAQuote(
       new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
-      tokenA.decimals,
+      tokenB.decimals,
       {
         weight: ruleset.weight,
         reservedPercent: rulesetMetadata.reservedPercent,
       }
     );
     setAmountA(quote.format()); // Use .format() for safety
+    //const quote = tokenBtoAQuote(value, selectedToken)
+    //setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
+    //setAmountB(quote);
   };
+
+
+  useEffect(() => {
+    if (!selectedToken || !amountA) return;
+    handlePayAmountChange(amountA);
+  }, [selectedToken]);
+  
+
+  // 6. Effect to initialize the context with a default chain
+  useEffect(() => {
+    // Only set default if context has no value and suckers have loaded
+    if (!selectedSucker && suckers && suckers.length > 0) {
+      /*const defaultSucker = activeChain
+        ? suckers.find((s) => s.peerChainId === activeChain)
+        : undefined;
+      setSelectedSucker(defaultSucker || suckers[0]);*/
+      
+      if (chainId) {
+        const defaultSucker = activeChain
+          ? suckers.find((s) => s.peerChainId === chainId)
+          : undefined;
+        setSelectedSucker(defaultSucker || suckers[0]);
+        return;
+      }
+
+      const defaultSucker = activeChain
+        ? suckers.find((s) => s.peerChainId === activeChain)
+        : undefined;
+      setSelectedSucker(defaultSucker || suckers[0]);
+    }
+  }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
+
+  // Updated Load Guard
+  if (isBalanceLoading || !suckers) {
+    return <PayCardSkeleton selectedToken={selectedToken} />;
+  }
+
+  const defaultToken = {
+    symbol: "IVX",
+    decimals: 18,
+  };
+
+  const tokenB = tokenBContext.data || defaultToken;
+  const ruleset = rulesetContext;
+  const rulesetMetadata = rulesetMetadataContext;
+
+  // --- CORE LOGIC (CALCULATION HANDLERS) ---
 
   // 7. Handler to update context and switch chain
-  const handleChainChange = (newChainId: JBChainId) => {
+  const handleChainChange = ({ address, chainId }: { address: Address; chainId: JBChainId }) => {    
     const newSelectedSucker = suckers?.find(
-      (s) => s.peerChainId === newChainId
+      (s) => s.peerChainId === chainId
     );
-    if (newSelectedSucker) {
+
+    const token = tokens.find((t) => t.address === address);
+
+    if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
+      setSelectedToken(token);
     }
-    if (activeChain !== newChainId && switchChain) {
+
+
+    //if (activeChain !== newChainId && switchChain) {
+    /*if (chainId !== newChainId && switchChain) {
       switchChain({ chainId: newChainId });
-    }
+    }*/
   };
 
+  
+
   const preparedAmountA = {
-    amount: new FixedInt(parseEther(amountA || "0"), tokenA.decimals),
-    symbol: tokenA.symbol,
+    //amount: new FixedInt(parseEther(amountA || "0"), tokenA.decimals),
+    amount: new FixedInt(parseUnits(amountA || "0", selectedToken.decimals), selectedToken.decimals),
+    symbol: selectedToken.symbol,
   };
   const preparedAmountB = {
     amount: new FixedInt(
@@ -147,6 +219,13 @@ export function TransactionCard() {
     ),
     symbol: formatTokenSymbol(tokenB.symbol),
   };
+
+  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "-" || e.key === "Minus") {
+      e.preventDefault();
+    }
+  };
+  
 
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
@@ -159,25 +238,20 @@ export function TransactionCard() {
               className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
               placeholder="0.00"
               value={amountA}
-              onChange={handlePayAmountChange}
+              onChange={(e) => handlePayAmountChange(e.target.value)}
               onKeyDown={preventMinusKey}
             />
           </div>
           <div className="flex flex-col items-end gap-1">
             <ChainSelector
               disabled={!suckers || suckers.length <= 1}
-              value={selectedSucker?.peerChainId as JBChainId}
+              value={selectedToken}
               onChange={handleChainChange}
-              options={suckers?.map((s) => s.peerChainId) ?? []}
+              options={tokens}
             />
-            {/*</div>*/}
             <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
               Balance:{" "}
-              {walletBalance
-                ? parseFloat(
-                    formatUnits(walletBalance.value, tokenA.decimals)
-                  ).toFixed(4)
-                : "--"}
+                {formatTokenAmount(balances.get(selectedToken.address) ?? 0n, selectedToken)}
             </p>
           </div>
         </div>
@@ -213,17 +287,8 @@ export function TransactionCard() {
         <PayActionButton
           amountA={preparedAmountA}
           amountB={preparedAmountB}
-          paymentToken={
-            (accountingContext?.project?.token as `0x${string}`) ||
-            NATIVE_TOKEN.toLowerCase()
-          }
-          walletBalance={
-            walletBalance
-              ? parseFloat(
-                  formatUnits(walletBalance.value, tokenA.decimals)
-                ).toFixed(4)
-              : 0
-          }
+          paymentToken={selectedToken}
+          walletBalance={balances}
           disabled={!amountA || parseFloat(amountA) === 0}
           selectedSucker={selectedSucker}
         />

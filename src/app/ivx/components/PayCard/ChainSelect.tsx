@@ -1,4 +1,3 @@
-import { JB_CHAINS } from "juice-sdk-core";
 import { JBChainId } from "juice-sdk-react";
 import { ChainLogo } from "@/components/ChainLogo";
 import {
@@ -8,14 +7,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { sortChains } from "@/lib/utils";
+import { Token } from "@/lib/token";
+import { useIVXContext } from "../../DataProvider";
+import { useSelectedSucker } from "../../SelectedSuckerContext";
+import { Address } from "viem";
 
 interface ChainSelectorProps {
-  value: JBChainId;
-  onChange: (chainId: JBChainId) => void;
+  value: Token;
+  onChange: (selected: { address: Address; chainId: JBChainId }) => void;
   disabled?: boolean;
-  options: JBChainId[];
+  options: Token[];
 }
+
+export interface TokenWithChain extends Token {
+  chainId: JBChainId;
+}
+
+type TokenSelectValue = `${Address}-${JBChainId}`;
 
 export const ChainSelector = ({
   value,
@@ -23,12 +31,23 @@ export const ChainSelector = ({
   disabled,
   options,
 }: ChainSelectorProps) => {
-  const chainOptions = sortChains(options);
+  const { suckers } = useIVXContext();
+  const { selectedSucker } = useSelectedSucker();
+
+  const tokensWithChains: TokenWithChain[] = (suckers ?? []).flatMap(({ peerChainId }) =>
+    options.map((token) => ({
+      ...token,
+      chainId: peerChainId as JBChainId,
+    }))
+  );
 
   return (
     <Select
-      onValueChange={(value) => {
-        onChange(Number(value) as JBChainId);
+      onValueChange={(value: TokenSelectValue) => {
+        const [address, chainIdString] = value.split("-");
+        const chainId = Number(chainIdString) as JBChainId;
+
+        onChange({ address: address as Address, chainId });
       }}
       disabled={disabled}
       defaultValue={String(value)}
@@ -39,14 +58,14 @@ export const ChainSelector = ({
       >
         <SelectValue placeholder="Select chain">
           {value ? (
-            <div className="flex items-center gap-2 font-light">
+            <div className="flex items-center gap-1 font-light">
               <ChainLogo
-                chainId={Number(value) as JBChainId}
+                chainId={Number(selectedSucker.peerChainId) as JBChainId}
                 height={24}
                 width={24}
               />
               <p className="mr-1 text-[18px]">
-                {JB_CHAINS[value].nativeTokenSymbol}
+                {value.symbol}
               </p>
             </div>
           ) : (
@@ -55,14 +74,18 @@ export const ChainSelector = ({
         </SelectValue>
       </SelectTrigger>
       <SelectContent align="end">
-        {chainOptions.map((chainId) => (
-          <SelectItem key={chainId} value={chainId.toString()}>
-            <div className="flex items-center gap-2 font-light">
-              <ChainLogo chainId={chainId as JBChainId} />
-              <span>{JB_CHAINS[chainId as JBChainId].name}</span>
-            </div>
-          </SelectItem>
-        ))}
+        {tokensWithChains.map((token, index) => {
+          return (
+            <SelectItem
+              key={`${token.address}-${token.chainId}-${index}`}
+              value={`${token.address}-${token.chainId}` as TokenSelectValue}
+              className="[&>*:last-child]:flex [&>*:last-child]:w-full"
+            >
+              <ChainLogo chainId={token.chainId as JBChainId} />
+              <span className="grow ml-2">{token.symbol}</span>
+            </SelectItem>
+          );
+        })}
       </SelectContent>
     </Select>
   );

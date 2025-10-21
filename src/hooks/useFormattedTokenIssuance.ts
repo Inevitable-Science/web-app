@@ -38,7 +38,7 @@ export function useFormattedTokenIssuance(params?: TokenIssuanceParams) {
       reservedPercent,
     }
   );
-  const amount = formatUnits(quote.payerTokens, tokenA.decimals);
+  const amount = formatUnits(quote.payerTokens, 18);
   const formattedAmount = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 3,
   }).format(Number(amount));

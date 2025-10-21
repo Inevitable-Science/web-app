@@ -18,6 +18,7 @@ import {
   getTokenAToBQuote,
   getTokenBtoAQuote,
   NATIVE_TOKEN,
+  USDC_ADDRESSES,
 } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
@@ -32,14 +33,18 @@ import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext
 
 export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
+  
+  const [memo, setMemo] = useState("");
+
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
-  const [memo, setMemo] = useState("");
 
   const tokenA = useTokenA();
   const { address } = useAccount(); // Get user's wallet and chain
   const activeChain = useJBChainId();
   const { switchChain } = useSwitchChain();
+
+  //const USDC_ADDRESSE = USDC_ADDRESSES[activeChain];
   const { data: walletBalance, isLoading: isBalanceLoading } = useBalance({
     address,
   });
@@ -95,6 +100,7 @@ export function TransactionCard() {
 
   // --- CORE LOGIC (CALCULATION HANDLERS) ---
   const handlePayAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(tokenA.decimals);
     const value = e.target.value;
     setAmountA(value);
     if (!value || value === ".") {

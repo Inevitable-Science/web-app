@@ -6,30 +6,36 @@ import {
   SuckerPair,
   NATIVE_TOKEN,
   TokenAmountType,
+  JBCoreContracts,
+  jbDirectoryAbi,
+  jbSwapTerminalAbi,
+  JBSwapTerminalContracts,
 } from "juice-sdk-core";
 import {
-  useJBChainId,
   useJBContractContext,
-  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useChainId,
+  usePublicClient,
   useSwitchChain,
   useWaitForTransactionReceipt,
+  useWalletClient,
   useWriteContract,
 } from "wagmi";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { Check, Loader2 } from "lucide-react";
+import { Check } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
-import { formatUnits } from "viem";
+import { erc20Abi, formatUnits, getContract } from "viem";
 import { useIVXContext } from "../../DataProvider";
-import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
+import { formatWalletError } from "@/lib/utils";
+import { Token } from "@/lib/token";
+import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 
 const shimmerClasses = `
   relative overflow-hidden
@@ -60,23 +66,28 @@ export function PayActionButton({
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
-  paymentToken: `0x${string}`;
-  walletBalance: number | string;
+  paymentToken: Token;
+  walletBalance:  Map<string, bigint>;
   disabled?: boolean;
   selectedSucker?: SuckerPair | undefined;
 }) {
   // --- 1. HOOKS ---
   const {
+    projectId, version,
     contracts: { primaryNativeTerminal },
+    contractAddress
   } = useJBContractContext();
-  const { projectId, version } = useJBContractContext();
-  const chainId = useJBChainId();
-  const { address, isConnected } = useAccount();
-  const { toast } = useToast();
+  const { data: accountingContext } = useProjectAccountingContext();
   const { metadata } = useIVXContext();
+  
+  const { address, isConnected } = useAccount();
   const userChainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  
+  const { toast } = useToast();
+  
 
+  const isAcceptedTokenNative = accountingContext?.project?.token?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
   const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
 
   //
@@ -89,6 +100,7 @@ export function PayActionButton({
     isError: isWriteError,
     error: writeError,
     writeContract,
+    writeContractAsync,
   } = useWriteContract();
 
   const {
@@ -97,10 +109,15 @@ export function PayActionButton({
     isError: isTxError,
   } = useWaitForTransactionReceipt({ hash: txHash });
 
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+
   // --- 2. STATE ---
-  const loading = isWriteLoading || isTxLoading;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+
+  const loading = isWriteLoading || isTxLoading || isApproving;
 
   // --- 3. DERIVED STATE & MEMOS ---
   const onCorrectChain = userChainId === targetChainId;
@@ -136,6 +153,7 @@ export function PayActionButton({
       });
       setIsModalOpen(false);
       setAgreedToTerms(false);
+      setIsApproving(false);
     }
     if (isTxError || isWriteError) {
       toast({
@@ -146,43 +164,17 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError, isWriteError]);
 
-  const { data: projectData } = useBendystrawQuery(
-    ProjectDocument,
-    {
-      chainId: Number(chainId),
-      projectId: Number(projectId),
-      version: Number(version), // TODO dynamic version
-    },
-    {
-      enabled: !!chainId && !!projectId,
-    }
-  );
-  const suckerGroupId = projectData?.project?.suckerGroupId;
 
-  // Get all projects in the sucker group with their token data
-  const { data: suckerGroupData } = useBendystrawQuery(
-    SuckerGroupDocument,
-    { id: suckerGroupId ?? "" },
-    { enabled: !!suckerGroupId }
-  );
 
-  const getTokenForChain = (targetChainId: number) => {
-    if (!suckerGroupData?.suckerGroup?.projects?.items) {
-      return paymentToken; // fallback to original paymentToken
-    }
+  const handlePay = async () => {
 
-    const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
-      (project) => project.chainId === targetChainId
-    );
+    // Prompt user to pay:
+    // - If the fetched terminal equals primaryNativeTerminal:
+    //     = Use the MultiTerminal ABI and write the contract.
+    //     = Check if the payment token is native or if approval is required.
+    // - If the terminal does NOT equal primaryNativeTerminal:
+    //     = Use the swap terminal instead.
 
-    if (projectForChain?.token) {
-      return projectForChain.token as `0x${string}`;
-    }
-
-    return paymentToken; // fallback to original paymentToken
-  };
-
-  const handlePay = () => {
     const value = amountA.amount.value;
 
     if (
@@ -190,45 +182,130 @@ export function PayActionButton({
       !address ||
       !selectedSucker ||
       !value ||
+      !publicClient ||
+      !walletClient ||
       !writeContract
-    )
-      return;
+    ) return;
 
-    const chainToken = getTokenForChain(selectedSucker.peerChainId);
-    const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
+    try{
+      const minTokens = paymentToken.isNative ? 0n : (amountB.amount.value * 95n) / 100n;
 
-    /*writeContract({
-      chainId: selectedSucker.peerChainId,
-      address: primaryNativeTerminal.data,
-      args: [
-        selectedSucker.projectId,
-        NATIVE_TOKEN,
-        value,
-        address,
-        0n,
-        memo || "",
-        "0x0",
-      ],
-      value,
-    });*/
-    writeContract?.({
-      // TODO:REVIEW
-      abi: jbMultiTerminalAbi,
-      functionName: "pay",
-      chainId: selectedSucker.peerChainId,
-      address: primaryNativeTerminal.data as `0x${string}`,
-      args: [
-        selectedSucker.projectId,
-        chainToken,
-        value,
-        address,
-        0n,
-        memo || "",
-        "0x0",
-      ],
-      value: isNative ? value : 0n,
-    });
+      const directory = getContract({
+        address: contractAddress(JBCoreContracts.JBDirectory, selectedSucker.peerChainId),
+        abi: jbDirectoryAbi,
+        client: publicClient,
+      });
+
+
+      const terminal = await directory.read.primaryTerminalOf([selectedSucker.projectId, paymentToken.address]);
+
+      if (!terminal) throw new Error(`No terminal found for ${paymentToken.symbol}`);
+      
+      if (terminal.toLowerCase() !== primaryNativeTerminal.data.toLowerCase()) { // When SwapTerminal is used
+        console.log("using no terminal found, assuming swap terminal");
+        
+        const swapTerminalAddress = isAcceptedTokenNative ?
+          contractAddress(JBSwapTerminalContracts.JBSwapTerminalRegistry, selectedSucker.peerChainId) :
+          contractAddress(JBSwapTerminalContracts.JBSwapTerminalUSDCRegistry, selectedSucker.peerChainId);
+        
+        
+        if (!paymentToken.isNative) {
+          const allowance = await publicClient.readContract({
+            address: paymentToken.address,
+            abi: erc20Abi,
+            functionName: "allowance",
+            args: [address, swapTerminalAddress],
+          });
+
+          if (BigInt(allowance) < BigInt(value)) {
+            setIsApproving(true);
+            const hash = await walletClient.writeContract({
+              address: paymentToken.address,
+              abi: erc20Abi,
+              functionName: "approve",
+              args: [swapTerminalAddress, value],
+            });
+            console.log("allowance is less than value, requesting approval");
+            await publicClient.waitForTransactionReceipt({ hash });
+            setIsApproving(false);
+          }
+        }
+
+        writeContract?.({
+          abi: jbSwapTerminalAbi,
+          functionName: "pay",
+          chainId: selectedSucker.peerChainId,
+          address: swapTerminalAddress,
+          args: [
+            selectedSucker.projectId,
+            paymentToken.address,
+            value,
+            address,
+            minTokens,
+            memo || "",
+            "0x0",
+          ],
+          value: paymentToken.isNative ? value : 0n,
+        });
+
+      } else {  // When MultiTerminal is used
+        console.log("terminal found");
+
+        if (!paymentToken.isNative) {
+          const allowance = await publicClient.readContract({
+            address: paymentToken.address,
+            abi: erc20Abi,
+            functionName: "allowance",
+            args: [address, terminal],
+          });
+
+          if (BigInt(allowance) < BigInt(value)) {
+            setIsApproving(true);
+            const hash = await walletClient.writeContract({
+              address: paymentToken.address,
+              abi: erc20Abi,
+              functionName: "approve",
+              args: [terminal, value],
+            });
+            console.log("allowance is less than value, requesting approval");
+            await publicClient.waitForTransactionReceipt({ hash });
+            setIsApproving(false);
+          }
+        }
+
+        writeContract?.({
+          abi: jbMultiTerminalAbi,
+          functionName: "pay",
+          chainId: selectedSucker.peerChainId,
+          address: terminal,
+          args: [
+            selectedSucker.projectId,
+            paymentToken.address,
+            value,
+            address,
+            minTokens,
+            memo || "",
+            "0x0",
+          ],
+          value: paymentToken.isNative ? value : 0n,
+        });
+      }
+
+    } catch (err) {
+      setIsApproving(false);
+      console.error("Payment failed:", err);
+      toast({
+        variant: "destructive",
+        title: "Payment Failed",
+        description: formatWalletError(err),
+      });
+    }
   };
+
+
+
+
+
 
   // --- 5. RENDER LOGIC ---
 
@@ -257,7 +334,7 @@ export function PayActionButton({
         loading={isSwitchingChain}
         className={primaryButtonClasses}
       >
-        {isSwitchingChain ? "Switching..." : `Switch to ${targetChainName}`}
+        {isSwitchingChain === false && `Switch to ${targetChainName}`}
       </Button>
     );
   }
@@ -266,8 +343,8 @@ export function PayActionButton({
   if (
     walletBalance &&
     amountA.amount._value &&
-    Number(walletBalance) <
-      Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+    Number(formatUnits(walletBalance.get(paymentToken.address) ?? 0n, paymentToken.decimals)) <
+     Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
   ) {
     return (
       <Button className={primaryButtonClasses} disabled={true}>
@@ -340,6 +417,7 @@ export function PayActionButton({
               targetChainId={targetChainId}
               disabled={!agreedToTerms || loading}
               loading={loading}
+              //onClick={handlePay}
               onClick={handlePay}
               className="inline-flex items-center justify-center rounded-md !bg-cerulean px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:!bg-gunmetal disabled:text-grey-100"
             >

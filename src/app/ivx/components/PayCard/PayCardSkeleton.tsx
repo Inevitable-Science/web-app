@@ -1,13 +1,14 @@
-import { JBChainId } from "juice-sdk-core";
 import { ChainSelector } from "./ChainSelect";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
-import { useIVXContext } from "../../DataProvider";
 import { Button } from "@/components/ui/button";
+import { useMemo } from "react";
+import { getTokensForChain, Token } from "@/lib/token";
 import Image from "next/image";
 
-export function PayCardSkeleton() {
-  const { suckers } = useIVXContext();
+export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
   const { selectedSucker } = useSelectedSucker();
+
+  const tokens = useMemo(() => getTokensForChain(selectedSucker?.peerChainId), [selectedSucker?.peerChainId]);
 
   const emptyReturnFunction = () => {
     return;
@@ -23,8 +24,8 @@ export function PayCardSkeleton() {
           </div>
           <div className="flex flex-col items-end gap-1">
             <ChainSelector
-              value={selectedSucker?.peerChainId || (1 as JBChainId)}
-              options={suckers?.map((s) => s.peerChainId) ?? []}
+              value={selectedToken}
+              options={tokens}
               onChange={emptyReturnFunction}
               disabled={true}
             />
