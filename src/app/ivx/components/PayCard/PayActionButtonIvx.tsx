@@ -36,6 +36,8 @@ import { useIVXContext } from "../../DataProvider";
 import { formatWalletError } from "@/lib/utils";
 import { Token } from "@/lib/token";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
+import { getPaymentTerminal } from "@/lib/paymentTerminal";
+import { useSelectedSucker } from "../../SelectedSuckerContext";
 
 const shimmerClasses = `
   relative overflow-hidden
@@ -62,23 +64,25 @@ export function PayActionButton({
   paymentToken,
   walletBalance,
   disabled,
-  selectedSucker,
+  //selectedSucker,
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
   paymentToken: Token;
   walletBalance:  Map<string, bigint>;
   disabled?: boolean;
-  selectedSucker?: SuckerPair | undefined;
+  //selectedSucker?: SuckerPair | undefined;
 }) {
   // --- 1. HOOKS ---
   const {
-    projectId, version,
+    /*projectId,*/ version,
     contracts: { primaryNativeTerminal },
     contractAddress
   } = useJBContractContext();
   const { data: accountingContext } = useProjectAccountingContext();
   const { metadata } = useIVXContext();
+  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+  const { peerChainId: chainId, projectId } = selectedSucker;
   
   const { address, isConnected } = useAccount();
   const userChainId = useChainId();
@@ -166,7 +170,7 @@ export function PayActionButton({
 
 
 
-  const handlePay = async () => {
+  /*const handlePay = async () => {
 
     // Prompt user to pay:
     // - If the fetched terminal equals primaryNativeTerminal:
@@ -291,6 +295,63 @@ export function PayActionButton({
         });
       }
 
+    } catch (err) {
+      setIsApproving(false);
+      console.error("Payment failed:", err);
+      toast({
+        variant: "destructive",
+        title: "Payment Failed",
+        description: formatWalletError(err),
+      });
+    }
+  };*/
+
+
+
+  const handlePay = async () => {
+    if (!address || !selectedSucker || !walletClient || !publicClient) return;
+    const value = amountA.amount.value;
+
+    try {
+      const terminal = await getPaymentTerminal({
+        client: publicClient,
+        version,
+        chainId: selectedSucker.peerChainId,
+        projectId,
+        token: paymentToken,
+      });
+
+      if (!paymentToken.isNative) {
+        const allowance = await publicClient.readContract({
+          address: paymentToken.address,
+          abi: erc20Abi,
+          functionName: "allowance",
+          args: [address, terminal.address],
+        });
+
+        if (BigInt(allowance) < BigInt(value)) {
+          setIsApproving(true);
+          const hash = await walletClient.writeContract({
+            address: paymentToken.address,
+            abi: erc20Abi,
+            functionName: "approve",
+            args: [terminal.address, value],
+          });
+          await publicClient.waitForTransactionReceipt({ hash });
+          setIsApproving(false);
+        }
+      }
+
+      const minTokens = paymentToken.isNative ? 0n : (amountB.amount.value * 95n) / 100n;
+
+      await writeContractAsync?.({
+        abi: terminal.abi,
+        functionName: "pay",
+        chainId,
+        address: terminal.address,
+        args: [projectId, paymentToken.address, value, address, minTokens, memo || "", "0x0"],
+        value: paymentToken.isNative ? value : 0n,
+      });
     } catch (err) {
       setIsApproving(false);
       console.error("Payment failed:", err);

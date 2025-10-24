@@ -197,12 +197,6 @@ export function TransactionCard() {
       setSelectedSucker(newSelectedSucker);
       setSelectedToken(token);
     }
-
-
-    //if (activeChain !== newChainId && switchChain) {
-    /*if (chainId !== newChainId && switchChain) {
-      switchChain({ chainId: newChainId });
-    }*/
   };
 
   
@@ -290,7 +284,7 @@ export function TransactionCard() {
           paymentToken={selectedToken}
           walletBalance={balances}
           disabled={!amountA || parseFloat(amountA) === 0}
-          selectedSucker={selectedSucker}
+          //selectedSucker={selectedSucker}
         />
       </div>
     </div>
