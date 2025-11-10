@@ -1,19 +1,9 @@
 import { ChainSelector } from "./ChainSelect";
-import { useSelectedSucker } from "../../SelectedSuckerContext";
 import { Button } from "@/components/ui/button";
-import { useMemo } from "react";
-import { getTokensForChain, Token } from "@/lib/token";
+import { Token } from "@/lib/token";
 import Image from "next/image";
 
-export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
-  const { selectedSucker } = useSelectedSucker();
-
-  const tokens = useMemo(() => getTokensForChain(selectedSucker?.peerChainId), [selectedSucker?.peerChainId]);
-
-  const emptyReturnFunction = () => {
-    return;
-  };
-
+export function PayCardSkeleton({ selectedToken, tokens }: { selectedToken: Token, tokens: Token[] }) {
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
       <div className="flex flex-col gap-2">
@@ -26,7 +16,6 @@ export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
             <ChainSelector
               value={selectedToken}
               options={tokens}
-              onChange={emptyReturnFunction}
               disabled={true}
             />
             <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">

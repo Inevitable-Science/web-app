@@ -1,5 +1,13 @@
+"use client"
 import { JBChainId } from "juice-sdk-react";
+import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
+import { Address } from "viem";
+import { useIVXContext } from "../../DataProvider";
+import { useSelectedSucker } from "../../SelectedSuckerContext";
+import { Token } from "@/lib/token";
+import Image from "next/image";
 import { ChainLogo } from "@/components/ChainLogo";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -7,14 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Token } from "@/lib/token";
-import { useIVXContext } from "../../DataProvider";
-import { useSelectedSucker } from "../../SelectedSuckerContext";
-import { Address } from "viem";
 
 interface ChainSelectorProps {
   value: Token;
-  onChange: (selected: { address: Address; chainId: JBChainId }) => void;
+  handleChainChange?: (selected: { chainId: JBChainId }) => void;
+  handleTokenChange?: (selected: { address: Address; }) => void;
   disabled?: boolean;
   options: Token[];
 }
@@ -23,47 +28,61 @@ export interface TokenWithChain extends Token {
   chainId: JBChainId;
 }
 
-type TokenSelectValue = `${Address}-${JBChainId}`;
 
 export const ChainSelector = ({
   value,
-  onChange,
+  handleChainChange,
+  handleTokenChange,
   disabled,
   options,
 }: ChainSelectorProps) => {
   const { suckers } = useIVXContext();
   const { selectedSucker } = useSelectedSucker();
 
-  const tokensWithChains: TokenWithChain[] = (suckers ?? []).flatMap(({ peerChainId }) =>
-    options.map((token) => ({
-      ...token,
-      chainId: peerChainId as JBChainId,
-    }))
-  );
-
   return (
     <Select
-      onValueChange={(value: TokenSelectValue) => {
-        const [address, chainIdString] = value.split("-");
-        const chainId = Number(chainIdString) as JBChainId;
-
-        onChange({ address: address as Address, chainId });
+      onValueChange={(value: Address) => {
+        handleTokenChange ? handleTokenChange({ address: value }) : undefined;
       }}
       disabled={disabled}
       defaultValue={String(value)}
     >
       <SelectTrigger
-        className="text-color h-fit w-fit rounded-full border-none bg-grey-450 p-1.5 text-xs"
+        className="text-color h-fit w-fit rounded-full border-none bg-grey-450 px-1.5 pt-1.5 pb-0 text-xs"
         aria-label="Select Chain"
       >
         <SelectValue placeholder="Select chain">
           {value ? (
-            <div className="flex items-center gap-1 font-light">
+            <div className="flex items-center gap-1 pb-1.5 font-light">
+              <div className="flex items-end">
+              {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() === value.address.toLowerCase() ? (
+                <Image
+                  src={"/assets/img/logo/usdc.svg"}
+                  alt={`USDC Logo`}
+                  width={24}
+                  height={24}
+                  style={{
+                    minWidth: 24,
+                    minHeight: 24,
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
               <ChainLogo
-                chainId={Number(selectedSucker.peerChainId) as JBChainId}
+                chainId={1}
                 height={24}
                 width={24}
               />
+              )}
+              
+              <div className="-ml-2.5 -mb-[4px] h-fit w-fit bg-grey-450 border-[1.5px] border-grey-450 rounded-full shadow-md">
+                <ChainLogo
+                  chainId={Number(selectedSucker.peerChainId) as JBChainId}
+                  height={16}
+                  width={16}
+                />
+              </div>
+              </div>
               <p className="mr-1 text-[18px]">
                 {value.symbol}
               </p>
@@ -74,14 +93,51 @@ export const ChainSelector = ({
         </SelectValue>
       </SelectTrigger>
       <SelectContent align="end">
-        {tokensWithChains.map((token, index) => {
+        <div className="flex flex-row mb-2 gap-1 items-center flex-nowrap">
+          {suckers?.map((sucker) => {
+            return (
+              <Button 
+                key={sucker.peerChainId}
+                onClick={() => {
+                  handleChainChange ? handleChainChange({ chainId: sucker.peerChainId as JBChainId }) : undefined;
+                }}
+                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-[var(--grey-100)] !bg-grey-500"} rounded-xl`}
+                variant={"outline"}
+                size="icon"
+              >
+                <ChainLogo
+                  chainId={sucker.peerChainId}
+                  height={24}
+                  width={24}
+                />
+              </Button>
+            )
+          })}
+        </div>
+
+        <div className="mb-2 border border-b-[0.5px] border-color w-full rounded-full" />
+        {options.map((token, index) => {
           return (
             <SelectItem
-              key={`${token.address}-${token.chainId}-${index}`}
-              value={`${token.address}-${token.chainId}` as TokenSelectValue}
+              key={`${token.address}-${index}`}
+              value={`${token.address}` as Address}
               className="[&>*:last-child]:flex [&>*:last-child]:w-full"
             >
-              <ChainLogo chainId={token.chainId as JBChainId} />
+              {token.address.toLowerCase() === NATIVE_TOKEN.toLowerCase() ? (
+                <ChainLogo chainId={1} />
+              ) : (
+                <Image
+                  src={"/assets/img/logo/usdc.svg"}
+                  alt={`USDC Logo`}
+                  width={24}
+                  height={24}
+                  style={{
+                    minWidth: 24,
+                    minHeight: 24,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
               <span className="grow ml-2">{token.symbol}</span>
             </SelectItem>
           );

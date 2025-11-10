@@ -93,7 +93,7 @@ export default async function IvxTokenPage() {
   return (
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
-      <Providers chainId={1 as JBChainId} projectId={4n as bigint} version={5}>
+      <Providers chainId={1 as JBChainId} projectId={17n as bigint} version={5}>
         <IvxPageDataProvider
           tokenData={pageData.tokenData}
           treasuryData={pageData.treasuryData}

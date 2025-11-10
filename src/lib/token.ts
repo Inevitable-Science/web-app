@@ -2,6 +2,7 @@
 import {
   DEFAULT_NATIVE_TOKEN_SYMBOL,
   JBChainId,
+  JBVersion,
   NATIVE_TOKEN,
   NATIVE_TOKEN_DECIMALS,
   USDC_ADDRESSES,
@@ -16,7 +17,7 @@ export interface Token {
   decimals: number;
 }
 
-export function getTokensForChain(chainId: JBChainId | undefined): Token[] {
+export function getTokensForChain(chainId: JBChainId | undefined, version: JBVersion | undefined): Token[] {
   if (!chainId) return [];
 
   const tokens: Token[] = [
@@ -29,7 +30,7 @@ export function getTokensForChain(chainId: JBChainId | undefined): Token[] {
   ];
 
   const usdcAddress = USDC_ADDRESSES[chainId];
-  if (usdcAddress) {
+  if (usdcAddress && version !==  4) {
     tokens.push({
       symbol: "USDC",
       address: usdcAddress,

@@ -28,10 +28,6 @@ export async function getPaymentTerminal(args: {
 
   const terminal = await directory.read.primaryTerminalOf([projectId, token.address]);
 
-  if (!terminal) {
-    throw new Error(`No primary terminal found for ${token.symbol}`);
-  }
-
   const swapTerminal = getJBContractAddress(
     token.isNative
       ? JBSwapTerminalContracts.JBSwapTerminalRegistry
@@ -39,6 +35,10 @@ export async function getPaymentTerminal(args: {
     version,
     chainId,
   );
+
+  if (!terminal || !swapTerminal) {
+    throw new Error(`No primary terminal found for ${token.symbol}`);
+  }
 
   if (terminal === zeroAddress) {
     return { address: swapTerminal, abi: jbSwapTerminalAbi, type: "swap" };
