@@ -13,7 +13,6 @@ interface TokenState {
   token: string;
 }
 
-
 export function SwapWidget({ token }: TokenState) {
   const provider = useEip1193Provider();
 

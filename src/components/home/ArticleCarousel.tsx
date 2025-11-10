@@ -19,7 +19,9 @@ type PropType = {
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-export default function ArticleCarousel({ options = DEFAULT_OPTIONS }: PropType) {
+export default function ArticleCarousel({
+  options = DEFAULT_OPTIONS,
+}: PropType) {
   const [trendingSlides, setTrendingSlides] = useState<SlideType[]>([]);
 
   useEffect(() => {
@@ -69,4 +71,4 @@ export default function ArticleCarousel({ options = DEFAULT_OPTIONS }: PropType)
       <PartnersComponent />
     </section>
   );
-};
+}

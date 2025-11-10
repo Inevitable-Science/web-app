@@ -33,7 +33,7 @@ import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext
 
 export function TransactionCard() {
   const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
-  
+
   const [memo, setMemo] = useState("");
 
   const [amountA, setAmountA] = useState("");

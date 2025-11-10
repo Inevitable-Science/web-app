@@ -8,7 +8,10 @@ import { useAccount, useBalance, useReadContracts } from "wagmi";
 export function useTokenBalances(tokens: Token[], chainId: number) {
   const { address } = useAccount();
 
-  const erc20Tokens = useMemo(() => tokens.filter((t) => !t.isNative), [tokens]);
+  const erc20Tokens = useMemo(
+    () => tokens.filter((t) => !t.isNative),
+    [tokens]
+  );
 
   const erc20Contracts = useMemo(
     () =>
@@ -19,7 +22,7 @@ export function useTokenBalances(tokens: Token[], chainId: number) {
         functionName: "balanceOf",
         args: [address],
       })),
-    [erc20Tokens, address, chainId],
+    [erc20Tokens, address, chainId]
   );
 
   const { data: erc20Data, isLoading: isErc20Loading } = useReadContracts({

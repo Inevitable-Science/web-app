@@ -251,4 +251,4 @@ export function Nav() {
       `}</style>
     </>
   );
-};
+}

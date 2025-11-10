@@ -133,4 +133,4 @@ export default function AuctionComponent() {
       </div>
     </section>
   );
-};
+}

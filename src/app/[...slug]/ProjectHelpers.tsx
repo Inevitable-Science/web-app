@@ -1,12 +1,19 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { ProjectDocument } from "@/generated/graphql";
-import { DaoResponse, DaoResponseSchema, TokenResponse, TokenResponseSchema, TreasuryResponse, TreasuryResponseSchema } from "@/lib/types/AnalyticTypes";
+import {
+  DaoResponse,
+  DaoResponseSchema,
+  TokenResponse,
+  TokenResponseSchema,
+  TreasuryResponse,
+  TreasuryResponseSchema,
+} from "@/lib/types/AnalyticTypes";
 import request from "graphql-request";
 
 interface ProjectAnalyticsResponse {
-  daoData: DaoResponse,
-  treasuryData: TreasuryResponse | null,
-  tokenData: TokenResponse | null,
+  daoData: DaoResponse;
+  treasuryData: TreasuryResponse | null;
+  tokenData: TokenResponse | null;
 }
 
 export function parseSlug(slug?: string) {
@@ -22,9 +29,12 @@ export function parseSlug(slug?: string) {
     throw new Error("Invalid URN format or unknown chain");
   }
 
-  return { projectId: urn.projectId, chainId: urn.chainId, version: urn.version };
-};
-
+  return {
+    projectId: urn.projectId,
+    chainId: urn.chainId,
+    version: urn.version,
+  };
+}
 
 export async function resolveIpfsLogo(
   metadataUri: string | null,
@@ -62,10 +72,13 @@ export async function resolveIpfsLogo(
     console.error("Failed to fetch IPFS metadata:", err);
     return fallbackUrl;
   }
-};
+}
 
-
-export async function fetchProjectData(config: { projectId: bigint; chainId: number; version: number }) {
+export async function fetchProjectData(config: {
+  projectId: bigint;
+  chainId: number;
+  version: number;
+}) {
   const url = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
 
   try {
@@ -80,14 +93,15 @@ export async function fetchProjectData(config: { projectId: bigint; chainId: num
     console.error("Failed to fetch project:", err);
     throw err;
   }
-};
+}
 
-
-export async function fetchProjectAnalytics(projectName: string): Promise<ProjectAnalyticsResponse | null> {
+export async function fetchProjectAnalytics(
+  projectName: string
+): Promise<ProjectAnalyticsResponse | null> {
   try {
     const daoResponse = await fetch(
       `https://inev.profiler.bio/dao/${projectName}`,
-      { next: { revalidate: 900 } },
+      { next: { revalidate: 900 } }
     );
     if (!daoResponse.ok) return null;
     const daoData = await daoResponse.json();
@@ -95,8 +109,13 @@ export async function fetchProjectAnalytics(projectName: string): Promise<Projec
 
     // make it fetch token with token name from daoResponse
     const [treasuryResponse, tokenResponse] = await Promise.all([
-      fetch(`https://inev.profiler.bio/treasury/${projectName}`, { next: { revalidate: 900 } }),
-      fetch(`https://inev.profiler.bio/token/${validatedDaoData.nativeToken.name}`, { next: { revalidate: 900 } }),
+      fetch(`https://inev.profiler.bio/treasury/${projectName}`, {
+        next: { revalidate: 900 },
+      }),
+      fetch(
+        `https://inev.profiler.bio/token/${validatedDaoData.nativeToken.name}`,
+        { next: { revalidate: 900 } }
+      ),
     ]);
 
     let treasuryData = null;

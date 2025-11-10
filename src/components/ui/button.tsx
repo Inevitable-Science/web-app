@@ -16,7 +16,8 @@ const buttonVariants = cva(
         destructive:
           "bg-red-500 text-zinc-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90",
         //outline: "border border-color rounded-lg",
-        outline: "border border-[var(--grey-500)] rounded-lg hover:bg-grey-450 hover:border-[var(--grey-100)]",
+        outline:
+          "border border-[var(--grey-500)] rounded-lg hover:bg-grey-450 hover:border-[var(--grey-100)]",
         bottomline:
           "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         "tab-selected":

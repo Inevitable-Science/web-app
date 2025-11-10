@@ -22,4 +22,4 @@ export function FooterLoginButton() {
       </ConnectKitButton.Custom>
     </>
   );
-};
+}

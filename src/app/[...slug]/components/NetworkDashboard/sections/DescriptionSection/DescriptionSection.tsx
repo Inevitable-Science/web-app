@@ -60,7 +60,6 @@ export function DescriptionSection({
 
   const { description, name } = metadata?.data ?? {};
 
-
   //const canEditMetadata = hasPermission("SET_PROJECT_URI");
 
   //const suckerGroup = await getSuckerGroup(project.suckerGroupId, chainId);

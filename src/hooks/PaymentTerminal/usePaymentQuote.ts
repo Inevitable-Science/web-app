@@ -11,7 +11,11 @@ import {
   JBChainId,
   USD_CURRENCY_ID,
 } from "juice-sdk-core";
-import { useJBContractContext, useJBRulesetContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  useJBContractContext,
+  useJBRulesetContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { formatUnits, parseUnits } from "viem";
 import { useCurrencyPrice } from "./useCurrencyPrice";
 import { useProjectBaseToken } from "../useTokenBaseToken";
@@ -26,7 +30,7 @@ export function usePaymentQuote(chainId: JBChainId) {
   const { price: usdToEthPrice } = useCurrencyPrice(
     USD_CURRENCY_ID(version),
     ETH_CURRENCY_ID,
-    chainId,
+    chainId
   );
 
   function tokenAToBQuote(valueRaw: string, token: Token) {
@@ -39,7 +43,7 @@ export function usePaymentQuote(chainId: JBChainId) {
         valueRaw,
         determineConversion(baseToken.isNative, token.isNative),
         usdToEthPrice,
-        baseToken.decimals,
+        baseToken.decimals
       );
 
       const amountBQuote = getTokenAToBQuote(
@@ -47,15 +51,22 @@ export function usePaymentQuote(chainId: JBChainId) {
         {
           weight: ruleset.data.weight,
           reservedPercent: rulesetMetadata.data.reservedPercent,
-        },
+        }
       );
 
       return {
         payerTokens: formatUnits(amountBQuote.payerTokens, tokenB.decimals),
-        reservedTokens: formatUnits(amountBQuote.reservedTokens, tokenB.decimals),
+        reservedTokens: formatUnits(
+          amountBQuote.reservedTokens,
+          tokenB.decimals
+        ),
       };
     } catch (err) {
-      toast({ variant: "destructive", title: "Error", description: formatWalletError(err) });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: formatWalletError(err),
+      });
       return { payerTokens: "0", reservedTokens: "0" };
     }
   }
@@ -73,20 +84,28 @@ export function usePaymentQuote(chainId: JBChainId) {
         reservedPercent: rulesetMetadata.data.reservedPercent,
       });
 
-      const conversion = determineConversion(baseToken.isNative, token.isNative);
+      const conversion = determineConversion(
+        baseToken.isNative,
+        token.isNative
+      );
       if (conversion === "NONE") return amountAQuote.format();
 
       const converted = fromProjectCurrencyAmount(
         amountAQuote.value,
         determineConversion(baseToken.isNative, token.isNative),
-        usdToEthPrice,
+        usdToEthPrice
       );
 
-      if (!converted) throw new Error("Failed to convert project currency amount");
+      if (!converted)
+        throw new Error("Failed to convert project currency amount");
 
       return formatUnits(converted.amount, converted.decimals);
     } catch (err) {
-      toast({ variant: "destructive", title: "Error", description: formatWalletError(err) });
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: formatWalletError(err),
+      });
       return "0";
     }
   }
@@ -99,7 +118,10 @@ export function usePaymentQuote(chainId: JBChainId) {
 
 type Conversion = "NONE" | "USD_TO_ETH" | "ETH_TO_USDC";
 
-export function determineConversion(baseIsNative: boolean, selectedIsNative: boolean): Conversion {
+export function determineConversion(
+  baseIsNative: boolean,
+  selectedIsNative: boolean
+): Conversion {
   if (baseIsNative && !selectedIsNative) return "USD_TO_ETH";
   if (!baseIsNative && selectedIsNative) return "ETH_TO_USDC";
   return "NONE";
@@ -109,7 +131,7 @@ export function toProjectCurrencyAmount(
   valueRaw: string,
   conversion: Conversion,
   usdToEthPrice: bigint | null | undefined,
-  projectDecimals: number,
+  projectDecimals: number
 ): bigint {
   if (usdToEthPrice && conversion === "USD_TO_ETH") {
     const usd = parseUnits(valueRaw, 6);
@@ -125,7 +147,7 @@ export function toProjectCurrencyAmount(
 export function fromProjectCurrencyAmount(
   projectAmount: bigint,
   conversion: Conversion,
-  usdToEthPrice: bigint | null | undefined,
+  usdToEthPrice: bigint | null | undefined
 ): { amount: bigint; decimals: 6 | 18 } | null {
   if (!usdToEthPrice || conversion === "NONE") return null;
   if (conversion === "USD_TO_ETH") {

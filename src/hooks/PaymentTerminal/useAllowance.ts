@@ -11,7 +11,11 @@ export function useAllowance(chainId: number) {
   const [isApproving, setIsApproving] = useState(false);
 
   const ensureAllowance = useCallback(
-    async (tokenAddress: `0x${string}`, spender: `0x${string}`, value: bigint) => {
+    async (
+      tokenAddress: `0x${string}`,
+      spender: `0x${string}`,
+      value: bigint
+    ) => {
       if (!address) throw new Error("Wallet not connected");
       if (!publicClient || !walletClient) throw new Error("Please try again");
 
@@ -38,7 +42,7 @@ export function useAllowance(chainId: number) {
         setIsApproving(false);
       }
     },
-    [address, publicClient, walletClient],
+    [address, publicClient, walletClient]
   );
 
   return { ensureAllowance, isApproving };

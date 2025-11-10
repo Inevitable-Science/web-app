@@ -23,13 +23,15 @@ import { SelectedSuckerProvider } from "../PayCard/SelectedSuckerContext";
  * The top-level component. Its ONLY job is to render the provider,
  * making the shared data available to all children.
  */
-{/*export function NetworkDashboard() {
+{
+  /*export function NetworkDashboard() {
   return (
     <NetworkDataProvider>
       <DashboardContent />
     </NetworkDataProvider>
   );
-}*/}
+}*/
+}
 
 export function DashboardContent() {
   const {

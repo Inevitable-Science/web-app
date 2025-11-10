@@ -27,7 +27,6 @@ import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useTokenA } from "@/hooks/useTokenA";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 
-
 export function TransactionCard() {
   const tokenA = useTokenA();
   const activeChain = useJBChainId();
@@ -46,7 +45,10 @@ export function TransactionCard() {
 
   const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
 
-  const tokens = useMemo(() => getTokensForChain(selectedSucker?.peerChainId, version), [selectedSucker?.peerChainId]);
+  const tokens = useMemo(
+    () => getTokensForChain(selectedSucker?.peerChainId, version),
+    [selectedSucker?.peerChainId]
+  );
   const { balances } = useTokenBalances(tokens, selectedSucker.peerChainId);
 
   const [amountA, setAmountA] = useState("");
@@ -54,11 +56,15 @@ export function TransactionCard() {
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
   const payTokenAddress = accountingContext?.project?.token;
-  const isTokenANative = payTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
-  const selectedTokenIsNative = selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  const isTokenANative =
+    payTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  const selectedTokenIsNative =
+    selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase();
 
   useEffect(() => {
-    setSelectedToken((s) => tokens.find((t) => t.address === s.address) || tokens[0]);
+    setSelectedToken(
+      (s) => tokens.find((t) => t.address === s.address) || tokens[0]
+    );
   }, [tokens]);
 
   const handlePayAmountChange = (value: string) => {
@@ -72,10 +78,13 @@ export function TransactionCard() {
       setAmountB("");
       return;
     }
-    
+
     if (version === 4) {
       const quote = getTokenAToBQuote(
-        new FixedInt(parseUnits(value || "0", tokenA.decimals), tokenA.decimals),
+        new FixedInt(
+          parseUnits(value || "0", tokenA.decimals),
+          tokenA.decimals
+        ),
         {
           weight: ruleset.weight,
           reservedPercent: rulesetMetadata.reservedPercent,
@@ -84,7 +93,10 @@ export function TransactionCard() {
       setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
       return;
     } else {
-      const { payerTokens, reservedTokens } = tokenAToBQuote(value, selectedToken);
+      const { payerTokens, reservedTokens } = tokenAToBQuote(
+        value,
+        selectedToken
+      );
       setAmountB(payerTokens);
       return;
     }
@@ -109,7 +121,6 @@ export function TransactionCard() {
     );
     setAmountA(quote.format());
   };
-
 
   useEffect(() => {
     if (!selectedToken || !amountA) return;
@@ -149,18 +160,15 @@ export function TransactionCard() {
   const ruleset = rulesetContext;
   const rulesetMetadata = rulesetMetadataContext;
 
-
   const handleChainChange = ({ chainId }: { chainId: JBChainId }) => {
-    const newSelectedSucker = suckers?.find(
-      (s) => s.peerChainId === chainId
-    );
+    const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
 
     const newChainTokens = getTokensForChain(chainId, version);
 
     let token;
 
     if (selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase()) {
-      token = newChainTokens.find((t) => t.address === NATIVE_TOKEN);      
+      token = newChainTokens.find((t) => t.address === NATIVE_TOKEN);
     } else {
       token = newChainTokens.find((t) => t.address === USDC_ADDRESSES[chainId]);
     }
@@ -170,21 +178,24 @@ export function TransactionCard() {
     if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
       setSelectedToken(token);
-    };
+    }
   };
 
-  const handleTokenChange = ({ address }: { address: Address }) => {    
+  const handleTokenChange = ({ address }: { address: Address }) => {
     const token = tokens.find((t) => t.address === address);
 
     if (token) {
       setSelectedToken(token);
-    };
+    }
 
-    return
+    return;
   };
 
   const preparedAmountA = {
-    amount: new FixedInt(parseUnits(amountA || "0", selectedToken.decimals), selectedToken.decimals),
+    amount: new FixedInt(
+      parseUnits(amountA || "0", selectedToken.decimals),
+      selectedToken.decimals
+    ),
     symbol: selectedToken.symbol,
   };
   const preparedAmountB = {
@@ -200,7 +211,6 @@ export function TransactionCard() {
       e.preventDefault();
     }
   };
-  
 
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
@@ -227,7 +237,10 @@ export function TransactionCard() {
             />
             <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
               Balance:{" "}
-                {formatTokenAmount(balances.get(selectedToken.address) ?? 0n, selectedToken)}
+              {formatTokenAmount(
+                balances.get(selectedToken.address) ?? 0n,
+                selectedToken
+              )}
             </p>
           </div>
         </div>
@@ -238,7 +251,7 @@ export function TransactionCard() {
             </p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foregroun disabled:cursor-not-allowed disabled:opacity-80"
+              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
               placeholder="0.00"
               value={amountB}
               disabled={isTokenANative !== selectedTokenIsNative}

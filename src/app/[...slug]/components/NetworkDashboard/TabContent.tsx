@@ -35,11 +35,8 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export function TabContent({
-  selectedTab,
-  setSelectedTab,
-}: TabContentProps) {
-  const { token, analyticsData/*, analyticsError*/ } = useNetworkData();
+export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
+  const { token, analyticsData /*, analyticsError*/ } = useNetworkData();
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback
@@ -57,15 +54,14 @@ export function TabContent({
       {selectedTab === "cycles" && <NetworkDetailsTable />}
 
       {/*{!analyticsError &&*/}
-        {analyticsData?.tokenData &&
-        analyticsData?.treasuryData && (
-          <>
-            {token?.data && (
-              <>{selectedTab === "analytics" && <TokenSection />}</>
-            )}
-            {selectedTab === "treasury" && <TreasurySection />}
-          </>
-        )}
+      {analyticsData?.tokenData && analyticsData?.treasuryData && (
+        <>
+          {token?.data && (
+            <>{selectedTab === "analytics" && <TokenSection />}</>
+          )}
+          {selectedTab === "treasury" && <TreasurySection />}
+        </>
+      )}
     </div>
   );
-};
+}

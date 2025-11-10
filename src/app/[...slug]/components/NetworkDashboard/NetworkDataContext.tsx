@@ -1,11 +1,5 @@
-"use client"
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useMemo,
-  useState,
-} from "react";
+"use client";
+import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import {
   useJBRulesetContext,
   useSuckers,
@@ -35,9 +29,9 @@ import {
 } from "../PayCard/SelectedSuckerContext";
 
 interface AnalyticsDataProp {
-  daoData: DaoResponse,
-  treasuryData: TreasuryResponse | null,
-  tokenData: TokenResponse | null,
+  daoData: DaoResponse;
+  treasuryData: TreasuryResponse | null;
+  tokenData: TokenResponse | null;
 }
 
 interface NetworkDataContextType {
@@ -77,7 +71,6 @@ export const NetworkDataProvider = ({
   // NOTE: `project` will hold the current or stale data from the query hook.
   const project = projectData?.project;
 
-
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
   const twoWeeksAgo = useMemo(
     () => loadTimestamp - 14 * 24 * 60 * 60,
@@ -89,7 +82,6 @@ export const NetworkDataProvider = ({
     startTimestamp: twoWeeksAgo,
     endTimestamp: loadTimestamp,
   });
-
 
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =

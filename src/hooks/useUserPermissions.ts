@@ -1,6 +1,10 @@
 import { ProjectWithPermissionsDocument } from "@/generated/graphql";
 import { JB_PERMISSIONS, JBPermissionKey } from "@/lib/permissions";
-import { useBendystrawQuery, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import {
+  useBendystrawQuery,
+  useJBChainId,
+  useJBContractContext,
+} from "juice-sdk-react";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 
@@ -18,7 +22,7 @@ export function useUserPermissions() {
     },
     {
       enabled: !!chainId && !!projectId && !!address,
-    },
+    }
   );
 
   const userPermissions = useMemo(() => {
@@ -26,7 +30,7 @@ export function useUserPermissions() {
 
     const permissionHolders = data.project.permissionHolders?.items || [];
     const userHolder = permissionHolders.find(
-      (holder) => holder.operator?.toLowerCase() === address.toLowerCase(),
+      (holder) => holder.operator?.toLowerCase() === address.toLowerCase()
     );
 
     return userHolder?.permissions || [];
@@ -37,7 +41,7 @@ export function useUserPermissions() {
       const permissionId = JB_PERMISSIONS[permission];
       return userPermissions.includes(permissionId);
     },
-    [userPermissions],
+    [userPermissions]
   );
 
   return {

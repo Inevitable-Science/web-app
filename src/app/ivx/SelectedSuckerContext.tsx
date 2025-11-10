@@ -7,7 +7,9 @@ export interface SelectedSuckerContextType {
   setSelectedSucker: React.Dispatch<React.SetStateAction<SuckerPair>>;
 }
 
-const SelectedSuckerContext = createContext<SelectedSuckerContextType | undefined>(undefined);
+const SelectedSuckerContext = createContext<
+  SelectedSuckerContextType | undefined
+>(undefined);
 
 export const SelectedSuckerProvider = ({
   children,
@@ -22,7 +24,9 @@ export const SelectedSuckerProvider = ({
   });
 
   return (
-    <SelectedSuckerContext.Provider value={{ selectedSucker, setSelectedSucker }}>
+    <SelectedSuckerContext.Provider
+      value={{ selectedSucker, setSelectedSucker }}
+    >
       {children}
     </SelectedSuckerContext.Provider>
   );

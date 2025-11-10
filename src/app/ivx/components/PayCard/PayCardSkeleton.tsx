@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 
-export function PayCardSkeleton({ selectedToken, tokens }: { selectedToken: Token, tokens: Token[] }) {
+export function PayCardSkeleton({
+  selectedToken,
+  tokens,
+}: {
+  selectedToken: Token;
+  tokens: Token[];
+}) {
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
       <div className="flex flex-col gap-2">

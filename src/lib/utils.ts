@@ -302,9 +302,13 @@ export function toWei(amount: string | number): bigint {
   return BigInt(Math.floor(Number(amount) * 1e18));
 }
 
-export function formatWalletError(error: any, defaultMessage = "Please try again") {
+export function formatWalletError(
+  error: any,
+  defaultMessage = "Please try again"
+) {
   if (typeof error === "string") return error;
-  if (error.shortMessage) return error.shortMessage.replace("User rejected", "You rejected");
+  if (error.shortMessage)
+    return error.shortMessage.replace("User rejected", "You rejected");
   if (error.message) return error.message;
   return defaultMessage;
 }

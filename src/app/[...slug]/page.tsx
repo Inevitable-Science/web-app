@@ -6,11 +6,16 @@ import { NetworkDataProvider } from "./components/NetworkDashboard/NetworkDataCo
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
-import { fetchProjectAnalytics, fetchProjectData, parseSlug, resolveIpfsLogo } from "./ProjectHelpers";
+import {
+  fetchProjectAnalytics,
+  fetchProjectData,
+  parseSlug,
+  resolveIpfsLogo,
+} from "./ProjectHelpers";
 
 interface Props {
-  params: Promise<{slug?: string}>;
-};
+  params: Promise<{ slug?: string }>;
+}
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
@@ -32,13 +37,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   } catch (err) {
     console.error(err);
     return notFound();
-  };
+  }
 
   if (!config || !projectData) {
     return notFound();
-  };
+  }
 
-  const projectLogo = await resolveIpfsLogo(projectData.metadataUri, imgUrl)
+  const projectLogo = await resolveIpfsLogo(projectData.metadataUri, imgUrl);
 
   return {
     title: `${projectData.name} | Inevitable Protocol`,
@@ -67,8 +72,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     },
     manifest: metadata.manifest,
   };
-};
-
+}
 
 export default async function Page(props: Props) {
   const params = await props.params;
@@ -83,11 +87,11 @@ export default async function Page(props: Props) {
   } catch (err) {
     console.error(err);
     return notFound();
-  };
+  }
 
   if (!config || !project.project?.name) {
     return notFound();
-  };
+  }
 
   const analytics = await fetchProjectAnalytics(project.project?.name);
 

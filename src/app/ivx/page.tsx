@@ -75,7 +75,6 @@ async function fetchIvxData() {
     const validatedTreasuryData = TreasuryResponseSchema.parse(treasuryData);
     const validatedTokenData = TokenResponseSchema.parse(tokenData);
 
-
     return {
       treasuryData: validatedTreasuryData,
       tokenData: validatedTokenData,

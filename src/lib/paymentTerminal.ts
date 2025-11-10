@@ -21,19 +21,26 @@ export async function getPaymentTerminal(args: {
   const { client, version, chainId, projectId, token } = args;
 
   const directory = getContract({
-    address: getJBContractAddress(JBCoreContracts.JBDirectory, version, chainId),
+    address: getJBContractAddress(
+      JBCoreContracts.JBDirectory,
+      version,
+      chainId
+    ),
     abi: jbDirectoryAbi,
     client,
   });
 
-  const terminal = await directory.read.primaryTerminalOf([projectId, token.address]);
+  const terminal = await directory.read.primaryTerminalOf([
+    projectId,
+    token.address,
+  ]);
 
   const swapTerminal = getJBContractAddress(
     token.isNative
       ? JBSwapTerminalContracts.JBSwapTerminalRegistry
       : JBSwapTerminalContracts.JBSwapTerminalUSDCRegistry,
     version,
-    chainId,
+    chainId
   );
 
   if (!terminal || !swapTerminal) {

@@ -8,12 +8,14 @@ export function useCurrencyPrice(
   fromCurrencyId: number,
   toCurrencyId: number,
   chainId: JBChainId | undefined,
-  enabled: boolean = true,
+  enabled: boolean = true
 ) {
   const { projectId, contractAddress } = useJBContractContext();
 
   const { data, isLoading, error, refetch } = useReadContract({
-    address: chainId ? contractAddress(JBCoreContracts.JBPrices, chainId) : undefined,
+    address: chainId
+      ? contractAddress(JBCoreContracts.JBPrices, chainId)
+      : undefined,
     abi: jbPricesAbi,
     functionName: "pricePerUnitOf",
     args: [projectId, BigInt(fromCurrencyId), BigInt(toCurrencyId), 18n],

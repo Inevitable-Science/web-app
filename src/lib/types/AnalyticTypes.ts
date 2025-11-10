@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const DaoResponseSchema = z.object({
   name: z.string(),
   logo: z.string(),
@@ -40,7 +39,6 @@ export const DaoResponseSchema = z.object({
 });
 
 export type DaoResponse = z.infer<typeof DaoResponseSchema>;
-
 
 export const TreasuryResponseSchema = z.object({
   name: z.string(),
@@ -97,7 +95,6 @@ export const TreasuryResponseSchema = z.object({
 
 export type TreasuryResponse = z.infer<typeof TreasuryResponseSchema>;
 
-
 export const TokenResponseSchema = z.object({
   name: z.string(),
   isIptToken: z.boolean(),
@@ -149,7 +146,6 @@ export const TokenResponseSchema = z.object({
 });
 
 export type TokenResponse = z.infer<typeof TokenResponseSchema>;
-
 
 export const MarketChartResponseSchema = z.object({
   prices: z.array(z.tuple([z.number(), z.number()])),

@@ -67,7 +67,7 @@ export function PrevButton(props: PropType) {
       {children}
     </button>
   );
-};
+}
 
 export function NextButton(props: PropType) {
   const { children, ...restProps } = props;
@@ -83,4 +83,4 @@ export function NextButton(props: PropType) {
       {children}
     </button>
   );
-};
+}

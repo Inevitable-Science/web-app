@@ -6,9 +6,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import {
-  useJBContractContext,
-} from "juice-sdk-react";
+import { useJBContractContext } from "juice-sdk-react";
 
 import {
   useAccount,
@@ -38,7 +36,6 @@ import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 
-
 const shimmerClasses = `
   relative overflow-hidden
   before:content-[''] before:absolute before:inset-0
@@ -51,7 +48,6 @@ const primaryButtonClasses =
 
 const memo = "";
 
-
 export function PayActionButton({
   amountA,
   amountB,
@@ -62,7 +58,7 @@ export function PayActionButton({
   amountA: TokenAmountType;
   amountB: TokenAmountType;
   paymentToken: Token;
-  walletBalance:  Map<string, bigint>;
+  walletBalance: Map<string, bigint>;
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
@@ -72,20 +68,19 @@ export function PayActionButton({
     version,
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
-  
+
   const { peerChainId: chainId, projectId } = selectedSucker;
-  
+
   const { address, isConnected } = useAccount();
   const userChainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
   const { ensureAllowance, isApproving } = useAllowance(chainId);
-  
+
   const { toast } = useToast();
-  
+
   const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
   const value = amountA.amount.value;
 
-  
   const {
     data: txHash,
     isPending: isWriteLoading,
@@ -138,7 +133,6 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError, isWriteError]);
 
-
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
 
@@ -147,7 +141,7 @@ export function PayActionButton({
         if (!primaryNativeTerminal?.data || !address || !selectedSucker) {
           return;
         }
-    
+
         await writeContractAsync?.({
           abi: jbMultiTerminalAbi,
           functionName: "pay",
@@ -165,7 +159,6 @@ export function PayActionButton({
           value,
         });
       } else {
-
         const terminal = await getPaymentTerminal({
           client: publicClient,
           version,
@@ -178,18 +171,27 @@ export function PayActionButton({
           await ensureAllowance(paymentToken.address, terminal.address, value);
         }
 
-        const minTokens = paymentToken.isNative ? 0n : (amountB.amount.value * 95n) / 100n;
+        const minTokens = paymentToken.isNative
+          ? 0n
+          : (amountB.amount.value * 95n) / 100n;
 
         await writeContractAsync?.({
           abi: terminal.abi,
           functionName: "pay",
           chainId,
           address: terminal.address,
-          args: [projectId, paymentToken.address, value, address, minTokens, memo || "", "0x0"],
+          args: [
+            projectId,
+            paymentToken.address,
+            value,
+            address,
+            minTokens,
+            memo || "",
+            "0x0",
+          ],
           value: paymentToken.isNative ? value : 0n,
         });
       }
-      
     } catch (err) {
       console.error("Payment failed:", err);
       toast({
@@ -199,7 +201,6 @@ export function PayActionButton({
       });
     }
   };
-
 
   // --- 5. RENDER LOGIC ---
 
@@ -237,8 +238,12 @@ export function PayActionButton({
   if (
     walletBalance &&
     amountA.amount._value &&
-    Number(formatUnits(walletBalance.get(paymentToken.address) ?? 0n, paymentToken.decimals)) <
-     Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+    Number(
+      formatUnits(
+        walletBalance.get(paymentToken.address) ?? 0n,
+        paymentToken.decimals
+      )
+    ) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
   ) {
     return (
       <Button className={primaryButtonClasses} disabled={true}>
@@ -262,9 +267,7 @@ export function PayActionButton({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
 
-        <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg"
-        >
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg">
           <Dialog.Title className="text-lg font-semibold">
             Before you continue...
           </Dialog.Title>
