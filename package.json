@@ -17,7 +17,7 @@
     "format:check": "prettier --check \"**/*.{jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@cowprotocol/widget-react": "^0.13.0",
+    "@cowprotocol/widget-react": "^0.14.0",
     "@farcaster/frame-node": "^0.0.20",
     "@farcaster/frame-sdk": "^0.0.64",
     "@farcaster/frame-wagmi-connector": "^0.0.53",
