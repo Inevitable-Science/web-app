@@ -37,7 +37,6 @@ export function ParticipantsTable({
               address={participant?.address as Address}
               short
               withEnsAvatar={false}
-              avatarProps={{ size: "sm" }}
               withEnsName
             />
             <div>

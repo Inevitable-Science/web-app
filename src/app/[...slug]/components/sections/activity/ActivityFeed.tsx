@@ -1,7 +1,4 @@
-import { sdk } from "@farcaster/frame-sdk";
 import EtherscanLink from "@/components/EtherscanLink";
-import FarcasterAvatar from "@/components/FarcasterAvatar";
-import { FarcasterProfilesProvider } from "@/components/FarcasterAvatarContext";
 import {
   ActivityEventsDocument,
   CashOutTokensEvent,
@@ -19,7 +16,7 @@ import {
   useBendystrawQuery,
 } from "juice-sdk-react";
 import { useState, useEffect, useMemo } from "react";
-import { Address, formatEther } from "viem";
+import { Address, Chain, formatEther } from "viem";
 
 import { Loader2 } from "lucide-react";
 import StaticVolumeChart, {
@@ -28,8 +25,8 @@ import StaticVolumeChart, {
 } from "../../ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
 import { useProjectContext } from "../../../ProjectDataContext";
+import { EthereumAddress } from "@/components/EthereumAddress";
 
-// todo cleanup
 
 function PayActivityItem(
   payEvent: Pick<
@@ -42,21 +39,7 @@ function PayActivityItem(
     | "memo"
   > & { chainId: JBChainId; identity?: any }
 ) {
-  const { token } = useJBTokenContext();
-  const { metadata } = useProjectContext();
-  const composeCast = sdk.actions.composeCast;
-  const chainId = payEvent.chainId;
-  const chain = JB_CHAINS[chainId].chain;
-
-  const [isMiniApp, setIsMiniApp] = useState(false);
-
-  useEffect(() => {
-    const checkMiniApp = async () => {
-      const result = await sdk.isInMiniApp();
-      setIsMiniApp(result);
-    };
-    checkMiniApp();
-  }, []);
+  const chain = JB_CHAINS[payEvent.chainId].chain;
 
   if (!payEvent) return null;
 
@@ -69,18 +52,10 @@ function PayActivityItem(
     memo: payEvent.memo,
   };
 
-  // Compose Farcaster handle or fallback to address
-  const handle = payEvent.identity?.username
-    ? `@${payEvent.identity.username}`
-    : `${payEvent.beneficiary.slice(0, 6)}…`;
-
-  const shareText = `⏩ ${handle} paid ${activityItemData.amount.format(4)} ETH and received ${activityItemData.beneficiaryTokenCount?.format(2)} ${token?.data?.symbol ? token.data.symbol : metadata?.data?.name} — "${activityItemData.memo}"`;
-
   const formattedDate = formatDistance(payEvent.timestamp * 1000, new Date(), {
     addSuffix: true,
   });
 
-  const embedUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
     <div className="border-color mb-1 min-h-[80px] border-b pb-2">
@@ -99,36 +74,14 @@ function PayActivityItem(
         </div>
 
         <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
-          <FarcasterAvatar
+          <EthereumAddress
             address={activityItemData.beneficiary as Address}
-            withAvatar={false}
-            short
             chain={chain}
+            short
+            withEnsName
           />
         </div>
       </div>
-
-      {activityItemData.memo && (
-        <div className="mt-1 pb-4">
-          {isMiniApp ? (
-            <button
-              onClick={() =>
-                composeCast({
-                  text: shareText,
-                  embeds: [embedUrl],
-                })
-              }
-              className="text-left text-sm font-light text-grey-50 hover:underline"
-            >
-              {activityItemData.memo}
-            </button>
-          ) : (
-            <div className="text-sm font-light text-grey-50">
-              "{activityItemData.memo}"
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -141,17 +94,7 @@ function RedeemActivityItem(
 ) {
   const { token } = useJBTokenContext();
   const { metadata } = useProjectContext();
-  const composeCast = sdk.actions.composeCast;
-
-  const [isMiniApp, setIsMiniApp] = useState(false);
-
-  useEffect(() => {
-    const checkMiniApp = async () => {
-      const result = await sdk.isInMiniApp();
-      setIsMiniApp(result);
-    };
-    checkMiniApp();
-  }, []);
+  const chain = JB_CHAINS[cashOutEvent.chainId].chain;
 
   if (!cashOutEvent) return null;
 
@@ -161,12 +104,6 @@ function RedeemActivityItem(
     cashOutCount: new JBProjectToken(BigInt(cashOutEvent.cashOutCount)),
   };
 
-  const handle = cashOutEvent.identity?.username
-    ? `@${cashOutEvent.identity.username}`
-    : `${cashOutEvent.beneficiary.slice(0, 6)}…`;
-
-  const shareText = `⏩ ${handle} redeemed ${activityItemData.cashOutCount?.format(2)} ${token?.data?.symbol ? token.data.symbol : metadata?.data?.name} for ${activityItemData.amount.format(4)} ETH`;
-
   const formattedDate = formatDistance(
     cashOutEvent.timestamp * 1000,
     new Date(),
@@ -174,8 +111,6 @@ function RedeemActivityItem(
       addSuffix: true,
     }
   );
-
-  const embedUrl = typeof window !== "undefined" ? window.location.href : "";
 
   return (
     <div className="border-color mb-1 border-b pb-2">
@@ -202,11 +137,12 @@ function RedeemActivityItem(
         </div>
 
         <div className="text-md font-light text-grey-100">
-          <FarcasterAvatar
+          <EthereumAddress
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
-            withAvatar={false}
+            chain={chain}
             short
+            withEnsName
           />
         </div>
       </div>
@@ -249,7 +185,6 @@ export function ActivityFeed() {
     return dailyTotals.map((day) => ({
       timestamp: Math.floor(day.date.getTime() / 1000),
       volume: Number(formatEther(day.volume)),
-      // You can add logic for these later if needed
       balance: 0,
       trendingScore: 0,
     }));
@@ -258,7 +193,7 @@ export function ActivityFeed() {
   const {
     data: activityEvents,
     isLoading,
-    isFetching, // optional if you want to show loading on polling
+    isFetching,
   } = useBendystrawQuery(
     ActivityEventsDocument,
     {
@@ -278,18 +213,7 @@ export function ActivityFeed() {
   );
 
   return (
-    <FarcasterProfilesProvider
-      addresses={
-        activityEvents?.activityEvents.items?.flatMap((e) =>
-          e?.payEvent || e?.cashOutTokensEvent
-            ? [
-                (e?.payEvent?.beneficiary ||
-                  e?.cashOutTokensEvent?.beneficiary) as `0x${string}`,
-              ]
-            : []
-        ) ?? []
-      }
-    >
+    <>
       <section className="mb-6 flex flex-col rounded-2xl bg-grey-450 p-[16px]">
         <StaticVolumeChart suckerGroupId={suckerGroupId} />
       </section>
@@ -331,6 +255,6 @@ export function ActivityFeed() {
           )}
         </div>
       )}
-    </FarcasterProfilesProvider>
+    </>
   );
 }

@@ -200,7 +200,6 @@ export function Header() {
                         short
                         withEnsAvatar={false}
                         withEnsName
-                        avatarProps={{ size: "sm" }}
                         className="text-xl font-light"
                       />
                     ) : (
