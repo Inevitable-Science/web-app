@@ -52,7 +52,7 @@ export const ChainSelector = ({
       >
         <SelectValue placeholder="Select chain">
           {value ? (
-            <div className="flex items-center gap-1 pb-1.5 font-light">
+            <div className="flex items-center gap-1 pb-1.5 font-light select-none">
               <div className="flex items-end">
                 {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
                 value.address.toLowerCase() ? (
