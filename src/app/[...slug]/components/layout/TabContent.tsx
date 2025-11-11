@@ -1,28 +1,17 @@
-// TabContent.tsx
 "use client";
 import { FC } from "react";
-import { ActivityFeed } from "../ActivityFeed";
-import { NetworkDetailsTable } from "../NetworkDetailsTable";
-import { DescriptionSection } from "./sections/DescriptionSection/DescriptionSection";
-import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
+import { ActivityFeed } from "../NetworkDashboard/sections/ActivitySection/ActivityFeed";
+import { NetworkDetailsTable } from "../NetworkDashboard/sections/CyclesSection/NetworkDetailsTable";
+import { DescriptionSection } from "../NetworkDashboard/sections/DescriptionSection/DescriptionSection";
+import { HoldersSection } from "../NetworkDashboard/sections/HoldersSection/HoldersSection";
 
-import { TreasurySection } from "./sections/TreasuryAnalyticsSection/TreasurySection";
-import { TokenSection } from "./sections/TokenAnalyticsSection/TokenSection";
-import { useProjectContext } from "../layout/ProjectDataContext";
+import { TreasurySection } from "../NetworkDashboard/sections/TreasuryAnalyticsSection/TreasurySection";
+import { TokenSection } from "../NetworkDashboard/sections/TokenAnalyticsSection/TokenSection";
+import { useProjectContext } from "../../ProjectDataContext";
 
 interface TabContentProps {
   selectedTab: string;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-interface DescriptionInterface {
-  treasuryHoldings: string;
-  assetsUnderManagement: string | number;
-  totalHolders: string;
-  totalSupply: string | number;
-  latestPrice: number;
-  latestMarketCap: number;
-  tokenName: string;
 }
 
 // Mapping of tab names to their corresponding components
@@ -36,7 +25,7 @@ const tabComponents: Record<string, FC<any>> = {
 };
 
 export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
-  const { token, analyticsData /*, analyticsError*/ } = useProjectContext();
+  const { token, analyticsData } = useProjectContext();
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback
@@ -46,19 +35,14 @@ export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
 
   return (
     <div className="pb-10">
-      {selectedTab === "about" && (
-        <DescriptionSection setSelectedTab={setSelectedTab} />
-      )}
+      {selectedTab === "about" && <DescriptionSection setSelectedTab={setSelectedTab} />}
       {selectedTab === "tokens" && <HoldersSection />}
       {selectedTab === "activity" && <ActivityFeed />}
       {selectedTab === "cycles" && <NetworkDetailsTable />}
 
-      {/*{!analyticsError &&*/}
       {analyticsData?.tokenData && analyticsData?.treasuryData && (
         <>
-          {token?.data && (
-            <>{selectedTab === "analytics" && <TokenSection />}</>
-          )}
+          {token?.data && selectedTab === "analytics" && <TokenSection />}
           {selectedTab === "treasury" && <TreasurySection />}
         </>
       )}

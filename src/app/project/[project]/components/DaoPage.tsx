@@ -4,7 +4,7 @@ import { Header } from "./Header";
 import { SwapWidget } from "./SwapWiget/SwapWiget";
 import { useData } from "../DataProvider";
 import { TabContent } from "./TabsContent";
-import OtherDaosCarousel from "@/app/[...slug]/components/NetworkDashboard/Components/OtherDaosCarousel";
+import OtherDaosCarousel from "@/app/[...slug]/components/layout/OtherDaosCarousel";
 
 import { ArrowRightIcon } from "lucide-react";
 

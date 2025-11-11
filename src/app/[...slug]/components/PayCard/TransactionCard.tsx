@@ -27,7 +27,7 @@ import { PayActionButton } from "@/components/PayActionButton";
 import { WithdrawCard } from "./WithdrawCard";
 import { ChainSelector } from "@/components/ChainSelector";
 import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useProjectContext } from "../layout/ProjectDataContext";
+import { useProjectContext } from "../../ProjectDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 

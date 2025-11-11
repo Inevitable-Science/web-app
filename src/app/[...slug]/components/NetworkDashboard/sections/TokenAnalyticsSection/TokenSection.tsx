@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 
 import TokenChart from "./TokenChart";
 import TokenStatsChart from "./TokenStatsChart";
-import { useProjectContext } from "../../../layout/ProjectDataContext";
+import { useProjectContext } from "../../../../ProjectDataContext";
 
 interface DescriptionSectionProps {
   data: TokenResponse | null;

@@ -296,7 +296,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
-import { useProjectContext } from "@/app/[...slug]/components/layout/ProjectDataContext";
+import { useProjectContext } from "@/app/[...slug]/ProjectDataContext";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 
 const shimmerClasses = `

@@ -6,7 +6,7 @@ import { ParticipantsTable } from "./ParticipantsTable";
 import { Address, formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
-import { useProjectContext } from "../../../layout/ProjectDataContext";
+import { useProjectContext } from "../../../../ProjectDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,

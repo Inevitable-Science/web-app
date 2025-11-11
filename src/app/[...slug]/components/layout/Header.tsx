@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useProjectContext } from "../../layout/ProjectDataContext";
+import { useProjectContext } from "../../ProjectDataContext";
 
 export function Header() {
   const { project, dailyTotals } = useProjectContext();

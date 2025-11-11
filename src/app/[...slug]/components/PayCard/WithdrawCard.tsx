@@ -15,7 +15,7 @@ import { formatUnits, parseUnits } from "viem";
 import { WithdrawActionButton } from "@/components/WithdrawActionButton";
 import { SuckerPair } from "juice-sdk-core";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { useProjectContext } from "../layout/ProjectDataContext";
+import { useProjectContext } from "../../ProjectDataContext";
 
 export function WithdrawCard({
   selectedSucker,

@@ -6,13 +6,13 @@ import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
-import { Header } from "../NetworkDashboard/Header/Header";
+import { Header } from "./Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { TabContent } from "../NetworkDashboard/TabContent";
+import { TabContent } from "./TabContent";
 
-import OtherDaosCarousel from "../NetworkDashboard/Components/OtherDaosCarousel";
+import OtherDaosCarousel from "./OtherDaosCarousel";
 
-import { useProjectContext } from "./ProjectDataContext";
+import { useProjectContext } from "../../ProjectDataContext";
 
 export function PageLayout() {
   const {
