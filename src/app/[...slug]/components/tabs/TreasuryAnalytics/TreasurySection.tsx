@@ -8,7 +8,7 @@ import { Loader2, RotateCw } from "lucide-react";
 import TreasuryPieChart from "./TreasuryPieChart";
 import TreasuryChart from "./TreasuryChart";
 import { useState } from "react";
-import { useProjectContext } from "../../../../ProjectDataContext";
+import { useProjectContext } from "../../../ProjectDataContext";
 
 export function TreasurySection() {
   const { analyticsData } = useProjectContext();

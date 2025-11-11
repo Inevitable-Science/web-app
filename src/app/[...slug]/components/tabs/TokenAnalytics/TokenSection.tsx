@@ -11,11 +11,7 @@ import { Loader2 } from "lucide-react";
 
 import TokenChart from "./TokenChart";
 import TokenStatsChart from "./TokenStatsChart";
-import { useProjectContext } from "../../../../ProjectDataContext";
-
-interface DescriptionSectionProps {
-  data: TokenResponse | null;
-}
+import { useProjectContext } from "../../../ProjectDataContext";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -67,8 +63,6 @@ function getValuationLabel(
 export function TokenSection() {
   const { analyticsData } = useProjectContext();
   const data = analyticsData?.tokenData;
-
-  const chainId = useJBChainId();
 
   const suckersQuery = useSuckers();
   const suckers = suckersQuery.data;
@@ -200,42 +194,9 @@ export function TokenSection() {
             </div>
           )}
 
-          {/*{data.tokenDistribution && (
-            <div className="bg-grey-450 p-[12px] rounded-2xl">
-              <h3 className="text-grey-50 uppercase text-sm pt-1">Holder Distribution</h3>
-
-              <div className="background-color p-[16px] rounded-xl mt-2">
-                <h3 className="text-xl">
-                  {data.selectedToken.totalHolders}
-                </h3>
-                <p className="text-muted-foreground font-light uppercase">Total Holders</p>
-              </div>
-
-              <div>
-                {data.tokenDistribution.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center py-3 border-b border-[#282828] text-grey-50 text-sm font-light"
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-grey-300">{item.range} ({item.accounts} accounts)</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-grey-500">{item.percent_tokens_held?.toFixed(2)}%</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}*/}
-
           <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
             <TokenStatsChart organisation="cryodao" tokenName="cryo" />
           </div>
-
-          {/*<pre>
-            <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>*/}
         </div>
       ) : (
         <div className="my-[15vh] flex w-full justify-center">

@@ -1,6 +1,4 @@
 "use client";
-
-import { FC, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "@/lib/utils";
@@ -20,10 +18,7 @@ interface TreasuryPreview {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const DaoData: FC<TreasuryPreview> = ({ data, setSelectedTab }) => {
-  //if (isLoading) return <div>Loading...</div>;
-  //if (error) return <div>Error: {error}</div>;
-  //if (!data) return <div>No data available</div>;
+export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
 
   return (
     <section className="mt-6 flex flex-col gap-6">

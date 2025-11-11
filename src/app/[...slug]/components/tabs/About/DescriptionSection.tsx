@@ -8,7 +8,7 @@ import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 //import { useUserPermissions } from "@/hooks/useUserPermissions";
 //import { EditMetadataDialog } from "./EditMetadataDialog";
-import { useProjectContext } from "../../../../ProjectDataContext";
+import { useProjectContext } from "../../../ProjectDataContext";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {

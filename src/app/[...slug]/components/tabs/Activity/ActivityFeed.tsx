@@ -25,9 +25,9 @@ import { Loader2 } from "lucide-react";
 import StaticVolumeChart, {
   ProjectTimelineRange,
   ProjectTimelineView,
-} from "../../Components/ActivityGraph";
+} from "../../ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
-import { useProjectContext } from "../../../../ProjectDataContext";
+import { useProjectContext } from "../../../ProjectDataContext";
 
 // todo cleanup
 

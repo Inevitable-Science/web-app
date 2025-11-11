@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useProjectContext } from "../../../../ProjectDataContext";
+import { useProjectContext } from "../../../ProjectDataContext";
 
 import {
   ChevronDownIcon,
@@ -14,7 +14,7 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import { formatEther } from "viem";
-import { SplitsSection } from "../HoldersSection/SplitsSection";
+import { SplitsSection } from "../Token/SplitsSection";
 import { ChevronRightIcon } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 

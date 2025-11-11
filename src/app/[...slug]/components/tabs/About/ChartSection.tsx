@@ -3,7 +3,7 @@
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import StaticVolumeChart from "../../Components/ActivityGraph";
+import StaticVolumeChart from "../../ActivityGraph";
 import { ProjectDocument } from "@/generated/graphql";
 import {
   useJBChainId,

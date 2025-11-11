@@ -1,7 +1,7 @@
 import { truncateAddress } from "@/lib/utils";
 import { useIVXContext } from "../../DataProvider";
 import { Address } from "viem";
-import TreasuryPieChart from "@/app/[...slug]/components/NetworkDashboard/sections/TreasuryAnalyticsSection/TreasuryPieChart";
+import TreasuryPieChart from "@/app/[...slug]/components/tabs/TreasuryAnalytics/TreasuryPieChart";
 
 export function IvxTreasuryAnalytics() {
   const { analyticsData } = useIVXContext();
