@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Header } from "./Header";
-import { SwapWidget } from "./SwapWiget/SwapWiget";
+import { SwapWidget } from "./swapWidget/SwapWidget";
 import { useData } from "../DataProvider";
 import { TabContent } from "./TabsContent";
 import { OtherDaosCarousel } from "@/app/[...slug]/components/layout/OtherDaosCarousel";

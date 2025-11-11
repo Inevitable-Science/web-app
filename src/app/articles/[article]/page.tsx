@@ -1,5 +1,4 @@
-import { type FC } from "react";
-import DynamicArticleCarousel from "../ArticleCarousel";
+import { DynamicArticleCarousel } from "../ArticleCarousel";
 import articleSchema, { Article } from "../Articles";
 import { headers } from "next/headers";
 import type { Metadata } from "next";

@@ -14,7 +14,7 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 import { formatEther } from "viem";
-import { SplitsSection } from "../Token/SplitsSection";
+import { SplitsSection } from "../token/SplitsSection";
 import { ChevronRightIcon } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 

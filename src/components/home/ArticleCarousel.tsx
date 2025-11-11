@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import PartnersComponent from "./PartnersComponent";
 import articleSchema, { Article } from "@/app/articles/Articles";
-import DynamicArticleCarousel from "@/app/articles/ArticleCarousel";
+import { DynamicArticleCarousel } from "@/app/articles/ArticleCarousel";
 
 type SlideType = {
   img: string;

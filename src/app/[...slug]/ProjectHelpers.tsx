@@ -96,10 +96,9 @@ export async function fetchProjectData(config: {
 }
 
 export async function fetchProjectAnalytics(
-  projectN?: string
+  projectName: string
 ): Promise<ProjectAnalyticsResponse | null> {
   try {
-    const projectName = "hydradao";
     const daoResponse = await fetch(
       `https://inev.profiler.bio/dao/${projectName}`,
       { next: { revalidate: 900 } }

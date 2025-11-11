@@ -1,12 +1,12 @@
 "use client";
 import { FC } from "react";
-import { ActivityFeed } from "../tabs/Activity/ActivityFeed";
-import { NetworkDetailsTable } from "../tabs/Cycles/CyclesTab";
-import { DescriptionSection } from "../tabs/About/DescriptionSection";
-import { HoldersSection } from "../tabs/Token/TokensSection";
+import { ActivityFeed } from "../sections/activity/ActivityFeed";
+import { NetworkDetailsTable } from "../sections/cycles/CyclesTab";
+import { DescriptionSection } from "../sections/about/DescriptionSection";
+import { HoldersSection } from "../sections/token/TokensSection";
 
-import { TreasurySection } from "../tabs/TreasuryAnalytics/TreasurySection";
-import { TokenSection } from "../tabs/TokenAnalytics/TokenSection";
+import { TreasurySection } from "../sections/treasuryAnalytics/TreasurySection";
+import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
 import { useProjectContext } from "../../ProjectDataContext";
 
 interface TabContentProps {

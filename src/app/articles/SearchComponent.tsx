@@ -8,7 +8,7 @@ interface SearchBarProps {
   onSearch: (query: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+export function SearchBar({ onSearch }: SearchBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -51,5 +51,3 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     </div>
   );
 };
-
-export default SearchBar;

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import SearchBar from "./SearchComponent";
-import DynamicArticleCarousel from "./ArticleCarousel";
+import { SearchBar } from "./SearchComponent";
+import { DynamicArticleCarousel } from "./ArticleCarousel";
 import { Article } from "./Articles";
 
 interface ArticlesClientProps {
@@ -15,11 +15,11 @@ interface ArticlesClientProps {
   initialArticles: Article[];
 }
 
-const ArticlesClient: React.FC<ArticlesClientProps> = ({
+export function ArticlesClient({
   initialCarousels,
   initialCategories,
   initialArticles,
-}) => {
+}: ArticlesClientProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [carousels, setCarousels] = useState(initialCarousels);
@@ -128,5 +128,3 @@ const ArticlesClient: React.FC<ArticlesClientProps> = ({
     </>
   );
 };
-
-export default ArticlesClient;
