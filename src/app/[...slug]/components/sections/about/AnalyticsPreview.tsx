@@ -1,8 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "@/lib/utils";
 import { useProjectContext } from "@/app/[...slug]/ProjectDataContext";
+import { ArrowRight } from "lucide-react";
 
 interface TreasuryPreview {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
@@ -50,7 +50,7 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
           className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Treasury Stats
-          <ArrowRightIcon height="20" width="20" />
+          <ArrowRight height="20" width="20" />
         </Button>
       </div>
 
@@ -117,7 +117,7 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
           className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
         >
           Analytics
-          <ArrowRightIcon height="20" width="20" />
+          <ArrowRight height="20" width="20" />
         </Button>
       </div>
     </section>

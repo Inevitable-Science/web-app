@@ -7,11 +7,11 @@ import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
 import { Header } from "./Header";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
 
 import { useProjectContext } from "../../ProjectDataContext";
+import { ArrowRight } from "lucide-react";
 
 export function PageLayout() {
   const {
@@ -66,7 +66,7 @@ export function PageLayout() {
               >
                 {tab.label}
                 <span className={selectedTab === tab.key ? "block" : "hidden"}>
-                  <ArrowRightIcon height="18" width="18" />
+                  <ArrowRight height="18" width="18" />
                 </span>
               </button>
             ))}

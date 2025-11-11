@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 export default function AuctionComponent() {
   const [projectVolume, setProjectVolume] = useState<
@@ -81,7 +81,7 @@ export default function AuctionComponent() {
           >
             <div className="flex items-center gap-3 font-normal transition-[gap] duration-150 hover:gap-5">
               Go To Auction
-              <ArrowRightIcon height={20} width={20} />
+              <ArrowRight height={20} width={20} />
             </div>
           </Link>
         </div>

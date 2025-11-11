@@ -8,14 +8,9 @@ import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { useProjectContext } from "../../../ProjectDataContext";
 
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
 import { formatEther } from "viem";
 import { SplitsSection } from "../token/SplitsSection";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 
 export function NetworkDetailsTable() {
@@ -216,9 +211,9 @@ export function NetworkDetailsTable() {
               onClick={() => setShowRules((prev) => !prev)}
             >
               {showRules ? (
-                <ChevronDownIcon height="24" width="24" />
+                <ChevronDown height="24" width="24" />
               ) : (
-                <ChevronUpIcon height="24" width="24" />
+                <ChevronUp height="24" width="24" />
               )}
             </Button>
           </div>

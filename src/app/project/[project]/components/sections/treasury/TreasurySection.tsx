@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { Address } from "viem";
 
-import { LinkIcon } from "@heroicons/react/24/solid";
-import { Loader2, RotateCw } from "lucide-react";
+import { Link, Loader2, RotateCw } from "lucide-react";
 
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 
@@ -233,7 +232,7 @@ export function TreasurySection() {
                       rel="noopener noreferrer"
                       className="border-b border-transparent hover:border-grey-50"
                     >
-                      <LinkIcon height={18} width={18} />
+                      <Link height={18} width={18} />
                     </a>
                   </div>
                 );
