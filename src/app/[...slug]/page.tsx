@@ -1,8 +1,8 @@
 import { Providers } from "./Providers";
-import { DashboardContent } from "./components/NetworkDashboard/NetworkDashboard";
+import { PageLayout } from "./components/layout/PageLayout";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
-import { NetworkDataProvider } from "./components/NetworkDashboard/NetworkDataContext";
+import { ProjectDataProvider } from "./components/layout/ProjectDataContext";
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
@@ -97,9 +97,9 @@ export default async function Page(props: Props) {
 
   return (
     <Providers {...config}>
-      <NetworkDataProvider projectData={project} analyticsData={analytics}>
-        <DashboardContent />
-      </NetworkDataProvider>
+      <ProjectDataProvider projectData={project} analyticsData={analytics}>
+        <PageLayout />
+      </ProjectDataProvider>
     </Providers>
   );
 }

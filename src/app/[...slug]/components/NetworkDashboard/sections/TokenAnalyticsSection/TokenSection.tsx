@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 
 import TokenChart from "./TokenChart";
 import TokenStatsChart from "./TokenStatsChart";
-import { useNetworkData } from "../../NetworkDataContext";
+import { useProjectContext } from "../../../layout/ProjectDataContext";
 
 interface DescriptionSectionProps {
   data: TokenResponse | null;
@@ -65,7 +65,7 @@ function getValuationLabel(
 }
 
 export function TokenSection() {
-  const { analyticsData } = useNetworkData();
+  const { analyticsData } = useProjectContext();
   const data = analyticsData?.tokenData;
 
   const chainId = useJBChainId();

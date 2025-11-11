@@ -27,7 +27,7 @@ import { PayActionButton } from "@/components/PayActionButton";
 import { WithdrawCard } from "./WithdrawCard";
 import { ChainSelector } from "@/components/ChainSelector";
 import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "../layout/ProjectDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 
@@ -60,7 +60,7 @@ export function TransactionCard() {
   } = useSuckers();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const { data: accountingContext } = useProjectAccountingContext();
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
 
   // 6. Effect to initialize the context with a default chain
   useEffect(() => {

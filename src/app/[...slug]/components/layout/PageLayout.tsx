@@ -1,47 +1,25 @@
 "use client";
-
-import { formatTokenSymbol } from "@/lib/utils";
 import {
   useJBContractContext,
-  useJBProjectMetadataContext,
-  useJBTokenContext,
 } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../PayCard/PayCard";
-import { Header } from "./Header/Header";
+import { Header } from "../NetworkDashboard/Header/Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { TabContent } from "./TabContent";
+import { TabContent } from "../NetworkDashboard/TabContent";
 
-import OtherDaosCarousel from "./Components/OtherDaosCarousel";
+import OtherDaosCarousel from "../NetworkDashboard/Components/OtherDaosCarousel";
 
-import { NetworkDataProvider, useNetworkData } from "./NetworkDataContext";
-import { SelectedSuckerProvider } from "../PayCard/SelectedSuckerContext";
+import { useProjectContext } from "./ProjectDataContext";
 
-/**
- * The top-level component. Its ONLY job is to render the provider,
- * making the shared data available to all children.
- */
-{
-  /*export function NetworkDashboard() {
-  return (
-    <NetworkDataProvider>
-      <DashboardContent />
-    </NetworkDataProvider>
-  );
-}*/
-}
-
-export function DashboardContent() {
+export function PageLayout() {
   const {
-    //contracts,
     token,
     analyticsData,
-    //isAnalyticsLoading,
-    //analyticsError,
     metadata,
-  } = useNetworkData();
+  } = useProjectContext();
   const { contracts } = useJBContractContext();
 
   // UI-specific state remains in this component.

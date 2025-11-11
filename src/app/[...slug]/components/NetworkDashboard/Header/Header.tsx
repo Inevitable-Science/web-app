@@ -11,10 +11,10 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useNetworkData } from "../NetworkDataContext";
+import { useProjectContext } from "../../layout/ProjectDataContext";
 
 export function Header() {
-  const { project, dailyTotals } = useNetworkData();
+  const { project, dailyTotals } = useProjectContext();
   const { metadata } = useJBProjectMetadataContext();
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
@@ -37,7 +37,7 @@ export function Header() {
 
     const difference = accCurVolume - accPrevVolume;
     const percentage = (Number(difference) * 100) / Number(accPrevVolume);
-    return percentage.toFixed(2);
+    return `+${percentage.toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);
 
   const {
@@ -129,15 +129,17 @@ export function Header() {
                 <h1 className="text-2xl font-light sm:text-3xl">
                   {projectName}
                 </h1>
-                <h5 className="text-base text-cerulean">
-                  <a
-                    href={`https://x.com/@${twitter}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    @{twitter}
-                  </a>
-                </h5>
+                {twitter && (
+                  <h5 className="text-base text-cerulean">
+                    <a
+                      href={`https://x.com/@${twitter}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      @{twitter}
+                    </a>
+                  </h5>
+                )}
               </div>
             </div>
           </div>

@@ -8,10 +8,10 @@ import { Loader2, RotateCw } from "lucide-react";
 import TreasuryPieChart from "./TreasuryPieChart";
 import TreasuryChart from "./TreasuryChart";
 import { useState } from "react";
-import { useNetworkData } from "../../NetworkDataContext";
+import { useProjectContext } from "../../../layout/ProjectDataContext";
 
 export function TreasurySection() {
-  const { analyticsData } = useNetworkData();
+  const { analyticsData } = useProjectContext();
   const data = analyticsData?.treasuryData;
 
   const [responseData, setResponseData] = useState("");

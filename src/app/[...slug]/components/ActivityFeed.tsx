@@ -27,7 +27,7 @@ import StaticVolumeChart, {
   ProjectTimelineView,
 } from "./NetworkDashboard/Components/ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
-import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "./layout/ProjectDataContext";
 
 // todo cleanup
 
@@ -43,7 +43,7 @@ function PayActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
   const composeCast = sdk.actions.composeCast;
   const chainId = payEvent.chainId;
   const chain = JB_CHAINS[chainId].chain;
@@ -140,7 +140,7 @@ function RedeemActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
   const composeCast = sdk.actions.composeCast;
 
   const [isMiniApp, setIsMiniApp] = useState(false);

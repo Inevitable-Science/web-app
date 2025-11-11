@@ -8,7 +8,7 @@ import { HoldersSection } from "./sections/HoldersSection/HoldersSection";
 
 import { TreasurySection } from "./sections/TreasuryAnalyticsSection/TreasurySection";
 import { TokenSection } from "./sections/TokenAnalyticsSection/TokenSection";
-import { useNetworkData } from "./NetworkDataContext";
+import { useProjectContext } from "../layout/ProjectDataContext";
 
 interface TabContentProps {
   selectedTab: string;
@@ -36,7 +36,7 @@ const tabComponents: Record<string, FC<any>> = {
 };
 
 export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
-  const { token, analyticsData /*, analyticsError*/ } = useNetworkData();
+  const { token, analyticsData /*, analyticsError*/ } = useProjectContext();
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback

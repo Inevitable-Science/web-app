@@ -15,7 +15,7 @@ import { formatUnits, parseUnits } from "viem";
 import { WithdrawActionButton } from "@/components/WithdrawActionButton";
 import { SuckerPair } from "juice-sdk-core";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { useNetworkData } from "../NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "../layout/ProjectDataContext";
 
 export function WithdrawCard({
   selectedSucker,
@@ -25,7 +25,7 @@ export function WithdrawCard({
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const chainId = useJBChainId();
 
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
 
   const tokenA = useTokenA();
   const { token: tokenB } = useJBTokenContext();

@@ -6,7 +6,7 @@ import { ParticipantsTable } from "./ParticipantsTable";
 import { Address, formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
-import { useNetworkData } from "../../NetworkDataContext";
+import { useProjectContext } from "../../../layout/ProjectDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
@@ -26,7 +26,7 @@ type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
   const { project, token, metadata, ruleset, rulesetMetadata } =
-    useNetworkData();
+    useProjectContext();
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
     ruleset: ruleset as JBRulesetData,

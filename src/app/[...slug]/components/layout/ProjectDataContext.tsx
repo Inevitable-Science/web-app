@@ -51,7 +51,7 @@ const NetworkDataContext = createContext<NetworkDataContextType | undefined>(
   undefined
 );
 
-export const NetworkDataProvider = ({
+export const ProjectDataProvider = ({
   children,
   projectData,
   analyticsData,
@@ -145,10 +145,10 @@ export const NetworkDataProvider = ({
 };
 
 // The consumer hook remains the same.
-export const useNetworkData = () => {
+export const useProjectContext = () => {
   const context = useContext(NetworkDataContext);
   if (!context) {
-    throw new Error("useNetworkData must be used within a NetworkDataProvider");
+    throw new Error("useProjectContext must be used within a NetworkDataProvider");
   }
   return context;
 };

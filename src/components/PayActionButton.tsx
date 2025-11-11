@@ -18,7 +18,7 @@ import { Check, Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { useNetworkData } from "@/app/[...slug]/components/NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "@/app/[...slug]/components/NetworkDashboard/NetworkDataContext";
 import { Button } from "./ui/button"; // Using your shadcn/ui Button
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
@@ -59,7 +59,7 @@ export function PayActionButton({
   } = useJBContractContext();
   const { address, isConnected } = useAccount();
   const { toast } = useToast();
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
   const userChainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 
@@ -296,7 +296,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
-import { useNetworkData } from "@/app/[...slug]/components/NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "@/app/[...slug]/components/layout/ProjectDataContext";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 
 const shimmerClasses = `
@@ -340,7 +340,7 @@ export function PayActionButton({
   const chainId = useJBChainId();
   const { address, isConnected } = useAccount();
   const { toast } = useToast();
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
   const userChainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 

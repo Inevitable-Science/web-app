@@ -19,6 +19,8 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
       : `https://${dataHolder.infoUri}`
     : "";
 
+  if (!websiteUrl && !discordLink && !dataHolder?.twitter) return;
+
   return (
     <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
       {websiteUrl && (

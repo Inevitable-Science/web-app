@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useNetworkData } from "./NetworkDashboard/NetworkDataContext";
+import { useProjectContext } from "./layout/ProjectDataContext";
 
 import {
   ChevronDownIcon,
@@ -23,7 +23,7 @@ export function NetworkDetailsTable() {
   const [showRules, setShowRules] = useState<boolean>(true);
 
   // Get raw data from the context
-  const { ruleset: currentRuleset, project } = useNetworkData();
+  const { ruleset: currentRuleset, project } = useProjectContext();
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
 
   const { allRulesets, isLoadingAllRulesets } = useRulesetData({

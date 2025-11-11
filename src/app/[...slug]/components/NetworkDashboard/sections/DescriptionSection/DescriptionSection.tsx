@@ -8,7 +8,7 @@ import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 //import { useUserPermissions } from "@/hooks/useUserPermissions";
 //import { EditMetadataDialog } from "./EditMetadataDialog";
-import { useNetworkData } from "../../NetworkDataContext";
+import { useProjectContext } from "../../../layout/ProjectDataContext";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -55,7 +55,7 @@ interface DescriptionSectionProps {
 export function DescriptionSection({
   setSelectedTab,
 }: DescriptionSectionProps) {
-  const { metadata } = useNetworkData();
+  const { metadata } = useProjectContext();
   //const { hasPermission } = useUserPermissions();
 
   const { description, name } = metadata?.data ?? {};
