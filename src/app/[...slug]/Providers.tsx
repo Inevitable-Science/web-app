@@ -2,7 +2,7 @@
 
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs";
 import { JBProjectProvider, JBChainId, JBVersion } from "juice-sdk-react";
-import { SelectedSuckerProvider } from "./components/PayCard/SelectedSuckerContext";
+import { SelectedSuckerProvider } from "./components/payCard/SelectedSuckerContext";
 import { BendystrawConfig } from "juice-sdk-react/dist/lib/bendystraw/getBendystrawUrl";
 import { notFound } from "next/navigation";
 

@@ -12,7 +12,7 @@ import {
   useTokenCashOutQuoteEth,
 } from "juice-sdk-react";
 import { formatUnits, parseUnits } from "viem";
-import { WithdrawActionButton } from "@/components/WithdrawActionButton";
+import { WithdrawActionButton } from "./WithdrawActionButton";
 import { SuckerPair } from "juice-sdk-core";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { useProjectContext } from "../../ProjectDataContext";

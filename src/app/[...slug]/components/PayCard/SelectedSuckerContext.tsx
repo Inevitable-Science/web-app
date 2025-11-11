@@ -20,10 +20,6 @@ export const SelectedSuckerProvider = ({
   children: ReactNode;
 }) => {
   const chainId = useJBChainId();
-  const { projectId } = useJBContractContext();
-  /* const [selectedSucker, setSelectedSucker] = useState<SuckerPair | undefined>(() => {
-    return { peerChainId: chainId, projectId };
-  }); */
 
   const [selectedSucker, setSelectedSucker] = useState<SuckerPair | undefined>(
     undefined

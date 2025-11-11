@@ -1,13 +1,13 @@
 import { JB_CHAINS } from "juice-sdk-core";
 import { JBChainId } from "juice-sdk-react";
-import { ChainLogo } from "./ChainLogo";
+import { ChainLogo } from "../../../../components/ChainLogo";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../../../../components/ui/select";
 import { sortChains } from "@/lib/utils";
 
 interface ChainSelectorProps {

@@ -26,7 +26,7 @@ import { type GetTokenReturnType } from "@wagmi/core";
 import {
   SelectedSuckerContextType,
   useSelectedSucker,
-} from "./components/PayCard/SelectedSuckerContext";
+} from "./components/payCard/SelectedSuckerContext";
 
 interface AnalyticsDataProp {
   daoData: DaoResponse;

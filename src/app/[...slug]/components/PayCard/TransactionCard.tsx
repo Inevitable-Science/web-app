@@ -23,9 +23,9 @@ import {
 import { formatTokenSymbol } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
-import { PayActionButton } from "@/components/PayActionButton";
+import { PayActionButton } from "./PayActionButton";
 import { WithdrawCard } from "./WithdrawCard";
-import { ChainSelector } from "@/components/ChainSelector";
+import { ChainSelector } from "./ChainSelector";
 import { useSelectedSucker } from "./SelectedSuckerContext";
 import { useProjectContext } from "../../ProjectDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";

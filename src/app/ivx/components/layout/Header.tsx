@@ -1,6 +1,6 @@
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useIVXContext } from "../../DataProvider";
-import { PayCard } from "../PayCard/PayCard";
+import { PayCard } from "../payCard/PayCard";
 
 export function IvxPageHeader() {
   const { analyticsData } = useIVXContext();
