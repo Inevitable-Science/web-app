@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, type JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
 
 interface TreasuryToken {
@@ -15,10 +15,6 @@ interface TreasuryToken {
   price: number;
   totalValue: number;
   _id?: string;
-}
-
-interface TreasuryPieChartProps {
-  filteredData: TreasuryToken[];
 }
 
 const MIN_PERCENT = 0.5;
@@ -142,9 +138,9 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   );
 };
 
-const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({
+export function TreasuryPieChart({
   filteredData,
-}) => {
+}: { filteredData: TreasuryToken[]; }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [radius, setRadius] = useState<{
     innerRadius: number;
@@ -259,5 +255,3 @@ const TreasuryPieChart: React.FC<TreasuryPieChartProps> = ({
     </div>
   );
 };
-
-export default TreasuryPieChart;

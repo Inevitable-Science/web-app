@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 //import { useJBChainId, useJBProjectMetadataContext } from "juice-sdk-react";
-//import { DaoData } from "./AnalyticsPreview";
+import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 //import { useUserPermissions } from "@/hooks/useUserPermissions";
@@ -68,6 +68,8 @@ export function DescriptionSection({
   return (
     <div className="text-sm">
       <ChartSection setSelectedTab={setSelectedTab} />
+      
+      <DaoData setSelectedTab={setSelectedTab} />
 
       <div className="mt-6">
         <RichPreview source={description || name || "..."} />

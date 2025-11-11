@@ -8,8 +8,8 @@ import { Loader2, RotateCw } from "lucide-react";
 
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 
-import TreasuryPieChart from "@/app/[...slug]/components/tabs/TreasuryAnalytics/TreasuryPieChart";
-import TreasuryChart from "@/app/[...slug]/components/tabs/TreasuryAnalytics/TreasuryChart";
+import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
+import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useData } from "../../../DataProvider";
 
 export function TreasurySection() {

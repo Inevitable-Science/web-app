@@ -54,7 +54,7 @@ const DEFAULT_SLIDES: SlideType[] = [
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-export default function OtherDaosCarousel({
+export function OtherDaosCarousel({
   slides = DEFAULT_SLIDES,
   options = DEFAULT_OPTIONS,
 }: PropType) {

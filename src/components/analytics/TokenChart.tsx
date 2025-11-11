@@ -278,7 +278,7 @@ export default TokenChart;*/
 
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createChart,
   IChartApi,
@@ -287,10 +287,6 @@ import {
   LineData,
   LineSeriesOptions,
 } from "lightweight-charts";
-
-interface TokenChartProps {
-  organisation: string;
-}
 
 interface PriceData {
   prices: LineData<Time>[];
@@ -303,7 +299,7 @@ interface ReturnData {
 
 const cache = new Map<string, { data: PriceData; timestamp: number }>();
 
-const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
+export function TokenChart({ organisation }: { organisation: string; }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -594,5 +590,3 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
     </div>
   );
 };
-
-export default TokenChart;

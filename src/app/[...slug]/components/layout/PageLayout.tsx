@@ -9,8 +9,7 @@ import { PayCard } from "../PayCard/PayCard";
 import { Header } from "./Header";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { TabContent } from "./TabContent";
-
-import OtherDaosCarousel from "./OtherDaosCarousel";
+import { OtherDaosCarousel } from "./OtherDaosCarousel";
 
 import { useProjectContext } from "../../ProjectDataContext";
 

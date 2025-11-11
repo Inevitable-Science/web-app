@@ -8,8 +8,8 @@ import { useChainId, useSwitchChain, useWatchAsset } from "wagmi";
 import { Address, formatUnits } from "viem";
 import { Loader2 } from "lucide-react";
 
-import TokenChart from "@/app/[...slug]/components/tabs/TokenAnalytics/TokenChart";
-import TokenStatsChart from "@/app/[...slug]/components/tabs/TokenAnalytics/TokenStatsChart";
+import { TokenChart } from "@/components/analytics/TokenChart";
+import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
 import { useData } from "../../../DataProvider";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";

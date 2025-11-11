@@ -1,6 +1,5 @@
 "use client";
 
-import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import StaticVolumeChart from "../../ActivityGraph";
@@ -15,7 +14,7 @@ interface ChartSection {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const ChartSection: FC<ChartSection> = ({ setSelectedTab }) => {
+export function ChartSection({ setSelectedTab }: ChartSection) {
   const chainId = useJBChainId();
   const { projectId, version } = useJBContractContext();
 

@@ -2,23 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatNumber } from "@/lib/utils";
-
-interface DaoData {
-  treasuryHoldings: string;
-  assetsUnderManagement: string | number;
-  totalHolders: string;
-  totalSupply: string | number;
-  latestPrice: number;
-  latestMarketCap: number;
-  tokenName: string;
-}
+import { useProjectContext } from "@/app/[...slug]/ProjectDataContext";
 
 interface TreasuryPreview {
-  data: DaoData | null;
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
+export function DaoData({ setSelectedTab }: TreasuryPreview) {
+  const { analyticsData } = useProjectContext();
+  const data = analyticsData?.treasuryData;
+
+  if (!analyticsData) return;
 
   return (
     <section className="mt-6 flex flex-col gap-6">
@@ -27,7 +21,7 @@ export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
           <div className="background-color rounded-2xl p-[16px]">
             {data ? (
               <h4 className="mb-0.5 text-xl tracking-wider">
-                ${formatNumber(Number(data.treasuryHoldings))}
+                ${formatNumber(Number(data.treasuryValue))}
               </h4>
             ) : (
               <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -66,19 +60,19 @@ export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(data.latestPrice))}
+                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.averageBal))}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
               <p className="font-light uppercase text-muted-foreground">
-                {data ? data.tokenName : ""} Price
-              </p>
+                Average {`${analyticsData?.daoData.nativeToken.mc_ticker} `}Balance
+               </p>
             </div>
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {formatNumber(Number(data.totalSupply))}
+                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.totalSupply))}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -93,7 +87,7 @@ export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(data.latestMarketCap))}
+                  ${formatNumber(Number(analyticsData.tokenData?.selectedToken.marketCap))}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -105,7 +99,7 @@ export function DaoData({ data, setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {formatNumber(Number(data.totalHolders))}
+                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.totalHolders))}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>

@@ -242,7 +242,7 @@ export default TokenStatsChart;*/
 
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createChart,
   IChartApi,
@@ -267,10 +267,10 @@ const cache = new Map<
   { data: ChartData[] | null; timestamp: number }
 >();
 
-const TokenStatsChart: React.FC<TokenStatsProps> = ({
+export function TokenStatsChart({
   organisation,
   tokenName,
-}) => {
+}: TokenStatsProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -526,5 +526,3 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({
     </div>
   );
 };
-
-export default TokenStatsChart;

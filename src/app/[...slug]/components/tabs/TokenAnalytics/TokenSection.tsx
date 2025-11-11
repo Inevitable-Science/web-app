@@ -2,15 +2,14 @@
 
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
-import { TokenResponse } from "@/lib/types/AnalyticTypes";
 import { JBChainId, useJBChainId, useSuckers } from "juice-sdk-react";
 import { JB_CHAINS } from "juice-sdk-core";
 
 import { Address } from "viem";
 import { Loader2 } from "lucide-react";
 
-import TokenChart from "./TokenChart";
-import TokenStatsChart from "./TokenStatsChart";
+import { TokenChart } from "@/components/analytics/TokenChart";
+import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
 import { useProjectContext } from "../../../ProjectDataContext";
 
 function calculateRatio(
@@ -69,9 +68,11 @@ export function TokenSection() {
 
   return (
     <section>
-      <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-        <TokenChart organisation="cryodao" />
-      </div>
+      {analyticsData?.daoData.name && (
+        <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
+          <TokenChart organisation={analyticsData?.daoData.name} />
+        </div>
+      )}
 
       {data ? (
         <div className="flex w-full flex-col gap-4">

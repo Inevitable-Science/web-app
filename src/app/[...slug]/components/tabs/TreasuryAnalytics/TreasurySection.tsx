@@ -1,13 +1,12 @@
 "use client";
-
+import { useState } from "react";
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 import { Address } from "viem";
 import { LinkIcon } from "@heroicons/react/24/solid";
 import { Loader2, RotateCw } from "lucide-react";
 
-import TreasuryPieChart from "./TreasuryPieChart";
-import TreasuryChart from "./TreasuryChart";
-import { useState } from "react";
+import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
+import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useProjectContext } from "../../../ProjectDataContext";
 
 export function TreasurySection() {

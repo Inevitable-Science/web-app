@@ -215,7 +215,7 @@ export default function ActivityGraph({
             <div
               key={v}
               className={twMerge(
-                "cursor-pointer border-b px-2 pb-2 text-sm",
+                "cursor-pointer border-b px-2 pb-2 text-sm select-none",
                 v === view
                   ? "border-primary font-medium"
                   : "border-transparent font-light text-muted-foreground"
@@ -320,23 +320,6 @@ export default function ActivityGraph({
                 dataKey="timestamp"
                 scale="time"
               />
-              {view === "trendingScore" &&
-                highTrendingScore &&
-                data.length > 0 && (
-                  <ReferenceLine
-                    label={
-                      <Label
-                        fill={color}
-                        style={{ fontSize, fontWeight: 500 }}
-                        position="insideTopLeft"
-                        offset={8}
-                        value="Current #1 trending"
-                      />
-                    }
-                    stroke={color}
-                    y={highTrendingScore}
-                  />
-                )}
               {data.length > 0 && (
                 <Line
                   dot={false}

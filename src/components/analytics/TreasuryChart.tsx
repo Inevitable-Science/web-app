@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createChart,
   IChartApi,
@@ -10,17 +10,13 @@ import {
   LineData,
 } from "lightweight-charts";
 
-interface TreasuryChartProps {
-  organisation: string;
-}
-
 interface ChartData {
   historical_treasury: [number, number][];
   historical_assets: [number, number][];
   total_assets: [number, number][];
 }
 
-const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
+export function TreasuryChart({ organisation }: { organisation: string; }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const treasuryLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -192,5 +188,3 @@ const TreasuryChart: React.FC<TreasuryChartProps> = ({ organisation }) => {
     </>
   );
 };
-
-export default TreasuryChart;
