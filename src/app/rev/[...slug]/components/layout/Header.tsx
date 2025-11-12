@@ -113,7 +113,7 @@ export function Header() {
           ) : (
             <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
               <Image
-                src="./assets/img/branding/icon.svg"
+                src="/assets/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
                 width={24}
                 height={24}
@@ -123,25 +123,25 @@ export function Header() {
         </div>
 
         <div className="w-full">
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-x-12 gap-y-2">
-            <div className="mb-2 flex flex-col items-baseline sm:flex-row sm:gap-2">
-              <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
-                <h1 className="text-2xl font-light sm:text-3xl">
-                  {projectName}
-                </h1>
-                {twitter && (
-                  <h5 className="text-base text-cerulean">
-                    <a
-                      href={`https://x.com/@${twitter}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      @{twitter}
-                    </a>
-                  </h5>
-                )}
-              </div>
-            </div>
+          <div className="flex flex-wrap items-baseline mb-6 gap-2 text-sm">
+            {projectName ? (
+              <h1 className="text-2xl font-light sm:text-3xl">
+                {projectName}
+              </h1>
+            ) : (
+              <div className="activeSkeleton h-[36px] w-[130px] opacity-70 rounded-lg" />
+            )}
+            {twitter && (
+              <h5 className="text-base text-cerulean">
+                <a
+                  href={`https://x.com/@${twitter}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  @{twitter}
+                </a>
+              </h5>
+            )}
           </div>
           <div className="items-leading flex flex-col items-start sm:flex-row sm:items-center sm:gap-4">
             <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">

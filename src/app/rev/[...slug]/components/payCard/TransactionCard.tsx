@@ -158,7 +158,7 @@ export function TransactionCard() {
   }
 
   const defaultToken = {
-    symbol: "IVX",
+    symbol: "TOKENS",
     decimals: 18,
   };
 
@@ -323,7 +323,7 @@ export function TransactionCard() {
                     alt="Token Icon"
                   />
                   <p className="text-lg font-light">
-                    {formatTokenSymbol(tokenB.symbol)}
+                    {tokenB.symbol || "TOKENS"}
                   </p>
                 </div>
               </div>
