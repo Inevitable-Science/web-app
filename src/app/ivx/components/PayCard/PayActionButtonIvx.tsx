@@ -35,6 +35,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 
 const shimmerClasses = `
   relative overflow-hidden
@@ -68,6 +69,7 @@ export function PayActionButton({
     version,
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
+  const { data: accountingContext } = useProjectAccountingContext();
 
   const { peerChainId: chainId, projectId } = selectedSucker;
 
@@ -114,6 +116,10 @@ export function PayActionButton({
     if (isSuccess) return "Success!";
     return "Agree & Buy";
   }, [loading, isSuccess]);
+
+  const primaryPayTokenAddress = accountingContext?.project?.token;
+  const isPrimaryPayTokenNative =
+    primaryPayTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
 
   useEffect(() => {
     if (isSuccess) {

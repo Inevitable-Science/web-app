@@ -134,6 +134,7 @@ export const ProjectDataProvider = ({
       !value.rulesetMetadata ||
       !value.project)
   ) {
+    console.log("No project values found");
     notFound();
   }
 

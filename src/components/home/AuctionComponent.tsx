@@ -75,7 +75,7 @@ export default function AuctionComponent() {
             capabilities.
           </p>
           <Link
-            href="/@stasis"
+            href="/rev/@stasis"
             aria-label="View Auction"
             className="mt-2 w-fit text-base font-medium uppercase hover:underline"
           >

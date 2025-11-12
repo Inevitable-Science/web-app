@@ -1,13 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { SuckerPair } from "juice-sdk-core";
+import { JBChainId, SuckerPair } from "juice-sdk-core";
 import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 
 export interface SelectedSuckerContextType {
-  peerChainId: number | undefined;
-  selectedSucker: SuckerPair | undefined;
-  setSelectedSucker: React.Dispatch<
-    React.SetStateAction<SuckerPair | undefined>
-  >;
+  selectedSucker: SuckerPair;
+  setSelectedSucker: React.Dispatch<React.SetStateAction<SuckerPair>>;
 }
 
 const SelectedSuckerContext = createContext<
@@ -20,19 +17,16 @@ export const SelectedSuckerProvider = ({
   children: ReactNode;
 }) => {
   const chainId = useJBChainId();
+  const { projectId } = useJBContractContext();
 
-  const [selectedSucker, setSelectedSucker] = useState<SuckerPair | undefined>(
-    undefined
-  );
-
-  const contextValue: SelectedSuckerContextType = {
-    peerChainId: chainId, // Add the missing property here
-    selectedSucker,
-    setSelectedSucker,
-  };
+  const [selectedSucker, setSelectedSucker] = useState<SuckerPair>(() => {
+    return { peerChainId: chainId as JBChainId, projectId };
+  });
 
   return (
-    <SelectedSuckerContext.Provider value={contextValue}>
+    <SelectedSuckerContext.Provider
+      value={{ selectedSucker, setSelectedSucker }}
+    >
       {children}
     </SelectedSuckerContext.Provider>
   );

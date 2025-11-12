@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
-import { useProjectContext } from "@/app/[...slug]/ProjectDataContext";
+import { useProjectContext } from "@/app/rev/[...slug]/ProjectDataContext";
 import { ArrowRight } from "lucide-react";
 
 interface TreasuryPreview {
