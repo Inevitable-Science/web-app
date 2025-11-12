@@ -4,14 +4,11 @@ import {
   JB_CHAINS,
   JBChainId,
   jbMultiTerminalAbi,
-  SuckerPair,
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
 import {
-  useJBChainId,
   useJBContractContext,
-  useBendystrawQuery,
 } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -43,7 +40,7 @@ const shimmerClasses = `
     relative overflow-hidden 
     before:content-[''] before:absolute before:inset-0 
     before:-translate-x-full before:animate-[shimmer_2s_infinite] 
-    before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent
+    before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
   `;
 
 // Define shared styles for the main action button for consistency
@@ -56,171 +53,20 @@ const primaryButtonClasses =
  */
 
 export function PayActionButton({
-  // TODO Move this into [...slug] route, idk why its here
   amountA,
   amountB,
   paymentToken,
   walletBalance,
   memo,
   disabled,
-  //selectedSucker,
 }: {
   amountA: TokenAmountType;
   amountB: TokenAmountType;
   paymentToken: Token;
-  //walletBalance: number | string;
   walletBalance: Map<string, bigint>;
   memo: string | undefined;
   disabled?: boolean;
-  //selectedSucker?: SuckerPair | undefined;
 }) {
-  /*// --- 1. HOOKS ---
-  const {
-    contracts: { primaryNativeTerminal },
-  } = useJBContractContext();
-  const { projectId, version } = useJBContractContext();
-  const chainId = useJBChainId();
-  const { address, isConnected } = useAccount();
-  const { toast } = useToast();
-  const { metadata } = useProjectContext();
-  const userChainId = useChainId();
-  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
-
-  const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
-
-  //
-  // *** THIS IS THE CORRECTED SECTION ***
-  // Restored the destructuring to include `writeContract` and `isWriteError`
-  //
-  const {
-    data: txHash,
-    isPending: isWriteLoading,
-    isError: isWriteError,
-    error: writeError,
-    writeContract,
-  } = useWriteContract();
-
-  const {
-    isLoading: isTxLoading,
-    isSuccess,
-    isError: isTxError,
-  } = useWaitForTransactionReceipt({ hash: txHash });
-
-  // --- 2. STATE ---
-  const loading = isWriteLoading || isTxLoading;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-
-  // --- 3. DERIVED STATE & MEMOS ---
-  const onCorrectChain = userChainId === targetChainId;
-  const targetChainName = targetChainId
-    ? JB_CHAINS[targetChainId]?.name
-    : "the correct network";
-
-  const actionButtonContent = useMemo(() => {
-    if (loading) return "Processing...";
-    if (isSuccess) return "Success!";
-    return "Agree & Buy";
-  }, [loading, isSuccess]);
-
-  /* // --- 4. EFFECTS & HANDLERS ---
-  @TODO: toast is going brazy
-  useEffect(() => {
-    if (isSuccess) {
-      toast({ title: "Success!", description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.` });
-      setIsModalOpen(false);
-      setAgreedToTerms(false);
-    }
-    // This now works correctly because isWriteError is destructured
-    if (isTxError || isWriteError) {
-      toast({ variant: "destructive", title: "Error", description: writeError?.name || "Transaction failed." });
-    }
-  }, [isSuccess, isTxError, isWriteError, writeError, toast, amountA]); * /
-
-  const { data: projectData } = useBendystrawQuery(
-    ProjectDocument,
-    {
-      chainId: Number(chainId),
-      projectId: Number(projectId),
-      version: Number(version),
-    },
-    {
-      enabled: !!chainId && !!projectId && !!version,
-    }
-  );
-  const suckerGroupId = projectData?.project?.suckerGroupId;
-
-  // Get all projects in the sucker group with their token data
-  const { data: suckerGroupData } = useBendystrawQuery(
-    SuckerGroupDocument,
-    { id: suckerGroupId ?? "" },
-    { enabled: !!suckerGroupId }
-  );
-
-  const getTokenForChain = (targetChainId: number) => {
-    if (!suckerGroupData?.suckerGroup?.projects?.items) {
-      return paymentToken; // fallback to original paymentToken
-    }
-
-    const projectForChain = suckerGroupData.suckerGroup.projects.items.find(
-      (project) => project.chainId === targetChainId
-    );
-
-    if (projectForChain?.token) {
-      return projectForChain.token as `0x${string}`;
-    }
-
-    return paymentToken; // fallback to original paymentToken
-  };
-
-  const handlePay = () => {
-    const value = amountA.amount.value;
-
-    if (
-      !primaryNativeTerminal?.data ||
-      !address ||
-      !selectedSucker ||
-      !value ||
-      !writeContract
-    )
-      return;
-
-    const chainToken = getTokenForChain(selectedSucker.peerChainId);
-    const isNative = chainToken === NATIVE_TOKEN.toLowerCase();
-
-    /*writeContract({ // old code archive
-      chainId: selectedSucker.peerChainId,
-      address: primaryNativeTerminal.data,
-      args: [
-        selectedSucker.projectId,
-        NATIVE_TOKEN,
-        value,
-        address,
-        0n,
-        memo || "",
-        "0x0",
-      ],
-      value,
-    });* /
-    writeContract?.({
-      // TODO:REVIEW
-      abi: jbMultiTerminalAbi,
-      functionName: "pay",
-      chainId: selectedSucker.peerChainId,
-      address: primaryNativeTerminal.data as `0x${string}`,
-      args: [
-        selectedSucker.projectId,
-        chainToken,
-        value,
-        address,
-        0n,
-        memo || "",
-        "0x0",
-      ],
-      value: isNative ? value : 0n,
-    });
-  };*/
-
   // --- 1. HOOKS ---
     const { metadata } = useProjectContext();
     const { selectedSucker } = useSelectedSucker();

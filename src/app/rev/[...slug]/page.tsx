@@ -82,10 +82,7 @@ export default async function Page(props: Props) {
   try {
     config = parseSlug(params.slug);
     project = await fetchProjectData(config);
-
-    console.log(project);
   } catch (err) {
-    console.error(err);
     return notFound();
   }
 
