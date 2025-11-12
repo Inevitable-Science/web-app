@@ -27,7 +27,6 @@ import { useVolumeData } from "@/hooks/useVolumeData";
 import { useProjectContext } from "../../../ProjectDataContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 
-
 function PayActivityItem(
   payEvent: Pick<
     PayEvent,
@@ -55,7 +54,6 @@ function PayActivityItem(
   const formattedDate = formatDistance(payEvent.timestamp * 1000, new Date(), {
     addSuffix: true,
   });
-
 
   return (
     <div className="border-color mb-1 min-h-[80px] border-b pb-2">

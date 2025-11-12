@@ -35,7 +35,9 @@ export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
 
   return (
     <div className="pb-10">
-      {selectedTab === "about" && <DescriptionSection setSelectedTab={setSelectedTab} />}
+      {selectedTab === "about" && (
+        <DescriptionSection setSelectedTab={setSelectedTab} />
+      )}
       {selectedTab === "tokens" && <HoldersSection />}
       {selectedTab === "activity" && <ActivityFeed />}
       {selectedTab === "cycles" && <NetworkDetailsTable />}

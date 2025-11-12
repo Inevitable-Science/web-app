@@ -127,4 +127,4 @@ export function ArticlesClient({
       </section>
     </>
   );
-};
+}

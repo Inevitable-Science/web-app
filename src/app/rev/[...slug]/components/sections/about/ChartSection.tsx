@@ -40,4 +40,4 @@ export function ChartSection({ setSelectedTab }: ChartSection) {
       </Button>
     </section>
   );
-};
+}

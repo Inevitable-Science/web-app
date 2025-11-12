@@ -215,7 +215,7 @@ export default function ActivityGraph({
             <div
               key={v}
               className={twMerge(
-                "cursor-pointer border-b px-2 pb-2 text-sm select-none",
+                "cursor-pointer select-none border-b px-2 pb-2 text-sm",
                 v === view
                   ? "border-primary font-medium"
                   : "border-transparent font-light text-muted-foreground"

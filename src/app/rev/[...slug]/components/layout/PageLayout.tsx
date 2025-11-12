@@ -1,7 +1,5 @@
 "use client";
-import {
-  useJBContractContext,
-} from "juice-sdk-react";
+import { useJBContractContext } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
@@ -14,11 +12,7 @@ import { useProjectContext } from "../../ProjectDataContext";
 import { ArrowRight } from "lucide-react";
 
 export function PageLayout() {
-  const {
-    token,
-    analyticsData,
-    metadata,
-  } = useProjectContext();
+  const { token, analyticsData, metadata } = useProjectContext();
   const { contracts } = useJBContractContext();
 
   // UI-specific state remains in this component.

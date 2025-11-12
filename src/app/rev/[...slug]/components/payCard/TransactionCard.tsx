@@ -1,14 +1,10 @@
-"use client"
+"use client";
 import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useTokenA } from "@/hooks/useTokenA";
-import {
-  JBChainId,
-  useJBChainId,
-  useJBContractContext,
-} from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseEther, parseUnits } from "viem";
 import {
@@ -249,7 +245,7 @@ export function TransactionCard() {
             </Button>
           )}
         </div>
-        <div className={`flex pr-2 p-1 background-color rounded-full`}>
+        <div className={`background-color flex rounded-full p-1 pr-2`}>
           {suckers.map((chain) => (
             <div key={chain.peerChainId} className="w-[16px]">
               <ChainLogo
@@ -290,7 +286,7 @@ export function TransactionCard() {
                       options={tokens}
                     />
                   </div>
-                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground select-none">
+                  <p className="w-[130px] select-none text-nowrap text-right text-sm font-light text-muted-foreground">
                     Balance:{" "}
                     {formatTokenAmount(
                       balances.get(selectedToken.address) ?? 0n,
@@ -301,12 +297,12 @@ export function TransactionCard() {
               </div>
               <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
                 <div className="flex flex-col gap-[2px]">
-                  <p className="text-sm font-light text-muted-foreground select-none">
+                  <p className="select-none text-sm font-light text-muted-foreground">
                     YOU RECEIVE
                   </p>
                   <input
                     type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground disabled:opacity-80 disabled:cursor-not-allowed"
+                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-80"
                     placeholder="0.00"
                     value={amountB}
                     onChange={handleReceiveAmountChange}

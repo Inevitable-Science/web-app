@@ -149,7 +149,9 @@ export const ProjectDataProvider = ({
 export const useProjectContext = () => {
   const context = useContext(NetworkDataContext);
   if (!context) {
-    throw new Error("useProjectContext must be used within a NetworkDataProvider");
+    throw new Error(
+      "useProjectContext must be used within a NetworkDataProvider"
+    );
   }
   return context;
 };

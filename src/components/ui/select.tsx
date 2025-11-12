@@ -15,7 +15,7 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
-    hideChevron?: boolean
+    hideChevron?: boolean;
   }
 >(({ className, children, hideChevron = false, ...props }, ref) => (
   <SelectPrimitive.Trigger

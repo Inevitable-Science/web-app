@@ -16,7 +16,7 @@ export function PayCardSkeleton({
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
-            <div className="activeSkeleton mt-1 h-[30px] w-[130px] opacity-30 max-w-full rounded-lg" />
+            <div className="activeSkeleton mt-1 h-[30px] w-[130px] max-w-full rounded-lg opacity-30" />
           </div>
           <div className="flex flex-col items-end gap-1">
             <ChainSelector
@@ -24,11 +24,11 @@ export function PayCardSkeleton({
               options={tokens}
               disabled={true}
             />
-            <div className="flex justify-end items-center gap-1">
+            <div className="flex items-center justify-end gap-1">
               <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
                 Balance:
               </p>
-              <div className="activeSkeleton h-[17px] w-[32px] opacity-30 rounded-md" />
+              <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@ export function PayCardSkeleton({
             <p className="text-sm font-light text-muted-foreground">
               YOU RECEIVE
             </p>
-            <div className="activeSkeleton mt-1 h-[30px] w-[130px] opacity-30 max-w-full rounded-lg" />
+            <div className="activeSkeleton mt-1 h-[30px] w-[130px] max-w-full rounded-lg opacity-30" />
           </div>
           <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 py-1 pl-1.5 pr-3">
             <Image

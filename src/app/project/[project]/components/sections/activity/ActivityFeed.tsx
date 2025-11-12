@@ -125,7 +125,12 @@ export function ActivityFeed() {
                       <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
                         <EthereumAddress
                           address={transaction.Beneficiary as Address}
-                          chain={JB_CHAINS[analyticsData?.tokenData?.selectedToken.chain_id as JBChainId].chain}
+                          chain={
+                            JB_CHAINS[
+                              analyticsData?.tokenData?.selectedToken
+                                .chain_id as JBChainId
+                            ].chain
+                          }
                           short
                           withEnsName
                         />

@@ -299,7 +299,7 @@ interface ReturnData {
 
 const cache = new Map<string, { data: PriceData; timestamp: number }>();
 
-export function TokenChart({ organisation }: { organisation: string; }) {
+export function TokenChart({ organisation }: { organisation: string }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -589,4 +589,4 @@ export function TokenChart({ organisation }: { organisation: string; }) {
       `}</style>
     </div>
   );
-};
+}

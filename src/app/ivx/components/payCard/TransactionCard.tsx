@@ -235,7 +235,7 @@ export function TransactionCard() {
               handleTokenChange={handleTokenChange}
               options={tokens}
             />
-            <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground select-none">
+            <p className="w-[130px] select-none text-nowrap text-right text-sm font-light text-muted-foreground">
               Balance:{" "}
               {formatTokenAmount(
                 balances.get(selectedToken.address) ?? 0n,
@@ -246,7 +246,7 @@ export function TransactionCard() {
         </div>
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground select-none">
+            <p className="select-none text-sm font-light text-muted-foreground">
               YOU RECEIVE
             </p>
             <input

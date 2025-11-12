@@ -16,7 +16,7 @@ interface ChartData {
   total_assets: [number, number][];
 }
 
-export function TreasuryChart({ organisation }: { organisation: string; }) {
+export function TreasuryChart({ organisation }: { organisation: string }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const treasuryLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -187,4 +187,4 @@ export function TreasuryChart({ organisation }: { organisation: string; }) {
       />
     </>
   );
-};
+}

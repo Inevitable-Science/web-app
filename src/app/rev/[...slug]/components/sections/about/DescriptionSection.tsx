@@ -68,7 +68,7 @@ export function DescriptionSection({
   return (
     <div className="text-sm">
       <ChartSection setSelectedTab={setSelectedTab} />
-      
+
       <DaoData setSelectedTab={setSelectedTab} />
 
       <div className="mt-6">

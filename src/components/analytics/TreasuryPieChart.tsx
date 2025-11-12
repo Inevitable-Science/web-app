@@ -140,7 +140,9 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
 export function TreasuryPieChart({
   filteredData,
-}: { filteredData: TreasuryToken[]; }) {
+}: {
+  filteredData: TreasuryToken[];
+}) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [radius, setRadius] = useState<{
     innerRadius: number;
@@ -254,4 +256,4 @@ export function TreasuryPieChart({
       `}</style>
     </div>
   );
-};
+}

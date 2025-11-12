@@ -1,4 +1,3 @@
-
 import { useToast } from "@/components/ui/use-toast";
 import {
   JB_CHAINS,
@@ -7,9 +6,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import {
-  useJBContractContext,
-} from "juice-sdk-react";
+import { useJBContractContext } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
@@ -68,151 +65,151 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-    const { metadata } = useProjectContext();
-    const { selectedSucker } = useSelectedSucker();
-    const {
-      version,
-      contracts: { primaryNativeTerminal },
-    } = useJBContractContext();
-  
-    const { peerChainId: chainId, projectId } = selectedSucker;
-    const { data: accountingContext } = useProjectAccountingContext();
-  
-    const { address, isConnected } = useAccount();
-    const userChainId = useChainId();
-    const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
-    const { ensureAllowance, isApproving } = useAllowance(chainId);
-  
-    const { toast } = useToast();
-  
-    const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
-    const value = amountA.amount.value;
-  
-    const {
-      data: txHash,
-      isPending: isWriteLoading,
-      isError: isWriteError,
-      writeContractAsync,
-    } = useWriteContract();
-  
-    const {
-      isLoading: isTxLoading,
-      isSuccess,
-      isError: isTxError,
-    } = useWaitForTransactionReceipt({ hash: txHash });
-  
-    const publicClient = usePublicClient();
-  
-    // --- 2. STATE ---
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [agreedToTerms, setAgreedToTerms] = useState(false);
-  
-    const loading = isWriteLoading || isTxLoading;
-  
-    // --- 3. DERIVED STATE & MEMOS ---
-    const onCorrectChain = userChainId === targetChainId;
-    const targetChainName = targetChainId
-      ? JB_CHAINS[targetChainId]?.name
-      : "the correct network";
-  
-    const actionButtonContent = useMemo(() => {
-      if (loading) return "Processing...";
-      if (isApproving) return "Approving...";
-      if (isSuccess) return "Success!";
-      return "Agree & Buy";
-    }, [loading, isSuccess]);
+  const { metadata } = useProjectContext();
+  const { selectedSucker } = useSelectedSucker();
+  const {
+    version,
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
 
-    const primaryPayTokenAddress = accountingContext?.project?.token;
-    const isPrimaryPayTokenNative =
-      primaryPayTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  const { peerChainId: chainId, projectId } = selectedSucker;
+  const { data: accountingContext } = useProjectAccountingContext();
 
-    useEffect(() => {
-      if (isSuccess) {
-        toast({
-          title: "Success",
-          description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
-        });
-        setIsModalOpen(false);
-        setAgreedToTerms(false);
-      }
-      if (isTxError || isWriteError) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Transaction unsuccessful.",
-        });
-      }
-    }, [isSuccess, isTxError, isWriteError]);
-  
-    const handlePay = async () => {
-      if (!address || !selectedSucker || !publicClient) return;
-  
-      try {
-        if (version === 4) {
-          if (!primaryNativeTerminal?.data || !address || !selectedSucker) {
-            return;
-          }
-  
-          await writeContractAsync?.({
-            abi: jbMultiTerminalAbi,
-            functionName: "pay",
-            chainId: selectedSucker.peerChainId,
-            address: primaryNativeTerminal?.data,
-            args: [
-              selectedSucker.projectId,
-              NATIVE_TOKEN,
-              value,
-              address,
-              0n,
-              memo || "",
-              "0x0",
-            ],
-            value,
-          });
-        } else {
-          const terminal = await getPaymentTerminal({
-            client: publicClient,
-            version,
-            chainId,
-            projectId,
-            token: paymentToken,
-            primaryTokenNative: isPrimaryPayTokenNative,
-          });
-  
-          if (!paymentToken.isNative) {
-            await ensureAllowance(paymentToken.address, terminal.address, value);
-          }
-  
-          const minTokens = paymentToken.isNative
-            ? 0n
-            : (amountB.amount.value * 95n) / 100n;
-  
-          await writeContractAsync?.({
-            abi: terminal.abi,
-            functionName: "pay",
-            chainId,
-            address: terminal.address,
-            args: [
-              projectId,
-              paymentToken.address,
-              value,
-              address,
-              minTokens,
-              memo || "",
-              "0x0",
-            ],
-            value: paymentToken.isNative ? value : 0n,
-          });
+  const { address, isConnected } = useAccount();
+  const userChainId = useChainId();
+  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const { ensureAllowance, isApproving } = useAllowance(chainId);
+
+  const { toast } = useToast();
+
+  const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
+  const value = amountA.amount.value;
+
+  const {
+    data: txHash,
+    isPending: isWriteLoading,
+    isError: isWriteError,
+    writeContractAsync,
+  } = useWriteContract();
+
+  const {
+    isLoading: isTxLoading,
+    isSuccess,
+    isError: isTxError,
+  } = useWaitForTransactionReceipt({ hash: txHash });
+
+  const publicClient = usePublicClient();
+
+  // --- 2. STATE ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  const loading = isWriteLoading || isTxLoading;
+
+  // --- 3. DERIVED STATE & MEMOS ---
+  const onCorrectChain = userChainId === targetChainId;
+  const targetChainName = targetChainId
+    ? JB_CHAINS[targetChainId]?.name
+    : "the correct network";
+
+  const actionButtonContent = useMemo(() => {
+    if (loading) return "Processing...";
+    if (isApproving) return "Approving...";
+    if (isSuccess) return "Success!";
+    return "Agree & Buy";
+  }, [loading, isSuccess]);
+
+  const primaryPayTokenAddress = accountingContext?.project?.token;
+  const isPrimaryPayTokenNative =
+    primaryPayTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Success",
+        description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
+      });
+      setIsModalOpen(false);
+      setAgreedToTerms(false);
+    }
+    if (isTxError || isWriteError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Transaction unsuccessful.",
+      });
+    }
+  }, [isSuccess, isTxError, isWriteError]);
+
+  const handlePay = async () => {
+    if (!address || !selectedSucker || !publicClient) return;
+
+    try {
+      if (version === 4) {
+        if (!primaryNativeTerminal?.data || !address || !selectedSucker) {
+          return;
         }
-      } catch (err) {
-        console.error("Payment failed:", err);
-        toast({
-          variant: "destructive",
-          title: "Payment Failed",
-          description: formatWalletError(err),
+
+        await writeContractAsync?.({
+          abi: jbMultiTerminalAbi,
+          functionName: "pay",
+          chainId: selectedSucker.peerChainId,
+          address: primaryNativeTerminal?.data,
+          args: [
+            selectedSucker.projectId,
+            NATIVE_TOKEN,
+            value,
+            address,
+            0n,
+            memo || "",
+            "0x0",
+          ],
+          value,
+        });
+      } else {
+        const terminal = await getPaymentTerminal({
+          client: publicClient,
+          version,
+          chainId,
+          projectId,
+          token: paymentToken,
+          primaryTokenNative: isPrimaryPayTokenNative,
+        });
+
+        if (!paymentToken.isNative) {
+          await ensureAllowance(paymentToken.address, terminal.address, value);
+        }
+
+        const minTokens = paymentToken.isNative
+          ? 0n
+          : (amountB.amount.value * 95n) / 100n;
+
+        await writeContractAsync?.({
+          abi: terminal.abi,
+          functionName: "pay",
+          chainId,
+          address: terminal.address,
+          args: [
+            projectId,
+            paymentToken.address,
+            value,
+            address,
+            minTokens,
+            memo || "",
+            "0x0",
+          ],
+          value: paymentToken.isNative ? value : 0n,
         });
       }
-    };
+    } catch (err) {
+      console.error("Payment failed:", err);
+      toast({
+        variant: "destructive",
+        title: "Payment Failed",
+        description: formatWalletError(err),
+      });
+    }
+  };
 
   // --- 5. RENDER LOGIC ---
 
@@ -255,14 +252,10 @@ export function PayActionButton({
         walletBalance.get(paymentToken.address) ?? 0n,
         paymentToken.decimals
       )
-    ) <
-      Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+    ) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
   ) {
     return (
-      <Button
-        className={twMerge(primaryButtonClasses)}
-        disabled={true}
-      >
+      <Button className={twMerge(primaryButtonClasses)} disabled={true}>
         Insufficient Funds
       </Button>
     );

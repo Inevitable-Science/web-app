@@ -60,19 +60,24 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.averageBal))}
+                  {formatNumber(
+                    Number(analyticsData.tokenData?.selectedToken.averageBal)
+                  )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
               <p className="font-light uppercase text-muted-foreground">
-                Average {`${analyticsData?.daoData.nativeToken.mc_ticker} `}Balance
-               </p>
+                Average {`${analyticsData?.daoData.nativeToken.mc_ticker} `}
+                Balance
+              </p>
             </div>
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.totalSupply))}
+                  {formatNumber(
+                    Number(analyticsData.tokenData?.selectedToken.totalSupply)
+                  )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -87,7 +92,10 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(analyticsData.tokenData?.selectedToken.marketCap))}
+                  $
+                  {formatNumber(
+                    Number(analyticsData.tokenData?.selectedToken.marketCap)
+                  )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -99,7 +107,9 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
             <div className="background-color rounded-2xl p-[16px]">
               {data ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {formatNumber(Number(analyticsData.tokenData?.selectedToken.totalHolders))}
+                  {formatNumber(
+                    Number(analyticsData.tokenData?.selectedToken.totalHolders)
+                  )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -122,4 +132,4 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
       </div>
     </section>
   );
-};
+}

@@ -267,10 +267,7 @@ const cache = new Map<
   { data: ChartData[] | null; timestamp: number }
 >();
 
-export function TokenStatsChart({
-  organisation,
-  tokenName,
-}: TokenStatsProps) {
+export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -525,4 +522,4 @@ export function TokenStatsChart({
       `}</style>
     </div>
   );
-};
+}
