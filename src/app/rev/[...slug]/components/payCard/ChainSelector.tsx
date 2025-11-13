@@ -53,42 +53,40 @@ export const ChainSelector = ({
         aria-label="Select Chain"
         hideChevron
       >
-        <SelectValue placeholder="Select chain">
-          {value ? (
-            <div className="flex select-none items-center pb-1.5 font-light">
-              <div className="mr-1 flex items-end">
-                {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
-                value.address.toLowerCase() ? (
-                  <Image
-                    src={"/assets/img/logo/usdc.svg"}
-                    alt={`USDC Logo`}
-                    width={24}
-                    height={24}
-                    style={{
-                      minWidth: 24,
-                      minHeight: 24,
-                      flexShrink: 0,
-                    }}
-                  />
-                ) : (
-                  <ChainLogo chainId={1} height={24} width={24} />
-                )}
+        {value ? (
+          <div className="flex select-none items-center pb-1.5 font-light">
+            <div className="mr-1 flex items-end">
+              {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
+              value.address.toLowerCase() ? (
+                <Image
+                  src={"/assets/img/logo/usdc.svg"}
+                  alt={`USDC Logo`}
+                  width={24}
+                  height={24}
+                  style={{
+                    minWidth: 24,
+                    minHeight: 24,
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
+                <ChainLogo chainId={1} height={24} width={24} />
+              )}
 
-                <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
-                  <ChainLogo
-                    chainId={Number(selectedSucker.peerChainId) as JBChainId}
-                    height={16}
-                    width={16}
-                  />
-                </div>
+              <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+                <ChainLogo
+                  chainId={Number(selectedSucker.peerChainId) as JBChainId}
+                  height={16}
+                  width={16}
+                />
               </div>
-              <p className="mr-1 text-[18px]">{value.symbol}</p>
-              <ChevronDown className="h-4 w-4 opacity-50" />
             </div>
-          ) : (
-            <span>Select chain</span>
-          )}
-        </SelectValue>
+            <p className="mr-1 text-[18px]">{value.symbol}</p>
+            <ChevronDown className="h-4 w-4 opacity-50" />
+          </div>
+        ) : (
+          <span>Select chain</span>
+        )}
       </SelectTrigger>
       <SelectContent align="end">
         <div className="mb-2 flex flex-row flex-nowrap items-center gap-1">
