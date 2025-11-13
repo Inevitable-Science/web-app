@@ -61,6 +61,7 @@ export const TreasuryResponseSchema = z.object({
     signers: z.array(z.string()),
   }),
   managed_accounts: z.record(
+    z.string(),
     z.object({
       comment: z.string(),
       ens: z.string().nullable(),
@@ -85,6 +86,7 @@ export const TreasuryResponseSchema = z.object({
     })
   ),
   historicalReturns: z.record(
+    z.string(),
     z.object({
       pastValue: z.union([z.number(), z.string()]),
       dollarReturn: z.string(),
