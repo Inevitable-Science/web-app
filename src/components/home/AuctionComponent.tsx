@@ -2,14 +2,16 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
-const AuctionComponent: React.FC = () => {
+export default function AuctionComponent() {
   const [projectVolume, setProjectVolume] = useState<
     bigint | null | undefined
   >();
+
+  // TODO: Lean out
 
   const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
   const query = `
@@ -73,13 +75,13 @@ const AuctionComponent: React.FC = () => {
             capabilities.
           </p>
           <Link
-            href="/@stasis"
+            href="/rev/@stasis"
             aria-label="View Auction"
             className="mt-2 w-fit text-base font-medium uppercase hover:underline"
           >
             <div className="flex items-center gap-3 font-normal transition-[gap] duration-150 hover:gap-5">
               Go To Auction
-              <ArrowRightIcon height={20} width={20} />
+              <ArrowRight height={20} width={20} />
             </div>
           </Link>
         </div>
@@ -131,6 +133,4 @@ const AuctionComponent: React.FC = () => {
       </div>
     </section>
   );
-};
-
-export default AuctionComponent;
+}

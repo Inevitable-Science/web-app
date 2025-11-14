@@ -6,12 +6,11 @@ import ArticleCarousel from "@/components/home/ArticleCarousel";
 import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
 
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
+import { ArrowRight } from "lucide-react";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -105,7 +104,7 @@ export default function Page() {
               className="flex w-fit items-center gap-3 font-medium uppercase transition-[gap] duration-150 hover:gap-5 hover:underline"
             >
               Apply To Inevitable
-              <ArrowRightIcon height={20} width={20} />
+              <ArrowRight height={20} width={20} />
             </a>
           </div>
 

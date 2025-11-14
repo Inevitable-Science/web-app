@@ -1,21 +1,21 @@
 "use client";
 import { useState } from "react";
 import { Header } from "./Header";
-import { SwapWidget } from "./SwapWiget/SwapWiget";
-import OtherDaosCarousel from "@/app/[...slug]/components/NetworkDashboard/Components/OtherDaosCarousel";
+import { SwapWidget } from "./swapWidget/SwapWidget";
 import { useData } from "../DataProvider";
 import { TabContent } from "./TabsContent";
+import { OtherDaosCarousel } from "@/app/rev/[...slug]/components/layout/OtherDaosCarousel";
 
 import { ArrowRightIcon } from "lucide-react";
 
 export function DaoPage() {
-  const { analyticsData, isLoading } = useData();
+  const { analyticsData } = useData();
   const [selectedTab, setSelectedTab] = useState("about");
 
   const tabs = [
     { key: "about", label: "About" },
     { key: "activity", label: "Activity" },
-    ...(analyticsData?.daoData === null && isLoading === false // Intended to prevent CLS
+    ...(analyticsData?.daoData === null
       ? []
       : [
           ...(analyticsData?.tokenData

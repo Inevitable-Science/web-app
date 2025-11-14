@@ -38,6 +38,7 @@ export const USDC_ADDRESSES: Record<number, `0x${string}`> = {
   8453: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // Base
   1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // Ethereum
   10: "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", // Optimism
+
   421614: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d", // Arbitrum sepolia
   84532: "0x036cbd53842c5426634e7929541ec2318f3dcf7e", // Base Sepolia
   11155111: "0x1c7d4b196cb0c7b01d743fbc6116a902379c7238", // Ethereum sepolia

@@ -1,7 +1,6 @@
 import { etherscanLink, formatEthAddress } from "@/lib/utils";
 import { useChain } from "juice-sdk-react";
 import { twMerge } from "tailwind-merge";
-import { ExternalLink } from "./ExternalLink";
 import { Chain } from "viem";
 
 const EtherscanLink: React.FC<
@@ -22,15 +21,17 @@ const EtherscanLink: React.FC<
     : value;
 
   return (
-    <ExternalLink
+    <a
       className={twMerge("hover:underline", className)}
       href={etherscanLink(value, {
         type,
         chain: chainToLink,
       })}
+      target="_blank"
+      rel="noopener noreferrer"
     >
       {children ?? renderValue}
-    </ExternalLink>
+    </a>
   );
 };
 

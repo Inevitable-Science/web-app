@@ -52,7 +52,7 @@ const slides: SlideType[] = [
   },
 ];
 
-const TeamComponent: React.FC = () => {
+export function TeamComponent() {
   return (
     <section>
       {/*<div className="flex flex-wrap gap-4 justify-center mt-48">*/}
@@ -112,6 +112,6 @@ const TeamComponent: React.FC = () => {
       </div>
     </section>
   );
-};
+}
 
 export default TeamComponent;

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const PartnersComponent: React.FC = () => {
+export default function PartnersComponent() {
   return (
     <div className="ctWrapper mt-32 hidden">
       <div className="flex flex-col items-center gap-2">
@@ -68,6 +68,4 @@ const PartnersComponent: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default PartnersComponent;
+}

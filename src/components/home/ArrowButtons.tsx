@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { EmblaCarouselType } from "embla-carousel";
-import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type UsePrevNextButtonsType = {
   prevBtnDisabled: boolean;
@@ -53,7 +53,7 @@ export const usePrevNextButtons = (
 
 type PropType = ComponentPropsWithRef<"button">;
 
-export const PrevButton: React.FC<PropType> = (props) => {
+export function PrevButton(props: PropType) {
   const { children, ...restProps } = props;
 
   return (
@@ -63,13 +63,13 @@ export const PrevButton: React.FC<PropType> = (props) => {
       aria-label="Carousel Left"
       {...restProps}
     >
-      <ArrowLeftIcon height="28" width="28" />
+      <ArrowLeft height="28" width="28" />
       {children}
     </button>
   );
-};
+}
 
-export const NextButton: React.FC<PropType> = (props) => {
+export function NextButton(props: PropType) {
   const { children, ...restProps } = props;
 
   return (
@@ -79,8 +79,8 @@ export const NextButton: React.FC<PropType> = (props) => {
       aria-label="Carousel Right"
       {...restProps}
     >
-      <ArrowRightIcon height="28" width="28" className="stroke-primary" />
+      <ArrowRight height="28" width="28" className="stroke-primary" />
       {children}
     </button>
   );
-};
+}

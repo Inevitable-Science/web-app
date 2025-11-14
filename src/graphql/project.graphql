@@ -9,6 +9,7 @@ query Project($projectId: Float!, $chainId: Float!, $version: Float!) {
     volume
     paymentsCount
     tokenSupply
+    name
   }
 }
 
@@ -41,5 +42,21 @@ query ProjectAccountingContext($chainId: Float!, $projectId: Float!, $version: F
     token
     decimals
     currency
+  }
+}
+
+query ProjectWithPermissions($projectId: Float!, $chainId: Float!, $version: Float!) {
+  project(projectId: $projectId, chainId: $chainId, version: $version) {
+    projectId
+    chainId
+    version
+    owner
+    permissionHolders {
+      items {
+        account
+        operator
+        permissions
+      }
+    }
   }
 }

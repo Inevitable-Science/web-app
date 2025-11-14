@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { useData } from "../../../DataProvider";
 import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import FarcasterAvatar from "@/components/FarcasterAvatar";
 import { Address } from "viem";
 import { mainnet } from "viem/chains";
 import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 interface ActivityResponse {
   page: number;
@@ -120,14 +121,21 @@ export function ActivityFeed() {
                       Ξ{transaction["ETH paid"]}
                     </div>
 
-                    <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
-                      <FarcasterAvatar
-                        address={transaction.Beneficiary as Address}
-                        withAvatar={false}
-                        short
-                        chain={mainnet}
-                      />
-                    </div>
+                    {analyticsData?.tokenData?.selectedToken.chain_id && (
+                      <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
+                        <EthereumAddress
+                          address={transaction.Beneficiary as Address}
+                          chain={
+                            JB_CHAINS[
+                              analyticsData?.tokenData?.selectedToken
+                                .chain_id as JBChainId
+                            ].chain
+                          }
+                          short
+                          withEnsName
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {/*{activityItemData.memo && (

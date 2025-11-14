@@ -1,5 +1,5 @@
 import articleSchema, { Article } from "./Articles";
-import ArticlesClient from "./ArticlesClient";
+import { ArticlesClient } from "./ArticlesClient";
 
 import { headers } from "next/headers";
 import type { Metadata } from "next";

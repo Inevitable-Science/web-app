@@ -1,0 +1,87 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+//import { useJBChainId, useJBProjectMetadataContext } from "juice-sdk-react";
+import { DaoData } from "./AnalyticsPreview";
+import { SocialLinks } from "./SocialLinks";
+import { ChartSection } from "./ChartSection";
+//import { useUserPermissions } from "@/hooks/useUserPermissions";
+//import { EditMetadataDialog } from "./EditMetadataDialog";
+import { useProjectContext } from "../../../ProjectDataContext";
+
+const RichPreview = ({ source }: { source: string }) => {
+  useEffect(() => {
+    DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+      if (node.tagName === "A") {
+        node.setAttribute("target", "_blank");
+        node.setAttribute("rel", "noopener noreferrer");
+      }
+    });
+  }, []);
+
+  if (!source?.trim()) {
+    return null;
+  }
+
+  try {
+    // Convert markdown links [text](url) → <a href="url">text</a>
+    const withLinks = source.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2">$1</a>'
+    );
+
+    // Sanitize the generated HTML
+    const purified = DOMPurify.sanitize(withLinks);
+
+    return (
+      <div
+        className="w-[calc(100vw-48px)] break-words sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
+        dangerouslySetInnerHTML={{
+          __html: purified,
+        }}
+      />
+    );
+  } catch (error) {
+    console.error("HTML sanitization failed:", error);
+    return <div className="break-words">{source}</div>;
+  }
+};
+
+interface DescriptionSectionProps {
+  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export function DescriptionSection({
+  setSelectedTab,
+}: DescriptionSectionProps) {
+  const { metadata } = useProjectContext();
+  //const { hasPermission } = useUserPermissions();
+
+  const { description, name } = metadata?.data ?? {};
+
+  //const canEditMetadata = hasPermission("SET_PROJECT_URI");
+
+  //const suckerGroup = await getSuckerGroup(project.suckerGroupId, chainId);
+  //if (!suckerGroup) notFound();
+
+  return (
+    <div className="text-sm">
+      <ChartSection setSelectedTab={setSelectedTab} />
+
+      <DaoData setSelectedTab={setSelectedTab} />
+
+      <div className="mt-6">
+        <RichPreview source={description || name || "..."} />
+      </div>
+
+      {/*{canEditMetadata && (
+        <div className="mt-4">
+          <EditMetadataDialog projects={suckersGroup.projects?.items ?? []} />
+        </div>
+      )}*/}
+
+      <SocialLinks {...metadata} />
+    </div>
+  );
+}

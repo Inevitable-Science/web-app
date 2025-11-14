@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
@@ -58,7 +57,7 @@ export function Header() {
           ) : (
             <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
               <Image
-                src="./assets/img/branding/icon.svg"
+                src="/assets/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
                 width={24}
                 height={24}
@@ -122,7 +121,6 @@ export function Header() {
                         short
                         withEnsAvatar={false}
                         withEnsName
-                        avatarProps={{ size: "sm" }}
                         className="text-xl font-light"
                       />
                     ) : (

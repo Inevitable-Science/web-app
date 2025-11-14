@@ -1,18 +1,32 @@
-import { headers } from "next/headers";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { DaoResponse, DaoResponseSchema } from "@/lib/types/AnalyticTypes";
-import { metadata } from "@/lib/metadata";
+import {
+  DaoResponse,
+  DaoResponseSchema,
+  TokenResponse,
+  TokenResponseSchema,
+  TreasuryResponse,
+  TreasuryResponseSchema,
+} from "@/lib/types/AnalyticTypes";
 import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
 
-// todo: make this fetch the data server side then pass to data provider + zod validation
+import { headers } from "next/headers";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { metadata } from "@/lib/metadata";
 
 interface Props {
   params: Promise<{
     project: string;
   }>;
 }
+
+interface PageData {
+  projectData: DaoResponse;
+  treasuryData: TreasuryResponse;
+  tokenData: TokenResponse;
+}
+
+export const revalidate = 900; // Revalidate every 15 minutes
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
@@ -23,84 +37,76 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const fullPath = `/project/${params.project}`;
   const url = new URL(fullPath, origin);
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
-  const projectData = await getProjectData(params.project);
+  const pageData = await getProjectData(params.project);
+  const projectData = pageData?.projectData;
 
-  if (!projectData) {
-    return {
-      title: "Page Not Found | Inevitable Protocol",
-      description: metadata.description,
-      alternates: {
-        canonical: url,
-      },
-      openGraph: {
-        title: "Page Not Found | Inevitable Protocol",
-        description: metadata.description,
-        siteName: metadata.siteName,
-        images: [
-          {
-            url: imgUrl,
-            width: 700,
-            height: 370,
-            alt: "Inevitable preview image",
-          },
-        ],
-        url: url,
-        type: "website",
-      },
-      twitter: {
-        title: "Page Not Found | Inevitable Protocol",
-        description: metadata.description,
-        card: "summary_large_image",
-        images: [imgUrl],
-      },
-      manifest: metadata.manifest,
-    };
-  } else {
-    return {
+  if (!projectData) return notFound();
+
+  return {
+    title: `${projectData.name} | Inevitable Protocol`,
+    description: projectData.description,
+    alternates: { canonical: url },
+    openGraph: {
       title: `${projectData.name} | Inevitable Protocol`,
       description: projectData.description,
-      alternates: { canonical: url },
-      openGraph: {
-        title: `${projectData.name} | Inevitable Protocol`,
-        description: projectData.description,
-        siteName: "Inevitable Protocol",
-        images: [
-          {
-            url: projectData.logo,
-            width: 800,
-            height: 800,
-            alt: "preview image",
-          },
-        ],
-        url,
-        type: "article",
-      },
-      twitter: {
-        title: `${projectData.name} | Inevitable Protocol`,
-        description: projectData.description,
-        card: "summary_large_image",
-        images: [projectData.logo],
-      },
-      manifest: metadata.manifest,
-    };
-  }
+      siteName: "Inevitable Protocol",
+      images: [
+        {
+          url: projectData.logo,
+          width: 800,
+          height: 800,
+          alt: "preview image",
+        },
+      ],
+      url,
+      type: "website",
+    },
+    twitter: {
+      title: `${projectData.name} | Inevitable Protocol`,
+      description: projectData.description,
+      card: "summary_large_image",
+      images: [projectData.logo],
+    },
+    manifest: metadata.manifest,
+  };
 }
 
-async function getProjectData(project: string): Promise<DaoResponse | null> {
-  const response = await fetch(`https://inev.profiler.bio/dao/${project}`);
-  if (!response.ok) return null;
-
-  const json = await response.json();
-
+async function getProjectData(projectName: string): Promise<PageData | null> {
   try {
-    const data = DaoResponseSchema.parse(json);
-    console.log(data.name);
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error("Invalid response structure", error);
+    const projectResponse = await fetch(
+      `https://inev.profiler.bio/dao/${projectName}`
+    );
+    if (!projectResponse) throw new Error("Failed to fetch project data");
+
+    const projectData = await projectResponse.json();
+    const validatedProjectData = DaoResponseSchema.parse(projectData);
+
+    const [treasuryRes, tokenRes] = await Promise.all([
+      fetch(`https://inev.profiler.bio/treasury/${projectName}`),
+      fetch(
+        `https://inev.profiler.bio/token/${validatedProjectData.nativeToken.name}`
+      ),
+    ]);
+
+    if (!treasuryRes.ok || !tokenRes.ok) {
+      throw new Error("Failed to fetch analytics data");
+    }
+
+    const [treasuryData, tokenData] = await Promise.all([
+      treasuryRes.json(),
+      tokenRes.json(),
+    ]);
+
+    const validatedTreasuryData = TreasuryResponseSchema.parse(treasuryData);
+    const validatedTokenData = TokenResponseSchema.parse(tokenData);
+
+    return {
+      projectData: validatedProjectData,
+      treasuryData: validatedTreasuryData,
+      tokenData: validatedTokenData,
+    };
+  } catch {
     return null;
   }
 }
@@ -108,12 +114,16 @@ async function getProjectData(project: string): Promise<DaoResponse | null> {
 export default async function ProjectPage(props: Props) {
   const params = await props.params;
   const project = params.project;
-  const projectData = await getProjectData(project);
+  const pageData = await getProjectData(project);
 
-  if (!projectData) return notFound();
+  if (!pageData) return notFound();
 
   return (
-    <DataProvider daoName={project} daoData={projectData}>
+    <DataProvider
+      daoData={pageData.projectData}
+      treasuryData={pageData.treasuryData}
+      tokenData={pageData.tokenData}
+    >
       <DaoPage />
     </DataProvider>
   );

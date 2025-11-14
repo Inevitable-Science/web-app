@@ -15,7 +15,7 @@ type SlideType = {
   description: string;
 };
 
-type PropType = {
+type Props = {
   category?: string;
   slides?: SlideType[];
   options?: EmblaOptionsType;
@@ -56,11 +56,11 @@ const createSlug = (title: string) =>
     .replace(/ /g, "-")
     .replace(/[^a-z0-9-]/g, "");
 
-const DynamicArticleCarousel: React.FC<PropType> = ({
+export function DynamicArticleCarousel({
   category = "Category",
   slides = DEFAULT_SLIDES,
   options = DEFAULT_OPTIONS,
-}) => {
+}: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const {
     prevBtnDisabled,
@@ -105,6 +105,4 @@ const DynamicArticleCarousel: React.FC<PropType> = ({
       </div>
     </section>
   );
-};
-
-export default DynamicArticleCarousel;
+}

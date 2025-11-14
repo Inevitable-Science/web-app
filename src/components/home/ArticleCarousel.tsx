@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import PartnersComponent from "./PartnersComponent";
 import articleSchema, { Article } from "@/app/articles/Articles";
-import DynamicArticleCarousel from "@/app/articles/ArticleCarousel";
+import { DynamicArticleCarousel } from "@/app/articles/ArticleCarousel";
 
 type SlideType = {
   img: string;
@@ -19,7 +19,9 @@ type PropType = {
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 
-const ArticleCarousel: React.FC<PropType> = ({ options = DEFAULT_OPTIONS }) => {
+export default function ArticleCarousel({
+  options = DEFAULT_OPTIONS,
+}: PropType) {
   const [trendingSlides, setTrendingSlides] = useState<SlideType[]>([]);
 
   useEffect(() => {
@@ -69,6 +71,4 @@ const ArticleCarousel: React.FC<PropType> = ({ options = DEFAULT_OPTIONS }) => {
       <PartnersComponent />
     </section>
   );
-};
-
-export default ArticleCarousel;
+}

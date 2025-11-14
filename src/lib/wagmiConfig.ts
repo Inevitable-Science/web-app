@@ -12,7 +12,6 @@ import {
 } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
 import { coinbaseWallet, safe, walletConnect } from "wagmi/connectors";
-import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector"
 
 const safeConnector = safe({
   allowedDomains: [/^app\.safe\.global$/],
@@ -23,7 +22,6 @@ const safeConnector = safe({
 export const wagmiConfig = createConfig({
     chains: [mainnet, optimism, arbitrum, base, sepolia, optimismSepolia, baseSepolia, arbitrumSepolia],
     connectors: [
-      miniAppConnector(),
       safeConnector,
       coinbaseWallet({
         appName: "REVNET",
@@ -81,7 +79,6 @@ export const wagmiConfig = createConfig({
 import { arbitrum, base, mainnet, optimism } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
 import { coinbaseWallet, safe, walletConnect } from "wagmi/connectors";
-import { farcasterFrame as miniAppConnector } from "@farcaster/frame-wagmi-connector";
 
 const safeConnector = safe({
   allowedDomains: [/^app\.safe\.global$/],
@@ -94,7 +91,6 @@ const isProduction = process.env.NODE_ENV === "production";
 export const wagmiConfig = createConfig({
   chains: [mainnet, optimism, arbitrum, base],
   connectors: [
-    miniAppConnector(),
     safeConnector,
     coinbaseWallet({
       appName: "Inevitable Protocol",
