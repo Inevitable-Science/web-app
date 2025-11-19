@@ -10,23 +10,25 @@ export function Header() {
     <header>
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
-          <div className="absolute top-0 z-[-1] h-[328px] w-full overflow-hidden rounded">
+          <div className="absolute top-0 mt-[90px] z-[-1] h-[238px] w-full overflow-hidden rounded">
             {analyticsData?.daoData?.logo ? (
               <Image
                 src={analyticsData?.daoData?.backdrop}
                 alt={"Project Logo"}
-                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
+                className="inset-0 h-full w-full rounded object-cover"
                 width={600}
                 height={400}
               />
             ) : (
-              <Image
-                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
-                alt="placeholder header image"
-                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
-                width={600}
-                height={400}
-              />
+              <div className="background-color inset-0 h-full w-full flex justify-center items-center opacity-85 rounded">
+                <Image
+                  src="/assets/img/branding/logo.svg"
+                  alt="placeholder header image"
+                  className="h-16 w-auto"
+                  width={1800}
+                  height={1200}
+                />
+              </div>
             )}
           </div>
         </div>

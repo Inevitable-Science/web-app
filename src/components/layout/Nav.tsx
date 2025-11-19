@@ -166,7 +166,7 @@ export function Nav() {
       {/* Mobile Menu Overlay */}
       <div
         id="mobile-menu"
-        className={`ctWrapper fixed inset-0 z-40 flex flex-col bg-background bg-opacity-90 pt-[110px] transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "translate-y-full"} navMaxMD`}
+        className={`ctWrapper fixed inset-0 z-40 flex flex-col bg-background bg-opacity-90 pt-[110px] transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "translate-y-full hidden"} navMaxMD`}
       >
         <div className="flex flex-col gap-2 text-lg font-extralight uppercase">
           <Link
