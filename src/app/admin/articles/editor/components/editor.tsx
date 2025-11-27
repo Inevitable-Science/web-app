@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.bubble.css";
 
-// Optional: If you want to revoke object URLs to prevent memory leaks
+// Revoke object URLs to prevent memory leaks
 import ImageBlot from "quill/formats/image";
-import { uploadImage } from "../../helpers/helpers";
+import { uploadImage } from "../../helpers/uploadHelper";
+import { useToast } from "@/components/ui/use-toast";
 
 type EditorProps = {
   editorValue: string;
@@ -16,7 +17,7 @@ type EditorProps = {
   authToken: string;
 };
 
-// Optional: Improve image blot to support alt text and revoke URLs on remove
+// Improve image blot to support alt text and revoke URLs on remove
 class BetterImageBlot extends ImageBlot {
   static create(value: any) {
     const node = super.create(value);
@@ -34,6 +35,7 @@ BetterImageBlot.tagName = "img";
 Quill.register(BetterImageBlot, true);
 
 export default function Editor({ editorValue, setEditorValue, attachments, setAttachments, authToken }: EditorProps) {
+  const { toast } = useToast();
   const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
@@ -56,7 +58,6 @@ export default function Editor({ editorValue, setEditorValue, attachments, setAt
       const range = quill.getSelection(true);
       if (range == null) return;
 
-      // Insert a loading placeholder (you can use any spinner GIF or just a text placeholder)
       quill.insertEmbed(range.index, "image", "/assets/img/branding/logo.svg");
       quill.setSelection(range.index + 1, 0);
 
@@ -83,8 +84,11 @@ export default function Editor({ editorValue, setEditorValue, attachments, setAt
         quill.deleteText(range.index, 1);
         quill.setSelection(range.index, 0);
 
-        // Optional: notify user
-        alert("Image upload failed");
+        toast({
+          title: "Error",
+          variant: "destructive",
+          description: "Image upload failed"
+        });
       }
     };
   };

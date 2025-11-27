@@ -1,17 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { DeleteArticleDialogue } from "../../components/admin/deleteArticleDialogue";
-//import { ArticleType } from "../../../types";
-import { ArrowRight, ArrowUpRight, Building2, ChevronRight, MoveUpRight, Trash, Upload } from "lucide-react";
+"use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowUpRight, Building2, ChevronRight, Trash, Upload } from "lucide-react";
+
+import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, } from "@/components/ui/select";
 
 import Editor from "./editor";
-import { ArticleCreateBodyType, ArticleCreateBodyZ, ArticleResponse, Organisation, UserResponseType } from "../../helpers/types";
+import { DeleteArticleDialogue } from "../../components/admin/deleteArticleDialogue";
+import { ArticleCreateBodyType, ArticleCreateBodyZ, ArticleResponse, Organisation } from "../../helpers/types";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { useToast } from "@/components/ui/use-toast";
-import { uploadImage } from "../../helpers/helpers";
-import Image from "next/image";
-import { Select, SelectContent, SelectItem, SelectScrollDownButton, SelectTrigger, SelectValue, } from "@/components/ui/select";
-import Link from "next/link";
+import { uploadImage } from "../../helpers/uploadHelper";
+
 
 interface DisplayRules {
   hidden: boolean;
@@ -349,8 +351,6 @@ export function ArticleEditor({ article }: { article?: ArticleResponse; }) {
                 const org = user.organisations.find(org => org.organisationId === orgId);
                 setOrganisation(org || null);
               }}
-              //disabled={userCanCreateOrg.length <= 1}
-              //defaultValue={null}
             >
               <SelectTrigger
                 className="text-color border-none background-color rounded-lg px-3 py-1"
@@ -505,7 +505,7 @@ export function ArticleEditor({ article }: { article?: ArticleResponse; }) {
           </div>
 
           <div className="flex flex-col gap-2 bg-grey-450 w-full rounded-lg border-none p-2 text-lg font-light">
-            {article?.organisation.userPerms.isAdmin && // automatically true if user is a top level admin
+            {article?.organisation.userPerms.isAdmin && // is automatically true if user is a top level admin
               <DeleteArticleDialogue article={{ articleId: article.articleId, articleTitle: article.title }} organisationId={article.organisation.organisationId}>
                 <Button className="w-full gap-1" variant="destructive">
                   <Trash height={18} width={18} />
@@ -518,10 +518,9 @@ export function ArticleEditor({ article }: { article?: ArticleResponse; }) {
               {revertButton ? "Are You Sure?" : "Revert Changes"}
             </Button>
             
-            
-              <Button onClick={saveArticle} className="w-full" variant={"accent"} disabled={!saveState}>
-                {article ? "Save" : "Create"}
-              </Button>
+            <Button onClick={saveArticle} className="w-full" variant={"accent"} disabled={!saveState}>
+              {article ? "Save" : "Create"}
+            </Button>
           </div>
         </div>
       </div>

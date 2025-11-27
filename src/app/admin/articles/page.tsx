@@ -1,20 +1,14 @@
 "use client"
+import { useEffect, useState } from "react";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi"
+
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
-import { ConnectKitButton } from "connectkit";
-import { CircleUserRound, Crown, Link, Pencil } from "lucide-react";
-import Image from "next/image";
-import { use, useCallback, useEffect, useState } from "react";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi"
-import z from "zod";
-import { LoginResponseZ, NonceResponseZ } from "./helpers/types";
 import { UserTable } from "./components/userTable";
 import { OrganisationTable } from "./components/orgTable";
 import { ArticlesTable } from "./components/articlesTable";
-import { useAuth } from "./helpers/useAuth";
+import { LoginResponseZ } from "./helpers/types";
 import { useArticleAuthContext } from "./helpers/articleAuthContext";
-
-// 1. useAuth hook (Next.js App Router or React 18+)
 
 
 export default function AdminArticlesPage() {
@@ -22,12 +16,10 @@ export default function AdminArticlesPage() {
   const { disconnect } = useDisconnect();
   const { signMessageAsync } = useSignMessage();
 
-  //const { user, authToken, status, logout, revalidateUser, fetchNonce } = useAuth(); 
-  const { user, authToken, status, logout, revalidateUser, fetchNonce } = useArticleAuthContext();
+  const { user, status, revalidateUser, fetchNonce } = useArticleAuthContext();
 
   const [userExists, setUserExists] = useState<boolean | null>(null);
   const [nonce, setNonce] = useState<number | null>(null);
-
   const [isSigning, setIsSigning] = useState(false);
 
   const checkUser = async () => {

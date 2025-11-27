@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
-import Image from "next/image";
-import { User } from "../helpers/types";
 import { useEffect, useState } from "react";
-import { uploadImage } from "../helpers/helpers";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import Image from "next/image";
+
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { uploadImage } from "../helpers/uploadHelper";
+import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
 
 
 export function UserTable() {
@@ -204,14 +204,14 @@ export function UserTable() {
     <div className="flex flex-col gap-[12px] bg-grey-450 p-[12px] rounded-2xl">
       <div className="flex items-center justify-between gap-4 background-color rounded-xl p-[16px]">
         <div className="flex items-center gap-4">
-          <div className="relative group w-[48px] h-[48px]">
+          <div className="relative group w-[48px] h-[48px] overflow-hidden">
             {profilePicture ? (
               <Image
                 src={profilePicture}
                 alt="profile picture"
-                className="max-h-[48px] max-w-[48px] rounded-full cursor-pointer"
-                height={48}
-                width={48}
+                className="max-h-[48px] max-w-[48px] w-full h-full rounded-full cursor-pointer object-cover"
+                height={200}
+                width={200}
               />
             ) : (
               <CircleUserRound

@@ -1,14 +1,15 @@
 "use client"
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { usePathname } from "next/navigation";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { Building2, CircleUserRound, Loader2, Pencil, Plus, X } from "lucide-react";
-import Image from "next/image";
-import { uploadImage } from "../../helpers/helpers";
+import { uploadImage } from "../../helpers/uploadHelper";
 import { AllUsersResponse, FetchOrganisationResponse, FetchOrganisationResponseZ, OrgCreateEditBody } from "../../helpers/types";
+import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { CircleUserRound, Loader2, Pencil, X } from "lucide-react";
+
 
 interface SelectedUser {
   userId: string;
@@ -330,14 +331,14 @@ export function EditOrgDialogue({ allUsers, organisationId, children }: { allUse
           {data ? (
           <div className="mt-4">
             <div className="flex items-center gap-2">
-              <div className="relative group w-[48px] h-[48px]">
+              <div className="relative group w-[48px] h-[48px] overflow-hidden">
                 {orgLogo ? (
                   <Image
                     src={orgLogo}
                     alt="profile picture"
-                    className="max-h-[48px] max-w-[48px] rounded-full cursor-pointer"
-                    height={48}
-                    width={48}
+                    className="max-h-[48px] max-w-[48px] w-full h-full rounded-full cursor-pointer object-cover"
+                    height={200}
+                    width={200}
                   />
                 ) : (
                   <CircleUserRound

@@ -1,5 +1,6 @@
 import z from "zod";
 
+
 export async function uploadImage(file: File, uploadType: "article" | "profile" | "organisation", authToken: string | null) {
   if (!authToken) throw new Error("AuthToken Required");
 

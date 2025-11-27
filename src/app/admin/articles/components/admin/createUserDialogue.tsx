@@ -1,9 +1,10 @@
 "use client"
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 
 export function CreateUserDialogue({ children }: { children: React.ReactNode; }) {
   const { user, authToken, silentRevalidateUser } = useArticleAuthContext();

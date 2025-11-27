@@ -1,7 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react"
-import { useAuth, UseAuthBody } from "./useAuth";
-import { NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
+"use client"
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+
+import { NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
 import { usePathname } from "next/navigation";
 
 
@@ -18,8 +19,6 @@ export interface ArticleAuthType {
 const ArticleAuthContext = createContext<ArticleAuthType | null>(null);
 
 export function ArticleAuthProvider({ children }: { children: React.ReactNode }) {
-  //const { user, authToken, status, logout, revalidateUser, fetchNonce } = useAuth();
-
   const { address, isConnected, status: wagmiStatus } = useAccount();
   const pathname = usePathname();
 
@@ -61,7 +60,6 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
       logout();
     };
 
-    //setStatus('loading');
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`, {
@@ -75,7 +73,6 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
       const parsed = UserResponseZ.parse(data);
       setUser(parsed);
       
-      //setStatus('authenticated');
       return;
 
     } catch (err) {
@@ -141,7 +138,6 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
   }, [isConnected, wagmiStatus]);
 
   const logout = () => {
-    console.log("LOGOUT");
     localStorage.removeItem('articleAuthToken');
     setAuthToken(null);
     setUser(null);

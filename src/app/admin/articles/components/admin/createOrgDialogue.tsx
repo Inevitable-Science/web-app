@@ -1,14 +1,14 @@
 "use client"
+import { useState } from "react";
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { usePathname } from "next/navigation";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { Building2, CircleUserRound, Pencil, Plus, X } from "lucide-react";
-import Image from "next/image";
-import { uploadImage } from "../../helpers/helpers";
+import { uploadImage } from "../../helpers/uploadHelper";
 import { AllUsersResponse, OrgCreateEditBody } from "../../helpers/types";
+import { CircleUserRound, Pencil, X } from "lucide-react";
 
 interface SelectedUser {
   userId: string;
@@ -27,7 +27,7 @@ interface SingleUser {
 }
 
 export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersResponse; children: React.ReactNode; }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { authToken, silentRevalidateUser } = useArticleAuthContext();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -264,12 +264,12 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
           </Dialog.Description>
           <div className="mt-4">
             <div className="flex items-center gap-2">
-              <div className="relative group w-[48px] h-[48px]">
+              <div className="relative group w-[48px] h-[48px] overflow-hidden">
                 {orgLogo ? (
                   <Image
                     src={orgLogo}
                     alt="profile picture"
-                    className="max-h-[48px] max-w-[48px] rounded-full cursor-pointer"
+                    className="max-h-[48px] max-w-[48px] w-full h-full rounded-full cursor-pointer object-cover"
                     height={48}
                     width={48}
                   />

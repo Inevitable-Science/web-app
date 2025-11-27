@@ -1,13 +1,12 @@
-import { Pencil, Plus, Trash } from "lucide-react";
-import { ArticlePreview, Organisation, User } from "../helpers/types";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DeleteArticleDialogue } from "./admin/deleteArticleDialogue";
-import Link from "next/link";
+import { ArticlePreview, Organisation } from "../helpers/types";
 import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { Pencil, Plus, Trash } from "lucide-react";
 
 
 export function ArticlesTable() {
-
   const { user: data } = useArticleAuthContext();
   const user = data?.user;
   const organisations = data?.organisations;

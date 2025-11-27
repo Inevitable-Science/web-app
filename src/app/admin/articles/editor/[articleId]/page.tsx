@@ -1,14 +1,8 @@
 "use client"
 import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-//import { ArticleSchema, ArticleType } from "../types";
-import { Input } from "@/components/ui/input";
-import { DeleteArticleDialogue } from "../../components/admin/deleteArticleDialogue";
-import { Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { ArticleEditor } from "../components/articleEditor";
-import { useAuth } from "../../helpers/useAuth";
 import { ArticleResponseZ, ArticleResponse } from "../../helpers/types";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 
@@ -18,15 +12,10 @@ export default function ArticleEditorPage() {
   const articleId = params.articleId;
   const { status, user, authToken } = useArticleAuthContext();
 
-
-  //const { address, isConnected } = useAccount();
-
-  //const [data, setData] = useState<ArticleType | null>(null);
   const [mounted, setMounted] = useState<boolean>(false);
   const [article, setArticle] = useState<ArticleResponse | null>(null);
 
   useEffect(() => {
-    
     const fetchArticle = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/fetch/${articleId}`, {

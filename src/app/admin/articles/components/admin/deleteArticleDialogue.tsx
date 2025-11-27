@@ -1,10 +1,11 @@
-"use client"
-import { Button } from "@/components/ui/button";
-import * as Dialog from "@radix-ui/react-dialog";
+"use client";
 import { useState } from "react";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import * as Dialog from "@radix-ui/react-dialog";
+import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 
 interface ArticleProp {
   articleId: string;
