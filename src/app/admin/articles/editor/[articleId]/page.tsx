@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 //import { ArticleSchema, ArticleType } from "../types";
 import { Input } from "@/components/ui/input";
-import { DeleteArticleDialogue } from "../../components/deleteArticleDialogue";
+import { DeleteArticleDialogue } from "../../components/admin/deleteArticleDialogue";
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArticleEditor } from "../components/articleEditor";
@@ -29,7 +29,7 @@ export default function ArticleEditorPage() {
     
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/article/fetch/${articleId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/fetch/${articleId}`, {
           headers: {
             authorization: `Bearer ${authToken}`
           },

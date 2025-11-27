@@ -53,7 +53,7 @@ export function EditOrgDialogue({ allUsers, organisationId, children }: { allUse
         const userOrg = user?.organisations.find(org => org.organisationId === organisationId);
         if (!user?.user.isTopLevelAdmin && !userOrg?.userPermissions.isAdmin) throw new Error();
 
-        const response = await fetch(`http://localhost:3001/organisation/${organisationId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/organisation/${organisationId}`, {
           headers: {
             authorization: `Bearer ${authToken}`
           }
@@ -246,7 +246,7 @@ export function EditOrgDialogue({ allUsers, organisationId, children }: { allUse
         },
       };
 
-      const response = await fetch(`http://localhost:3001/organisation/edit/${organisationId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/organisation/edit/${organisationId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

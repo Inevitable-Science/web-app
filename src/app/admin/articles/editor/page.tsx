@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 //import { ArticleSchema, ArticleType } from "../types";
 import { Input } from "@/components/ui/input";
-import { DeleteArticleDialogue } from "../components/deleteArticleDialogue";
+import { DeleteArticleDialogue } from "../components/admin/deleteArticleDialogue";
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ArticleEditor } from "./components/articleEditor";

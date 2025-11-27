@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DeleteArticleDialogue } from "../../components/deleteArticleDialogue";
+import { DeleteArticleDialogue } from "../../components/admin/deleteArticleDialogue";
 //import { ArticleType } from "../../../types";
 import { ArrowRight, ArrowUpRight, Building2, ChevronRight, MoveUpRight, Trash, Upload } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -179,9 +179,9 @@ export function ArticleEditor({ article }: { article?: ArticleResponse; }) {
 
       let endpoint;
       if (article) {
-        endpoint = `http://localhost:3001/article/edit/${article.articleId}`;
+        endpoint = `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/edit/${article.articleId}`;
       } else {
-        endpoint = "http://localhost:3001/article/create";
+        endpoint = `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/create`;
       };
 
       const body: ArticleCreateBodyType = {

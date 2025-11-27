@@ -33,7 +33,7 @@ export default function AdminArticlesPage() {
   const checkUser = async () => {
     try {
       const nonce = await fetchNonce();
-      if (!nonce) {
+      if (typeof nonce !== "number") {
         setUserExists(false);
         return;
       };
@@ -59,12 +59,14 @@ export default function AdminArticlesPage() {
 
       await checkUser();
 
+      if (typeof nonce !== "number") return;
+
       const signature = await signMessageAsync({
         account: address,
         message: `Authorize this action by signing below.\nNo cost. No sensitive data shared.\nAction: login\nAddress: ${address.toLowerCase()}\nNonce: ${nonce}`
       });
 
-      const response = await fetch(`http://localhost:3001/user/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

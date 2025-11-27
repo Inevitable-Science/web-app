@@ -40,7 +40,9 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
     try {
       if (!address) return null;
 
-      const response = await fetch(`http://localhost:3001/user/getNonce/${address}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getNonce/${address}`, {
+        cache: "no-store"
+      });
       if (!response.ok) return null;
 
       const data = await response.json();
@@ -62,7 +64,7 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
     //setStatus('loading');
 
     try {
-      const res = await fetch('http://localhost:3001/user/fetch', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`, {
         method: "POST",
         headers: { authorization: `Bearer ${authToken}` },
       });
@@ -100,7 +102,7 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
     setStatus('loading');
 
     try {
-      const res = await fetch('http://localhost:3001/user/fetch', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`, {
         method: "POST",
         headers: { authorization: `Bearer ${token}` },
       });

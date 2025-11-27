@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
 
@@ -30,7 +30,7 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
         return;
       };
 
-      const response = await fetch("http://localhost:3001/article/delete", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/delete`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

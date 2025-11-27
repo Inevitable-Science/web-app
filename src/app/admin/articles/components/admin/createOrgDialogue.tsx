@@ -183,7 +183,7 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
         },
       };
 
-      const response = await fetch("http://localhost:3001/organisation/create", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/organisation/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

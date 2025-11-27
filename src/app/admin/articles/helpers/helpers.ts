@@ -6,7 +6,7 @@ export async function uploadImage(file: File, uploadType: "article" | "profile" 
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`http://localhost:3001/upload/${uploadType}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/upload/${uploadType}`, {
     method: "POST",
     body: formData,
     headers: {

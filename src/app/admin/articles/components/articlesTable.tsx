@@ -1,7 +1,7 @@
 import { Pencil, Plus, Trash } from "lucide-react";
 import { ArticlePreview, Organisation, User } from "../helpers/types";
 import { Button } from "@/components/ui/button";
-import { DeleteArticleDialogue } from "./deleteArticleDialogue";
+import { DeleteArticleDialogue } from "./admin/deleteArticleDialogue";
 import Link from "next/link";
 import { useArticleAuthContext } from "../helpers/articleAuthContext";
 

@@ -6,6 +6,7 @@ import { CreateOrgDialogue } from "./admin/createOrgDialogue";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { EditOrgDialogue } from "./admin/editOrgDialogue";
+import { CreateUserDialogue } from "./admin/createUserDialogue";
 
 
 export function OrganisationTable({ organisations }: { organisations: Organisation[] }) {
@@ -20,7 +21,7 @@ export function OrganisationTable({ organisations }: { organisations: Organisati
           return;
         };
 
-        const response = await fetch("http://localhost:3001/user/all", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/all`, {
           headers: {
             authorization: `Bearer ${authToken}`
           }
@@ -50,15 +51,24 @@ export function OrganisationTable({ organisations }: { organisations: Organisati
     <div className="flex flex-col gap-[12px] bg-grey-450 p-[12px] rounded-2xl">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-xl">Organisations</h3>
-        {(user?.user.isTopLevelAdmin && allUsers) && (
-          <CreateOrgDialogue allUsers={allUsers} >
-            <Button variant={"secondary"} className="flex gap-1 items-center">
-              Create Organisation
-              <Plus height={20} width={20} />
-            </Button>
-          </CreateOrgDialogue>
-        )}
-        {/*user.isTopLevelAdmin && <p className="text-muted-foreground text-sm">You have full access to all orgs</p>*/}
+        <div className="flex items-center gap-2">
+          {user?.user.isTopLevelAdmin && (
+            <CreateUserDialogue>
+              <Button variant={"secondary"} className="flex gap-1 items-center">
+                Create User
+                <Plus height={20} width={20} />
+              </Button>
+            </CreateUserDialogue>
+          )}
+          {(user?.user.isTopLevelAdmin && allUsers) && (
+            <CreateOrgDialogue allUsers={allUsers} >
+              <Button variant={"secondary"} className="flex gap-1 items-center">
+                Create Organisation
+                <Plus height={20} width={20} />
+              </Button>
+            </CreateOrgDialogue>
+          )}
+        </div>
       </div>
       
       {organisations.length > 0 ? (

@@ -34,7 +34,7 @@ export function useAuth(): UseAuthBody {
     try {
       if (!address) return null;
 
-      const response = await fetch(`http://localhost:3001/user/getNonce/${address}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getNonce/${address}`);
       if (!response.ok) return null;
 
       const data = await response.json();
@@ -63,7 +63,7 @@ export function useAuth(): UseAuthBody {
     setStatus('loading');
 
     try {
-      const res = await fetch('http://localhost:3001/user/getUser', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getUser`, {
         method: "POST",
         headers: { authorization: `Bearer ${token}` },
       });
