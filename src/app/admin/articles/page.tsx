@@ -150,8 +150,6 @@ export default function AdminArticlesPage() {
             <ArticlesTable />
           }
         </div>
-
-        <pre>{JSON.stringify(user, null, 2)}</pre>
       </div>
     )
   }
