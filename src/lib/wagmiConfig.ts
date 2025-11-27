@@ -92,13 +92,13 @@ const isProduction = process.env.NODE_ENV === "production";
 export const wagmiConfig = createConfig({
   chains: [mainnet, optimism, arbitrum, base],
   connectors: [
-    metaMask({
+    /*metaMask({
       dappMetadata: { 
         name: "Inevitable Protocol", 
         url: "https://inevitable.science", 
         //iconUrl: 'https://example.com/favicon.ico', 
       }
-    }),
+    }),*/
     coinbaseWallet({
       appName: "Inevitable Protocol",
       appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",

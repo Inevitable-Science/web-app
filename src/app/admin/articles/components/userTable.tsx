@@ -1,29 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
 import Image from "next/image";
-import { Organisation, User } from "../types";
+import { User } from "../helpers/types";
 import { useEffect, useState } from "react";
+import { uploadImage } from "../helpers/helpers";
+import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 
-export function UserTable({ user }: { user: User }) {
+export function UserTable() {
+
+  const { user: data, authToken, silentRevalidateUser } = useArticleAuthContext();
+  if (!data) return;
+  const user = data.user;
+
+  const { toast } = useToast();
+
 
   const [editingValue, setEditingValue] = useState("");
 
-  //const [isTopLevelAdmin, setIsTopLevelAdmin] = useState<boolean>(user.isTopLevelAdmin);
-  //const [userId, setUserId] = useState<string>(user.userId); rm
-  //const [organisations, setOrganisations] = useState<Organisation[]>(user.organisations);
+  const [username, setUsername] = useState(user.userMetadata.username);
+  const [profilePicture, setProfilePicture] = useState(user.userMetadata.profilePicture);
 
-  const [username, setUsername] = useState<string>(user.user_metadata.username);
-  const [profilePicture, setProfilePicture] = useState<string>(user.user_metadata.profile_picture);
+  const [socialX, setSocialX] = useState(user.userMetadata.socials.x);
+  const [socialLinkedIn, setSocialLinkedIn] = useState(user.userMetadata.socials.linkedIn);
+  const [socialWebsite, setSocialWebsite] = useState(user.userMetadata.socials.website);
 
-  const [newProfilePicture, setNewProfilePicture] = useState<File | null>(null);
-  //const [newPreviewUrl, setNewPreviewUrl] = useState<string | null>(null);
-
-  const [socialX, setSocialX] = useState<string>(user.user_metadata.socials.x);
-  const [socialLinkedIn, setSocialLinkedIn] = useState<string>(user.user_metadata.socials.linked_in);
-  const [socialWebsite, setSocialWebsite] = useState<string>(user.user_metadata.socials.website);
-
-  const [saveState, setSaveState] = useState<boolean>(false);
+  const [saveState, setSaveState] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (profilePicture) {
@@ -31,30 +35,33 @@ export function UserTable({ user }: { user: User }) {
     }
   }, [profilePicture]);
 
+  useEffect(() => {
+    if (isSaving === false) {
+      checkState();
+      return;
+    };
+
+    return;
+  }, [isSaving]);
+
   function resetValues() {
-    setUsername(user.user_metadata.username);
-    setProfilePicture(user.user_metadata.profile_picture);
+    setUsername(user.userMetadata.username);
+    setProfilePicture(user.userMetadata.profilePicture);
 
-    // Clear any newly selected file
-    if (newProfilePicture) {
-      URL.revokeObjectURL(profilePicture);
-      setNewProfilePicture(null);
-    }
-
-    setSocialX(user.user_metadata.socials.x);
-    setSocialLinkedIn(user.user_metadata.socials.linked_in);
-    setSocialWebsite(user.user_metadata.socials.website);
+    setSocialX(user.userMetadata.socials.x);
+    setSocialLinkedIn(user.userMetadata.socials.linkedIn);
+    setSocialWebsite(user.userMetadata.socials.website);
 
     setSaveState(false);
   }
 
   function checkState() {
     if (
-      username !== user.user_metadata.username ||
-      profilePicture !== user.user_metadata.profile_picture ||
-      socialX !== user.user_metadata.socials.x ||
-      socialLinkedIn !== user.user_metadata.socials.linked_in ||
-      socialWebsite !== user.user_metadata.socials.website
+      username !== user.userMetadata.username ||
+      profilePicture !== user.userMetadata.profilePicture ||
+      socialX !== user.userMetadata.socials.x ||
+      socialLinkedIn !== user.userMetadata.socials.linkedIn ||
+      socialWebsite !== user.userMetadata.socials.website
     ) {
       setSaveState(true);
     } else {
@@ -67,19 +74,19 @@ export function UserTable({ user }: { user: User }) {
   function resetUserState(field: string) {
     switch (field) {
       case "username":
-        setUsername(user.user_metadata.username);
+        setUsername(user.userMetadata.username);
         break;
       case "profilePicture":
-        setProfilePicture(user.user_metadata.profile_picture);
+        setProfilePicture(user.userMetadata.profilePicture);
         break;
       case "twitter":
-        setSocialX(user.user_metadata.socials.x);
+        setSocialX(user.userMetadata.socials.x);
         break;
       case "linkedIn":
-        setSocialLinkedIn(user.user_metadata.socials.linked_in);
+        setSocialLinkedIn(user.userMetadata.socials.linkedIn);
         break;
       case "website":
-        setSocialWebsite(user.user_metadata.socials.website);
+        setSocialWebsite(user.userMetadata.socials.website);
         break;
       default:
         console.warn(`Unknown field: ${field}`);
@@ -88,23 +95,110 @@ export function UserTable({ user }: { user: User }) {
   };
 
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!e.target.files || e.target.files.length === 0) return;
 
-    const file = e.target.files[0];
+      const file = e.target.files[0];
 
-    // Optional: Only accept images
-    if (!file.type.startsWith("image/")) {
-      alert("Please select an image file");
+      // Optional: Only accept images
+      if (!file.type.startsWith("image/")) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please select an image file",
+        });
+        return;
+      };
+
+      const url = await uploadImage(file, "profile", authToken);
+      setProfilePicture(url);
       return;
-    }
-
-    setNewProfilePicture(file);
-
-    // Create a preview URL
-    const url = URL.createObjectURL(file);
-    setProfilePicture(url);
+    } catch (err) {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error Uploading File",
+      });
+      return;
+    };
   };
+
+  const saveChanges = async () => {
+    try {
+      if (!saveState) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please Make Changes Before Trying To Save",
+        });
+        return;
+      };
+      
+      if (username.length < 5) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Username Must Be >5 Characters",
+        });
+        return;
+      };
+      
+      const websiteRegexQuery = /^https:\/\/([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,24}\/?$/;
+      if (socialWebsite && !websiteRegexQuery.test(socialWebsite)) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please Enter Full Personal Website URL (Including https://)",
+        });
+        return;
+      };
+
+      setIsSaving(true);
+
+      const reqBody = JSON.stringify({
+        username,
+        profilePicture,
+        socials: {
+          x: socialX,
+          linkedIn: socialLinkedIn,
+          website: socialWebsite,
+        }
+      });
+
+      const response = await fetch("http://localhost:3001/user/edit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${authToken}`
+        },
+        body: reqBody
+      });
+
+      if (!response.ok) throw new Error();
+
+      await silentRevalidateUser();
+
+      toast({
+        title: "Success",
+        description: "Changes Successfully Saved",
+      });
+      return;
+
+    } catch (err) {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Couldn't Save Your Changes",
+      });
+      return;
+    } finally {
+      setIsSaving(false);
+    };
+  };
+
 
   return (
     <div className="flex flex-col gap-[12px] bg-grey-450 p-[12px] rounded-2xl">
@@ -216,7 +310,7 @@ export function UserTable({ user }: { user: User }) {
               Reset
             </Button>
           )}
-          <Button variant={"accent"} disabled={!saveState}>
+          <Button onClick={saveChanges} variant={"accent"} disabled={!saveState || isSaving || editingValue !== ""}>
             Save Changes
           </Button>
         </div>

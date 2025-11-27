@@ -1,8 +1,8 @@
-"use client"
+/*"use client"
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
 
@@ -11,69 +11,14 @@ interface ArticleProp {
   articleTitle: string;
 };
 
-export function DeleteArticleDialogue({ article, organisationId, children }: { article: ArticleProp; organisationId: string; children: React.ReactNode; }) {
+export function CreateUserDialogue({ children }: { children: React.ReactNode; }) {
   const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
   const { toast } = useToast();
   const pathname = usePathname();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const deleteArticle = async () => {
-    try {
-      const userOrg = user?.organisations.find(org => org.organisationId === organisationId);
-      if (!user?.user.isTopLevelAdmin && !userOrg?.userPermissions.canDelete) {
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: "You Cannot Delete This Article"
-        });
-        return;
-      };
-
-      const response = await fetch("http://localhost:3001/article/delete", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-          articleId: article.articleId
-        })
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        console.log(data);
-        throw new Error();
-      };
-
-      const data = await response.json();
-      console.log(data);
-      
-      if (pathname !== "/admin/articles") {
-        window.location.href = "/admin/articles";
-        return;
-      };
-
-      await silentRevalidateUser();
-      setIsModalOpen(false);
-
-      toast({
-        title: "Success",
-        description: "Article Deleted"
-      });
-      return;
-
-    } catch (err) {
-      console.log(err);
-      toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Error Deleting Article"
-      });
-      return;
-    }
-  };
+  
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -89,7 +34,7 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
           className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg"
         >
           <Dialog.Title className="text-lg font-semibold">
-            Confirm Action
+            Create User
           </Dialog.Title>
           <Dialog.Description className="mt-2 text-sm text-muted-foreground">
             Are you sure you would like to delete 
@@ -113,4 +58,4 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
       </Dialog.Portal>
     </Dialog.Root>
   );
-};
+};*/

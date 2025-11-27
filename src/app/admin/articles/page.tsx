@@ -4,49 +4,99 @@ import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { CircleUserRound, Crown, Link, Pencil } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useAccount, useDisconnect } from "wagmi"
+import { use, useCallback, useEffect, useState } from "react";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 import z from "zod";
-import { Article, UserSchema, User } from "./types";
+import { LoginResponseZ, NonceResponseZ } from "./helpers/types";
 import { UserTable } from "./components/userTable";
 import { OrganisationTable } from "./components/orgTable";
 import { ArticlesTable } from "./components/articlesTable";
+import { useAuth } from "./helpers/useAuth";
+import { useArticleAuthContext } from "./helpers/articleAuthContext";
+
+// 1. useAuth hook (Next.js App Router or React 18+)
 
 
 export default function AdminArticlesPage() {
   const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect()
+  const { disconnect } = useDisconnect();
+  const { signMessageAsync } = useSignMessage();
 
-  const [user, setUser] = useState<User | null>(null);
-  const [isUserValid, setIsUserValid] = useState<boolean | null>(null);
-  const [articles, setArticles] = useState<Article[] | null>(null);
+  //const { user, authToken, status, logout, revalidateUser, fetchNonce } = useAuth(); 
+  const { user, authToken, status, logout, revalidateUser, fetchNonce } = useArticleAuthContext();
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        if (!address) return;
+  const [userExists, setUserExists] = useState<boolean | null>(null);
+  const [nonce, setNonce] = useState<number | null>(null);
 
-        const response = await fetch(`http://localhost:3001/article/user/verifyAddress/${address}`);
-        if (!response.ok) throw new Error();
+  const [isSigning, setIsSigning] = useState(false);
 
-        const data = await response.json();
-        const parsed = UserSchema.parse(data);
-
-        setIsUserValid(true);
-        setUser(parsed.user);
-        setArticles(parsed.articles);
-      } catch {
-        setIsUserValid(false);
+  const checkUser = async () => {
+    try {
+      const nonce = await fetchNonce();
+      if (!nonce) {
+        setUserExists(false);
         return;
-      }
+      };
+
+      setNonce(nonce);
+      setUserExists(true);
+    } catch (err) {
+      setUserExists(false);
+      console.log(err);
     };
-
-    fetchArticles();
-  }, [address]);
-
-  if (isUserValid === null && address) return;
+  };
   
-  if (!isConnected) {
+  useEffect(() => {
+    if (!address || status !== "unauthenticated") return;
+    checkUser();
+  }, [address, status, checkUser]);
+
+  
+  async function signMessage() {
+    try {
+      if (!address) return;
+      setIsSigning(true);
+
+      await checkUser();
+
+      const signature = await signMessageAsync({
+        account: address,
+        message: `Authorize this action by signing below.\nNo cost. No sensitive data shared.\nAction: login\nAddress: ${address.toLowerCase()}\nNonce: ${nonce}`
+      });
+
+      const response = await fetch(`http://localhost:3001/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          address,
+          signature
+        }),
+      });
+
+      console.log(response);
+      
+      if (!response.ok) throw new Error();
+
+      const data = await response.json();
+      console.log(data);
+      const parsed = LoginResponseZ.parse(data);
+      
+      console.log(parsed);
+      localStorage.setItem('articleAuthToken', parsed.key);
+      await revalidateUser();
+      return;
+    } catch {
+      return;
+    } finally {
+      setIsSigning(false);
+    }
+  };
+
+  if (status === "loading") return;
+  
+  if (isConnected === false) {
     return (
       <div className="ctWrapper mt-32 flex flex-col gap-2">
         <h2 className="text-3xl font-optima">Connect Your Wallet</h2>
@@ -58,7 +108,7 @@ export default function AdminArticlesPage() {
     );
   };
 
-  if (isUserValid !== true) {
+  if (userExists === false) {
     return (
       <div className="ctWrapper mt-32 flex flex-col gap-2">
         <h2 className="text-3xl font-optima">You Cannot Access This</h2>
@@ -70,34 +120,37 @@ export default function AdminArticlesPage() {
     );
   };
 
-  return (
-    <div className="ctWrapper">
-      <div className="mt-32 flex flex-col gap-2">
-        <h2 className="text-3xl font-optima">Welcome back</h2>
-        <p className="mb-4">Below are all articles you have permission to edit. Note <u>all</u> info is public.</p>
+  if (status === "unauthenticated") {
+    return (
+      <div className="ctWrapper mt-32 flex flex-col gap-2">
+        <h2 className="text-3xl font-optima">Login To View Articles</h2>
+        <p className="mb-4">Sign a quick message to login.</p>
+        <Button loading={isSigning} variant={"accent"} onClick={() => signMessage()}>
+          Sign Message
+        </Button>
       </div>
+    );
+  }
 
-      <div className="flex flex-col gap-[12px]">
-        {user && (
-          <>
-            <UserTable user={user} />
-            <OrganisationTable user={user} />
-          </>
-        )}
+  if (status === "authenticated" && user) {
+    return (
+      <div className="ctWrapper">
+        <div className="mt-32 flex flex-col gap-2">
+          <h2 className="text-3xl font-optima">Welcome back</h2>
+          <p className="mb-4">Below are all articles you have permission to edit. Treat <u>all</u> info as if it were public.</p>
+        </div>
 
-        {articles && <ArticlesTable articles={articles} />}
+        <div className="flex flex-col gap-[12px]">
+          {user.user && <UserTable />}
+          {user.organisations && <OrganisationTable organisations={user.organisations} />}
+
+          {user.editableArticles && 
+            <ArticlesTable />
+          }
+        </div>
+
+        <pre>{JSON.stringify(user, null, 2)}</pre>
       </div>
-
-
-      {/*<div className="">
-        {articles && articles.map(article => (
-          <div key={article.article_id} className="">
-            {JSON.stringify(article, null, 2)}
-          </div>
-        ))}
-      </div>
-    <pre>{JSON.stringify(user, null, 2)}</pre>
-    <pre>{JSON.stringify(articles, null, 2)}</pre>*/}
-    </div>
-  )
+    )
+  }
 }

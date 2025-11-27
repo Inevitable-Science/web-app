@@ -155,7 +155,7 @@ export function SplitsSection() {
               return (
                 <Button
                   variant={
-                    selectedStageIdx === idx ? "tab-selected" : "bottomline"
+                    selectedStageIdx === idx ? "tabSelected" : "bottomline"
                   }
                   className={twJoin(
                     "text-md text-zinc-400",

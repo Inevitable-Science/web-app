@@ -1,15 +1,129 @@
-import { User } from "../types";
+import { Button } from "@/components/ui/button";
+import { AllUsersResponse, AllUsersResponseZ, Organisation, User } from "../helpers/types";
+import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { CircleUserRound, Pencil, Plus } from "lucide-react";
+import { CreateOrgDialogue } from "./admin/createOrgDialogue";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { EditOrgDialogue } from "./admin/editOrgDialogue";
 
 
-export function OrganisationTable({ user }: { user: User }) {
+export function OrganisationTable({ organisations }: { organisations: Organisation[] }) {
+  const { user, authToken } = useArticleAuthContext();
+
+  const [allUsers, setAllUsers] = useState<AllUsersResponse | null>(null);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        if (!user?.user.isTopLevelAdmin || !authToken) {
+          return;
+        };
+
+        const response = await fetch("http://localhost:3001/user/all", {
+          headers: {
+            authorization: `Bearer ${authToken}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error();
+        };
+
+        const data = await response.json();
+        console.log(data);
+        const parsed = AllUsersResponseZ.parse(data.users);
+
+        setAllUsers(parsed);
+        return;
+
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+    };
+
+    fetchAllUsers();
+  }, []);
+  
   return(
     <div className="flex flex-col gap-[12px] bg-grey-450 p-[12px] rounded-2xl">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-xl">Organisations</h3>
-        {user.isTopLevelAdmin && <p className="text-muted-foreground text-sm">You have full access to all orgs</p>}
+        {(user?.user.isTopLevelAdmin && allUsers) && (
+          <CreateOrgDialogue allUsers={allUsers} >
+            <Button variant={"secondary"} className="flex gap-1 items-center">
+              Create Organisation
+              <Plus height={20} width={20} />
+            </Button>
+          </CreateOrgDialogue>
+        )}
+        {/*user.isTopLevelAdmin && <p className="text-muted-foreground text-sm">You have full access to all orgs</p>*/}
       </div>
       
-      <p>ToDo</p>
+      {organisations.length > 0 ? (
+        <>
+          {organisations.map((org) => (
+            <div key={org.organisationId} className="background-color p-3 rounded-lg mb-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {org.metadata.logo ? (
+                    <Image
+                      src={org.metadata.logo}
+                      className="rounded-full"
+                      alt={"Org Logo"}
+                      height={28}
+                      width={28}
+                    />
+                  ) : (
+                    <CircleUserRound height={28} width={28} />
+                  )}
+                  <p>{org.organisationName}</p>
+                </div>
+
+                {(allUsers !== null && (user?.user.isTopLevelAdmin || org.userPermissions.isAdmin)) && (
+                  <EditOrgDialogue allUsers={allUsers} organisationId={org.organisationId} >
+                    <Button className="flex gap-2 items-center h-[34px]">
+                      Edit Organisation
+                      <Pencil height={16} width={16} />
+                    </Button>
+                  </EditOrgDialogue>
+                )}
+              </div>
+
+              <div className="mt-2 text-sm">
+                {org.metadata.description ? (
+                  <p>{org.metadata.description}</p>
+                ) : (
+                  <p className="text-muted-foreground">No Description</p>
+                )}
+                {org.metadata.website && (
+                  <p>
+                    Website: <a href={org.metadata.website}>{org.metadata.website}</a>
+                  </p>
+                )}
+                {org.metadata.x && <p>X: {org.metadata.x}</p>}
+                {org.metadata.discord && <p>Discord: {org.metadata.discord}</p>}
+              </div>
+
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-2 mt-2">
+                {(["isAdmin", "canCreate", "canEdit", "canDelete"] as const).map(
+                  (role) => (
+                    <div key={role} className="flex flex-col gap-0.5">
+                      <p className="text-sm capitalize">{role.replace(/([A-Z])/g, " $1")}</p>
+                        {org.userPermissions[role] ? "True" : "False"}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          ))}
+        </>
+      ) : (
+        <div className="flex items-center justify-center h-[44px]">
+          <p className="text-muted-foreground">No Organisations</p>
+        </div>
+      )}
     </div>
   )
 }
