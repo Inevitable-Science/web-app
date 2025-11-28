@@ -78,7 +78,7 @@ export function Header() {
             ) : (
               <div className="background-color inset-0 flex h-full w-full items-center justify-center rounded opacity-85">
                 <Image
-                  src="/assets/img/branding/logo.svg"
+                  src="https://cdn.inevitable.science/static/img/branding/logo.svg"
                   alt="placeholder header image"
                   className="h-16 w-auto"
                   width={1800}
@@ -115,7 +115,7 @@ export function Header() {
           ) : (
             <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
               <Image
-                src="/assets/img/branding/icon.svg"
+                src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
                 width={24}
                 height={24}
@@ -238,7 +238,7 @@ export function Header() {
         {/* Left cloud - shifted slightly right */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/dao_cloud_left.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_left.webp"
           style={{ transform: "translateX(-40%)" }}
           alt=""
         />
@@ -246,7 +246,7 @@ export function Header() {
         {/* Right cloud - shifted slightly left */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/dao_cloud_right.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_right.webp"
           style={{ transform: "translateX(40%)" }}
           alt=""
         />

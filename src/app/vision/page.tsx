@@ -58,7 +58,7 @@ export default function Vision() {
           </div>
 
           <img
-            src="/assets/img/hero.webp"
+            src="https://cdn.inevitable.science/static/img/hero.webp"
             className="hidden h-[55vh] select-none object-contain sm:block sm:min-h-[400px]"
             height={600}
             width={290}
@@ -85,7 +85,7 @@ export default function Vision() {
           {/* Left cloud */}
           <img
             className="z-[-10] w-[100vw] select-none"
-            src="/assets/img/clouds/cloud_bg_1.webp"
+            src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_1.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""
           />
@@ -93,7 +93,7 @@ export default function Vision() {
           {/* Right cloud */}
           <img
             className="z-[-10] w-[100vw] select-none"
-            src="/assets/img/clouds/cloud_bg_3.webp"
+            src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_3.webp"
             style={{ transform: "translateX(-25%)" }}
             alt=""
           />

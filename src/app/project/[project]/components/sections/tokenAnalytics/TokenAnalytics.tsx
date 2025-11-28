@@ -182,7 +182,7 @@ export function TokenSection() {
                   : "Add To Metamask"}
               <Image
                 alt="Metamask Logo"
-                src="/assets/img/logo/metamask.svg"
+                src="https://cdn.inevitable.science/static/img/logo/metamask.svg"
                 height={16}
                 width={16}
               />
@@ -251,7 +251,7 @@ export function TokenSection() {
                           alt="Token Logo"
                           width={28}
                           height={28}
-                          src="/assets/img/logo/mainnet.svg"
+                          src="https://cdn.inevitable.science/static/img/logo/mainnet.svg"
                         />
                       )}
                       {network === "base" && (
@@ -259,7 +259,7 @@ export function TokenSection() {
                           alt="Token Logo"
                           width={28}
                           height={28}
-                          src="/assets/img/logo/base.svg"
+                          src="https://cdn.inevitable.science/static/img/logo/base.svg"
                         />
                       )}
                       {network === "opt" && (
@@ -267,7 +267,7 @@ export function TokenSection() {
                           alt="Token Logo"
                           width={28}
                           height={28}
-                          src="/assets/img/logo/optimism.svg"
+                          src="https://cdn.inevitable.science/static/img/logo/optimism.svg"
                         />
                       )}
                       {network === "arb" && (
@@ -275,7 +275,7 @@ export function TokenSection() {
                           alt="Token Logo"
                           width={25}
                           height={25}
-                          src="/assets/img/logo/arbitrum.svg"
+                          src="https://cdn.inevitable.science/static/img/logo/arbitrum.svg"
                         />
                       )}
                     </span>

@@ -164,7 +164,7 @@ export function HoldersSection() {
                     : "Add To Metamask"}
                 <Image
                   alt="Metamask Logo"
-                  src="/assets/img/logo/metamask.svg"
+                  src="https://cdn.inevitable.science/static/img/logo/metamask.svg"
                   height={16}
                   width={16}
                 />

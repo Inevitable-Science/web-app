@@ -44,28 +44,28 @@ const projectVars: projectInterface[] = [
   {
     name: "HydraDAO",
     href: "hydradao",
-    logo: "/assets/img/daos/tokenLogos/hydra.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/hydra.svg",
     tokenAddress: "0xaF04f0912E793620824F4442b03F4d984Af29853",
     vestingContract: "0x87d83a88cdc3bfe53877cf852013fc76c8669a99",
   },
   {
     name: "CryoDAO",
     href: "cryodao",
-    logo: "/assets/img/daos/tokenLogos/cryo.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/cryo.svg",
     tokenAddress: "0xf4308b0263723b121056938c2172868e408079d0",
     vestingContract: "0xF5BdfeE7910c561606e6A19Bbf0319238A6a2340",
   },
   {
     name: "Erectus",
     href: "erectusdao",
-    logo: "/assets/img/daos/tokenLogos/yuge.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/yuge.svg",
     tokenAddress: "0xFdc9D2A3cae56e484a85de3C2e812784a8184d0D",
     vestingContract: "0xD8D29d907C248BE3721C0c434c792a127113b297",
   },
   {
     name: "CryoRat",
     href: "cryorat",
-    logo: "/assets/img/daos/tokenLogos/cryorat.png",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/cryorat.webp",
     tokenAddress: "0x4cd1B2874e020C5bf08c4bE18Ab69ca86EC25fEf",
     vestingContract: "0x9dad05FAD7b20C8bb66e5b7796a4E601967e2868",
   },
@@ -75,7 +75,7 @@ const v4ProjectVars: v4ProjectInterface[] = [
   {
     name: "Stasis",
     href: "stasis",
-    logo: "/assets/img/daos/tokenLogos/stasis.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.svg",
     projectID: 64,
   },
 ];

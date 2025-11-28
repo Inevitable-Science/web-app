@@ -64,7 +64,7 @@ export default function Editor({
       const range = quill.getSelection(true);
       if (range == null) return;
 
-      quill.insertEmbed(range.index, "image", "/assets/img/branding/logo.svg");
+      quill.insertEmbed(range.index, "image", "https://cdn.inevitable.science/static/img/branding/logo.svg");
       quill.setSelection(range.index + 1, 0);
 
       try {

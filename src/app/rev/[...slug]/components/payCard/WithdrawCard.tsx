@@ -73,7 +73,7 @@ export function WithdrawCard({
                 src={
                   metadata.data?.logoUri
                     ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                    : "/assets/img/logo/mainnet.svg"
+                    : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
                 }
                 className="rounded-full"
                 height={22}
@@ -106,7 +106,7 @@ export function WithdrawCard({
           </div>
           <div className="flex w-fit min-w-fit items-center justify-end gap-2 rounded-full bg-grey-450 px-2 py-1">
             <Image
-              src="/assets/img/logo/mainnet.svg"
+              src="https://cdn.inevitable.science/static/img/logo/mainnet.svg"
               className="rounded-full"
               height={22}
               width={22}

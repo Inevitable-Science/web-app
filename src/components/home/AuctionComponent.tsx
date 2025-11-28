@@ -58,7 +58,7 @@ export default function AuctionComponent() {
         <div className="flex flex-col gap-2">
           <Image
             className="mb-3 block rounded-2xl md:hidden"
-            src="/assets/img/auction_bg.webp"
+            src="https://cdn.inevitable.science/static/img/auction_bg.webp"
             height={390}
             width={690}
             alt="Auction Image"

@@ -80,14 +80,14 @@ export function Nav() {
         <div className="flex items-center gap-6">
           <Link aria-label="Home" href="/">
             <Image
-              src="/assets/img/branding/icon.svg"
+              src="https://cdn.inevitable.science/static/img/branding/icon.svg"
               width={26}
               height={26}
               className="iconNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
               alt="Icon Image"
             />
             <Image
-              src="/assets/img/branding/logo.svg"
+              src="https://cdn.inevitable.science/static/img/branding/logo.svg"
               width={240}
               height={68}
               className="logoNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
@@ -140,7 +140,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="min-w-[90px] max-w-[125px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
+                  className="block min-w-[90px] w-fit max-w-[130px] overflow-hidden truncate text-ellipsis px-3 text-center normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))
@@ -214,7 +214,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="min-w-[90px] max-w-[125px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
+                  className="block min-w-[90px] w-fit max-w-[130px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))

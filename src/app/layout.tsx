@@ -20,13 +20,13 @@ export default function RootLayout({
         {/* Light theme favicon */}
         <link
           rel="icon"
-          href="/assets/img/branding/favicon-light.ico"
+          href="https://cdn.inevitable.science/static/img/branding/favicon-light.ico"
           media="(prefers-color-scheme: light)"
         />
         {/* Dark theme favicon */}
         <link
           rel="icon"
-          href="/assets/img/branding/favicon-dark.ico"
+          href="https://cdn.inevitable.science/static/img/branding/favicon-dark.ico"
           media="(prefers-color-scheme: dark)"
         />
       </head>

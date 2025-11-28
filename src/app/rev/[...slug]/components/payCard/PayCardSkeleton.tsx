@@ -58,7 +58,7 @@ export function PayCardSkeleton({
               </div>
               <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 p-1.5">
                 <Image
-                  src="/assets/img/branding/manifest/android-chrome-192x192.png"
+                  src="https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-192x192.png"
                   className="rounded-full"
                   height={24}
                   width={24}

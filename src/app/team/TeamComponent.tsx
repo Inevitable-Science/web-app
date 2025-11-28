@@ -13,7 +13,7 @@ type SlideType = {
 
 const slides: SlideType[] = [
   {
-    img: "/assets/img/team/kai_member.webp",
+    img: "https://cdn.inevitable.science/static/img/team/kai_member.webp",
     name: "Kai Micah Mills",
     description:
       "Founder of CryoDAO, HydraDAO, Cryopets, and the American Biostasis Foundation.",
@@ -21,7 +21,7 @@ const slides: SlideType[] = [
     linkedIn: "https://www.linkedin.com/in/kaimicahmills",
   },
   {
-    img: "/assets/img/team/eli_member.webp",
+    img: "https://cdn.inevitable.science/static/img/team/eli_member.webp",
     name: "Eli Mohamad",
     description:
       "Founder of ErectusDAO, CryoDAO, and HydraDAO. Co-founded X-Therma and the Organ Preservation Alliance.",
@@ -29,7 +29,7 @@ const slides: SlideType[] = [
     linkedIn: "https://www.linkedin.com/in/emohamad/",
   },
   {
-    img: "/assets/img/team/austin_member.webp",
+    img: "https://cdn.inevitable.science/static/img/team/austin_member.webp",
     name: "Austin Lynch",
     description:
       "Founder of HydraDAO, Steward of CryoDAO, Head of Member Care at Cryopets.",
@@ -37,7 +37,7 @@ const slides: SlideType[] = [
     linkedIn: "https://www.linkedin.com/in/austin-lynch-61a673202",
   },
   {
-    img: "/assets/img/team/emil_member.webp",
+    img: "https://cdn.inevitable.science/static/img/team/emil_member.webp",
     name: "Dr. Emil Kendziorra",
     description:
       "Founder of Tomorrow Bio, the European Biostasis Foundation, CryoDAO, and HydraDAO.",
@@ -45,7 +45,7 @@ const slides: SlideType[] = [
     linkedIn: "https://www.linkedin.com/in/emilkendziorra/",
   },
   {
-    img: "/assets/img/team/jango_member.webp",
+    img: "https://cdn.inevitable.science/static/img/team/jango_member.webp",
     name: "Jango",
     description: "Founder of Juicebox Protocol, Revnets, and Banny Network.",
     twitter: "https://x.com/me_jango",
@@ -81,7 +81,7 @@ export function TeamComponent() {
                       rel="noopener noreferrer"
                     >
                       <Image
-                        src="/assets/img/team/linked_in_image.webp"
+                        src="https://cdn.inevitable.science/static/img/team/linked_in_image.webp"
                         alt="Linked In Logo"
                         className="pointer-events-none select-none"
                         height={45}
@@ -96,7 +96,7 @@ export function TeamComponent() {
                       rel="noopener noreferrer"
                     >
                       <Image
-                        src="/assets/img/team/twitter_image.webp"
+                        src="https://cdn.inevitable.science/static/img/team/twitter_image.webp"
                         className="pointer-events-none select-none"
                         alt="Twitter Logo"
                         height={41}

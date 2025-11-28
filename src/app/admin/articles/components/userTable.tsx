@@ -316,7 +316,7 @@ export function UserTable() {
       <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3">
         <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
           <Image
-            src="/assets/img/logo/socials/x.svg"
+            src="https://cdn.inevitable.science/static/img/logo/socials/x.svg"
             alt="X Logo"
             height={24}
             width={24}
@@ -385,7 +385,7 @@ export function UserTable() {
 
         <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
           <Image
-            src="/assets/img/logo/socials/linked_in.svg"
+            src="https://cdn.inevitable.science/static/img/logo/socials/linked_in.svg"
             alt="X Logo"
             height={28}
             width={28}

@@ -68,7 +68,7 @@ export default function Page() {
           playsInline
         >
           <source
-            src="/assets/img/layout/home_hero_main.mp4"
+            src="https://cdn.inevitable.science/static/img/layout/home_hero_main.mp4"
             type="video/mp4"
           />
           Your browser does not support the video tag.
@@ -125,7 +125,7 @@ export default function Page() {
         <div className="relative">
           <img
             className="sm-translate-up absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] select-none overflow-hidden"
-            src="/assets/img/fog_bg.webp"
+            src="https://cdn.inevitable.science/static/img/fog_bg.webp"
             alt=""
           />
 
@@ -141,14 +141,14 @@ export default function Page() {
             <div className="pointer-events-none absolute top-0 hidden w-full items-center justify-between overflow-hidden sm:flex">
               <img
                 className="z-[-10] select-none overflow-hidden"
-                src="/assets/img/clouds/cloud_left.webp"
+                src="https://cdn.inevitable.science/static/img/clouds/cloud_left.webp"
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
               <img
                 className="relative z-[-10] select-none overflow-hidden"
-                src="/assets/img/clouds/cloud_right.webp"
+                src="https://cdn.inevitable.science/static/img/clouds/cloud_right.webp"
                 style={{ transform: "translateX(40%)" }}
                 alt=""
               />
@@ -163,7 +163,7 @@ export default function Page() {
             <div className="flex flex-col items-center gap-6 text-center">
               <Image
                 alt="Icon Logo"
-                src="/assets/img/branding/icon.svg"
+                src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 height="70"
                 width="35"
               />
@@ -188,7 +188,7 @@ export default function Page() {
 
             <img
               className="pointer-events-none relative top-[-10px] hidden h-[40vh] sm:block"
-              src="/assets/img/hero.webp"
+              src="https://cdn.inevitable.science/static/img/hero.webp"
               alt="Hero Image"
             />
           </div>

@@ -43,7 +43,7 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
           rel="noopener noreferrer"
         >
           <Image
-            src="/assets/img/logo/socials/discord.svg"
+            src="https://cdn.inevitable.science/static/img/logo/socials/discord.svg"
             alt="Join Discord"
             height="20"
             width="20"
@@ -60,7 +60,7 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
           rel="noopener noreferrer"
         >
           <Image
-            src="/assets/img/logo/socials/x.svg"
+            src="https://cdn.inevitable.science/static/img/logo/socials/x.svg"
             alt="Follow Our X"
             height="16"
             width="16"
