@@ -12,7 +12,7 @@ export default function PartnersComponent() {
         <div className="flex flex-wrap items-center justify-center gap-6">
           <div className="text-center">
             <Image
-              src="/assets/img/partner.webp"
+              src="https://cdn.inevitable.science/static/img/partner.webp"
               className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
@@ -23,7 +23,7 @@ export default function PartnersComponent() {
 
           <div className="text-center">
             <Image
-              src="/assets/img/partner.webp"
+              src="https://cdn.inevitable.science/static/img/partner.webp"
               className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
@@ -34,7 +34,7 @@ export default function PartnersComponent() {
 
           <div className="text-center">
             <Image
-              src="/assets/img/partner.webp"
+              src="https://cdn.inevitable.science/static/img/partner.webp"
               className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
@@ -45,7 +45,7 @@ export default function PartnersComponent() {
 
           <div className="text-center">
             <Image
-              src="/assets/img/partner.webp"
+              src="https://cdn.inevitable.science/static/img/partner.webp"
               className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}
@@ -56,7 +56,7 @@ export default function PartnersComponent() {
 
           <div className="text-center">
             <Image
-              src="/assets/img/partner.webp"
+              src="https://cdn.inevitable.science/static/img/partner.webp"
               className="mb-4 w-32 opacity-60 md:w-48"
               height={200}
               width={200}

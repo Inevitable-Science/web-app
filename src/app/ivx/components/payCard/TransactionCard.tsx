@@ -264,7 +264,7 @@ export function TransactionCard() {
               src={
                 metadata.data?.logoUri
                   ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                  : "/assets/img/logo/mainnet.svg"
+                  : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
               }
               className="rounded-full"
               height={24}

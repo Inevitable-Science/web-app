@@ -85,7 +85,7 @@ export default function DaosGrid() {
         {/* Left cloud */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/cloud_bg_1.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_1.webp"
           style={{ transform: "translateX(25%)" }}
           alt=""
         />
@@ -93,7 +93,7 @@ export default function DaosGrid() {
         {/* Center cloud */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/cloud_bg_2.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_2.webp"
           style={{ transform: "translateX(10%)" }}
           alt=""
         />
@@ -101,7 +101,7 @@ export default function DaosGrid() {
         {/* Right cloud */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/cloud_bg_3.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_3.webp"
           style={{ transform: "translateX(-25%)" }}
           alt=""
         />
@@ -154,7 +154,7 @@ export default function DaosGrid() {
       >
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/cloud_bottom_right.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/cloud_bottom_right.webp"
           style={{ transform: "translateX(30%)" }}
           alt=""
         />
@@ -189,7 +189,7 @@ export default function DaosGrid() {
       >
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/cloud_bottom_center.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/cloud_bottom_center.webp"
           style={{ transform: "translateX(-5%)" }}
           alt=""
         />

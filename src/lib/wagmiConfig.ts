@@ -76,9 +76,14 @@ export const wagmiConfig = createConfig({
   });
 */
 
+import { getDefaultConnectors } from "connectkit";
 import { arbitrum, base, mainnet, optimism } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
-import { coinbaseWallet, safe, walletConnect } from "wagmi/connectors";
+import {
+  coinbaseWallet,
+  safe,
+  walletConnect,
+} from "wagmi/connectors";
 
 const safeConnector = safe({
   allowedDomains: [/^app\.safe\.global$/],
@@ -91,11 +96,11 @@ const isProduction = process.env.NODE_ENV === "production";
 export const wagmiConfig = createConfig({
   chains: [mainnet, optimism, arbitrum, base],
   connectors: [
-    safeConnector,
     coinbaseWallet({
       appName: "Inevitable Protocol",
       appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
     }),
+    safeConnector,
     walletConnect({
       projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
       showQrModal: false,

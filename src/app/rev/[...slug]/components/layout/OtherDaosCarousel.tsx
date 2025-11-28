@@ -24,28 +24,28 @@ type PropType = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: "/assets/img/daos/cryo.webp",
+    img: "https://cdn.inevitable.science/static/img/daos/cryo.webp",
     href: "cryodao",
     title: "CryoDAO",
     description:
       "DAO specialized in advancing high-impact cryopreservation research.",
   },
   {
-    img: "/assets/img/daos/hydra.webp",
+    img: "https://cdn.inevitable.science/static/img/daos/hydra.webp",
     href: "hydradao",
     title: "HydraDAO",
     description:
       "Funding and incubating replacement research to extend human lifespan.",
   },
   {
-    img: "/assets/img/daos/erectus.webp",
+    img: "https://cdn.inevitable.science/static/img/daos/erectus.webp",
     href: "erectusdao",
     title: "Erectus",
     description:
       "Community owned collective funding and promoting male sexual health research.",
   },
   {
-    img: "/assets/img/daos/cryorat.webp",
+    img: "https://cdn.inevitable.science/static/img/daos/cryorat.webp",
     href: "cryorat",
     title: "CryoRat",
     description: "High sub-zero preservation and revival of a rat.",
@@ -76,7 +76,7 @@ export function OtherDaosCarousel({
           {/* Left cloud - shifted slightly right */}
           <img
             className="z-[-10] w-full select-none"
-            src="/assets/img/clouds/dao_cloud_bottom_left.webp"
+            src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_bottom_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
           />
@@ -84,7 +84,7 @@ export function OtherDaosCarousel({
           {/* Right cloud - shifted slightly left */}
           <img
             className="z-[-10] w-full select-none"
-            src="/assets/img/clouds/dao_cloud_bottom_right.webp"
+            src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_bottom_right.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""
           />

@@ -23,25 +23,25 @@ type Props = {
 
 const DEFAULT_SLIDES: SlideType[] = [
   {
-    img: "/assets/img/articles/article_1.png",
+    img: "https://cdn.inevitable.science/static/img/articles/article_1.png",
     title: "Article Title 1",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: "/assets/img/articles/article_2.png",
+    img: "https://cdn.inevitable.science/static/img/articles/article_2.png",
     title: "Article Title 2",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: "/assets/img/articles/article_3.png",
+    img: "https://cdn.inevitable.science/static/img/articles/article_3.png",
     title: "Article Title 3",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
   },
   {
-    img: "/assets/img/articles/article_4.png",
+    img: "https://cdn.inevitable.science/static/img/articles/article_4.png",
     title: "Article Title 4",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",

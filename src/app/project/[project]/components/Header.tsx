@@ -10,23 +10,25 @@ export function Header() {
     <header>
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
-          <div className="absolute top-0 z-[-1] h-[328px] w-full overflow-hidden rounded">
+          <div className="absolute top-0 z-[-1] mt-[90px] h-[238px] w-full overflow-hidden rounded">
             {analyticsData?.daoData?.logo ? (
               <Image
                 src={analyticsData?.daoData?.backdrop}
                 alt={"Project Logo"}
-                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
+                className="inset-0 h-full w-full rounded object-cover"
                 width={600}
                 height={400}
               />
             ) : (
-              <Image
-                src="https://juicebox.money/_next/image?url=https%3A%2F%2Fjbm.infura-ipfs.io%2Fipfs%2FQmbtfkWtVocZnakQucppwBEFxdnJsRoMpFKbjtDbkQbapc&w=3840&q=75&dpl=dpl_GPDUQpfXZdursdZ7JpC6ufhYvi65"
-                alt="placeholder header image"
-                className="inset-0 mt-[90px] h-full w-full rounded object-cover"
-                width={600}
-                height={400}
-              />
+              <div className="background-color inset-0 flex h-full w-full items-center justify-center rounded opacity-85">
+                <Image
+                  src="https://cdn.inevitable.science/static/img/branding/logo.svg"
+                  alt="placeholder header image"
+                  className="h-16 w-auto"
+                  width={1800}
+                  height={1200}
+                />
+              </div>
             )}
           </div>
         </div>
@@ -57,7 +59,7 @@ export function Header() {
           ) : (
             <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
               <Image
-                src="/assets/img/branding/icon.svg"
+                src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
                 width={24}
                 height={24}
@@ -159,7 +161,7 @@ export function Header() {
         {/* Left cloud - shifted slightly right */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/dao_cloud_left.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_left.webp"
           style={{ transform: "translateX(-40%)" }}
           alt=""
         />
@@ -167,7 +169,7 @@ export function Header() {
         {/* Right cloud - shifted slightly left */}
         <img
           className="z-[-10] w-screen select-none"
-          src="/assets/img/clouds/dao_cloud_right.webp"
+          src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_right.webp"
           style={{ transform: "translateX(40%)" }}
           alt=""
         />

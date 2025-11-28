@@ -21,14 +21,14 @@ export const chainSortOrder = new Map<JBChainId, number>([
 ]);
 
 export const chainIdToLogo = {
-  [sepolia.id]: "/assets/img/logo/mainnet.svg",
-  [optimismSepolia.id]: "/assets/img/logo/optimism.svg",
-  [baseSepolia.id]: "/assets/img/logo/base.svg",
-  [arbitrumSepolia.id]: "/assets/img/logo/arbitrum.svg",
-  [mainnet.id]: "/assets/img/logo/mainnet.svg",
-  [optimism.id]: "/assets/img/logo/optimism.svg",
-  [base.id]: "/assets/img/logo/base.svg",
-  [arbitrum.id]: "/assets/img/logo/arbitrum.svg",
+  [sepolia.id]: "https://cdn.inevitable.science/static/img/logo/mainnet.svg",
+  [optimismSepolia.id]: "https://cdn.inevitable.science/static/img/logo/optimism.svg",
+  [baseSepolia.id]: "https://cdn.inevitable.science/static/img/logo/base.svg",
+  [arbitrumSepolia.id]: "https://cdn.inevitable.science/static/img/logo/arbitrum.svg",
+  [mainnet.id]: "https://cdn.inevitable.science/static/img/logo/mainnet.svg",
+  [optimism.id]: "https://cdn.inevitable.science/static/img/logo/optimism.svg",
+  [base.id]: "https://cdn.inevitable.science/static/img/logo/base.svg",
+  [arbitrum.id]: "https://cdn.inevitable.science/static/img/logo/arbitrum.svg",
 };
 
 export const BACKED_BY_TOKENS = ["ETH", "USDC"] as const;

@@ -13,17 +13,14 @@ const buttonVariants = cva(
         default: "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
-        destructive:
-          "bg-red-500 text-zinc-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-zinc-50 dark:hover:bg-red-900/90",
-        //outline: "border border-color rounded-lg",
+        destructive: "bg-red-600 hover:bg-red-600/90 rounded-lg",
         outline:
           "border border-[var(--grey-500)] rounded-lg hover:bg-grey-450 hover:border-[var(--grey-100)]",
         bottomline:
           "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
-        "tab-selected":
+        tabSelected:
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
-        secondary:
-          "bg-zinc-100 text-zinc-900 hover:bg-zinc-100/80 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-800/80",
+        secondary: "rounded-lg background-color",
         ghost: "rounded hover:text-white hover:bg-grey-450",
         link: "font-light text-base !p-0 hover:underline",
       },

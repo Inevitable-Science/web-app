@@ -8,7 +8,7 @@ export default function Footer() {
       {/* CENTERED SECTION */}
       <div className="flex flex-grow flex-col items-center justify-center gap-16">
         <Image
-          src="/assets/img/branding/icon.svg"
+          src="https://cdn.inevitable.science/static/img/branding/icon.svg"
           alt="Icon Logo"
           height="70"
           width="38"
@@ -45,7 +45,7 @@ export default function Footer() {
             rel="noopener noreferrer"
           >
             <Image
-              src="/assets/img/logo/socials/x.svg"
+              src="https://cdn.inevitable.science/static/img/logo/socials/x.svg"
               alt="X Logo"
               height={16}
               width={16}
@@ -58,7 +58,7 @@ export default function Footer() {
             rel="noopener noreferrer"
           >
             <Image
-              src="/assets/img/logo/socials/discord.svg"
+              src="https://cdn.inevitable.science/static/img/logo/socials/discord.svg"
               alt="Discord Logo"
               height={20}
               width={20}

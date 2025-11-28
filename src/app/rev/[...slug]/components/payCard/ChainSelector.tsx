@@ -59,7 +59,7 @@ export const ChainSelector = ({
               {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
               value.address.toLowerCase() ? (
                 <Image
-                  src={"/assets/img/logo/usdc.svg"}
+                  src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
                   alt={`USDC Logo`}
                   width={24}
                   height={24}
@@ -127,7 +127,7 @@ export const ChainSelector = ({
                 <ChainLogo chainId={1} />
               ) : (
                 <Image
-                  src={"/assets/img/logo/usdc.svg"}
+                  src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
                   alt={`USDC Logo`}
                   width={24}
                   height={24}

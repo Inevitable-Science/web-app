@@ -28,7 +28,8 @@
 }
 
 ::selection {
-  background: theme("colors.orange.200");
+  background: var(--light-gold);
+  color: #000000;
 }
 
 :root {
