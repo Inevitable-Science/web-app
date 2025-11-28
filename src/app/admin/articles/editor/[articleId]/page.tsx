@@ -1,11 +1,10 @@
-"use client"
+"use client";
 import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { ArticleEditor } from "../components/articleEditor";
 import { ArticleResponseZ, ArticleResponse } from "../../helpers/types";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-
 
 export default function ArticleEditorPage() {
   const params = useParams();
@@ -18,15 +17,18 @@ export default function ArticleEditorPage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/fetch/${articleId}`, {
-          headers: {
-            authorization: `Bearer ${authToken}`
-          },
-          cache: 'no-store',
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/fetch/${articleId}`,
+          {
+            headers: {
+              authorization: `Bearer ${authToken}`,
+            },
+            cache: "no-store",
+          }
+        );
 
         if (!response.ok) throw new Error();
-        
+
         const data = await response.json();
         const parsed = ArticleResponseZ.parse(data);
 
@@ -52,6 +54,6 @@ export default function ArticleEditorPage() {
       <>
         <ArticleEditor article={article} />
       </>
-    )
+    );
   }
 }

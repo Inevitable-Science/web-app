@@ -10,9 +10,17 @@ import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 interface ArticleProp {
   articleId: string;
   articleTitle: string;
-};
+}
 
-export function DeleteArticleDialogue({ article, organisationId, children }: { article: ArticleProp; organisationId: string; children: React.ReactNode; }) {
+export function DeleteArticleDialogue({
+  article,
+  organisationId,
+  children,
+}: {
+  article: ArticleProp;
+  organisationId: string;
+  children: React.ReactNode;
+}) {
   const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
   const { toast } = useToast();
   const pathname = usePathname();
@@ -21,56 +29,60 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
 
   const deleteArticle = async () => {
     try {
-      const userOrg = user?.organisations.find(org => org.organisationId === organisationId);
+      const userOrg = user?.organisations.find(
+        (org) => org.organisationId === organisationId
+      );
       if (!user?.user.isTopLevelAdmin && !userOrg?.userPermissions.canDelete) {
         toast({
           title: "Error",
           variant: "destructive",
-          description: "You Cannot Delete This Article"
+          description: "You Cannot Delete This Article",
         });
         return;
-      };
+      }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/delete`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${authToken}`
-        },
-        body: JSON.stringify({
-          articleId: article.articleId
-        })
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/article/delete`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            articleId: article.articleId,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
         throw new Error();
-      };
+      }
 
       const data = await response.json();
       console.log(data);
-      
+
       if (pathname !== "/admin/articles") {
         window.location.href = "/admin/articles";
         return;
-      };
+      }
 
       await silentRevalidateUser();
       setIsModalOpen(false);
 
       toast({
         title: "Success",
-        description: "Article Deleted"
+        description: "Article Deleted",
       });
       return;
-
     } catch (err) {
       console.log(err);
       toast({
         title: "Error",
         variant: "destructive",
-        description: "Error Deleting Article"
+        description: "Error Deleting Article",
       });
       return;
     }
@@ -78,9 +90,7 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
 
   return (
     <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
-        {children}
-      </Dialog.Trigger>
+      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
@@ -93,9 +103,10 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
             Confirm Action
           </Dialog.Title>
           <Dialog.Description className="mt-2 text-sm text-muted-foreground">
-            Are you sure you would like to delete 
+            Are you sure you would like to delete
             <span className="text-color font-semibold">
-              {" "}{article.articleTitle}
+              {" "}
+              {article.articleTitle}
             </span>
           </Dialog.Description>
 
@@ -114,4 +125,4 @@ export function DeleteArticleDialogue({ article, organisationId, children }: { a
       </Dialog.Portal>
     </Dialog.Root>
   );
-};
+}

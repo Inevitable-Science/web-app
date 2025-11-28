@@ -66,7 +66,7 @@ export function Header() {
     <header>
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
-          <div className="absolute top-0 mt-[90px] z-[-1] h-[238px] w-full overflow-hidden rounded">
+          <div className="absolute top-0 z-[-1] mt-[90px] h-[238px] w-full overflow-hidden rounded">
             {coverImageUri ? (
               <Image
                 src={ipfsUriToGatewayUrl(coverImageUri)}
@@ -76,7 +76,7 @@ export function Header() {
                 height={400}
               />
             ) : (
-              <div className="background-color inset-0 h-full w-full flex justify-center items-center opacity-85 rounded">
+              <div className="background-color inset-0 flex h-full w-full items-center justify-center rounded opacity-85">
                 <Image
                   src="/assets/img/branding/logo.svg"
                   alt="placeholder header image"
@@ -125,13 +125,11 @@ export function Header() {
         </div>
 
         <div className="w-full">
-          <div className="flex flex-wrap items-baseline mb-6 gap-2 text-sm">
+          <div className="mb-6 flex flex-wrap items-baseline gap-2 text-sm">
             {projectName ? (
-              <h1 className="text-2xl font-light sm:text-3xl">
-                {projectName}
-              </h1>
+              <h1 className="text-2xl font-light sm:text-3xl">{projectName}</h1>
             ) : (
-              <div className="activeSkeleton h-[36px] w-[130px] opacity-70 rounded-lg" />
+              <div className="activeSkeleton h-[36px] w-[130px] rounded-lg opacity-70" />
             )}
             {twitter && (
               <h5 className="text-base text-cerulean">

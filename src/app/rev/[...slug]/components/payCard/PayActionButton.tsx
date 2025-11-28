@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useToast } from "@/components/ui/use-toast";
 import {
   JB_CHAINS,

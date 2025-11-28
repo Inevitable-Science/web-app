@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -18,7 +18,7 @@ interface SelectedUser {
   canEdit: boolean;
   canDelete: boolean;
   canCreate: boolean;
-};
+}
 
 interface SingleUser {
   userId: string;
@@ -26,7 +26,13 @@ interface SingleUser {
   username: string;
 }
 
-export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersResponse; children: React.ReactNode; }) {
+export function CreateOrgDialogue({
+  allUsers,
+  children,
+}: {
+  allUsers: AllUsersResponse;
+  children: React.ReactNode;
+}) {
   const { authToken, silentRevalidateUser } = useArticleAuthContext();
   const { toast } = useToast();
 
@@ -35,11 +41,11 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
 
   const [organisationName, setOrganisationName] = useState("");
   const [orgLogo, setOrgLogo] = useState<string | null>(null);
-  
+
   const [socialWebsite, setSocialWebsite] = useState("");
   const [socialX, setSocialX] = useState("");
   const [socialDiscord, setSocialDiscord] = useState("");
-  const [description, setDescription] = useState(""); 
+  const [description, setDescription] = useState("");
 
   const [orgUsers, setOrgUsers] = useState<SelectedUser[]>([]);
   const [searchUsers, setSearchUsers] = useState<AllUsersResponse>(allUsers);
@@ -58,13 +64,12 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
           description: "Please select an image file",
         });
         return;
-      };
+      }
 
       const url = await uploadImage(file, "organisation", authToken);
 
       setOrgLogo(url);
       return;
-
     } catch (err) {
       console.log(err);
       toast({
@@ -73,9 +78,8 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
         description: "Error Uploading File",
       });
       return;
-    };
+    }
   };
-
 
   const addUserToOrg = (user: SingleUser) => {
     const addUser = {
@@ -88,15 +92,17 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
     setOrgUsers([...orgUsers, addUser]);
     return;
   };
-  
+
   const removeUserFromOrg = (userId: string) => {
-    const filteredUsers = orgUsers.filter(u => u.userId !== userId);
+    const filteredUsers = orgUsers.filter((u) => u.userId !== userId);
     setOrgUsers(filteredUsers);
   };
 
   const searchUsersQuery = (username: string) => {
     const lowercase = username.toLowerCase();
-    const userArray = allUsers.filter(u => u.username.toLocaleLowerCase().includes(lowercase));
+    const userArray = allUsers.filter((u) =>
+      u.username.toLocaleLowerCase().includes(lowercase)
+    );
     setSearchUsers(userArray);
   };
 
@@ -136,17 +142,16 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
     );
   };
 
-
   const createOrg = async () => {
     try {
       if (!organisationName) {
         toast({
           title: "Error",
           variant: "destructive",
-          description: "An Organisation Name Is Required"
+          description: "An Organisation Name Is Required",
         });
         return;
-      };
+      }
 
       const websiteRegex = /^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/;
       const discordRegex = /^https:\/\/discord\.gg\/[A-Za-z0-9]+$/;
@@ -155,19 +160,20 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
         toast({
           title: "Error",
           variant: "destructive",
-          description: "Please Enter A Valid Website (https:// Included)"
+          description: "Please Enter A Valid Website (https:// Included)",
         });
         return;
-      };
+      }
 
       if (socialDiscord && !discordRegex.test(socialDiscord)) {
         toast({
           title: "Error",
           variant: "destructive",
-          description: "Please Enter A Valid Discord (https://discord.gg/ Included)"
+          description:
+            "Please Enter A Valid Discord (https://discord.gg/ Included)",
         });
         return;
-      };
+      }
 
       setIsSaving(true);
 
@@ -183,20 +189,23 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
         },
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/organisation/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/organisation/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       if (!response.ok) {
         const data = await response.json();
         console.log(data);
-        throw new Error();       
-      };
+        throw new Error();
+      }
 
       const data = await response.json();
       console.log(data);
@@ -205,16 +214,15 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
       resetModalState();
       toast({
         title: "Success",
-        description: "Organisation Created"
+        description: "Organisation Created",
       });
       return;
-
     } catch (err) {
       console.log(err);
       toast({
         title: "Error",
         variant: "destructive",
-        description: "An Error Occured"
+        description: "An Error Occured",
       });
       return;
     } finally {
@@ -235,245 +243,274 @@ export function CreateOrgDialogue({ allUsers, children }: { allUsers: AllUsersRe
     setSearchUsers(allUsers);
   };
 
-
   return (
     <>
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
-        {children}
-      </Dialog.Trigger>
+      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
 
-        <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg max-h-[80vh] overflow-y-auto -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg"
-        >
-          <div className="flex items-center justify-between">
-            <Dialog.Title className="text-lg font-semibold">
-              Create Organisation
-            </Dialog.Title>
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-grey-450 p-6 shadow-lg">
+            <div className="flex items-center justify-between">
+              <Dialog.Title className="text-lg font-semibold">
+                Create Organisation
+              </Dialog.Title>
 
-            <Dialog.Close asChild>
-              <Button onClick={() => {}} variant={"ghost"} size={"icon"} >
-                <X />
-              </Button>
-            </Dialog.Close>
-          </div>
-          <Dialog.Description className="hidden">
-          </Dialog.Description>
-          <div className="mt-4">
-            <div className="flex items-center gap-2">
-              <div className="relative group w-[48px] h-[48px] overflow-hidden">
-                {orgLogo ? (
-                  <Image
-                    src={orgLogo}
-                    alt="profile picture"
-                    className="max-h-[48px] max-w-[48px] w-full h-full rounded-full cursor-pointer object-cover"
-                    height={48}
-                    width={48}
+              <Dialog.Close asChild>
+                <Button onClick={() => {}} variant={"ghost"} size={"icon"}>
+                  <X />
+                </Button>
+              </Dialog.Close>
+            </div>
+            <Dialog.Description className="hidden"></Dialog.Description>
+            <div className="mt-4">
+              <div className="flex items-center gap-2">
+                <div className="group relative h-[48px] w-[48px] overflow-hidden">
+                  {orgLogo ? (
+                    <Image
+                      src={orgLogo}
+                      alt="profile picture"
+                      className="h-full max-h-[48px] w-full max-w-[48px] cursor-pointer rounded-full object-cover"
+                      height={48}
+                      width={48}
+                    />
+                  ) : (
+                    <CircleUserRound
+                      className="cursor-pointer opacity-80"
+                      width={48}
+                      height={48}
+                    />
+                  )}
+
+                  <div className="pointer-events-none absolute inset-0 rounded-full bg-black opacity-0 transition-opacity duration-200 group-hover:opacity-50" />
+                  <Pencil
+                    className="pointer-events-none absolute inset-0 m-auto opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    width={24}
+                    height={24}
+                    color="white"
                   />
-                ) : (
-                  <CircleUserRound
-                    className="opacity-80 cursor-pointer"
-                    width={48}
-                    height={48}
+                  <input
+                    id="org-create-image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={uploadOrgImage}
+                    className="hidden"
                   />
-                )}
-    
-                <div
-                  className="
-                    absolute inset-0 rounded-full
-                    bg-black opacity-0 group-hover:opacity-50
-                    transition-opacity duration-200
-                    pointer-events-none
-                  "
-                />
-                <Pencil
-                  className="
-                    absolute inset-0 m-auto
-                    opacity-0 group-hover:opacity-100
-                    transition-opacity duration-200
-                    pointer-events-none
-                  "
-                  width={24}
-                  height={24}
-                  color="white"
-                />
-                <input
-                  id="org-create-image-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={uploadOrgImage}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="org-create-image-upload"
-                  className="absolute inset-0 cursor-pointer rounded-full"
-                />
+                  <label
+                    htmlFor="org-create-image-upload"
+                    className="absolute inset-0 cursor-pointer rounded-full"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="text"
+                    className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    placeholder="Organisation Name"
+                    value={organisationName}
+                    onChange={(e) => setOrganisationName(e.target.value)}
+                  />
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      placeholder="Website"
+                      value={socialWebsite}
+                      onChange={(e) => setSocialWebsite(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      placeholder="X/Twitter @"
+                      value={socialX}
+                      onChange={(e) => setSocialX(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      placeholder="Discord URL"
+                      value={socialDiscord}
+                      onChange={(e) => setSocialDiscord(e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
 
+              <textarea
+                placeholder="Add Description"
+                className="background-color mt-2 h-[90px] w-full resize-none rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
 
-              <div className="flex flex-col gap-2">
-                <input
-                  type="text"
-                  className="background-color w-full h-[28px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-                  placeholder="Organisation Name"
-                  value={organisationName}
-                  onChange={(e) => setOrganisationName(e.target.value)}
-                />
+              <div className="background-color mt-2 rounded-lg p-3">
+                <h3>Users</h3>
 
-                <div className="flex items-center gap-2">
+                <div className="mb-6 mt-2">
+                  {orgUsers.length > 0 ? (
+                    <>
+                      {orgUsers.map((u) => (
+                        <div
+                          key={u.userId}
+                          className="rounded-lg bg-grey-450 p-2"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              {u.profilePicture ? (
+                                <Image
+                                  src={u.profilePicture}
+                                  className="rounded-full"
+                                  alt={"User PFP"}
+                                  height={28}
+                                  width={28}
+                                />
+                              ) : (
+                                <CircleUserRound height={28} width={28} />
+                              )}
+                              <p>{u.username}</p>
+                            </div>
+
+                            <Button
+                              onClick={() => removeUserFromOrg(u.userId)}
+                              variant={"secondary"}
+                              className="h-[28px]"
+                            >
+                              Remove
+                            </Button>
+                          </div>
+
+                          <div className="mt-2 grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-2">
+                            <div className="flex flex-col gap-0.5">
+                              <p className="text-sm">Is Admin</p>
+                              <Button
+                                onClick={() =>
+                                  toggleUserRole(u.userId, "isAdmin")
+                                }
+                                variant={"secondary"}
+                                className="h-[28px]"
+                              >
+                                {u.isAdmin ? "True" : "False"}
+                              </Button>
+                            </div>
+
+                            <div className="flex flex-col gap-0.5">
+                              <p className="text-sm">Can Create</p>
+                              <Button
+                                onClick={() =>
+                                  toggleUserRole(u.userId, "canCreate")
+                                }
+                                variant={"secondary"}
+                                className="h-[28px]"
+                              >
+                                {u.canCreate ? "True" : "False"}
+                              </Button>
+                            </div>
+
+                            <div className="flex flex-col gap-0.5">
+                              <p className="text-sm">Can Edit</p>
+                              <Button
+                                onClick={() =>
+                                  toggleUserRole(u.userId, "canEdit")
+                                }
+                                variant={"secondary"}
+                                className="h-[28px]"
+                              >
+                                {u.canEdit ? "True" : "False"}
+                              </Button>
+                            </div>
+
+                            <div className="flex flex-col gap-0.5">
+                              <p className="text-sm">Can Delete</p>
+                              <Button
+                                onClick={() =>
+                                  toggleUserRole(u.userId, "canDelete")
+                                }
+                                variant={"secondary"}
+                                className="h-[28px]"
+                              >
+                                {u.canDelete ? "True" : "False"}
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <div className="flex h-[44px] items-center justify-center">
+                      <p className="text-muted-foreground">No Users Selected</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <h3>Add Users</h3>
                   <input
                     type="text"
-                    className="background-color w-full h-[28px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-                    placeholder="Website"
-                    value={socialWebsite}
-                    onChange={(e) => setSocialWebsite(e.target.value)}
+                    className="h-[28px] w-full max-w-[150px] rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    placeholder="Search..."
+                    onChange={(e) => searchUsersQuery(e.target.value)}
                   />
-                  <input
-                    type="text"
-                    className="background-color w-full h-[28px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-                    placeholder="X/Twitter @"
-                    value={socialX}
-                    onChange={(e) => setSocialX(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    className="background-color w-full h-[28px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-                    placeholder="Discord URL"
-                    value={socialDiscord}
-                    onChange={(e) => setSocialDiscord(e.target.value)}
-                  />
+                </div>
+
+                <div className="mt-2 flex flex-col gap-2">
+                  {searchUsers.map((u) => (
+                    <div
+                      key={u.userId}
+                      className="flex items-center justify-between rounded-lg bg-grey-450 p-2"
+                    >
+                      <div className="flex items-center gap-2">
+                        {u.profilePicture ? (
+                          <Image
+                            src={u.profilePicture}
+                            className="rounded-full"
+                            alt={"User PFP"}
+                            height={28}
+                            width={28}
+                          />
+                        ) : (
+                          <CircleUserRound height={28} width={28} />
+                        )}
+                        <p>{u.username}</p>
+                      </div>
+
+                      <Button
+                        disabled={
+                          orgUsers.filter((orgU) => orgU.userId === u.userId)
+                            .length === 1
+                        }
+                        onClick={() => addUserToOrg(u)}
+                        variant={"secondary"}
+                        className="h-[28px]"
+                      >
+                        {orgUsers.filter((orgU) => orgU.userId === u.userId)
+                          .length === 1
+                          ? "Added"
+                          : "Add"}
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            <textarea
-              placeholder="Add Description"
-              className="background-color mt-2 resize-none w-full h-[90px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <div className="mt-6 flex justify-end space-x-2">
+              <Button onClick={resetModalState} variant={"ghost"}>
+                Cancel
+              </Button>
 
-            <div className="background-color rounded-lg mt-2 p-3">
-              <h3>Users</h3>
-
-              <div className="mt-2 mb-6">
-                {orgUsers.length > 0 ? (
-                  <>
-                  {orgUsers.map(u => (
-                    <div key={u.userId} className="bg-grey-450 p-2 rounded-lg">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {u.profilePicture ? (
-                            <Image
-                              src={u.profilePicture}
-                              className="rounded-full"
-                              alt={"User PFP"}
-                              height={28}
-                              width={28}
-                            />
-                          ) : (
-                            <CircleUserRound height={28} width={28}/>
-                          )}
-                          <p>{u.username}</p>
-                        </div>
-
-                        <Button onClick={() => removeUserFromOrg(u.userId)} variant={"secondary"} className="h-[28px]">
-                          Remove
-                        </Button>
-                      </div>
-
-                      <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] gap-2 mt-2">
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-sm">Is Admin</p>
-                          <Button onClick={() => toggleUserRole(u.userId, "isAdmin")} variant={"secondary"} className="h-[28px]">
-                            {u.isAdmin ? "True": "False"}
-                          </Button>
-                        </div>
-
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-sm">Can Create</p>
-                          <Button onClick={() => toggleUserRole(u.userId, "canCreate")} variant={"secondary"} className="h-[28px]">
-                            {u.canCreate ? "True": "False"}
-                          </Button>
-                        </div>
-
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-sm">Can Edit</p>
-                          <Button onClick={() => toggleUserRole(u.userId, "canEdit")} variant={"secondary"} className="h-[28px]">
-                            {u.canEdit ? "True": "False"}
-                          </Button>
-                        </div>
-
-                        <div className="flex flex-col gap-0.5">
-                          <p className="text-sm">Can Delete</p>
-                          <Button onClick={() => toggleUserRole(u.userId, "canDelete")} variant={"secondary"} className="h-[28px]">
-                            {u.canDelete ? "True": "False"}
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  </>
-                ) : (
-                  <div className="flex items-center justify-center h-[44px]">
-                    <p className="text-muted-foreground">No Users Selected</p>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <h3>Add Users</h3>
-                <input
-                  type="text"
-                  className="bg-grey-450 w-full h-[28px] max-w-[150px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-                  placeholder="Search..."
-                  onChange={(e) => searchUsersQuery(e.target.value)}
-                />
-              </div>
-              
-              <div className="flex flex-col gap-2 mt-2">
-                {searchUsers.map(u => (
-                  <div key={u.userId} className="bg-grey-450 p-2 rounded-lg flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {u.profilePicture ? (
-                        <Image
-                          src={u.profilePicture}
-                          className="rounded-full"
-                          alt={"User PFP"}
-                          height={28}
-                          width={28}
-                        />
-                      ) : (
-                        <CircleUserRound height={28} width={28}/>
-                      )}
-                      <p>{u.username}</p>
-                    </div>
-
-                    <Button disabled={orgUsers.filter(orgU => orgU.userId === u.userId).length === 1} onClick={() => addUserToOrg(u)} variant={"secondary"} className="h-[28px]">
-                      {orgUsers.filter(orgU => orgU.userId === u.userId).length === 1 ? 
-                      ("Added") : ("Add")}
-                    </Button>
-                  </div>
-                ))}
-              </div>
+              <Button
+                disabled={isSaving}
+                onClick={createOrg}
+                variant={"secondary"}
+              >
+                Create Organisation
+              </Button>
             </div>
-          </div>
-
-          <div className="mt-6 flex justify-end space-x-2">
-            <Button onClick={resetModalState} variant={"ghost"}>
-              Cancel
-            </Button>
-
-            <Button disabled={isSaving} onClick={createOrg} variant={"secondary"}>
-              Create Organisation
-            </Button>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </>
   );
-};
+}

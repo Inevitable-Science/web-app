@@ -1,10 +1,15 @@
-"use client"
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+"use client";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useAccount } from "wagmi";
 
 import { NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
 import { usePathname } from "next/navigation";
-
 
 export interface ArticleAuthType {
   user: UserResponseType | null;
@@ -14,34 +19,43 @@ export interface ArticleAuthType {
   revalidateUser: () => Promise<boolean>;
   silentRevalidateUser: () => Promise<void>;
   fetchNonce: () => Promise<number | null>;
-};
+}
 
 const ArticleAuthContext = createContext<ArticleAuthType | null>(null);
 
-export function ArticleAuthProvider({ children }: { children: React.ReactNode }) {
+export function ArticleAuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { address, isConnected, status: wagmiStatus } = useAccount();
   const pathname = usePathname();
 
-  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
+  const [status, setStatus] = useState<
+    "loading" | "authenticated" | "unauthenticated"
+  >("loading");
   const [user, setUser] = useState<UserResponseType | null>(null);
   const [authToken, setAuthToken] = useState<string | null>(null);
 
   function linkToLogin() {
     if (pathname !== "/admin/articles") {
-      window.location.href = ("/admin/articles");
+      window.location.href = "/admin/articles";
       return;
-    };
+    }
 
     return;
-  };
+  }
 
   const fetchNonce = async (): Promise<number | null> => {
     try {
       if (!address) return null;
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getNonce/${address}`, {
-        cache: "no-store"
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getNonce/${address}`,
+        {
+          cache: "no-store",
+        }
+      );
       if (!response.ok) return null;
 
       const data = await response.json();
@@ -54,41 +68,42 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
   };
 
   const silentRevalidateUser = useCallback(async () => {
-
     if (!authToken) {
       console.log("NO AUTH TOKEN");
       logout();
-    };
-
+    }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`, {
-        method: "POST",
-        headers: { authorization: `Bearer ${authToken}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`,
+        {
+          method: "POST",
+          headers: { authorization: `Bearer ${authToken}` },
+        }
+      );
 
       if (!res.ok) throw new Error("Invalid token");
 
       const data = await res.json();
       const parsed = UserResponseZ.parse(data);
       setUser(parsed);
-      
-      return;
 
+      return;
     } catch (err) {
       console.error(err);
       logout();
       return;
-    };
+    }
   }, [authToken]);
 
   const revalidateUser = useCallback(async () => {
-    const token = typeof window !== 'undefined'
-      ? localStorage.getItem('articleAuthToken')
-      : null;
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("articleAuthToken")
+        : null;
 
     if (!token) {
-      setStatus('unauthenticated');
+      setStatus("unauthenticated");
       setUser(null);
       setAuthToken(null);
       linkToLogin();
@@ -96,22 +111,24 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
     }
 
     setAuthToken(token);
-    setStatus('loading');
+    setStatus("loading");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`, {
-        method: "POST",
-        headers: { authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/fetch`,
+        {
+          method: "POST",
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
 
       if (!res.ok) throw new Error("Invalid token");
 
       const data = await res.json();
       const parsed = UserResponseZ.parse(data);
       setUser(parsed);
-      setStatus('authenticated');
+      setStatus("authenticated");
       return true;
-
     } catch (err) {
       console.error(err);
       logout();
@@ -127,33 +144,49 @@ export function ArticleAuthProvider({ children }: { children: React.ReactNode })
     } else {
       setStatus("unauthenticated");
       linkToLogin();
-    };
+    }
   }, [isConnected, wagmiStatus, revalidateUser]);
 
-
   useEffect(() => {
-    if (!isConnected && wagmiStatus !== "connecting" && wagmiStatus !== "reconnecting") {
+    if (
+      !isConnected &&
+      wagmiStatus !== "connecting" &&
+      wagmiStatus !== "reconnecting"
+    ) {
       logout();
-    };
+    }
   }, [isConnected, wagmiStatus]);
 
   const logout = () => {
-    localStorage.removeItem('articleAuthToken');
+    localStorage.removeItem("articleAuthToken");
     setAuthToken(null);
     setUser(null);
-    setStatus('unauthenticated');
+    setStatus("unauthenticated");
     linkToLogin();
   };
 
   return (
-    <ArticleAuthContext.Provider value={{ user, authToken, status, logout, revalidateUser, silentRevalidateUser, fetchNonce }}>
+    <ArticleAuthContext.Provider
+      value={{
+        user,
+        authToken,
+        status,
+        logout,
+        revalidateUser,
+        silentRevalidateUser,
+        fetchNonce,
+      }}
+    >
       {children}
     </ArticleAuthContext.Provider>
-  )
+  );
 }
 
 export function useArticleAuthContext() {
   const ctx = useContext(ArticleAuthContext);
-  if (!ctx) throw new Error("useArticleAuthContext must be used in a ArticleAuthProvider");
+  if (!ctx)
+    throw new Error(
+      "useArticleAuthContext must be used in a ArticleAuthProvider"
+    );
   return ctx;
-};
+}

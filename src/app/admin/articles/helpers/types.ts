@@ -10,8 +10,6 @@ export const LoginResponseZ = z.object({
   key: z.string(),
 });
 
-
-
 // ---- User Rotues ----
 
 export const UserMetadataZ = z.object({
@@ -29,7 +27,7 @@ export const UserZ = z.object({
   userId: z.string(),
   currentNonce: z.number(),
   isTopLevelAdmin: z.boolean(),
-  attachments: z.array(z.string()), 
+  attachments: z.array(z.string()),
   userMetadata: UserMetadataZ,
 });
 
@@ -48,7 +46,7 @@ export const OrganisationZ = z.object({
     canEdit: z.boolean(),
     canDelete: z.boolean(),
     canCreate: z.boolean(),
-  })
+  }),
 });
 
 export const PreviewArticleZ = z.object({
@@ -72,8 +70,6 @@ export type Organisation = z.infer<typeof OrganisationZ>;
 export type User = z.infer<typeof UserZ>;
 
 export type UserResponseType = z.infer<typeof UserResponseZ>;
-
-
 
 // ---- Article Rotues ----
 
@@ -109,16 +105,16 @@ export const ArticleResponseZ = z.object({
       username: z.string(),
       profilePicture: z.string(),
     }),
-    editors: z.array(z.object({
-      username: z.string(),
-      profilePicture: z.string(),
-    }))
+    editors: z.array(
+      z.object({
+        username: z.string(),
+        profilePicture: z.string(),
+      })
+    ),
   }),
 });
 
 export type ArticleResponse = z.infer<typeof ArticleResponseZ>;
-
-
 
 export const ArticleCreateBodyZ = z.object({
   title: z.string(),
@@ -138,18 +134,17 @@ export const ArticleCreateBodyZ = z.object({
 
 export type ArticleCreateBodyType = z.infer<typeof ArticleCreateBodyZ>;
 
-
-
 // ---- Misc All Users ----
 
-export const AllUsersResponseZ = z.array(z.object({
-  userId: z.string(),
-  username: z.string(),
-  profilePicture: z.string(),
-}));
+export const AllUsersResponseZ = z.array(
+  z.object({
+    userId: z.string(),
+    username: z.string(),
+    profilePicture: z.string(),
+  })
+);
 
 export type AllUsersResponse = z.infer<typeof AllUsersResponseZ>;
-
 
 export const UserPermissionsZ = z.object({
   userId: z.string(),
@@ -165,16 +160,15 @@ export const OrgCreateEditBodyZ = z.object({
   metadata: z.object({
     logo: z.string(),
     description: z.string(),
-    website: z.string().regex(/^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/),
+    website: z
+      .string()
+      .regex(/^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/),
     x: z.string(),
     discord: z.string().regex(/^https:\/\/discord\.gg\/[A-Za-z0-9]+$/),
   }),
 });
 
 export type OrgCreateEditBody = z.infer<typeof OrgCreateEditBodyZ>;
-
-
-
 
 const OrgUserZ = z.object({
   userId: z.string(),
@@ -214,4 +208,6 @@ export const FetchOrganisationResponseZ = z.object({
   articles: z.array(ArticleZ),
 });
 
-export type FetchOrganisationResponse = z.infer<typeof FetchOrganisationResponseZ>;
+export type FetchOrganisationResponse = z.infer<
+  typeof FetchOrganisationResponseZ
+>;

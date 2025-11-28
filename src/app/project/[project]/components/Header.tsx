@@ -10,7 +10,7 @@ export function Header() {
     <header>
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
-          <div className="absolute top-0 mt-[90px] z-[-1] h-[238px] w-full overflow-hidden rounded">
+          <div className="absolute top-0 z-[-1] mt-[90px] h-[238px] w-full overflow-hidden rounded">
             {analyticsData?.daoData?.logo ? (
               <Image
                 src={analyticsData?.daoData?.backdrop}
@@ -20,7 +20,7 @@ export function Header() {
                 height={400}
               />
             ) : (
-              <div className="background-color inset-0 h-full w-full flex justify-center items-center opacity-85 rounded">
+              <div className="background-color inset-0 flex h-full w-full items-center justify-center rounded opacity-85">
                 <Image
                   src="/assets/img/branding/logo.svg"
                   alt="placeholder header image"

@@ -34,7 +34,13 @@ BetterImageBlot.blotName = "image";
 BetterImageBlot.tagName = "img";
 Quill.register(BetterImageBlot, true);
 
-export default function Editor({ editorValue, setEditorValue, attachments, setAttachments, authToken }: EditorProps) {
+export default function Editor({
+  editorValue,
+  setEditorValue,
+  attachments,
+  setAttachments,
+  authToken,
+}: EditorProps) {
   const { toast } = useToast();
   const quillRef = useRef<ReactQuill>(null);
 
@@ -87,7 +93,7 @@ export default function Editor({ editorValue, setEditorValue, attachments, setAt
         toast({
           title: "Error",
           variant: "destructive",
-          description: "Image upload failed"
+          description: "Image upload failed",
         });
       }
     };
@@ -115,7 +121,7 @@ export default function Editor({ editorValue, setEditorValue, attachments, setAt
   );
 
   return (
-    <div className="prose max-w-none bg-grey-450 rounded-xl">
+    <div className="prose max-w-none rounded-xl bg-grey-450">
       <ReactQuill
         ref={quillRef}
         theme="bubble"
@@ -194,4 +200,4 @@ export default function Editor({ editorValue, setEditorValue, attachments, setAt
       `}</style>
     </div>
   );
-};
+}

@@ -7,24 +7,31 @@ import { uploadImage } from "../helpers/uploadHelper";
 import { useArticleAuthContext } from "../helpers/articleAuthContext";
 import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
 
-
 export function UserTable() {
-
-  const { user: data, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const {
+    user: data,
+    authToken,
+    silentRevalidateUser,
+  } = useArticleAuthContext();
   if (!data) return;
   const user = data.user;
 
   const { toast } = useToast();
 
-
   const [editingValue, setEditingValue] = useState("");
 
   const [username, setUsername] = useState(user.userMetadata.username);
-  const [profilePicture, setProfilePicture] = useState(user.userMetadata.profilePicture);
+  const [profilePicture, setProfilePicture] = useState(
+    user.userMetadata.profilePicture
+  );
 
   const [socialX, setSocialX] = useState(user.userMetadata.socials.x);
-  const [socialLinkedIn, setSocialLinkedIn] = useState(user.userMetadata.socials.linkedIn);
-  const [socialWebsite, setSocialWebsite] = useState(user.userMetadata.socials.website);
+  const [socialLinkedIn, setSocialLinkedIn] = useState(
+    user.userMetadata.socials.linkedIn
+  );
+  const [socialWebsite, setSocialWebsite] = useState(
+    user.userMetadata.socials.website
+  );
 
   const [saveState, setSaveState] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -39,7 +46,7 @@ export function UserTable() {
     if (isSaving === false) {
       checkState();
       return;
-    };
+    }
 
     return;
   }, [isSaving]);
@@ -69,7 +76,7 @@ export function UserTable() {
     }
 
     setEditingValue("");
-  };
+  }
 
   function resetUserState(field: string) {
     switch (field) {
@@ -90,10 +97,9 @@ export function UserTable() {
         break;
       default:
         console.warn(`Unknown field: ${field}`);
-    };
+    }
     setEditingValue("");
-  };
-
+  }
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -109,7 +115,7 @@ export function UserTable() {
           description: "Please select an image file",
         });
         return;
-      };
+      }
 
       const url = await uploadImage(file, "profile", authToken);
       setProfilePicture(url);
@@ -122,7 +128,7 @@ export function UserTable() {
         description: "Error Uploading File",
       });
       return;
-    };
+    }
   };
 
   const saveChanges = async () => {
@@ -134,8 +140,8 @@ export function UserTable() {
           description: "Please Make Changes Before Trying To Save",
         });
         return;
-      };
-      
+      }
+
       if (username.length < 5) {
         toast({
           variant: "destructive",
@@ -143,17 +149,19 @@ export function UserTable() {
           description: "Username Must Be >5 Characters",
         });
         return;
-      };
-      
-      const websiteRegexQuery = /^https:\/\/([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,24}\/?$/;
+      }
+
+      const websiteRegexQuery =
+        /^https:\/\/([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,24}\/?$/;
       if (socialWebsite && !websiteRegexQuery.test(socialWebsite)) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Please Enter Full Personal Website URL (Including https://)",
+          description:
+            "Please Enter Full Personal Website URL (Including https://)",
         });
         return;
-      };
+      }
 
       setIsSaving(true);
 
@@ -164,17 +172,20 @@ export function UserTable() {
           x: socialX,
           linkedIn: socialLinkedIn,
           website: socialWebsite,
-        }
+        },
       });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/edit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${authToken}`
-        },
-        body: reqBody
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/edit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${authToken}`,
+          },
+          body: reqBody,
+        }
+      );
 
       if (!response.ok) throw new Error();
 
@@ -185,7 +196,6 @@ export function UserTable() {
         description: "Changes Successfully Saved",
       });
       return;
-
     } catch (err) {
       console.log(err);
       toast({
@@ -196,46 +206,33 @@ export function UserTable() {
       return;
     } finally {
       setIsSaving(false);
-    };
+    }
   };
 
-
   return (
-    <div className="flex flex-col gap-[12px] bg-grey-450 p-[12px] rounded-2xl">
-      <div className="flex items-center justify-between gap-4 background-color rounded-xl p-[16px]">
+    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+      <div className="background-color flex items-center justify-between gap-4 rounded-xl p-[16px]">
         <div className="flex items-center gap-4">
-          <div className="relative group w-[48px] h-[48px] overflow-hidden">
+          <div className="group relative h-[48px] w-[48px] overflow-hidden">
             {profilePicture ? (
               <Image
                 src={profilePicture}
                 alt="profile picture"
-                className="max-h-[48px] max-w-[48px] w-full h-full rounded-full cursor-pointer object-cover"
+                className="h-full max-h-[48px] w-full max-w-[48px] cursor-pointer rounded-full object-cover"
                 height={200}
                 width={200}
               />
             ) : (
               <CircleUserRound
-                className="opacity-80 cursor-pointer"
+                className="cursor-pointer opacity-80"
                 width={48}
                 height={48}
               />
             )}
 
-            <div
-              className="
-                absolute inset-0 rounded-full
-                bg-black opacity-0 group-hover:opacity-60
-                transition-opacity duration-200
-                pointer-events-none
-              "
-            />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-black opacity-0 transition-opacity duration-200 group-hover:opacity-60" />
             <Pencil
-              className="
-                absolute inset-0 m-auto
-                opacity-0 group-hover:opacity-100
-                transition-opacity duration-200
-                pointer-events-none
-              "
+              className="pointer-events-none absolute inset-0 m-auto opacity-0 transition-opacity duration-200 group-hover:opacity-100"
               width={24}
               height={24}
               color="white"
@@ -256,18 +253,18 @@ export function UserTable() {
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
               {user?.isTopLevelAdmin && <Crown height={22} width={22} />}
-              
+
               {editingValue === "username" ? (
                 <div className="flex items-center gap-1">
                   <input
                     type="text"
-                    className="bg-grey-450 w-full h-[28px] text-[19px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                     placeholder="@..."
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
 
-                  <div className="flex items-center bg-grey-450 h-[28px] rounded-lg p-1">
+                  <div className="flex h-[28px] items-center rounded-lg bg-grey-450 p-1">
                     <Button
                       className="h-[28px] w-[28px] opacity-70 hover:opacity-100"
                       onClick={() => resetUserState("username")}
@@ -276,8 +273,8 @@ export function UserTable() {
                     >
                       <X height={18} width={18} />
                     </Button>
-                    <div className="h-full border-l border-color" />
-                    <Button 
+                    <div className="border-color h-full border-l" />
+                    <Button
                       className="h-[28px] w-[28px] opacity-70 hover:opacity-100"
                       onClick={checkState}
                       variant="ghost"
@@ -290,7 +287,7 @@ export function UserTable() {
               ) : (
                 <div className="flex items-center gap-1">
                   <h3 className="text-xl">{username}</h3>
-                  <Button 
+                  <Button
                     className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
                     onClick={() => setEditingValue("username")}
                     variant="ghost"
@@ -305,34 +302,40 @@ export function UserTable() {
         </div>
 
         <div className="flex items-center gap-2">
-          {saveState && (
-            <Button onClick={resetValues}>
-              Reset
-            </Button>
-          )}
-          <Button onClick={saveChanges} variant={"accent"} disabled={!saveState || isSaving || editingValue !== ""}>
+          {saveState && <Button onClick={resetValues}>Reset</Button>}
+          <Button
+            onClick={saveChanges}
+            variant={"accent"}
+            disabled={!saveState || isSaving || editingValue !== ""}
+          >
             Save Changes
           </Button>
         </div>
       </div>
 
-
       <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3">
-        <div className="flex items-center gap-4 background-color rounded-xl p-[16px]">
-          <Image src="/assets/img/logo/socials/x.svg" alt="X Logo" height={24} width={24} />
+        <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
+          <Image
+            src="/assets/img/logo/socials/x.svg"
+            alt="X Logo"
+            height={24}
+            width={24}
+          />
           <div className="flex flex-col gap-1">
-            <p className="font-light text-muted-foreground uppercase">X/Twitter Handle</p>
+            <p className="font-light uppercase text-muted-foreground">
+              X/Twitter Handle
+            </p>
             {editingValue === "twitter" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="bg-grey-450 w-full h-[32px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialX}
                   onChange={(e) => setSocialX(e.target.value)}
                 />
 
-                <div className="flex items-center bg-grey-450 h-[32px] rounded-lg p-1">
+                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("twitter")}
@@ -341,7 +344,7 @@ export function UserTable() {
                   >
                     <X height={18} width={18} />
                   </Button>
-                  <div className="h-full border-l border-color" />
+                  <div className="border-color h-full border-l" />
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={checkState}
@@ -354,40 +357,54 @@ export function UserTable() {
               </div>
             ) : (
               <>
-              {socialX ? (
-                <div className="flex items-center gap-1">
-                  <h4 className="max-w-[155px] leading-[32px] truncate overflow-hidden text-ellipsis">@{socialX}</h4>
-                  <Button 
-                    className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                {socialX ? (
+                  <div className="flex items-center gap-1">
+                    <h4 className="max-w-[155px] overflow-hidden truncate text-ellipsis leading-[32px]">
+                      @{socialX}
+                    </h4>
+                    <Button
+                      className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                      onClick={() => setEditingValue("twitter")}
+                      variant="ghost"
+                    >
+                      <Pencil height={14} width={14} />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
                     onClick={() => setEditingValue("twitter")}
-                    variant="ghost"
+                    className="h-[32px]"
                   >
-                    <Pencil height={14} width={14} />
+                    Add X Handle
                   </Button>
-                </div>
-              ) : (
-                <Button onClick={() => setEditingValue("twitter")} className="h-[32px]">Add X Handle</Button>
-              )}
+                )}
               </>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-4 background-color rounded-xl p-[16px]">
-          <Image src="/assets/img/logo/socials/linked_in.svg" alt="X Logo" height={28} width={28} />
+        <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
+          <Image
+            src="/assets/img/logo/socials/linked_in.svg"
+            alt="X Logo"
+            height={28}
+            width={28}
+          />
           <div className="flex flex-col gap-1">
-            <p className="font-light text-muted-foreground uppercase">Linked In Username</p>
+            <p className="font-light uppercase text-muted-foreground">
+              Linked In Username
+            </p>
             {editingValue === "linkedIn" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="bg-grey-450 w-full h-[32px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialLinkedIn}
                   onChange={(e) => setSocialLinkedIn(e.target.value)}
                 />
 
-                <div className="flex items-center bg-grey-450 h-[32px] rounded-lg p-1">
+                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("linkedIn")}
@@ -396,8 +413,8 @@ export function UserTable() {
                   >
                     <X height={18} width={18} />
                   </Button>
-                  <div className="h-full border-l border-color" />
-                  <Button 
+                  <div className="border-color h-full border-l" />
+                  <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={checkState}
                     variant="ghost"
@@ -409,40 +426,49 @@ export function UserTable() {
               </div>
             ) : (
               <>
-              {socialLinkedIn ? (
-                <div className="flex items-center gap-1">
-                  <h4 className="max-w-[155px] leading-[32px] truncate overflow-hidden text-ellipsis">@{socialLinkedIn}</h4>
-                  <Button 
-                    className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                {socialLinkedIn ? (
+                  <div className="flex items-center gap-1">
+                    <h4 className="max-w-[155px] overflow-hidden truncate text-ellipsis leading-[32px]">
+                      @{socialLinkedIn}
+                    </h4>
+                    <Button
+                      className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                      onClick={() => setEditingValue("linkedIn")}
+                      variant="ghost"
+                    >
+                      <Pencil height={14} width={14} />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
                     onClick={() => setEditingValue("linkedIn")}
-                    variant="ghost"
+                    className="h-[32px]"
                   >
-                    <Pencil height={14} width={14} />
+                    Add Linked In
                   </Button>
-                </div>
-              ) : (
-                <Button onClick={() => setEditingValue("linkedIn")} className="h-[32px]">Add Linked In</Button>
-              )}
+                )}
               </>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-4 background-color rounded-xl p-[16px]">
+        <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
           <Link height={28} width={28} />
           <div className="flex flex-col gap-1">
-            <p className="font-light text-muted-foreground uppercase">Personal Website</p>
+            <p className="font-light uppercase text-muted-foreground">
+              Personal Website
+            </p>
             {editingValue === "website" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="bg-grey-450 w-full h-[32px] rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="www.mysite.com"
                   value={socialWebsite}
                   onChange={(e) => setSocialWebsite(e.target.value)}
                 />
 
-                <div className="flex items-center bg-grey-450 h-[32px] rounded-lg p-1">
+                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("website")}
@@ -451,7 +477,7 @@ export function UserTable() {
                   >
                     <X height={18} width={18} />
                   </Button>
-                  <div className="h-full border-l border-color" />
+                  <div className="border-color h-full border-l" />
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={checkState}
@@ -464,25 +490,32 @@ export function UserTable() {
               </div>
             ) : (
               <>
-              {socialWebsite ? (
-                <div className="flex items-center gap-1">
-                  <h4 className="max-w-[155px] leading-[32px] items-center truncate overflow-hidden text-ellipsis">{socialWebsite}</h4>
-                  <Button 
-                    className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                {socialWebsite ? (
+                  <div className="flex items-center gap-1">
+                    <h4 className="max-w-[155px] items-center overflow-hidden truncate text-ellipsis leading-[32px]">
+                      {socialWebsite}
+                    </h4>
+                    <Button
+                      className="h-7 w-7 p-1 opacity-50 hover:opacity-100"
+                      onClick={() => setEditingValue("website")}
+                      variant="ghost"
+                    >
+                      <Pencil height={14} width={14} />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
                     onClick={() => setEditingValue("website")}
-                    variant="ghost"
+                    className="h-[32px]"
                   >
-                    <Pencil height={14} width={14} />
+                    Add Site
                   </Button>
-                </div>
-              ) : (
-                <Button onClick={() => setEditingValue("website")} className="h-[32px]">Add Site</Button>
-              )}
+                )}
               </>
             )}
           </div>
         </div>
       </div>
     </div>
-  )
-};
+  );
+}
