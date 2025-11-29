@@ -269,7 +269,7 @@ export function TransactionCard() {
                   </p>
                   <input
                     type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
                     placeholder="0.00"
                     value={amountA}
                     onChange={(e) => handlePayAmountChange(e.target.value)}
@@ -302,7 +302,7 @@ export function TransactionCard() {
                   </p>
                   <input
                     type="number"
-                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-80"
+                    className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-80"
                     placeholder="0.00"
                     value={amountB}
                     onChange={handleReceiveAmountChange}
@@ -330,7 +330,7 @@ export function TransactionCard() {
             </div>
             <input
               type="text"
-              className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+              className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
               onChange={(e) => setMemo(e.target.value)}
               value={memo}
               placeholder="Add a note... (optional)"

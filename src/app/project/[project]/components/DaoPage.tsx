@@ -28,7 +28,7 @@ export function DaoPage() {
   return (
     <>
       <div className="relative w-full">
-        <div className="absolute inset-0 z-[-10] w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
 
@@ -39,7 +39,7 @@ export function DaoPage() {
               <button
                 key={tab.key}
                 onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                   selectedTab === tab.key
                     ? "bg-gunmetal"
                     : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -74,7 +74,7 @@ export function DaoPage() {
                     <button
                       key={tab.key}
                       onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                         selectedTab === tab.key
                           ? "bg-gunmetal"
                           : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"

@@ -40,7 +40,7 @@ export function Header() {
               <div className="sm:hidden">
                 <Image
                   src={analyticsData?.daoData?.logo}
-                  className="block overflow-hidden rounded-xl border-[3px] border-background bg-[var(--card)]"
+                  className="block overflow-hidden rounded-xl border-[3px] border-background bg-(--card)"
                   alt={"Project Logo"}
                   width={120}
                   height={10}
@@ -49,7 +49,7 @@ export function Header() {
               <div className="hidden sm:block">
                 <Image
                   src={analyticsData?.daoData?.logo}
-                  className="block overflow-hidden rounded-2xl border-[4px] border-background bg-[var(--card)]"
+                  className="block overflow-hidden rounded-2xl border-4 border-background bg-(--card)"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -57,7 +57,7 @@ export function Header() {
               </div>
             </>
           ) : (
-            <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
+            <div className="flex h-36 w-36 items-center justify-center rounded bg-(--card)">
               <Image
                 src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
@@ -155,12 +155,12 @@ export function Header() {
       </div>
 
       <div
-        className="max-w-screen absolute z-[-10] flex items-center justify-center overflow-hidden"
+        className="max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-60%)" }}
       >
         {/* Left cloud - shifted slightly right */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_left.webp"
           style={{ transform: "translateX(-40%)" }}
           alt=""
@@ -168,7 +168,7 @@ export function Header() {
 
         {/* Right cloud - shifted slightly left */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_right.webp"
           style={{ transform: "translateX(40%)" }}
           alt=""

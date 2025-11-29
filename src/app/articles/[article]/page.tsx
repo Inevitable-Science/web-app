@@ -167,7 +167,7 @@ export default async function ArticlePage({ params }: Props) {
             {fetchedArticle.category.map((cat) => (
               <span
                 key={cat}
-                className="rounded-full bg-gunmetal px-[12px] py-[6px] text-sm focus:outline-none"
+                className="rounded-full bg-gunmetal px-[12px] py-[6px] text-sm focus:outline-hidden"
               >
                 {cat}
               </span>

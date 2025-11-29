@@ -37,13 +37,13 @@ import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext
 const shimmerClasses = `
     relative overflow-hidden 
     before:content-[''] before:absolute before:inset-0 
-    before:-translate-x-full before:animate-[shimmer_2s_infinite] 
-    before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+    before:-translate-x-full before:animate-shimmer 
+    before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
   `;
 
 // Define shared styles for the main action button for consistency
 const primaryButtonClasses =
-  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
+  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
 
 /**
  * A self-contained button that handles wallet connection, chain switching,
@@ -275,7 +275,7 @@ export function PayActionButton({
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content
           //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
@@ -302,7 +302,7 @@ export function PayActionButton({
               id="terms"
               checked={agreedToTerms}
               onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
-              className="peer h-4 w-4 shrink-0 rounded-sm border border-slate-400 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:bg-cerulean data-[state=checked]:text-white"
+              className="peer h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:bg-cerulean data-[state=checked]:text-white"
             >
               <Checkbox.Indicator className="flex items-center justify-center text-current">
                 <Check className="h-4 w-4" />
@@ -327,7 +327,7 @@ export function PayActionButton({
               disabled={!agreedToTerms || loading}
               loading={loading}
               onClick={handlePay}
-              className="inline-flex items-center justify-center rounded-md !bg-cerulean px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:!bg-gunmetal disabled:text-grey-100"
+              className="inline-flex items-center justify-center rounded-md bg-cerulean! px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gunmetal! disabled:text-grey-100"
             >
               {actionButtonContent}
             </ButtonWithWallet>

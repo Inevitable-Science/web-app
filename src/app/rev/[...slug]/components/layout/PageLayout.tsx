@@ -42,7 +42,7 @@ export function PageLayout() {
   return (
     <>
       <div className="relative w-full">
-        <div className="absolute inset-0 z-[-10] w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
       <div className="ctWrapper mb-10 flex flex-wrap gap-10 px-4 pb-5 sm:mb-24 md:flex-nowrap">
@@ -52,7 +52,7 @@ export function PageLayout() {
               <button
                 key={tab.key}
                 onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                   selectedTab === tab.key
                     ? "bg-gunmetal"
                     : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -83,7 +83,7 @@ export function PageLayout() {
                     <button
                       key={tab.key}
                       onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                         selectedTab === tab.key
                           ? "bg-gunmetal"
                           : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"

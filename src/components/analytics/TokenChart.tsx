@@ -217,35 +217,35 @@ const TokenChart: React.FC<TokenChartProps> = ({ organisation }) => {
         </div>
         <div className="flex items-center flex-wrap gap-2">
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("1")}
             disabled={timeRange === "1"}
           >
             24h
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("7")}
             disabled={timeRange === "7"}
           >
             7d
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("30")}
             disabled={timeRange === "30"}
           >
             1m
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("max")}
             disabled={timeRange === "max"}
           >
@@ -519,35 +519,35 @@ export function TokenChart({ organisation }: { organisation: string }) {
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
             onClick={() => setTimeRange("1")}
             disabled={timeRange === "1"}
           >
             24h
           </button>
           <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
             onClick={() => setTimeRange("7")}
             disabled={timeRange === "7"}
           >
             7d
           </button>
           <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
             onClick={() => setTimeRange("30")}
             disabled={timeRange === "30"}
           >
             1m
           </button>
           <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
           </button>
           <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
             onClick={() => setTimeRange("max")}
             disabled={timeRange === "max"}
           >

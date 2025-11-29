@@ -220,7 +220,7 @@ export function TransactionCard() {
             <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
               placeholder="0.00"
               value={amountA}
               onChange={(e) => handlePayAmountChange(e.target.value)}
@@ -251,7 +251,7 @@ export function TransactionCard() {
             </p>
             <input
               type="number"
-              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
+              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
               placeholder="0.00"
               value={amountB}
               disabled={isTokenANative !== selectedTokenIsNative}

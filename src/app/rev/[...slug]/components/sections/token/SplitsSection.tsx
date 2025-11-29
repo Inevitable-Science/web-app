@@ -166,7 +166,7 @@ export function SplitsSection() {
                 >
                   Stage {idx + 1}
                   {idx === currentStageIdx && (
-                    <span className="ml-1 h-2 w-2 rounded-full border-[2px] border-orange-200 bg-orange-400"></span>
+                    <span className="ml-1 h-2 w-2 rounded-full border-2 border-orange-200 bg-orange-400"></span>
                   )}
                 </Button>
               );

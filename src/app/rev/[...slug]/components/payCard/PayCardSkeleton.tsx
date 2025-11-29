@@ -71,14 +71,14 @@ export function PayCardSkeleton({
 
           <input
             type="text"
-            className="background-color w-full cursor-not-allowed rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="background-color w-full cursor-not-allowed rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="Add a note... (optional)"
             disabled
           />
 
           <Button
             loading={true}
-            className="w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium hover:bg-primary focus:outline-none disabled:opacity-50"
+            className="w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium hover:bg-primary focus:outline-hidden disabled:opacity-50"
           >
             Loading
           </Button>

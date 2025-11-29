@@ -79,12 +79,12 @@ export default function DaosGrid() {
 
       <div
         ref={cloudTopRef}
-        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-center overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_1.webp"
           style={{ transform: "translateX(25%)" }}
           alt=""
@@ -92,7 +92,7 @@ export default function DaosGrid() {
 
         {/* Center cloud */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_2.webp"
           style={{ transform: "translateX(10%)" }}
           alt=""
@@ -100,7 +100,7 @@ export default function DaosGrid() {
 
         {/* Right cloud */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_3.webp"
           style={{ transform: "translateX(-25%)" }}
           alt=""
@@ -149,11 +149,11 @@ export default function DaosGrid() {
 
       <div
         ref={cloudMidRef}
-        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-end overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bottom_right.webp"
           style={{ transform: "translateX(30%)" }}
           alt=""
@@ -184,11 +184,11 @@ export default function DaosGrid() {
 
       <div
         ref={cloudBottomRef}
-        className="hiddenDaoCloud max-w-screen absolute z-[-10] flex items-center justify-end overflow-hidden"
+        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bottom_center.webp"
           style={{ transform: "translateX(-5%)" }}
           alt=""

@@ -101,7 +101,7 @@ export const ChainSelector = ({
                       })
                     : undefined;
                 }}
-                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-[var(--grey-100)] !bg-grey-500"} rounded-xl`}
+                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-(--grey-100) bg-grey-500!"} rounded-xl`}
                 variant={"outline"}
                 size="icon"
               >

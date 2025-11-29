@@ -174,7 +174,7 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     <>
       <div
         ref={chartContainerRef}
-        className={data ? "opacity-1" : "!h-[1px] opacity-0"}
+        className={data ? "opacity-1" : "h-px! opacity-0"}
         style={{
           width: "100%",
           height: "400px",

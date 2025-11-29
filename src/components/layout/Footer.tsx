@@ -4,9 +4,9 @@ import { FooterLoginButton } from "./FooterLoginButton";
 
 export default function Footer() {
   return (
-    <footer className="flex h-screen w-full flex-col bg-[url('/assets/img/layout/footer.webp')] bg-cover bg-center px-12 py-8 font-light [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
+    <footer className="flex h-screen w-full flex-col bg-[url('/assets/img/layout/footer.webp')] bg-cover bg-center px-12 py-8 font-light mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)]">
       {/* CENTERED SECTION */}
-      <div className="flex flex-grow flex-col items-center justify-center gap-16">
+      <div className="flex grow flex-col items-center justify-center gap-16">
         <Image
           src="https://cdn.inevitable.science/static/img/branding/icon.svg"
           alt="Icon Logo"

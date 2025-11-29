@@ -69,13 +69,13 @@ export function OtherDaosCarousel({
   return (
     <section className="mx-auto w-full">
       <div
-        className="absolute left-0 right-0 z-[-10] flex justify-center overflow-hidden"
+        className="absolute left-0 right-0 -z-10 flex justify-center overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <div className="mx-auto hidden w-full max-w-[1500px] items-center justify-center md:flex">
           {/* Left cloud - shifted slightly right */}
           <img
-            className="z-[-10] w-full select-none"
+            className="-z-10 w-full select-none"
             src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_bottom_left.webp"
             style={{ transform: "translateX(-40%)" }}
             alt=""
@@ -83,7 +83,7 @@ export function OtherDaosCarousel({
 
           {/* Right cloud - shifted slightly left */}
           <img
-            className="z-[-10] w-full select-none"
+            className="-z-10 w-full select-none"
             src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_bottom_right.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""

@@ -258,7 +258,7 @@ export function UserTable() {
                 <div className="flex items-center gap-1">
                   <input
                     type="text"
-                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                     placeholder="@..."
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -329,7 +329,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialX}
                   onChange={(e) => setSocialX(e.target.value)}
@@ -398,7 +398,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialLinkedIn}
                   onChange={(e) => setSocialLinkedIn(e.target.value)}
@@ -462,7 +462,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="www.mysite.com"
                   value={socialWebsite}
                   onChange={(e) => setSocialWebsite(e.target.value)}

@@ -61,7 +61,7 @@ export function WithdrawCard({
             </p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
               placeholder="0.00"
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
@@ -98,7 +98,7 @@ export function WithdrawCard({
             </p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
               placeholder="0.00"
               value={formattedEthQuote}
               readOnly // This field is derived from the above input

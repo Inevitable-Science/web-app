@@ -52,7 +52,7 @@ export function PayCardSkeleton({
         </div>
         <Button
           loading={true}
-          className="w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-none disabled:opacity-50"
+          className="w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-hidden disabled:opacity-50"
         >
           Loading
         </Button>

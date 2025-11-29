@@ -32,7 +32,7 @@ const RichPreview = ({ source }: { source: string }) => {
 
     return (
       <div
-        className="w-[calc(100vw-48px)] break-words sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
+        className="w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -40,7 +40,7 @@ const RichPreview = ({ source }: { source: string }) => {
     );
   } catch (error) {
     console.error("HTML sanitization failed:", error);
-    return <div className="break-words">{source}</div>;
+    return <div className="wrap-break-word">{source}</div>;
   }
 };
 

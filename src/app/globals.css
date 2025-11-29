@@ -1,6 +1,110 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+@plugin '@tailwindcss/forms';
+
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1225px) {
+    max-width: 1225px;
+  }
+}
+
+@theme {
+  --radius: var(--radius);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-light-gold: var(--light-gold);
+  --color-dark-slate-grey: var(--dark-slate-grey);
+  --color-gunmetal: var(--gunmetal);
+  --color-cerulean: var(--cerulean);
+  --color-columbia-blue: var(--columbia-blue);
+  --color-grey-50: var(--grey-50);
+  --color-grey-100: var(--grey-100);
+  --color-grey-450: var(--grey-450);
+  --color-grey-500: var(--grey-500);
+
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-optima: var(--font-optima), sans-serif;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-shimmer: shimmer 2s infinite;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility container-border-x {
+  border-left: 1px solid var(--color-zinc-400);
+  border-right: 1px solid var(--color-zinc-400);
+  padding: 0 --spacing(7);
+}
 
 /* hide scroll wheel for numbers */
 @layer base {
@@ -10,14 +114,6 @@
     -webkit-appearance: none;
     margin: 0;
     -moz-appearance: textfield !important;
-  }
-}
-
-@layer components {
-  .container-border-x {
-    border-left: 1px solid theme("colors.zinc.400");
-    border-right: 1px solid theme("colors.zinc.400");
-    padding: 0 theme("spacing.7");
   }
 }
 
@@ -78,16 +174,16 @@ body {
 }
 
 .background-color {
-  @apply bg-[var(--background)];
+  @apply bg-(--background);
 }
 
 .border-color {
-  @apply border-[var(--border)];
+  @apply border-(--border);
 }
 
-.text-color {
+/*.text-color {
   @apply text-foreground;
-}
+}*/
 
 .activeSkeleton {
   background: linear-gradient(
