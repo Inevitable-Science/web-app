@@ -344,12 +344,12 @@ export function EditOrgDialogue({
             {data ? (
               <div className="mt-4">
                 <div className="flex items-center gap-2">
-                  <div className="group relative h-[48px] w-[48px] overflow-hidden">
+                  <div className="group relative h-[48px] min-w-[48px] max-w-[48px] overflow-hidden">
                     {orgLogo ? (
                       <Image
                         src={orgLogo}
                         alt="profile picture"
-                        className="h-full max-h-[48px] w-full max-w-[48px] cursor-pointer rounded-full object-cover"
+                        className="h-[48px] w-[48px] cursor-pointer rounded-full object-cover"
                         height={200}
                         width={200}
                       />

@@ -82,14 +82,16 @@ export default function AdminArticlesPage() {
             type="text"
             className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="User ID"
+            autoComplete="username"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
           />
 
           <input
-            type="text"
+            type="password"
             className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="Password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
