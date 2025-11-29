@@ -76,39 +76,43 @@ export default function AdminArticlesPage() {
       <div className="ctWrapper mt-32 flex flex-col gap-2">
         <h2 className="font-optima text-3xl">Login To View Articles</h2>
         <p className="mb-4">Login with your admin credentials.</p>
-        <input
-          type="text"
-          className="w-full rounded-lg border-none bg-grey-450 p-2 font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-          placeholder="User ID"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
 
-        <input
-          type="text"
-          className="w-full rounded-lg border-none bg-grey-450 p-2 font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="w-[400px] flex flex-col gap-2 bg-grey-450 p-4 rounded-lg border-[2px] border-color">
+          <input
+            type="text"
+            className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            placeholder="User ID"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+          />
 
-        <input
-          type="text"
-          className="w-full rounded-lg border-none bg-grey-450 p-2 font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-          placeholder="MFA Code"
-          maxLength={6}
-          value={mfaCode}
-          onChange={(e) => setMfaCode(e.target.value)}
-        />
+          <input
+            type="text"
+            className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <Button
-          loading={isLogginIn}
-          disabled={!userId || !password || !mfaCode}
-          variant={"accent"}
-          onClick={() => login()}
-        >
-          Login
-        </Button>
+          <input
+            type="text"
+            className="w-full rounded-lg border-none background-color p-2 font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            placeholder="MFA Code"
+            maxLength={6}
+            value={mfaCode}
+            onChange={(e) => setMfaCode(e.target.value)}
+          />
+
+          <Button
+            loading={isLogginIn}
+            disabled={!userId || !password || !mfaCode}
+            variant={"accent"}
+            className="w-full mt-2"
+            onClick={() => login()}
+          >
+            Login
+          </Button>
+        </div>
       </div>
     );
   }
