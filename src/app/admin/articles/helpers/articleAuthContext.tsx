@@ -8,8 +8,9 @@ import {
 } from "react";
 import { useAccount } from "wagmi";
 
-import { NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
+import { LoginResponseZ, NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
 import { usePathname } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 export interface ArticleAuthType {
   user: UserResponseType | null;
@@ -18,7 +19,6 @@ export interface ArticleAuthType {
   logout: () => void;
   revalidateUser: () => Promise<boolean>;
   silentRevalidateUser: () => Promise<void>;
-  fetchNonce: () => Promise<number | null>;
 }
 
 const ArticleAuthContext = createContext<ArticleAuthType | null>(null);
@@ -30,6 +30,7 @@ export function ArticleAuthProvider({
 }) {
   const { address, isConnected, status: wagmiStatus } = useAccount();
   const pathname = usePathname();
+  const { toast } = useToast();
 
   const [status, setStatus] = useState<
     "loading" | "authenticated" | "unauthenticated"
@@ -46,6 +47,7 @@ export function ArticleAuthProvider({
     return;
   }
 
+  /*
   const fetchNonce = async (): Promise<number | null> => {
     try {
       if (!address) return null;
@@ -65,7 +67,8 @@ export function ArticleAuthProvider({
     } catch {
       return null;
     }
-  };
+  };*/
+
 
   const silentRevalidateUser = useCallback(async () => {
     if (!authToken) {
@@ -137,6 +140,21 @@ export function ArticleAuthProvider({
   }, []);
 
   useEffect(() => {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("articleAuthToken")
+        : null;
+
+    if (token) {
+      revalidateUser();
+    } else {
+      setStatus("unauthenticated");
+      linkToLogin();
+    }
+  }, []);
+
+  /*
+  useEffect(() => {
     if (wagmiStatus === "connecting" || wagmiStatus === "reconnecting") return;
 
     if (isConnected) {
@@ -155,7 +173,7 @@ export function ArticleAuthProvider({
     ) {
       logout();
     }
-  }, [isConnected, wagmiStatus]);
+  }, [isConnected, wagmiStatus]);*/
 
   const logout = () => {
     localStorage.removeItem("articleAuthToken");
@@ -174,7 +192,7 @@ export function ArticleAuthProvider({
         logout,
         revalidateUser,
         silentRevalidateUser,
-        fetchNonce,
+        //fetchNonce,
       }}
     >
       {children}

@@ -23,9 +23,9 @@ export const UserMetadataZ = z.object({
 });
 
 export const UserZ = z.object({
-  walletAddress: z.string(),
+  //walletAddress: z.string(),
   userId: z.string(),
-  currentNonce: z.number(),
+  //currentNonce: z.number(),
   isTopLevelAdmin: z.boolean(),
   attachments: z.array(z.string()),
   userMetadata: UserMetadataZ,
@@ -70,6 +70,16 @@ export type Organisation = z.infer<typeof OrganisationZ>;
 export type User = z.infer<typeof UserZ>;
 
 export type UserResponseType = z.infer<typeof UserResponseZ>;
+
+
+export const CreateUserResponseZ = z.object({
+  userId: z.string(),
+  password: z.string(),
+  mfaKey: z.string()
+});
+
+export type CreateResponseType = z.infer<typeof CreateUserResponseZ>;
+
 
 // ---- Article Rotues ----
 

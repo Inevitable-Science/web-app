@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import z from "zod";
+import { CreateResponseType, CreateUserResponseZ } from "../../helpers/types";
 
 export function CreateUserDialogue({
   children,
@@ -17,26 +19,20 @@ export function CreateUserDialogue({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const [walletAddress, setWalletAddress] = useState("");
+  //const [walletAddress, setWalletAddress] = useState("");
   const [isTopLevelAdmin, setIsTopLevelAdmin] = useState(false);
+
+  const [data, setData] = useState<CreateResponseType | null>(null);
+
 
   const createUser = async () => {
     try {
       if (!user?.user.isTopLevelAdmin) throw new Error();
-      if (!walletAddress) {
-        toast({
-          title: "Error",
-          variant: "destructive",
-          description: "Wallet Address Required",
-        });
-        return;
-      }
 
       setIsSaving(true);
 
       const body = {
         user: {
-          walletAddress,
           isTopLevelAdmin,
           organisations: [],
         },
@@ -65,8 +61,10 @@ export function CreateUserDialogue({
         return;
       }
 
+      const data = await response.json();
+      const parsed = CreateUserResponseZ.parse(data);
+      setData(parsed);
       await silentRevalidateUser();
-      resetModalState();
 
       toast({
         title: "Success",
@@ -86,10 +84,10 @@ export function CreateUserDialogue({
   };
 
   const resetModalState = () => {
-    setWalletAddress("");
     setIsTopLevelAdmin(false);
     setIsModalOpen(false);
     setIsSaving(false);
+    setData(null);
   };
 
   return (
@@ -104,36 +102,45 @@ export function CreateUserDialogue({
             Create User
           </Dialog.Title>
 
-          <div className="mt-4 flex flex-col gap-2">
-            <input
-              type="text"
-              className="background-color w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
-              placeholder="Wallet Address"
-              value={walletAddress}
-              onChange={(e) => setWalletAddress(e.target.value)}
-            />
-
-            <Button
-              onClick={() => setIsTopLevelAdmin((prev) => !prev)}
-              className="background-color hover:background-color"
-            >
-              {isTopLevelAdmin ? (
-                <span className="flex flex-col">
-                  Revoke Site Admin
-                  <span className="text-xs text-muted-foreground">
-                    (Currently Admin)
+          {data ? (
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-col gap-1">
+                <h4>User ID</h4>
+                <p className="w-full background-color rounded p-2">{data.userId}</p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h4>Password</h4>
+                <p className="w-full background-color rounded p-2">{data.password}</p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h4>TOTP Key</h4>
+                <p className="w-full background-color rounded text-sm p-2">{data.mfaKey}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-col gap-2">
+              <Button
+                onClick={() => setIsTopLevelAdmin((prev) => !prev)}
+                className="background-color hover:background-color"
+              >
+                {isTopLevelAdmin ? (
+                  <span className="flex flex-col">
+                    Revoke Site Admin
+                    <span className="text-xs text-muted-foreground">
+                      (Currently Admin)
+                    </span>
                   </span>
-                </span>
-              ) : (
-                <span className="flex flex-col">
-                  Grant Site Admin
-                  <span className="text-xs text-muted-foreground">
-                    (Currently Not Admin)
+                ) : (
+                  <span className="flex flex-col">
+                    Grant Site Admin
+                    <span className="text-xs text-muted-foreground">
+                      (Currently Not Admin)
+                    </span>
                   </span>
-                </span>
-              )}
-            </Button>
-          </div>
+                )}
+              </Button>
+            </div>
+          )}
 
           <Dialog.Description className="hidden"></Dialog.Description>
 
@@ -142,7 +149,7 @@ export function CreateUserDialogue({
 
             <Button
               onClick={createUser}
-              disabled={isSaving || !walletAddress}
+              disabled={isSaving || data !== null}
               variant={"secondary"}
             >
               Create User
