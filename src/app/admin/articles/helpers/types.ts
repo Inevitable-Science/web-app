@@ -23,9 +23,7 @@ export const UserMetadataZ = z.object({
 });
 
 export const UserZ = z.object({
-  //walletAddress: z.string(),
   userId: z.string(),
-  //currentNonce: z.number(),
   isTopLevelAdmin: z.boolean(),
   attachments: z.array(z.string()),
   userMetadata: UserMetadataZ,

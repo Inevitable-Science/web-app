@@ -6,11 +6,9 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useAccount } from "wagmi";
 
-import { LoginResponseZ, NonceResponseZ, UserResponseType, UserResponseZ } from "./types";
+import { UserResponseType, UserResponseZ } from "./types";
 import { usePathname } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 
 export interface ArticleAuthType {
   user: UserResponseType | null;
@@ -28,9 +26,7 @@ export function ArticleAuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { address, isConnected, status: wagmiStatus } = useAccount();
   const pathname = usePathname();
-  const { toast } = useToast();
 
   const [status, setStatus] = useState<
     "loading" | "authenticated" | "unauthenticated"
@@ -46,29 +42,6 @@ export function ArticleAuthProvider({
 
     return;
   }
-
-  /*
-  const fetchNonce = async (): Promise<number | null> => {
-    try {
-      if (!address) return null;
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/getNonce/${address}`,
-        {
-          cache: "no-store",
-        }
-      );
-      if (!response.ok) return null;
-
-      const data = await response.json();
-      const parsed = NonceResponseZ.parse(data);
-
-      return parsed.nonce;
-    } catch {
-      return null;
-    }
-  };*/
-
 
   const silentRevalidateUser = useCallback(async () => {
     if (!authToken) {
@@ -152,28 +125,6 @@ export function ArticleAuthProvider({
       linkToLogin();
     }
   }, []);
-
-  /*
-  useEffect(() => {
-    if (wagmiStatus === "connecting" || wagmiStatus === "reconnecting") return;
-
-    if (isConnected) {
-      revalidateUser();
-    } else {
-      setStatus("unauthenticated");
-      linkToLogin();
-    }
-  }, [isConnected, wagmiStatus, revalidateUser]);
-
-  useEffect(() => {
-    if (
-      !isConnected &&
-      wagmiStatus !== "connecting" &&
-      wagmiStatus !== "reconnecting"
-    ) {
-      logout();
-    }
-  }, [isConnected, wagmiStatus]);*/
 
   const logout = () => {
     localStorage.removeItem("articleAuthToken");

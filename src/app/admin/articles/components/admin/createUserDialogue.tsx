@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import z from "zod";
 import { CreateResponseType, CreateUserResponseZ } from "../../helpers/types";
 
 export function CreateUserDialogue({
@@ -19,7 +18,6 @@ export function CreateUserDialogue({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  //const [walletAddress, setWalletAddress] = useState("");
   const [isTopLevelAdmin, setIsTopLevelAdmin] = useState(false);
 
   const [data, setData] = useState<CreateResponseType | null>(null);

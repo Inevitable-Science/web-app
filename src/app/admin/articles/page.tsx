@@ -1,8 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useState } from "react";
 
-import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { UserTable } from "./components/userTable";
 import { OrganisationTable } from "./components/orgTable";
@@ -12,88 +10,15 @@ import { useArticleAuthContext } from "./helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function AdminArticlesPage() {
-  const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { signMessageAsync } = useSignMessage();
   const { toast } = useToast();
 
   const { user, status, revalidateUser } = useArticleAuthContext();
 
-  const [userExists, setUserExists] = useState<boolean | null>(null);
-  const [nonce, setNonce] = useState<number | null>(null);
   const [isLogginIn, setIsLoggingIn] = useState(false);
 
-  const [userId, setUserId] = useState("0xf73544");
-  const [password, setPassword] = useState("H(+uPD#D1x");
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
-
-  /*const checkUser = async () => {
-    try {
-      const nonce = await fetchNonce();
-      if (typeof nonce !== "number") {
-        setUserExists(false);
-        return;
-      }
-
-      setNonce(nonce);
-      setUserExists(true);
-    } catch (err) {
-      setUserExists(false);
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    if (!address || status !== "unauthenticated") return;
-    checkUser();
-  }, [address, status, checkUser]);
-
-  async function signMessage() {
-    try {
-      if (!address) return;
-      setIsSigning(true);
-
-      await checkUser();
-
-      if (typeof nonce !== "number") return;
-
-      const signature = await signMessageAsync({
-        account: address,
-        message: `Authorize this action by signing below.\nNo cost. No sensitive data shared.\nAction: login\nAddress: ${address.toLowerCase()}\nNonce: ${nonce}`,
-      });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            address,
-            signature,
-          }),
-        }
-      );
-
-      console.log(response);
-
-      if (!response.ok) throw new Error();
-
-      const data = await response.json();
-      console.log(data);
-      const parsed = LoginResponseZ.parse(data);
-
-      console.log(parsed);
-      localStorage.setItem("articleAuthToken", parsed.key);
-      await revalidateUser();
-      return;
-    } catch {
-      return;
-    } finally {
-      setIsSigning(false);
-    }
-  }*/
 
   const login = async () => {
     try {
@@ -107,16 +32,14 @@ export default function AdminArticlesPage() {
       };
 
       const res = await fetch(
-        //`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/login`,
-        `http://localhost:3001/user/login`,
+        `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/user/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(reqBody),
         },
       );
-      const data = await res.json();
-      console.log(data);
+      
       if (!res.ok) {
         toast({
           title: "Error",
@@ -126,7 +49,7 @@ export default function AdminArticlesPage() {
         return;
       };
 
-      //const data = await res.json();
+      const data = await res.json();
       const parsed = LoginResponseZ.parse(data);
       localStorage.setItem("articleAuthToken", parsed.key);
       await revalidateUser();
@@ -147,48 +70,6 @@ export default function AdminArticlesPage() {
   };
 
   if (status === "loading") return;
-
-  /*if (isConnected === false) {
-    return (
-      <div className="ctWrapper mt-32 flex flex-col gap-2">
-        <h2 className="font-optima text-3xl">Connect Your Wallet</h2>
-        <p className="mb-4">
-          Connect your wallet in order to view & manage articles.
-        </p>
-        <ButtonWithWallet variant={"accent"}>Connect Wallet</ButtonWithWallet>
-      </div>
-    );
-  }
-
-  if (userExists === false) {
-    return (
-      <div className="ctWrapper mt-32 flex flex-col gap-2">
-        <h2 className="font-optima text-3xl">You Cannot Access This</h2>
-        <p className="mb-4">
-          Sorry you cannot access this... maybe try another account?
-        </p>
-        <Button variant={"accent"} onClick={() => disconnect()}>
-          Disconnect
-        </Button>
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated") {
-    return (
-      <div className="ctWrapper mt-32 flex flex-col gap-2">
-        <h2 className="font-optima text-3xl">Login To View Articles</h2>
-        <p className="mb-4">Sign a quick message to login.</p>
-        <Button
-          loading={isSigning}
-          variant={"accent"}
-          onClick={() => signMessage()}
-        >
-          Sign Message
-        </Button>
-      </div>
-    );
-  }*/
 
   if (status === "unauthenticated") {
     return (
