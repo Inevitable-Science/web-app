@@ -1,4 +1,4 @@
-import { useProjectBaseToken } from "./useTokenBaseToken";
+import { useProjectBaseToken } from "./useProjectBaseToken";
 
 /**
  * Token A is the token used to buy the project's token (Token B).

@@ -1,6 +1,6 @@
 "use client";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
-import { useProjectBaseToken } from "@/hooks/useTokenBaseToken";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import {
   ReservedPercent,
   JBCoreContracts,

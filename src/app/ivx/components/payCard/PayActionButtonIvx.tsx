@@ -37,6 +37,7 @@ import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
 const shimmerClasses = `
   relative overflow-hidden
@@ -80,6 +81,8 @@ export function PayActionButton({
   const { ensureAllowance, isApproving } = useAllowance(chainId);
 
   const { toast } = useToast();
+  const baseToken = useProjectBaseToken();
+
 
   const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
   const value = amountA.amount.value;
@@ -172,6 +175,7 @@ export function PayActionButton({
           chainId,
           projectId,
           token: paymentToken,
+          baseToken,
         });
 
         if (!paymentToken.isNative) {
