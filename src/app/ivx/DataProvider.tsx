@@ -29,10 +29,6 @@ import {
 import { AsyncData } from "juice-sdk-react/dist/contexts/types";
 import { type GetTokenReturnType } from "@wagmi/core";
 import { useBoostRecipient } from "@/hooks/useBoostRecipient";
-import {
-  SelectedSuckerContextType,
-  useSelectedSucker,
-} from "./SelectedSuckerContext";
 import { z } from "zod";
 
 export interface AnalyticsData {
@@ -63,7 +59,6 @@ interface NetworkDataContextType {
     | undefined;
   payoutWallet: `0x${string}` | undefined;
   metadata: AsyncData<JBProjectMetadata>;
-  selectedSucker: SelectedSuckerContextType;
 }
 
 const IvxPageDataContext = createContext<NetworkDataContextType | undefined>(
@@ -88,7 +83,6 @@ export const IvxPageDataProvider = ({
   const { metadata } = useJBProjectMetadataContext();
   const chainId = useJBChainId();
   const payoutWallet = useBoostRecipient();
-  const selectedSucker = useSelectedSucker();
 
   const analyticsData: AnalyticsData | null =
     tokenData && treasuryData
@@ -157,7 +151,6 @@ export const IvxPageDataProvider = ({
       token,
       payoutWallet,
       metadata,
-      selectedSucker,
     };
   }, [
     suckers,
