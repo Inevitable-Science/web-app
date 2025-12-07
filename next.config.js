@@ -6,6 +6,7 @@ module.exports = {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     return config;
   },
+  serverExternalPackages: ['pino', 'pino-pretty', 'thread-stream'], // review this -> error within upgrade from next 16.02 -> 16.0.7
   turbopack: {},
   images: {
     remotePatterns: [
