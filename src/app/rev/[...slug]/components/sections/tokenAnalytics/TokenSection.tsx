@@ -196,7 +196,7 @@ export function TokenSection() {
           )}
 
           <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-            <TokenStatsChart organisation="cryodao" tokenName="cryo" />
+            <TokenStatsChart organisation="cryodao" tokenName="cryo" /> {/* TODO: change */}
           </div>
         </div>
       ) : (

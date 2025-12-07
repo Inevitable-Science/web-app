@@ -59,8 +59,8 @@ export async function generateMetadata(): Promise<Metadata> {
 async function fetchIvxData() {
   try {
     const [treasuryRes, tokenRes] = await Promise.all([
-      fetch(`https://inev.profiler.bio/treasury/hydra`),
-      fetch(`https://inev.profiler.bio/token/hydra`),
+      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/hydra`),
+      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/cryo`),
     ]);
 
     if (!treasuryRes.ok || !tokenRes.ok) {

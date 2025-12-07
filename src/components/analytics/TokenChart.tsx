@@ -287,6 +287,7 @@ import {
   LineData,
   LineSeriesOptions,
 } from "lightweight-charts";
+import { MarketChartResponse } from "@/lib/types/AnalyticTypes";
 
 interface PriceData {
   prices: LineData<Time>[];
@@ -347,8 +348,7 @@ export function TokenChart({ organisation }: { organisation: string }) {
 
   const fetchData = async (range: string): Promise<PriceData> => {
     try {
-      //const apiUrl = `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`;
-      const apiUrl = `https://inev.profiler.bio/chart/${organisation}-${range}`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/market_chart/${organisation}/${range}`;
       const cacheEntry = cache.get(apiUrl);
       const now = Date.now();
       if (cacheEntry && now - cacheEntry.timestamp < 5 * 60 * 1000) {
@@ -362,14 +362,15 @@ export function TokenChart({ organisation }: { organisation: string }) {
         return { prices: [] };
       }
 
-      setDataFound(true);
-      if (error === true) setError(false);
-
       const data = await response.json();
+      const parsedMarketResponse = MarketChartResponse.parse(data);
+      setDataFound(true);
+      //if (error === true) setError(false);
+
 
       const processedData: PriceData = {
         prices:
-          data?.prices?.map(([timestamp, value]: [number, number]) => ({
+          parsedMarketResponse.prices.map(([timestamp, value]: [number, number]) => ({
             time: Math.floor(timestamp / 1000) as Time,
             value,
           })) ?? [],

@@ -100,7 +100,7 @@ export async function fetchProjectAnalytics(
 ): Promise<ProjectAnalyticsResponse | null> {
   try {
     const daoResponse = await fetch(
-      `https://inev.profiler.bio/dao/${projectName}`,
+      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${projectName}`,
       { next: { revalidate: 900 } }
     );
     if (!daoResponse.ok) return null;
@@ -109,11 +109,11 @@ export async function fetchProjectAnalytics(
 
     // make it fetch token with token name from daoResponse
     const [treasuryResponse, tokenResponse] = await Promise.all([
-      fetch(`https://inev.profiler.bio/treasury/${projectName}`, {
+      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`, {
         next: { revalidate: 900 },
       }),
       fetch(
-        `https://inev.profiler.bio/token/${validatedDaoData.nativeToken.name}`,
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/${validatedDaoData.nativeToken.name}`,
         { next: { revalidate: 900 } }
       ),
     ]);

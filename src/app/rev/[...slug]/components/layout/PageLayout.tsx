@@ -26,7 +26,7 @@ export function PageLayout() {
     ...(analyticsData?.daoData === null //&& isAnalyticsLoading === false // Intended to prevent CLS
       ? []
       : [
-          ...(token.data && analyticsData?.tokenData
+          ...(analyticsData?.tokenData // && token.data
             ? [{ key: "analytics", label: "Analytics" }]
             : []),
           ...(analyticsData?.treasuryData

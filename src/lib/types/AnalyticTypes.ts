@@ -25,17 +25,6 @@ export const DaoResponseSchema = z.object({
     totalHolders: z.string().nullable(),
     marketCap: z.number().nullable(),
   }),
-  ipt: z
-    .array(
-      z.object({
-        name: z.string().nullable(),
-        backdrop: z.string().nullable(),
-        logo: z.string().nullable(),
-        description: z.string().nullable(),
-        tokenType: z.string().nullable(),
-      })
-    )
-    .nullable(),
 });
 
 export type DaoResponse = z.infer<typeof DaoResponseSchema>;
@@ -54,18 +43,19 @@ export const TreasuryResponseSchema = z.object({
   treasury: z.object({
     address: z.string(),
     ens_name: z.string(),
+    chain_id: z.number()
   }),
   signers: z.object({
     required: z.number(),
     total: z.number(),
     signers: z.array(z.string()),
   }),
-  managed_accounts: z.record(
-    z.string(),
+  managed_accounts: z.array(
     z.object({
+      address: z.string(),
       comment: z.string(),
       ens: z.string().nullable(),
-      chain: z.string(),
+      chain_id: z.number(),
     })
   ),
   treasuryValue: z.number(),
@@ -85,9 +75,9 @@ export const TreasuryResponseSchema = z.object({
       totalValue: z.number(),
     })
   ),
-  historicalReturns: z.record(
-    z.string(),
+  historicalReturns: z.array(
     z.object({
+      dateRange: z.string(),
       pastValue: z.union([z.number(), z.string()]),
       dollarReturn: z.string(),
       percentReturn: z.string(),
@@ -99,25 +89,14 @@ export type TreasuryResponse = z.infer<typeof TreasuryResponseSchema>;
 
 export const TokenResponseSchema = z.object({
   name: z.string(),
-  isIptToken: z.boolean(),
   logo: z.string(),
-  tags: z.string(),
-  socials: z.object({
-    site: z.string().nullable(),
-    linked_in: z.string().nullable(),
-    x: z.string().nullable(),
-    discord: z.string().nullable(),
-  }),
   assetsUnderManagement: z.number().nullable(),
   selectedToken: z.object({
     address: z.string().nullable(),
     chain_id: z.number().nullable(),
     logoUrl: z.string().nullable(),
     ticker: z.string().nullable(),
-    tokenType: z.string().nullable(),
-    website: z.string().nullable(),
     name: z.string().nullable(),
-    description: z.string().nullable(),
     parentDao: z.string().nullable(),
     networks: z.array(z.string()).nullable(),
     totalSupply: z.number().nullable(),
@@ -149,9 +128,59 @@ export const TokenResponseSchema = z.object({
 
 export type TokenResponse = z.infer<typeof TokenResponseSchema>;
 
-export const MarketChartResponseSchema = z.object({
-  prices: z.array(z.tuple([z.number(), z.number()])),
-  market_caps: z.array(z.tuple([z.number(), z.number()])),
+
+export const HistoricalTreasuryResponse = z.object({
+  historical_treasury: z.array(
+    z.tuple([z.number(), z.number()])
+  ),
+  historical_assets: z.array(
+    z.tuple([z.number(), z.number()])
+  ),
+  total_assets: z.array(
+    z.tuple([z.number(), z.number()])
+  ),
 });
 
-export type MarketChartResponse = z.infer<typeof MarketChartResponseSchema>;
+export type HistoricalTreasuryType = z.infer<typeof HistoricalTreasuryResponse>;
+
+export const OHLCResponseZ = z.array(
+  z.tuple([
+    z.number(),
+    z.number(),
+    z.number(),
+    z.number(),
+    z.number(),
+  ])
+);
+
+export const MarketChartResponse = z.object({
+  prices: z.array(
+    z.tuple([
+      z.number(),
+      z.number(),
+    ])
+  ),
+  market_caps: z.array(
+    z.tuple([
+      z.number(),
+      z.number(),
+    ])
+  ),
+  total_volumes: z.array(
+    z.tuple([
+      z.number(),
+      z.number(),
+    ])
+  ),
+});
+
+export type MarketChartType = z.infer<typeof MarketChartResponse>;
+
+
+export const TokenHoldersResponse = z.object({
+  holders: z.array(
+    z.tuple([z.number(), z.number()]),
+  )
+});
+
+export type TokenHoldersType = z.infer<typeof TokenHoldersResponse>;

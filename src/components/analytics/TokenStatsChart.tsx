@@ -242,15 +242,15 @@ export default TokenStatsChart;*/
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { MarketChartResponse, TokenHoldersResponse } from "@/lib/types/AnalyticTypes";
 import {
   createChart,
   IChartApi,
   ISeriesApi,
-  Time,
-  LineData,
   LineSeriesOptions,
+  Time
 } from "lightweight-charts";
+import { useEffect, useRef, useState } from "react";
 
 interface TokenStatsProps {
   organisation: string;
@@ -261,6 +261,8 @@ interface ChartData {
   time: Time;
   value: number;
 }
+
+type ChartType = "volume" | "holders" | "marketCap";
 
 const cache = new Map<
   string,
@@ -274,24 +276,20 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
   const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">(
     "1"
   );
-  const [chartType, setChartType] = useState<
-    "volume" | "holders" | "marketCap"
-  >("volume");
+  const [chartType, setChartType] = useState<ChartType>("volume");
   const [dataFound, setDataFound] = useState<boolean>(true);
   const [passedData, setPassedData] = useState<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
 
   const fetchData = async (
     range: string,
-    type: string
+    type: ChartType
   ): Promise<ChartData[] | null> => {
     try {
       const apiUrl =
         type === "marketCap" || type === "volume"
-          ? //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
-            //  : `https://api.profiler.bio/api/holders/${tokenName}`;
-            `https://inev.profiler.bio/chart/${organisation}-${range}`
-          : `https://inev.profiler.bio/charts/holders/${tokenName}`;
+        ? `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/market_chart/${tokenName}/${range}`
+        : `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/holders/${tokenName}`;
 
       const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
       const cacheEntry = cache.get(cacheKey);
@@ -309,19 +307,32 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
       setDataFound(true);
       const data = await response.json();
 
+      if (type === "marketCap" || type === "volume") {
+        const parsed = MarketChartResponse.parse(data);
+
+        const seriesData =
+          (type === "marketCap"
+            ? parsed.market_caps
+            : parsed.total_volumes
+          ).map(([timestamp, value]: [number, number]) => ({
+            time: Math.floor(timestamp / 1000) as Time,
+            value,
+          })) ?? null;
+
+        cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
+        return seriesData;
+      }
+
+      const parsed = TokenHoldersResponse.parse(data);
       const seriesData =
-        (type === "marketCap"
-          ? data?.market_caps
-          : type === "volume"
-            ? data?.total_volumes
-            : data?.holders
-        )?.map(([timestamp, value]: [number, number]) => ({
+        parsed.holders.map(([timestamp, value]: [number, number]) => ({
           time: Math.floor(timestamp / 1000) as Time,
           value,
         })) ?? null;
 
       cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
       return seriesData;
+
     } catch (error) {
       console.error("Error fetching data:", error);
       setDataFound(false);
@@ -331,7 +342,7 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
     }
   };
 
-  const updateChart = async (range: string, type: string) => {
+  const updateChart = async (range: string, type: ChartType) => {
     if (!isMountedRef.current) return; // Prevent updates if unmounted
 
     const prices = await fetchData(range, type);
