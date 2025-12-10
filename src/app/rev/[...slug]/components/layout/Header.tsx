@@ -1,21 +1,34 @@
 "use client";
 
-import { ParticipantsDocument, SuckerGroupDocument } from "@/generated/graphql";
+import { ParticipantsDocument, ProjectOperatorDocument, SuckerGroupDocument } from "@/generated/graphql";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatDate } from "@/lib/utils";
 import {
   useJBProjectMetadataContext,
   useBendystrawQuery,
+  useJBChainId,
+  useJBContractContext,
 } from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useProjectContext } from "../../ProjectDataContext";
+import { JB_CHAINS } from "juice-sdk-core";
 
 export function Header() {
   const { project, dailyTotals } = useProjectContext();
   const { metadata } = useJBProjectMetadataContext();
+  const { projectId, version } = useJBContractContext();
+  const chainId = useJBChainId();
+
+  const { data: operator, isLoading } = useBendystrawQuery(ProjectOperatorDocument, {
+    chainId: Number(chainId),
+    projectId: Number(projectId),
+    version,
+    skip: !chainId || !projectId || !version,
+  });
+
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -194,13 +207,14 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {project?.owner ? (
+                    {operator ? (
                       <EthereumAddress
-                        address={project?.owner as Address}
+                        address={operator.permissionHolders.items[0].operator as Address}
                         short
                         withEnsAvatar={false}
                         withEnsName
                         className="text-xl font-light"
+                        chain={JB_CHAINS[chainId ?? 1].chain}
                       />
                     ) : (
                       <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />

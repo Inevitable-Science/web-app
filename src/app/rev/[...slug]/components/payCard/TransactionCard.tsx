@@ -103,7 +103,16 @@ export function TransactionCard() {
         value,
         selectedToken
       );
-      setAmountB(payerTokens);
+
+      const numberPayerTokens = Number(payerTokens);
+      if (numberPayerTokens < 0) {
+        // Round 3 to sigfigs then remove trailing 0's 
+        // this prevents strings like 0.0100000 and 0.000111111111
+        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
+        return;
+      }
+      
+      setAmountB(Number(numberPayerTokens.toFixed(4)).toString());
       return;
     }
   };
@@ -125,7 +134,15 @@ export function TransactionCard() {
         reservedPercent: rulesetMetadata.reservedPercent,
       }
     );
-    setAmountA(quote.format());
+
+    const numberPayerTokens = Number(quote.format());
+    if (numberPayerTokens < 0) {
+      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
+      return;
+    }
+    
+    setAmountA(Number(numberPayerTokens.toFixed(4)).toString());
+    return;
   };
 
   useEffect(() => {
@@ -213,7 +230,44 @@ export function TransactionCard() {
   };
 
   const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "-" || e.key === "Minus") {
+    const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
+
+    const key = e.key;
+
+    // Allow all control/navigation keys:
+    const controlKeys = [
+      "Backspace",
+      "Delete",
+      "Tab",
+      "Escape",
+      "Enter",
+      "Home",
+      "End",
+      "ArrowLeft",
+      "ArrowRight",
+    ];
+
+    if (controlKeys.includes(key)) {
+      return; // allow
+    }
+
+    // Block invalid characters
+    if (invalidKeys.includes(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    // Key is a single character. Ensure it's a digit or decimal point.
+    if (!/[\d.]/.test(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    const current = e.currentTarget.value;
+    const next = current + key;
+
+    // Limit total length to 16
+    if (next.length > 16) {
       e.preventDefault();
     }
   };

@@ -11,18 +11,16 @@ export function PortfolioPeformance() {
             Portfolio Peformance
           </h3>
           <div className="flex flex-col text-sm font-light">
-            {Object.entries(
-              analyticsData?.treasury?.historicalReturns || {}
-            ).map(([label, value]) => {
+            {analyticsData?.treasury?.historicalReturns.map(value => {
               const isPositive = !value.percentReturn.startsWith("-");
               const textColor = isPositive ? "text-green-500" : "text-red-500";
 
               return (
                 <div
-                  key={label}
+                  key={value.dateRange}
                   className="flex items-center justify-between border-b border-[#282828] py-1 py-4"
                 >
-                  <p className="w-8 text-muted-foreground">{label}</p>
+                  <p className="w-8 text-muted-foreground">{value.dateRange}</p>
                   <p className={`min-w-24 text-center ${textColor}`}>
                     {isPositive === true && "+"}
                     {value.dollarReturn}
