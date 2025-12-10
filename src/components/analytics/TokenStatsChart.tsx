@@ -251,6 +251,7 @@ import {
   Time
 } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "../ui/button";
 
 interface TokenStatsProps {
   organisation: string;
@@ -464,41 +465,41 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
+          <Button
+            variant={"graphRounded"}
             onClick={() => setTimeRange("1")}
             disabled={chartType === "holders" || timeRange === "1"}
           >
             24h
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("7")}
             disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("30")}
             disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-(--background)"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("max")}
             disabled={chartType === "holders" || timeRange === "max"}
           >
             MAX
-          </button>
+          </Button>
         </div>
       </div>
 
