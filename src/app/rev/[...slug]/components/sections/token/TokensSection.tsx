@@ -17,14 +17,17 @@ import {
   JBProjectToken,
   JBRulesetData,
   JBRulesetMetadata,
+  JB_CHAINS,
   jbControllerAbi,
 } from "juice-sdk-core";
-import { useReadContract, useWatchAsset } from "wagmi";
+import { useAccount, useReadContract, useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
+import EtherscanLink from "@/components/EtherscanLink";
 
 type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
+  const { connector } = useAccount();
   const { project, token, metadata, ruleset, rulesetMetadata } =
     useProjectContext();
   const { projectId, contracts, contractAddress } = useJBContractContext();
@@ -137,23 +140,26 @@ export function HoldersSection() {
           <div className="background-color rounded-xl p-[16px]">
             <div className="flex items-end gap-2">
               {/* This h3 is already correctly handling a potential lack of token.data */}
-              <h3 className="text-xl">
+              <h3 className="text-xl leading-[24px]">
                 {token.data?.name ? token.data.name : metadata.data?.name}
               </h3>
               {token.data && (
-                <p className="text-sm font-light text-muted-foreground">
-                  {/* Use the actual token address from your data */}
-                  {truncateAddress(token.data.address as Address)}
-                </p>
+                <EtherscanLink
+                  value={token.data.address}
+                  className="text-sm text-muted-foreground"
+                  type={"token"}
+                  truncateTo={4}
+                  chain={JB_CHAINS[chainId ?? 1].chain}
+                />
               )}
             </div>
             <p className="font-light uppercase text-muted-foreground">
               Project Token
             </p>
-            {token.data && (
+            {(token.data && connector?.name === "MetaMask") && (
               <Button
                 variant="link"
-                className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
+                className="flex h-6 w-fit text-sm items-center gap-1.5 px-0 font-normal uppercase text-nowrap"
                 onClick={handleAddToken}
                 disabled={isPending} // Disable the button while processing
               >

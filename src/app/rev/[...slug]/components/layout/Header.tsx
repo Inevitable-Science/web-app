@@ -49,7 +49,11 @@ export function Header() {
     }
 
     const difference = accCurVolume - accPrevVolume;
-    const percentage = (Number(difference) * 100) / Number(accPrevVolume);
+    let percentage = (Number(difference) * 100) / Number(accPrevVolume);
+
+    if (percentage < 0) { // TODO: Review
+      percentage = percentage * -1;
+    }
     return `+${percentage.toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);
 
@@ -74,7 +78,7 @@ export function Header() {
   });
 
   const suckerGroupData = participants?.participants;
-
+console.log(operator);
   return (
     <header>
       <div className="ctWrapper">
@@ -207,7 +211,7 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {operator ? (
+                    {operator?.permissionHolders?.items[0]?.operator ? (
                       <EthereumAddress
                         address={operator.permissionHolders.items[0].operator as Address}
                         short

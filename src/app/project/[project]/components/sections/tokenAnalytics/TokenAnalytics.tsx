@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { formatNumber, truncateAddress } from "@/lib/utils";
 import { TokenResponse } from "@/lib/types/AnalyticTypes";
-import { useChainId, useSwitchChain, useWatchAsset } from "wagmi";
+import { useChainId, useReadContract, useReadContracts, useSwitchChain, useWatchAsset } from "wagmi";
 
-import { Address, formatUnits } from "viem";
+import { Address, erc20Abi, formatUnits } from "viem";
 import { Loader2 } from "lucide-react";
 
 import { TokenChart } from "@/components/analytics/TokenChart";
@@ -18,6 +18,8 @@ import { useAccount } from "wagmi";
 import { getBalance } from "@wagmi/core";
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { useSwitchToCorrectChain } from "../../../useEnsureCorrectChain";
+import EtherscanLink from "@/components/EtherscanLink";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -68,29 +70,38 @@ function getValuationLabel(
 
 export function TokenSection() {
   const { analyticsData } = useData();
-  const data = analyticsData?.tokenData;
-  const nativeTokenChainId = analyticsData?.tokenData?.selectedToken.chain_id;
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
   const { watchAsset, isSuccess, isPending } = useWatchAsset();
-  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
-  const chainId = useChainId();
-  const [balance, setBalance] = useState<string>("");
+  const data = analyticsData?.tokenData;
+  const nativeTokenChainId = (data?.selectedToken.chain_id ?? 1) as JBChainId;
+  const tokenAddress = data?.selectedToken.address as Address;
 
-  const handleSwitchChain = () => {
-    if (
-      !nativeTokenChainId ||
-      !isConnected ||
-      !chainId ||
-      chainId === nativeTokenChainId
-    )
-      return;
-    try {
-      switchChain({ chainId: nativeTokenChainId });
-    } catch (err) {
-      console.error("Failed to switch chain", err);
-    }
-  };
+  const {
+    data: tokenDataResult,
+    isLoading,
+  } = useReadContracts({
+    allowFailure: false, // makes typing easier
+    contracts: [
+      {
+        address: tokenAddress,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [address!], // safe because we enable only when connected
+        chainId: nativeTokenChainId,
+      },
+      {
+        address: tokenAddress,
+        abi: erc20Abi,
+        functionName: "decimals",
+        chainId: nativeTokenChainId,
+      },
+    ] as const,
+    query: {
+      enabled: isConnected && !!address && !!tokenAddress,
+    },
+  });
+
 
   const handleAddToken = () => {
     // Make sure token.data and necessary properties exist
@@ -113,37 +124,16 @@ export function TokenSection() {
     });
   };
 
-  useEffect(() => {
-    if (!address || !isConnected || chainId !== nativeTokenChainId) {
-      return;
-    }
+  const balance = tokenDataResult?.[0];
+  const decimals = tokenDataResult?.[1];
 
-    const fetchBalance = async () => {
-      try {
-        const balanceResults = await getBalance(wagmiConfig, {
-          address,
-          token: data?.selectedToken.address as Address,
-        });
+  let safeFormattedBalance = "0.00";
 
-        const raw = Number(
-          formatUnits(balanceResults.value, balanceResults.decimals)
-        );
-        let formatted: string;
-
-        if (raw < 1000) {
-          formatted = raw.toFixed(2);
-        } else {
-          formatted = formatNumber(raw, true);
-        }
-
-        setBalance(formatted);
-      } catch (err) {
-        console.error("Error fetching token balances:", err);
-      }
-    };
-
-    fetchBalance();
-  }, [address, chainId, isConnected, data?.selectedToken.address]);
+  if (isConnected && !isLoading && balance !== undefined && decimals !== undefined) {
+    safeFormattedBalance = formatNumber(
+      Number(formatUnits(balance, decimals))
+    );
+  }
 
   return (
     <section>
@@ -157,23 +147,26 @@ export function TokenSection() {
         <div className="background-color rounded-xl p-[16px]">
           <div className="flex items-end gap-2">
             {/* This h3 is already correctly handling a potential lack of token.data */}
-            <h3 className="text-xl">{data?.selectedToken.name}</h3>
-            {data?.selectedToken && (
-              <p className="text-sm font-light text-muted-foreground">
-                {/* Use the actual token address from your data */}
-                {truncateAddress(data?.selectedToken.address as Address)}
-              </p>
+            <h3 className="text-xl leading-[24px]">{data?.selectedToken.name}</h3>
+            {(tokenAddress && nativeTokenChainId) && (
+              <EtherscanLink
+                value={tokenAddress}
+                className="text-sm text-muted-foreground"
+                type={"token"}
+                truncateTo={4}
+                chain={JB_CHAINS[nativeTokenChainId].chain}
+              />
             )}
           </div>
           <p className="font-light uppercase text-muted-foreground">
             Project Token
           </p>
-          {data?.selectedToken && (
+          {(data?.selectedToken && connector?.name === "MetaMask") && (
             <Button
               variant="link"
-              className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
+              className="flex h-6 w-fit text-sm items-center gap-1.5 px-0 font-normal uppercase"
               onClick={handleAddToken}
-              disabled={isPending} // Disable the button while processing
+              disabled={isPending}
             >
               {isPending
                 ? "Adding..."
@@ -192,26 +185,11 @@ export function TokenSection() {
         <div className="background-color rounded-xl p-[16px]">
           <h3 className="text-xl">
             {isConnected ? (
-              <>
-                {chainId === nativeTokenChainId ? (
-                  <>
-                    {!balance ? (
-                      <div className="activeSkeleton mb-2 h-8 w-24 rounded-lg" />
-                    ) : (
-                      balance
-                    )}
-                  </>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="flex h-6 w-fit items-center gap-1.5 px-0 font-normal uppercase"
-                    onClick={handleSwitchChain}
-                    disabled={isSwitchingChain}
-                  >
-                    Switch Chain
-                  </Button>
-                )}
-              </>
+              isLoading ? (
+                <div className="activeSkeleton mb-2 h-8 w-24 rounded-lg" />
+              ) : (
+                <>{safeFormattedBalance}</>
+              )
             ) : (
               "0.00"
             )}

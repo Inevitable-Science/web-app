@@ -115,6 +115,8 @@ export function RulesTable() {
     return `, ${days} days`;
   };
 
+  console.log(primaryRuleset.weightCutPercent._value, primaryRuleset.duration, issuance, "PRP");
+
   return (
     <>
       <div className="rounded-2xl bg-grey-450 p-[12px]">
@@ -164,9 +166,15 @@ export function RulesTable() {
             </p>
 
             <p>
-              Paid Issuance: {issuance} cut{" "}
-              {primaryRuleset.weightCutPercent.formatPercentage()}% every{" "}
-              {(primaryRuleset.duration / 86400).toString()} days
+              Paid Issuance: {issuance}
+              {!!primaryRuleset.weightCutPercent._value &&
+                !!primaryRuleset.duration && (
+                <>
+                  {" "}cut{" "}
+                  {primaryRuleset.weightCutPercent.formatPercentage()}% every{" "}
+                  {(primaryRuleset.duration / 86400).toString()} days
+                </>
+              )}
             </p>
 
             <p>

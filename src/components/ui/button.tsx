@@ -23,7 +23,7 @@ const buttonVariants = cva(
         secondary: "rounded-lg background-color",
         ghost: "rounded hover:text-white hover:bg-grey-450",
         link: "font-light text-base p-0! hover:underline",
-        graphRounded: "block! font-normal! max-h-fit min-w-[28px] max-w-fit cursor-pointer rounded rounded-full border-none px-2! py-1! text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)] disabled:opacity-100!",
+        graphRounded: "block! font-normal! max-h-fit min-w-[28px] max-w-fit rounded rounded-full border-none px-2! py-1! text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)] disabled:opacity-100!",
       },
       size: {
         default: "h-10 px-4 py-2",
