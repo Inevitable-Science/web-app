@@ -98,7 +98,7 @@ export const TokenResponseSchema = z.object({
     ticker: z.string().nullable(),
     name: z.string().nullable(),
     parentDao: z.string().nullable(),
-    networks: z.array(z.string()).nullable(),
+    networks: z.array(z.number()).nullable(),
     totalSupply: z.number().nullable(),
     marketCap: z.number().nullable(),
     averageBal: z.number().nullable(),

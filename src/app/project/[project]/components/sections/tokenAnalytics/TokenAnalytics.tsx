@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { formatNumber, truncateAddress } from "@/lib/utils";
-import { TokenResponse } from "@/lib/types/AnalyticTypes";
-import { useChainId, useReadContract, useReadContracts, useSwitchChain, useWatchAsset } from "wagmi";
+import { useReadContracts, useWatchAsset } from "wagmi";
 
 import { Address, erc20Abi, formatUnits } from "viem";
 import { Loader2 } from "lucide-react";
@@ -15,11 +13,9 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 import { useAccount } from "wagmi";
-import { getBalance } from "@wagmi/core";
-import { wagmiConfig } from "@/lib/wagmiConfig";
-import { useSwitchToCorrectChain } from "../../../useEnsureCorrectChain";
 import EtherscanLink from "@/components/EtherscanLink";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { ChainLogo } from "@/components/ChainLogo";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -221,42 +217,16 @@ export function TokenSection() {
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px_16px_10px_16px]">
-                <div className="flex h-[28px] [&>*:not(:first-child)]:relative [&>*:not(:first-child)]:right-2">
-                  {data?.selectedToken?.networks?.map((network, index) => (
-                    <span key={index}>
-                      {network === "eth" && (
-                        <Image
-                          alt="Token Logo"
-                          width={28}
-                          height={28}
-                          src="https://cdn.inevitable.science/static/img/logo/mainnet.svg"
-                        />
-                      )}
-                      {network === "base" && (
-                        <Image
-                          alt="Token Logo"
-                          width={28}
-                          height={28}
-                          src="https://cdn.inevitable.science/static/img/logo/base.svg"
-                        />
-                      )}
-                      {network === "opt" && (
-                        <Image
-                          alt="Token Logo"
-                          width={28}
-                          height={28}
-                          src="https://cdn.inevitable.science/static/img/logo/optimism.svg"
-                        />
-                      )}
-                      {network === "arb" && (
-                        <Image
-                          alt="Token Logo"
-                          width={25}
-                          height={25}
-                          src="https://cdn.inevitable.science/static/img/logo/arbitrum.svg"
-                        />
-                      )}
-                    </span>
+                <div className="flex h-[24px]">
+                  {data?.selectedToken?.networks?.map((network) => (
+                    <div className="w-[18px]" key={network}>
+                      <ChainLogo
+                        key={network}
+                        chainId={network as JBChainId}
+                        width={24}
+                        height={24}
+                      />
+                    </div>
                   ))}
                 </div>
                 <p className="mt-[8px] font-light uppercase text-muted-foreground">

@@ -26,9 +26,15 @@ export function Header() {
     chainId: Number(chainId),
     projectId: Number(projectId),
     version,
-    skip: !chainId || !projectId || !version,
+    skip: !chainId || !projectId || !version || version !== 5,
   });
 
+  const owner = 
+    (
+      version === 4 ?
+      project.owner : 
+      operator?.permissionHolders.items[0].operator
+    ) as Address;
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -78,7 +84,6 @@ export function Header() {
   });
 
   const suckerGroupData = participants?.participants;
-console.log(operator);
   return (
     <header>
       <div className="ctWrapper">
@@ -211,9 +216,9 @@ console.log(operator);
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {operator?.permissionHolders?.items[0]?.operator ? (
+                    {owner ? (
                       <EthereumAddress
-                        address={operator.permissionHolders.items[0].operator as Address}
+                        address={owner}
                         short
                         withEnsAvatar={false}
                         withEnsName
