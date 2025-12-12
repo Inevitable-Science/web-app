@@ -44,7 +44,7 @@
     "juice-sdk-react": "^5.0.2",
     "lightweight-charts": "^4.2.3",
     "lucide-react": "^0.555.0",
-    "next": "16.0.7",
+    "next": "16.0.10",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-quill-new": "^3.6.0",
