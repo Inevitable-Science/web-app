@@ -9,7 +9,8 @@
     "dev": "next dev --turbopack",
     "build": "NODEOPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "export": "next export",
     "ts:compile": "tsc",
     "generate:gql": "DOTENV_CONFIG_PATH=./.env.local graphql-code-generator --config codegen.yml -r dotenv/config",
@@ -60,6 +61,7 @@
     "@babel/core": "^7.22.17",
     "@babel/preset-env": "^7.22.15",
     "@babel/preset-typescript": "^7.22.15",
+    "@eslint/js": "^9.39.2",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/client-preset": "^4.3.0",
     "@graphql-codegen/introspection": "^4.0.3",
@@ -70,14 +72,18 @@
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "@types/recharts": "^1.8.24",
-    "eslint": "^8",
+    "eslint": "^9.39.2",
     "eslint-config-next": "16.0.2",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.5.0",
+    "jiti": "^2.6.1",
     "postcss": "^8.4.33",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4.1.17",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typescript-eslint": "^8.49.0"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
