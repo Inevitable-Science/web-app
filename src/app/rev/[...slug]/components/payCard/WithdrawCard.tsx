@@ -193,7 +193,7 @@ export function WithdrawCard() {
               type="number"
               className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 opacity-80 placeholder:text-white cursor-not-allowed"
               placeholder="0.00"
-              value={receiveAmountString}
+              value={Number(receiveAmountString).toString()} // KEEP - this removes trailing 0's
               readOnly
             />
           </div>

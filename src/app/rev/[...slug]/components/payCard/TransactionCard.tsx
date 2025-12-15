@@ -106,13 +106,13 @@ export function TransactionCard() {
 
       const numberPayerTokens = Number(payerTokens);
       if (numberPayerTokens < 1) {
-        // Round 3 to sigfigs then remove trailing 0's 
+        // Round 3 to sigfigs then remove trailing 0's -> via Number(...).toString() 
         // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(numberPayerTokens.toPrecision(3));
+        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString()); // KEEP Number(...).toString(); 
         return;
       }
       
-      setAmountB(numberPayerTokens.toFixed(3));
+      setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
       return;
     }
   };
@@ -137,11 +137,11 @@ export function TransactionCard() {
 
     const numberPayerTokens = Number(quote.format());
     if (numberPayerTokens < 1) {
-      setAmountA(numberPayerTokens.toPrecision(3));
+      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
       return;
     }
     
-    setAmountA(numberPayerTokens.toFixed(4));
+    setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
     return;
   };
 
@@ -185,18 +185,14 @@ export function TransactionCard() {
 
   const handleChainChange = ({ chainId }: { chainId: JBChainId }) => {
     const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
-
     const newChainTokens = getTokensForChain(chainId, version);
 
     let token;
-
     if (selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase()) {
       token = newChainTokens.find((t) => t.address === NATIVE_TOKEN);
     } else {
       token = newChainTokens.find((t) => t.address === USDC_ADDRESSES[chainId]);
     }
-
-    console.log(token);
 
     if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
@@ -364,18 +360,33 @@ export function TransactionCard() {
                     disabled={isTokenANative !== selectedTokenIsNative}
                   />
                 </div>
-                <div className="flex w-fit min-w-fit items-center gap-2 rounded-full bg-grey-450 px-2 py-1">
-                  <Image
-                    src={
-                      metadata.data?.logoUri
-                        ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                        : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
-                    }
-                    className="rounded-full"
-                    height={22}
-                    width={22}
-                    alt="Token Icon"
-                  />
+                <div className="flex w-fit min-w-fit items-center gap-1 rounded-full bg-grey-450 px-1.5 py-1">
+                  <div className="flex items-end">
+                    <Image
+                      src={
+                        metadata.data?.logoUri
+                          ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                          : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
+                      }
+                      className="rounded-full"
+                      alt={`Token Logo`}
+                      width={24}
+                      height={24}
+                      style={{
+                        minWidth: 24,
+                        minHeight: 24,
+                        flexShrink: 0,
+                      }}
+                    />
+      
+                    <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+                      <ChainLogo
+                        chainId={Number(selectedSucker.peerChainId) as JBChainId}
+                        height={16}
+                        width={16}
+                      />
+                    </div>
+                  </div>
                   <p className="text-lg font-light">
                     {tokenB.symbol || "TOKENS"}
                   </p>
