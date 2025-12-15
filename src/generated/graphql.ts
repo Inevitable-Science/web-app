@@ -677,8 +677,8 @@ export type QuerySuckerGroupArgs = {
 
 
 export type QuerySuckerGroupMomentArgs = {
-  block: Scalars['Float']['input'];
   suckerGroupId: Scalars['String']['input'];
+  timestamp: Scalars['Float']['input'];
   version: Scalars['Float']['input'];
 };
 
@@ -4298,6 +4298,7 @@ export type Project = {
   redeemVolume: Scalars['BigInt']['output'];
   redeemVolumeUsd: Scalars['BigInt']['output'];
   repayLoanEvents: Maybe<RepayLoanEventPage>;
+  reservedTokenSupply: Scalars['BigInt']['output'];
   sendPayoutToSplitEvents: Maybe<SendPayoutToSplitEventPage>;
   sendPayoutsEvents: Maybe<SendPayoutsEventPage>;
   sendReservedTokensToSplitEvents: Maybe<SendReservedTokensToSplitEventPage>;
@@ -5001,6 +5002,14 @@ export type ProjectFilter = {
   redeemVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   suckerGroupId?: InputMaybe<Scalars['String']['input']>;
   suckerGroupId_contains?: InputMaybe<Scalars['String']['input']>;
   suckerGroupId_ends_with?: InputMaybe<Scalars['String']['input']>;
@@ -6433,6 +6442,7 @@ export type SuckerGroup = {
   redeemCount: Scalars['Int']['output'];
   redeemVolume: Scalars['BigInt']['output'];
   redeemVolumeUsd: Scalars['BigInt']['output'];
+  reservedTokenSupply: Scalars['BigInt']['output'];
   suckerTransactions: Maybe<SuckerTransactionPage>;
   tokenSupply: Scalars['BigInt']['output'];
   trendingPaymentsCount: Scalars['Int']['output'];
@@ -6550,6 +6560,14 @@ export type SuckerGroupFilter = {
   redeemVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   tokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
   tokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
@@ -6610,7 +6628,6 @@ export type SuckerGroupFilter = {
 
 export type SuckerGroupMoment = {
   balance: Scalars['BigInt']['output'];
-  block: Scalars['Int']['output'];
   contributorsCount: Scalars['Int']['output'];
   nftsMintedCount: Scalars['Int']['output'];
   paymentsCount: Scalars['Int']['output'];
@@ -6639,14 +6656,6 @@ export type SuckerGroupMomentFilter = {
   balance_lte?: InputMaybe<Scalars['BigInt']['input']>;
   balance_not?: InputMaybe<Scalars['BigInt']['input']>;
   balance_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
-  block?: InputMaybe<Scalars['Int']['input']>;
-  block_gt?: InputMaybe<Scalars['Int']['input']>;
-  block_gte?: InputMaybe<Scalars['Int']['input']>;
-  block_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  block_lt?: InputMaybe<Scalars['Int']['input']>;
-  block_lte?: InputMaybe<Scalars['Int']['input']>;
-  block_not?: InputMaybe<Scalars['Int']['input']>;
-  block_not_in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   contributorsCount?: InputMaybe<Scalars['Int']['input']>;
   contributorsCount_gt?: InputMaybe<Scalars['Int']['input']>;
   contributorsCount_gte?: InputMaybe<Scalars['Int']['input']>;
@@ -7343,7 +7352,7 @@ export type SuckerGroupQueryVariables = Exact<{
 }>;
 
 
-export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any, volume: any, projects: { items: Array<{ chainId: number, projectId: number, token: string | null, currency: any | null, decimals: number | null, version: number }> } | null } | null };
+export type SuckerGroupQuery = { suckerGroup: { id: string, tokenSupply: any, volume: any, projects: { items: Array<{ balance: any, chainId: number, projectId: number, token: string | null, tokenSupply: any, currency: any | null, decimals: number | null, version: number, suckerGroupId: string }> } | null } | null };
 
 
 export const ActivityEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ActivityEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"activityEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"activityEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1000"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"payEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"memo"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"feeFromProject"}},{"kind":"Field","name":{"kind":"Name","value":"newlyIssuedTokenCount"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"amountUsd"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}},{"kind":"Field","name":{"kind":"Name","value":"distributionFromProjectId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"cashOutTokensEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"from"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"reclaimAmount"}},{"kind":"Field","name":{"kind":"Name","value":"cashOutCount"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"}},{"kind":"Field","name":{"kind":"Name","value":"project"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"handle"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ActivityEventsQuery, ActivityEventsQueryVariables>;
@@ -7360,4 +7369,4 @@ export const ProjectOperatorDocument = {"kind":"Document","definitions":[{"kind"
 export const ProjectCreateEventDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectCreateEvent"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"projectCreateEventFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projectCreateEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"txHash"}},{"kind":"Field","name":{"kind":"Name","value":"timestamp"}}]}}]}}]}}]} as unknown as DocumentNode<ProjectCreateEventQuery, ProjectCreateEventQueryVariables>;
 export const StoreAutoIssuanceAmountEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StoreAutoIssuanceAmountEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"storeAutoIssuanceAmountEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"storeAutoIssuanceAmountEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<StoreAutoIssuanceAmountEventsQuery, StoreAutoIssuanceAmountEventsQueryVariables>;
 export const AutoIssueEventsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AutoIssueEvents"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"autoIssueEventFilter"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"autoIssueEvents"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderBy"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderDirection"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"stageId"}},{"kind":"Field","name":{"kind":"Name","value":"beneficiary"}},{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"caller"}}]}}]}}]}}]} as unknown as DocumentNode<AutoIssueEventsQuery, AutoIssueEventsQueryVariables>;
-export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;
+export const SuckerGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SuckerGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"suckerGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"volume"}},{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"balance"}},{"kind":"Field","name":{"kind":"Name","value":"chainId"}},{"kind":"Field","name":{"kind":"Name","value":"projectId"}},{"kind":"Field","name":{"kind":"Name","value":"token"}},{"kind":"Field","name":{"kind":"Name","value":"tokenSupply"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"suckerGroupId"}}]}}]}}]}}]}}]} as unknown as DocumentNode<SuckerGroupQuery, SuckerGroupQueryVariables>;

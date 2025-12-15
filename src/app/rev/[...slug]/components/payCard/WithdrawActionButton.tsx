@@ -1,53 +1,43 @@
-// src/components/WithdrawActionButton.tsx
-
-import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  DEFAULT_METADATA,
-  jbMultiTerminalAbi,
-  NATIVE_TOKEN,
-  SuckerPair,
-} from "juice-sdk-core";
-import { JBChainId, useJBContractContext } from "juice-sdk-react";
 import { useEffect, useMemo } from "react";
+import { Address, parseUnits } from "viem";
 import {
   useAccount,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { Loader2 } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import {
+  DEFAULT_METADATA,
+  jbMultiTerminalAbi,
+  NATIVE_TOKEN_DECIMALS,
+} from "juice-sdk-core";
+import { JBChainId, useJBContractContext } from "juice-sdk-react";
+import { useSelectedSucker } from "./SelectedSuckerContext";
+import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import { useToast } from "@/components/ui/use-toast";
 
 const shimmerClasses = `
+    w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
     relative overflow-hidden 
     before:content-[''] before:absolute before:inset-0 
     before:-translate-x-full before:animate-shimmer 
-    before:bg-linear-to-r before:from-transparent before:via-white/60 before:to-transparent
-  `;
+    before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
+`;
 
 export function WithdrawActionButton({
-  amountToWithdraw,
+  withdrawAmount,
+  receiveTokenAddress,
+  tokenBalance,
   disabled,
-  selectedSucker,
 }: {
-  amountToWithdraw: bigint;
+  withdrawAmount: string;
+  receiveTokenAddress?: Address;
+  tokenBalance: number;
   disabled?: boolean;
-  selectedSucker?: SuckerPair | undefined;
 }) {
-  const {
-    projectId,
-    contracts: { primaryNativeTerminal },
-  } = useJBContractContext();
+  const { selectedSucker } = useSelectedSucker();
+  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
   const { address, chainId } = useAccount();
   const { toast } = useToast();
-
-  /*const {
-    data: txHash,
-    isPending: isWriteLoading,
-    isError: isWriteError,
-    error: writeError,
-    writeContract,
-  } = useWriteJbMultiTerminalCashOutTokensOf();*/
   const {
     data: txHash,
     isPending: isWriteLoading,
@@ -63,19 +53,20 @@ export function WithdrawActionButton({
   } = useWaitForTransactionReceipt({ hash: txHash });
 
   const loading = isWriteLoading || isTxLoading;
+  const insufficientFunds = Number(withdrawAmount) > tokenBalance;
 
   useEffect(() => {
     if (isSuccess) {
       toast({
         title: "Withdraw Successful!",
-        description: "Your ETH is on its way.",
+        description: "You Successfully Withdrew Your Tokens.",
       });
     }
     if (isWriteError || isTxError) {
       toast({
         variant: "destructive",
         title: "Withdraw Failed",
-        description: writeError?.name || "An unknown error occurred.",
+        description: "Couldn't Withdraw Your Tokens.",
       });
     }
   }, [isSuccess, isWriteError, isTxError, writeError, toast]);
@@ -86,61 +77,49 @@ export function WithdrawActionButton({
       !address ||
       !writeContractAsync ||
       !selectedSucker ||
-      !chainId
-    )
+      !chainId ||
+      !receiveTokenAddress
+    ) {
+      toast({
+        variant: "destructive",
+        title: "Error Preparing Transaction",
+        description: "Couldn't Prepare Your Transaction.",
+      });
       return;
+    }
 
-    const args = [
-      address, // holder
-      selectedSucker.projectId, // project id (use the correct project ID for the selected chain)
-      amountToWithdraw, // token to reclaim (what you want to receive)
-      NATIVE_TOKEN,
-      0n, // min tokens reclaimed
-      address, // beneficiary
-      DEFAULT_METADATA, // metadata
-    ] as const;
 
-    await writeContractAsync?.({
-      // TODO:REVIEW
+    await writeContractAsync({
       abi: jbMultiTerminalAbi,
       functionName: "cashOutTokensOf",
-      chainId: selectedSucker?.peerChainId as JBChainId,
-      address: primaryNativeTerminal.data as `0x${string}`,
-      args,
-    }); // TODO:REVIEW
-    /*writeContract({ // old code archive
-      chainId: selectedSucker.peerChainId,
+      chainId: selectedSucker?.peerChainId,
       address: primaryNativeTerminal.data,
       args: [
-        address, // holder of tokens
-        selectedSucker.projectId,
-        amountToWithdraw,
-        NATIVE_TOKEN, // The token to receive back (ETH)
-        0n, // minTokensReclaimed (for slippage, 0 for now)
+        address, // holder
+        selectedSucker.projectId, // project id (use the correct project ID for the selected chain)
+        withdrawAmount ? parseUnits(withdrawAmount, NATIVE_TOKEN_DECIMALS) : 0n, // cash out count
+        receiveTokenAddress, // token to reclaim (what you want to receive)
+        0n, // min tokens reclaimed
         address, // beneficiary
-        DEFAULT_METADATA,
+        DEFAULT_METADATA, // metadata,
       ],
-    });*/
+    });
   };
 
   const buttonContent = useMemo(() => {
-    if (loading) return <>Processing...</>;
+    if (insufficientFunds) return "Insufficient Funds";
+    if (loading) return "Processing...";
     if (isSuccess) return "Success!";
-    /* if (isWriteError || isTxError) return "Error - Try Again"; */
     return "Withdraw";
-  }, [loading, isSuccess, isWriteError, isTxError]);
+  }, [loading, isSuccess, isWriteError, isTxError, insufficientFunds]);
 
   return (
     <ButtonWithWallet
       targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
-      disabled={false}
+      disabled={insufficientFunds || disabled || !withdrawAmount}
       loading={loading}
       onClick={handleWithdraw}
-      className={twMerge(
-        "w-full rounded-full transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey",
-        shimmerClasses,
-        "w-full rounded-full bg-cerulean"
-      )}
+      className={shimmerClasses}
     >
       {buttonContent}
     </ButtonWithWallet>

@@ -31,9 +31,9 @@ export function Header() {
 
   const owner = 
     (
-      version === 4 ?
+      (version === 4 || !operator?.permissionHolders?.items[0]?.operator) ?
       project.owner : 
-      operator?.permissionHolders.items[0].operator
+      operator?.permissionHolders?.items[0]?.operator
     ) as Address;
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
@@ -57,10 +57,7 @@ export function Header() {
     const difference = accCurVolume - accPrevVolume;
     let percentage = (Number(difference) * 100) / Number(accPrevVolume);
 
-    if (percentage < 0) { // TODO: Review
-      percentage = percentage * -1;
-    }
-    return `+${percentage.toFixed(2)}`;
+    return `+${Math.abs(percentage).toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);
 
   const {

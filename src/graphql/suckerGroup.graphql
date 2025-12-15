@@ -5,12 +5,15 @@ query SuckerGroup($id: String!) {
     volume
     projects {
       items {
+        balance
         chainId
         projectId
         token
+        tokenSupply
         currency
         decimals
         version
+        suckerGroupId
       }
     }
   }

@@ -78,7 +78,7 @@ export function useProjectBaseToken(): BaseTokenInfo {
 
   if (isAllUsdc) {
     tokenType = "USDC";
-    symbol = "USD";
+    symbol = "USDC";
     decimals = 6;
     currency = USD_CURRENCY_ID(version);
     isNative = false;

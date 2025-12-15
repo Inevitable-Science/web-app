@@ -105,14 +105,14 @@ export function TransactionCard() {
       );
 
       const numberPayerTokens = Number(payerTokens);
-      if (numberPayerTokens < 0) {
+      if (numberPayerTokens < 1) {
         // Round 3 to sigfigs then remove trailing 0's 
         // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
+        setAmountB(numberPayerTokens.toPrecision(3));
         return;
       }
       
-      setAmountB(Number(numberPayerTokens.toFixed(4)).toString());
+      setAmountB(numberPayerTokens.toFixed(3));
       return;
     }
   };
@@ -136,12 +136,12 @@ export function TransactionCard() {
     );
 
     const numberPayerTokens = Number(quote.format());
-    if (numberPayerTokens < 0) {
-      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
+    if (numberPayerTokens < 1) {
+      setAmountA(numberPayerTokens.toPrecision(3));
       return;
     }
     
-    setAmountA(Number(numberPayerTokens.toFixed(4)).toString());
+    setAmountA(numberPayerTokens.toFixed(4));
     return;
   };
 
@@ -275,7 +275,7 @@ export function TransactionCard() {
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <Button
             onClick={() => setActiveTab("buy")}
             className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
@@ -333,7 +333,7 @@ export function TransactionCard() {
                 <div className="flex flex-col items-end gap-1">
                   <div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450">
                     <ChainSelector
-                      disabled={!suckers || suckers.length <= 1}
+                      disabled={!suckers/* || suckers.length <= 1*/}
                       value={selectedToken}
                       handleChainChange={handleChainChange}
                       handleTokenChange={handleTokenChange}
@@ -399,7 +399,7 @@ export function TransactionCard() {
             />
           </div>
         ) : (
-          <WithdrawCard selectedSucker={selectedSucker} />
+          <WithdrawCard />
         )}
       </div>
     </div>
