@@ -6,14 +6,15 @@ import {
 } from "juice-sdk-react";
 import { formatNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
-import { useProjectContext } from "../../ProjectDataContext";
-import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useProjectContext } from "../../../ProjectDataContext";
+import { useSelectedSucker } from "../SelectedSuckerContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { SuckerGroupDocument } from "@/generated/graphql";
 import { getProjectsReclaimableSurplus, getUnitValue } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
+import { PayInput } from "../PayInput";
 
 export interface Surplus {
   projectId: number;
@@ -25,7 +26,7 @@ export interface Surplus {
   tokenDecimals: 18;
 }
 
-export function WithdrawCard() {
+export function WithdrawTab() {
   const { project, token } = useProjectContext();
   const { selectedSucker } = useSelectedSucker();
 
@@ -105,49 +106,6 @@ export function WithdrawCard() {
     return;
   };
 
-  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
-
-    const key = e.key;
-
-    // Allow all control/navigation keys:
-    const controlKeys = [
-      "Backspace",
-      "Delete",
-      "Tab",
-      "Escape",
-      "Enter",
-      "Home",
-      "End",
-      "ArrowLeft",
-      "ArrowRight",
-    ];
-
-    if (controlKeys.includes(key)) {
-      return; // allow
-    }
-
-    // Block invalid characters
-    if (invalidKeys.includes(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    // Key is a single character. Ensure it's a digit or decimal point.
-    if (!/[\d.]/.test(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    const current = e.currentTarget.value;
-    const next = current + key;
-
-    // Limit total length to 16
-    if (next.length > 16) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
@@ -157,14 +115,9 @@ export function WithdrawCard() {
             <p className="text-sm font-light text-muted-foreground">
               YOU WITHDRAW
             </p>
-            <input
-              type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0  placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="0.00"
+            <PayInput
               value={withdrawAmount}
-              onChange={(e) => handleWithdrawAmountChange(e.target.value)}
-              onKeyDown={preventMinusKey}
-              aria-label={!unitValue ? "Switch Chains To Withdraw" : "Withdraw Amount"}
+              onChangeFunction={handleWithdrawAmountChange}
               disabled={!unitValue}
             />
           </div>
@@ -189,12 +142,9 @@ export function WithdrawCard() {
             <p className="text-sm font-light text-muted-foreground select-none">
               YOU RECEIVE
             </p>
-            <input
-              type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 opacity-80 placeholder:text-white cursor-not-allowed"
-              placeholder="0.00"
+            <PayInput
               value={Number(receiveAmountString).toString()} // KEEP - this removes trailing 0's
-              readOnly
+              disabled
             />
           </div>
           <div className="flex w-fit min-w-fit items-center justify-end gap-1 rounded-full bg-grey-450 px-1.5 py-1">

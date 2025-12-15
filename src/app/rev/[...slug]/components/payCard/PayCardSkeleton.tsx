@@ -1,14 +1,12 @@
-import { ChainSelector } from "./ChainSelector";
+import { ChainSelector } from "./payTab/ChainSelector";
 import { Button } from "@/components/ui/button";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 
 export function PayCardSkeleton({
   selectedToken,
-  tokens,
 }: {
   selectedToken: Token;
-  tokens: Token[];
 }) {
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
@@ -37,11 +35,11 @@ export function PayCardSkeleton({
               <div className="flex flex-col items-end gap-1">
                 <ChainSelector
                   value={selectedToken}
-                  options={tokens}
-                  disabled={true}
+                  options={[selectedToken]}
+                  disabled
                 />
                 <div className="flex items-center justify-end gap-1">
-                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+                  <p className="text-nowrap text-right text-sm font-light text-muted-foreground">
                     Balance:
                   </p>
                   <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />

@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { JBChainId } from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
-import { useProjectContext } from "../../ProjectDataContext";
-import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useProjectContext } from "../../../ProjectDataContext";
+import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {
   Select,
@@ -16,9 +16,9 @@ import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatNumber } from "@/lib/utils";
 
 export interface SuckersBalance {
-    balance: JBProjectToken;
-    chainId: JBChainId;
-    projectId: bigint;
+  balance: JBProjectToken;
+  chainId: JBChainId;
+  projectId: bigint;
 };
 
 interface ChainSelectorProps {

@@ -11,7 +11,7 @@ import {
   NATIVE_TOKEN_DECIMALS,
 } from "juice-sdk-core";
 import { JBChainId, useJBContractContext } from "juice-sdk-react";
-import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -116,7 +116,13 @@ export function WithdrawActionButton({
   return (
     <ButtonWithWallet
       targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
-      disabled={insufficientFunds || disabled || !withdrawAmount}
+      disabled={
+        disabled || 
+        (
+          (insufficientFunds ||!withdrawAmount) &&
+          chainId === selectedSucker?.peerChainId
+        )
+        }
       loading={loading}
       onClick={handleWithdraw}
       className={shimmerClasses}

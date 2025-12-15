@@ -3,7 +3,7 @@ import { useJBContractContext } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
-import { PayCard } from "../payCard/PayCard";
+import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";

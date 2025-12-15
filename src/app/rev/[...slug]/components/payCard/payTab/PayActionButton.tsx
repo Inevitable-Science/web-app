@@ -26,8 +26,7 @@ import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
 import { useProjectContext } from "@/app/rev/[...slug]/ProjectDataContext";
-import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { formatWalletError } from "@/lib/utils";
@@ -135,14 +134,14 @@ export function PayActionButton({
       setIsModalOpen(false);
       setAgreedToTerms(false);
     }
-    if (isTxError || isWriteError) {
+    if (isTxError) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Transaction unsuccessful.",
       });
     }
-  }, [isSuccess, isTxError, isWriteError]);
+  }, [isSuccess, isTxError]);
 
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
