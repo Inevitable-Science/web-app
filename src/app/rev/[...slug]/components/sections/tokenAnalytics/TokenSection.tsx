@@ -101,7 +101,7 @@ export function TokenSection() {
                     return (
                       <div className="w-[18px]" key={pair.peerChainId}>
                         <ChainLogo
-                          chainId={pair.peerChainId as JBChainId}
+                          chainId={pair.peerChainId}
                           width={24}
                           height={24}
                         />

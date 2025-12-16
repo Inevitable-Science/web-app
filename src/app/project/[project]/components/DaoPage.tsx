@@ -60,7 +60,7 @@ export function DaoPage() {
             <div className="mt-1 max-h-[700px]">
               <SwapWidget
                 token={
-                  analyticsData?.tokenData?.selectedToken.address as string
+                  analyticsData?.tokenData?.selectedToken.address!
                 }
               />
             </div>
@@ -98,7 +98,7 @@ export function DaoPage() {
         <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
           <div className="mb-4">
             <SwapWidget
-              token={analyticsData?.tokenData?.selectedToken.address as string}
+              token={analyticsData?.tokenData?.selectedToken.address!}
             />
           </div>
         </div>

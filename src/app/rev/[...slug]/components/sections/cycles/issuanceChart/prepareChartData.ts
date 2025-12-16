@@ -5,16 +5,16 @@ import { createVisualScale, type VisualScale } from "./visualScale";
 
 const SECONDS_PER_DAY = 86400;
 
-export type ChartDataPoint = {
+export interface ChartDataPoint {
   timestamp: number;
   price: number;
   visualX: number;
-};
+}
 
-export type Stage = {
+export interface Stage {
   name: string;
   start: number;
-};
+}
 
 export type StageArea = Stage & {
   x1: number;
@@ -22,13 +22,13 @@ export type StageArea = Stage & {
   fill: string;
 };
 
-export type ChartData = {
+export interface ChartData {
   chartData: ChartDataPoint[];
   stages: Stage[];
   stageAreas: StageArea[];
   todayVisualX: number | null;
   toReal: VisualScale["toReal"];
-};
+}
 
 function calculatePriceAtTimestamp(timestamp: number, rulesets: Ruleset[]): number | undefined {
   const active = rulesets.find((r, i) => {

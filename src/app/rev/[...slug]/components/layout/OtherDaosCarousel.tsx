@@ -10,17 +10,17 @@ import {
 import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
 
-type SlideType = {
+interface SlideType {
   img: string;
   href: string;
   title: string;
   description: string;
-};
+}
 
-type PropType = {
+interface PropType {
   slides?: SlideType[];
   options?: EmblaOptionsType;
-};
+}
 
 const DEFAULT_SLIDES: SlideType[] = [
   {

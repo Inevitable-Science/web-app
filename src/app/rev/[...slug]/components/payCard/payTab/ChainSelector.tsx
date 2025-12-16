@@ -97,7 +97,7 @@ export const ChainSelector = ({
                 onClick={() => {
                   handleChainChange
                     ? handleChainChange({
-                        chainId: sucker.peerChainId as JBChainId,
+                        chainId: sucker.peerChainId,
                       })
                     : undefined;
                 }}
@@ -120,7 +120,7 @@ export const ChainSelector = ({
           return (
             <SelectItem
               key={`${token.address}-${index}`}
-              value={`${token.address}` as Address}
+              value={`${token.address}`}
               className="[&>*:last-child]:flex [&>*:last-child]:w-full"
             >
               {token.address.toLowerCase() === NATIVE_TOKEN.toLowerCase() ? (

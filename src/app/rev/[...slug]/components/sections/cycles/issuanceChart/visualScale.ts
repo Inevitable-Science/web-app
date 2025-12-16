@@ -2,18 +2,18 @@ import { Stage } from "./prepareChartData";
 
 const MIN_STAGE_WIDTH_PERCENT = 0.12;
 
-export type StageMapping = {
+export interface StageMapping {
   start: number;
   end: number;
   visualStart: number;
   visualEnd: number;
-};
+}
 
-export type VisualScale = {
+export interface VisualScale {
   mappings: StageMapping[];
   toVisual: (timestamp: number) => number;
   toReal: (visualX: number) => number;
-};
+}
 
 /**
  * Creates a visual scale that ensures each stage takes at least MIN_STAGE_WIDTH_PERCENT

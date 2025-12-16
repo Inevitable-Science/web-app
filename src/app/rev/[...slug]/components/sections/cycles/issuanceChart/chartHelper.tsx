@@ -14,19 +14,17 @@ import { DataKey } from "recharts/types/util/types";
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
-export type ChartConfig = {
-  [k in string]: {
+export type ChartConfig = Record<string, {
     label?: React.ReactNode;
     icon?: React.ComponentType;
   } & (
     | { color?: string; theme?: never }
     | { color?: never; theme: Record<keyof typeof THEMES, string> }
-  );
-};
+  )>;
 
-type ChartContextProps = {
+interface ChartContextProps {
   config: ChartConfig;
-};
+}
 
 export interface LegendPayload {
     /**
@@ -63,19 +61,19 @@ export type CustomTooltipProps = DefaultTooltipContentProps<ValueType, NameType>
     name: string,
     item: Payload<number | string, string>,
     index: number,
-    payload: ReadonlyArray<Payload<number | string, string>>,
+    payload: readonly Payload<number | string, string>[],
   ) => React.ReactNode;
   labelClassName?: string;
   color?: string;
 };
 
-export type ChartLegendContentProps = {
+export interface ChartLegendContentProps {
   className?: string;
   hideIcon?: boolean;
   verticalAlign?: LegendProps["verticalAlign"];
   payload?: LegendPayload[];
   nameKey?: string;
-};
+}
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
 
@@ -180,7 +178,7 @@ function ChartTooltipContent({
     const value = (() => {
       const v =
         !labelKey && typeof label === "string"
-          ? (config[label as keyof typeof config]?.label ?? label)
+          ? (config[label]?.label ?? label)
           : itemConfig?.label;
 
       return typeof v === "string" || typeof v === "number" ? v : undefined;
@@ -358,7 +356,7 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
     configLabelKey = payloadPayload[key as keyof typeof payloadPayload] as string;
   }
 
-  return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
+  return configLabelKey in config ? config[configLabelKey] : config[key];
 }
 
 export {

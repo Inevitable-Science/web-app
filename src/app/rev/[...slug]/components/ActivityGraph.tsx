@@ -25,12 +25,12 @@ import { useVolumeData } from "@/hooks/useVolumeData"; // 1. Import the data hoo
 import { formatEther } from "viem";
 
 // Export types for clarity and potential external use
-export type ProjectTimelinePoint = {
+export interface ProjectTimelinePoint {
   timestamp: number;
   volume: number;
   balance: number;
   trendingScore: number;
-};
+}
 export type ProjectTimelineView = "volume" | "balance" | "trendingScore";
 export type ProjectTimelineRange = 7 | 30 | 365;
 

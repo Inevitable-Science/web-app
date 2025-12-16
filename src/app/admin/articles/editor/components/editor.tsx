@@ -9,13 +9,13 @@ import ImageBlot from "quill/formats/image";
 import { uploadImage } from "../../helpers/uploadHelper";
 import { useToast } from "@/components/ui/use-toast";
 
-type EditorProps = {
+interface EditorProps {
   editorValue: string;
   setEditorValue: (value: string) => void;
   attachments: string[];
   setAttachments: (value: string[]) => void;
   authToken: string;
-};
+}
 
 // Improve image blot to support alt text and revoke URLs on remove
 class BetterImageBlot extends ImageBlot {

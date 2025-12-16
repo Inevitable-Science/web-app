@@ -47,7 +47,7 @@ export function truncateAddress(address: Address) {
 
 export function formatNumber(
   num: number | null,
-  compact: boolean = false
+  compact = false
 ): string {
   if (num === null || isNaN(num)) return "--";
 
@@ -95,7 +95,7 @@ export function formatNumber(
 
 export function formatDate(
   input?: Date | string | null,
-  short: boolean = false
+  short = false
 ): string {
   if (!input) return "--";
 
@@ -218,7 +218,7 @@ export function sortChains(chainIds: JBChainId[]): JBChainId[] {
  * Ruleset metadata
  * @see https://github.com/Bananapus/nana-core/blob/main/src/libraries/JBRulesetMetadataResolver.sol
  */
-export type RulesetMetadata = {
+export interface RulesetMetadata {
   reservedPercent: ReservedPercent; // bits 4-19
   cashOutTaxRate: CashOutTaxRate; // bits 20-35
   baseCurrency: number; // bits 36-67
@@ -238,7 +238,7 @@ export type RulesetMetadata = {
   useDataHookForCashOut: boolean; // bit 81
   dataHook: Address; // bits 82-241
   metadata: number; // bits 242-255
-};
+}
 
 /**
  * Decodes packed ruleset metadata into its constituent parts
@@ -274,7 +274,7 @@ export function decodeRulesetMetadata(packed: bigint): RulesetMetadata {
 
     // Address
     dataHook:
-      `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}` as Address,
+      `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}`,
 
     // Final metadata (14 bits)
     metadata: Number((packed >> 242n) & ((1n << 14n) - 1n)),

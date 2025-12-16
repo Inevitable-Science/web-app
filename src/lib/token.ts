@@ -26,7 +26,7 @@ export function getTokensForChain(
   const tokens: Token[] = [
     {
       symbol: DEFAULT_NATIVE_TOKEN_SYMBOL,
-      address: NATIVE_TOKEN as `0x${string}`,
+      address: NATIVE_TOKEN,
       isNative: true,
       decimals: NATIVE_TOKEN_DECIMALS,
     },

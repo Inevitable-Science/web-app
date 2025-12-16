@@ -18,7 +18,7 @@ export function useBoostRecipient() {
     chainId,
     address: contractAddress(JBCoreContracts.JBSplits),
     args:
-      ruleset && ruleset?.data
+      ruleset?.data
         ? [projectId, BigInt(ruleset.data.id), RESERVED_TOKEN_SPLIT_GROUP_ID]
         : undefined,
   });

@@ -3,13 +3,13 @@
 import React from "react";
 import Image from "next/image";
 
-type SlideType = {
+interface SlideType {
   img: string;
   name: string;
   description: string;
   linkedIn?: string;
   twitter?: string;
-};
+}
 
 const slides: SlideType[] = [
   {

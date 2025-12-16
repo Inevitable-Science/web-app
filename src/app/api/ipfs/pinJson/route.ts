@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 
-export type InfuraPinResponse = {
+export interface InfuraPinResponse {
   Hash: string;
-};
+}
 
 const INFURA_IPFS_API_BASE_URL = "https://ipfs.infura.io:5001";
 const INFURA_IPFS_PROJECT_ID = process.env.INFURA_IPFS_PROJECT_ID;

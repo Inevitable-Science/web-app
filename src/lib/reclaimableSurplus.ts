@@ -54,9 +54,7 @@ export async function getReclaimableSurplus(
 }
 
 export async function getProjectsReclaimableSurplus(
-  projects: Array<
-    Pick<Project, "chainId" | "projectId" | "tokenSupply" | "version" | "decimals" | "currency">
-  >,
+  projects: Pick<Project, "chainId" | "projectId" | "tokenSupply" | "version" | "decimals" | "currency">[],
 ) {
   const result = await Promise.all(
     projects.map(async (project) => {

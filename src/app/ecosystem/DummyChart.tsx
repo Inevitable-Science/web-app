@@ -22,12 +22,12 @@ import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
 
 // Export types for clarity
-export type ProjectTimelinePoint = {
+export interface ProjectTimelinePoint {
   timestamp: number;
   volume: number;
   balance: number;
   trendingScore: number;
-};
+}
 export type ProjectTimelineView = "volume" | "balance" | "trendingScore";
 export type ProjectTimelineRange = 7 | 30 | 365;
 

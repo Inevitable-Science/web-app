@@ -55,7 +55,7 @@ export function Header() {
     }
 
     const difference = accCurVolume - accPrevVolume;
-    let percentage = (Number(difference) * 100) / Number(accPrevVolume);
+    const percentage = (Number(difference) * 100) / Number(accPrevVolume);
 
     return `+${Math.abs(percentage).toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);

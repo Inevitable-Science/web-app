@@ -6,7 +6,7 @@ import { JBCoreContracts, jbRulesetsAbi, SuckerPair } from "juice-sdk-core";
 import { useJBContractContext } from "juice-sdk-react";
 import { useCallback, useEffect, useState } from "react";
 
-type RuleSet = {
+interface RuleSet {
   cycleNumber: number;
   id: number;
   basedOnId: number;
@@ -16,7 +16,7 @@ type RuleSet = {
   weightCutPercent: number;
   approvalHook: `0x${string}`;
   metadata: RulesetMetadata;
-};
+}
 
 type SuckerPairWithRulesets = SuckerPair & {
   readonly rulesets: readonly RuleSet[];

@@ -3,7 +3,7 @@ import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
 import { ETH_CURRENCY_ID, JBChainId, NATIVE_TOKEN_DECIMALS, USD_CURRENCY_ID } from "juice-sdk-core";
 import { useBendystrawQuery, useJBChainId, useJBContractContext } from "juice-sdk-react";
 
-export type BaseTokenInfo = {
+export interface BaseTokenInfo {
   tokenType: "ETH" | "USDC" | "MIXED";
   symbol: string;
   decimals: number;
@@ -11,7 +11,7 @@ export type BaseTokenInfo = {
   isNative: boolean;
   targetCurrency: string;
   tokenMap: Record<JBChainId, { token: `0x${string}`; currency: number; decimals: number }>;
-};
+}
 
 export function useProjectBaseToken(): BaseTokenInfo {
   const { projectId, version } = useJBContractContext();

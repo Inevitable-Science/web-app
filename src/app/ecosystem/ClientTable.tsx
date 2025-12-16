@@ -32,11 +32,11 @@ interface v4ProjectInterface {
   vestingContract?: Address;
 }
 
-type Participant = {
+interface Participant {
   balance: string;
   erc20Balance: string;
   creditBalance: string;
-};
+}
 
 type ProjectBalanceMap = Record<string, bigint | string>;
 

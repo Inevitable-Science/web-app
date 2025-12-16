@@ -64,7 +64,7 @@ export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
 
   const tokenSymbol = token.data?.symbol ?? "$TOKEN";
 
-  if (!chartData || !chartData.length) {
+  if (!chartData?.length) {
     return (
       <div className="ml-[16px] mt-2">
         <div className="aspect-[2/1] sm:aspect-[5/2] min-w-full rounded-lg activeSkeleton" />

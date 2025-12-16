@@ -32,8 +32,8 @@ export function HoldersSection() {
     useProjectContext();
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
-    ruleset: ruleset as JBRulesetData,
-    metadata: rulesetMetadata as JBRulesetMetadata,
+    ruleset: ruleset,
+    metadata: rulesetMetadata,
     projectId: project.projectId,
   });
   const chainId = useJBChainId();
@@ -95,7 +95,7 @@ export function HoldersSection() {
     watchAsset({
       type: "ERC20",
       options: {
-        address: token.data.address as Address,
+        address: token.data.address,
         symbol: token.data.symbol,
         decimals: token.data.decimals,
         image: metadata.data?.logoUri,

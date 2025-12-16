@@ -20,7 +20,7 @@ export const SelectedSuckerProvider = ({
   const { projectId } = useJBContractContext();
 
   const [selectedSucker, setSelectedSucker] = useState<SuckerPair>(() => {
-    return { peerChainId: chainId as JBChainId, projectId };
+    return { peerChainId: chainId!, projectId };
   });
 
   return (

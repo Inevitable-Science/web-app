@@ -11,13 +11,13 @@ import {
 } from "juice-sdk-core";
 import { getContract } from "viem";
 
-export type Ruleset = {
+export interface Ruleset {
   id: number;
   start: number;
   duration: number;
   weight: string;
   weightCutPercent: number;
-};
+}
 
 export const getRulesets = async (projectId: string, chainId: Exclude<JBChainId, 11155111 | 11155420 | 421614 | 84532>, version: JBVersion): Promise<Ruleset[]> => {
     const client = getViemPublicClient(chainId);

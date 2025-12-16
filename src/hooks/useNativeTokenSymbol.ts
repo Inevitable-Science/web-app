@@ -3,7 +3,7 @@ import { optimismSepolia } from "viem/chains";
 import { sepolia } from "viem/chains";
 
 export function useNativeTokenSymbol() {
-  const symbols: { [k: number]: string } = {
+  const symbols: Record<number, string> = {
     [sepolia.id]: "SepETH",
     [optimismSepolia.id]: "OPSepETH",
   };

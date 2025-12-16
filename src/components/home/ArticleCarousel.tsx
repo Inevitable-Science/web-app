@@ -6,16 +6,16 @@ import PartnersComponent from "./PartnersComponent";
 import articleSchema, { Article } from "@/app/articles/Articles";
 import { DynamicArticleCarousel } from "@/app/articles/ArticleCarousel";
 
-type SlideType = {
+interface SlideType {
   img: string;
   title: string;
   description: string;
-};
+}
 
-type PropType = {
+interface PropType {
   slides?: SlideType[];
   options?: EmblaOptionsType;
-};
+}
 
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
 

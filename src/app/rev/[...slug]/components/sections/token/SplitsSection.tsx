@@ -75,7 +75,7 @@ export function SplitsSection() {
     ]?.metadata.reservedPercent.formatPercentage();
   const { data: reservedTokenSplits, isLoading: isLoadingSplits } =
     useReadContract({
-      chainId: selectedSucker?.peerChainId as JBChainId | undefined,
+      chainId: selectedSucker?.peerChainId,
       abi: jbSplitsAbi,
       address: contractAddress(
         JBCoreContracts.JBSplits,
@@ -106,7 +106,7 @@ export function SplitsSection() {
           selectedSucker.peerChainId
         )
       : undefined,
-    args: ruleset && ruleset?.data ? [projectId] : undefined,
+    args: ruleset?.data ? [projectId] : undefined,
   });
 
   useEffect(() => {
@@ -143,8 +143,8 @@ export function SplitsSection() {
                   className="flex items-center gap-2"
                 >
                   <div className="flex items-center gap-2">
-                    <ChainLogo chainId={s.peerChainId as JBChainId} />
-                    <span>{JB_CHAINS[s.peerChainId as JBChainId].name}</span>
+                    <ChainLogo chainId={s.peerChainId} />
+                    <span>{JB_CHAINS[s.peerChainId].name}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -206,7 +206,7 @@ export function SplitsSection() {
                             chain={
                               selectedSucker
                                 ? JB_CHAINS[
-                                    selectedSucker.peerChainId as JBChainId
+                                    selectedSucker.peerChainId
                                   ].chain
                                 : chainId
                                   ? JB_CHAINS[chainId].chain
@@ -222,7 +222,7 @@ export function SplitsSection() {
                             chain={
                               selectedSucker
                                 ? JB_CHAINS[
-                                    selectedSucker.peerChainId as JBChainId
+                                    selectedSucker.peerChainId
                                   ].chain
                                 : chainId
                                   ? JB_CHAINS[chainId].chain
