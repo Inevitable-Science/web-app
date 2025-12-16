@@ -213,7 +213,9 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {owner ? (
+                    {isLoading ?  (
+                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
+                    ) : (
                       <EthereumAddress
                         address={owner}
                         short
@@ -222,8 +224,6 @@ export function Header() {
                         className="text-xl font-light"
                         chain={JB_CHAINS[chainId ?? 1].chain}
                       />
-                    ) : (
-                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
                     )}
                   </h3>
                 </div>

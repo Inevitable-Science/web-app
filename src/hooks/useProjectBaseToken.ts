@@ -1,6 +1,5 @@
-import { USDC_ADDRESSES } from "@/app/constants";
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { ETH_CURRENCY_ID, JBChainId, NATIVE_TOKEN_DECIMALS, USD_CURRENCY_ID } from "juice-sdk-core";
+import { ETH_CURRENCY_ID, JBChainId, NATIVE_TOKEN_DECIMALS, USD_CURRENCY_ID, USDC_ADDRESSES } from "juice-sdk-core";
 import { useBendystrawQuery, useJBChainId, useJBContractContext } from "juice-sdk-react";
 
 export interface BaseTokenInfo {

@@ -18,9 +18,10 @@ export function TransactionCard() {
   const chainId = useChainId();
   const { version } = useJBContractContext();
 
+  const peerChainId = selectedSucker?.peerChainId;
   const tokens = useMemo(
-    () => getTokensForChain(selectedSucker.peerChainId, version),
-    [selectedSucker?.peerChainId]
+    () => getTokensForChain(peerChainId, version),
+    [peerChainId, version]
   );
 
   const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
