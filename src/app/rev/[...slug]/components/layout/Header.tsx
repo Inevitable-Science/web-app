@@ -153,11 +153,11 @@ export function Header() {
             {twitter && (
               <h5 className="text-base text-cerulean">
                 <a
-                  href={`https://x.com/@${twitter}`}
+                  href={`https://x.com/${twitter}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  @{twitter}
+                  {!twitter.startsWith("@") && "@"}{twitter}
                 </a>
               </h5>
             )}

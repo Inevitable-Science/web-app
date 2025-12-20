@@ -33,6 +33,7 @@ import { formatWalletError } from "@/lib/utils";
 import { Token } from "@/lib/token";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { useRulesetData } from "@/hooks/useRulesetData";
 
 const shimmerClasses = `
     relative overflow-hidden 
@@ -66,7 +67,10 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const { metadata } = useProjectContext();
+  const { metadata, project } = useProjectContext();
+  const { allRulesets } = useRulesetData({
+    projectId: project.projectId
+  });
   const { selectedSucker } = useSelectedSucker();
   const {
     version,
@@ -86,6 +90,11 @@ export function PayActionButton({
 
   const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
   const value = amountA.amount.value;
+
+  const now = new Date().getTime() / 1000;
+  const startDate = allRulesets?.[0]?.start;
+  const timeUntilStart = startDate ? startDate - now : 0;
+  const hasStarted = timeUntilStart <= 0;
 
   const {
     data: txHash,
@@ -122,8 +131,6 @@ export function PayActionButton({
   }, [loading, isSuccess]);
 
   const primaryPayTokenAddress = accountingContext?.project?.token;
-  const isPrimaryPayTokenNative =
-    primaryPayTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
 
   useEffect(() => {
     if (isSuccess) {
@@ -214,6 +221,15 @@ export function PayActionButton({
   };
 
   // --- 5. RENDER LOGIC ---
+  if (!hasStarted) {
+    return (
+      <Button
+        className={`${primaryButtonClasses} cursor-not-allowed opacity-50 hover:bg-cerulean hover:text-white`}
+      >
+        Payments Haven't Started Yet
+      </Button>
+    );
+  }
 
   // State 1: User is not connected
   if (!isConnected) {

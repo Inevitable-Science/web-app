@@ -45,7 +45,7 @@ export function PageLayout() {
         <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
-      <div className="ctWrapper mb-10 flex flex-wrap gap-10 px-4 pb-5 sm:mb-24 md:flex-nowrap">
+      <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
         <aside className="max-w-54 hidden lg:block">
           <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
             {tabs.map((tab) => (
