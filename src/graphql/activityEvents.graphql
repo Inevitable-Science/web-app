@@ -2,14 +2,17 @@ query ActivityEvents(
   $where: activityEventFilter
   $orderBy: String
   $orderDirection: String
+  $limit: Int
+  $offset: Int
 ) {
   activityEvents(
     where: $where
     orderBy: $orderBy
     orderDirection: $orderDirection
-    limit: 1000
-    # TODO implement paging
+    limit: $limit
+    offset: $offset
   ) {
+    totalCount
     items {
       id
       chainId

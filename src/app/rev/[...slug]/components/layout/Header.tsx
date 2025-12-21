@@ -74,13 +74,12 @@ export function Header() {
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
     where: {
-      suckerGroupId: suckerGroup.data?.suckerGroup?.id,
+      suckerGroupId: project.suckerGroupId,
       balance_gt: 0,
     },
-    limit: 1000, // BUG: will break once more than 1000 participants exist
+    limit: 10, // Limit this to 10, items length is unused
   });
 
-  const suckerGroupData = participants?.participants;
   return (
     <header>
       <div className="ctWrapper">
@@ -185,7 +184,7 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full text-2xl font-semibold tracking-wider">
-                    {suckerGroupData?.totalCount ?? (
+                    {participants?.participants?.totalCount ?? (
                       <div className="activeSkeleton h-[32px] w-full max-w-[142px] rounded-md" />
                     )}
                   </h3>

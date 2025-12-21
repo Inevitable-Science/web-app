@@ -18,7 +18,7 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import { Address, Chain, formatEther } from "viem";
 
-import { Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import StaticVolumeChart, {
   ProjectTimelineRange,
   ProjectTimelineView,
@@ -26,6 +26,7 @@ import StaticVolumeChart, {
 import { useVolumeData } from "@/hooks/useVolumeData";
 import { useProjectContext } from "../../../ProjectDataContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
+import { Button } from "@/components/ui/button";
 
 function PayActivityItem(
   payEvent: Pick<
@@ -156,6 +157,11 @@ export function ActivityFeed() {
   // --- 1. Manage the chart's state here in the parent ---
   const [view, setView] = useState<ProjectTimelineView>("volume");
   const [range, setRange] = useState<ProjectTimelineRange>(30); // Default to 30 days
+  const [indexNum, setIndexNum] = useState(0);
+
+  const activityEventsLimit = 45;
+  const activityEventsOffset = indexNum * activityEventsLimit;
+  const page = indexNum + 1;
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
@@ -203,12 +209,19 @@ export function ActivityFeed() {
             OR: [{ payEvent_not: null }, { cashOutTokensEvent_not: null }],
           }
         : undefined,
+      limit: activityEventsLimit,
+      offset: activityEventsOffset
     },
     {
       pollInterval: 5000,
       enabled: !!suckerGroupId,
     }
   );
+
+  const totalActivityEvents = activityEvents?.activityEvents.totalCount;
+  const totalPages = useMemo(() => {
+    return totalActivityEvents ? Math.ceil(totalActivityEvents / activityEventsLimit) : 0;
+  }, [totalActivityEvents]);
 
   return (
     <>
@@ -224,28 +237,81 @@ export function ActivityFeed() {
             </div>
           ) : activityEvents?.activityEvents.items &&
             activityEvents.activityEvents.items.length > 0 ? (
-            activityEvents.activityEvents.items?.map((event) => {
-              if (event?.payEvent) {
-                return (
-                  <PayActivityItem
-                    key={event.id}
-                    chainId={event.chainId as JBChainId}
-                    {...event.payEvent}
-                  />
-                );
-              }
-              if (event?.cashOutTokensEvent) {
-                return (
-                  <RedeemActivityItem
-                    key={event.id}
-                    chainId={event.chainId as JBChainId}
-                    {...event.cashOutTokensEvent}
-                  />
-                );
-              }
+              <>
+                {activityEvents.activityEvents.items?.map((event) => {
+                  if (event?.payEvent) {
+                    return (
+                      <PayActivityItem
+                        key={event.id}
+                        chainId={event.chainId as JBChainId}
+                        {...event.payEvent}
+                      />
+                    );
+                  }
+                  if (event?.cashOutTokensEvent) {
+                    return (
+                      <RedeemActivityItem
+                        key={event.id}
+                        chainId={event.chainId as JBChainId}
+                        {...event.cashOutTokensEvent}
+                      />
+                    );
+                  }
 
-              return null;
-            })
+                  return null;
+                })}
+                
+                <div className="mt-6 flex flex-col items-center gap-2">
+                  <p className="text-sm font-light text-muted-foreground">
+                    Page {page} out of {totalPages}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setIndexNum((prev) => Math.max(0, prev - 1))}
+                      disabled={page === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+
+                    {Array.from({ length: 3 }, (_, i) => {
+                      const start = Math.max(
+                        1,
+                        Math.min(page - 1, totalPages - 2)
+                      );
+
+                      const pageNum = start + i;
+                      if (pageNum > totalPages) return null;
+
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={pageNum === page ? "default" : "outline"}
+                          className={`${pageNum === page ? "border-color border" : ""} font-light`}
+                          onClick={() => setIndexNum(pageNum - 1)} // indexNum is page - 1
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() =>
+                        setIndexNum((prev) => Math.min(totalPages + 1, prev + 1))
+                      }
+                      disabled={page === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm font-light text-muted-foreground">
+                    Showing {activityEventsLimit} items out of {totalActivityEvents}
+                  </p>
+                </div>
+              </>
           ) : (
             <span className="text-md text-muted-foreground">
               No activity yet.
