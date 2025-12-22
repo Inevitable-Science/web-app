@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DeleteArticleDialogue } from "./admin/deleteArticleDialogue";
-import { ArticlePreview, Organisation } from "../helpers/types";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+import { ArticlePreview, Organisation } from "../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../helpers/articleAuthContext";
 import { Pencil, Plus, Trash } from "lucide-react";
+import { useUser } from "../../../../store/AdminAuthStore";
 
 export function ArticlesTable() {
-  const { user: data } = useArticleAuthContext();
+  //const { user: data } = useArticleAuthContext();
+  const { user: data } = useUser();
   const user = data?.user;
   const organisations = data?.organisations;
   const writtenArticles = data?.writtenArticles;

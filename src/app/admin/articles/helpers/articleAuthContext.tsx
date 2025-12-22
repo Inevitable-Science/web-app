@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import {
   createContext,
   useCallback,
@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 
-import { UserResponseType, UserResponseZ } from "./types";
+import { UserResponseType, UserResponseZ } from "../../../../lib/types/AdminArticleTypes";
 import { usePathname } from "next/navigation";
 
 export interface ArticleAuthType {
@@ -159,3 +159,4 @@ export function useArticleAuthContext() {
     );
   return ctx;
 }
+*/

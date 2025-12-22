@@ -26,9 +26,10 @@ import {
   ArticleCreateBodyZ,
   ArticleResponse,
   Organisation,
-} from "../../helpers/types";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+} from "../../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { uploadImage } from "../../helpers/uploadHelper";
+import { useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface DisplayRules {
   hidden: boolean;
@@ -36,7 +37,9 @@ interface DisplayRules {
 }
 
 export function ArticleEditor({ article }: { article?: ArticleResponse }) {
-  const { authToken, user } = useArticleAuthContext();
+  //const { authToken, user } = useArticleAuthContext();
+  const { authToken } = useAuthToken();
+  const { user } = useUser();
   const { toast } = useToast();
 
   // Hooks first

@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface ArticleProp {
   articleId: string;
@@ -21,7 +22,10 @@ export function DeleteArticleDialogue({
   organisationId: string;
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
   const pathname = usePathname();
 
@@ -29,6 +33,11 @@ export function DeleteArticleDialogue({
 
   const deleteArticle = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       const userOrg = user?.organisations.find(
         (org) => org.organisationId === organisationId
       );
@@ -69,7 +78,7 @@ export function DeleteArticleDialogue({
         return;
       }
 
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
       setIsModalOpen(false);
 
       toast({

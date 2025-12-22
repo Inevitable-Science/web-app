@@ -9,16 +9,19 @@ import {
   AllUsersResponse,
   AllUsersResponseZ,
   Organisation,
-} from "../helpers/types";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+} from "../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../helpers/articleAuthContext";
 import { CircleUserRound, Pencil, Plus } from "lucide-react";
+import { useAuthToken, useUser } from "../../../../store/AdminAuthStore";
 
 export function OrganisationTable({
   organisations,
 }: {
   organisations: Organisation[];
 }) {
-  const { user, authToken } = useArticleAuthContext();
+  //const { user, authToken } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
 
   const [allUsers, setAllUsers] = useState<AllUsersResponse | null>(null);
 

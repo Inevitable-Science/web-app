@@ -11,9 +11,10 @@ import {
   FetchOrganisationResponse,
   FetchOrganisationResponseZ,
   OrgCreateEditBody,
-} from "../../helpers/types";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+} from "../../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { CircleUserRound, Loader2, Pencil, X } from "lucide-react";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface SelectedUser {
   userId: string;
@@ -40,7 +41,10 @@ export function EditOrgDialogue({
   organisationId: string;
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
 
   const [data, setData] = useState<FetchOrganisationResponse | null>(null);
@@ -219,6 +223,11 @@ export function EditOrgDialogue({
 
   const editOrg = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       if (!organisationName) {
         toast({
           title: "Error",
@@ -284,7 +293,7 @@ export function EditOrgDialogue({
 
       const data = await response.json();
       console.log(data);
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       resetModalState();
       toast({
@@ -432,7 +441,7 @@ export function EditOrgDialogue({
                         {orgUsers.map((u) => (
                           <div
                             key={u.userId}
-                            className="rounded-lg bg-grey-450 p-2"
+                            className="rounded-lg bg-grey-450 p-2 mb-2"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">

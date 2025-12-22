@@ -3,13 +3,17 @@ import { notFound, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { ArticleEditor } from "../components/articleEditor";
-import { ArticleResponseZ, ArticleResponse } from "../../helpers/types";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { ArticleResponseZ, ArticleResponse } from "../../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { useAuthStatus, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 export default function ArticleEditorPage() {
   const params = useParams();
   const articleId = params.articleId;
-  const { status, user, authToken } = useArticleAuthContext();
+  //const { status, user, authToken } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { authStatus } = useAuthStatus();
 
   const [mounted, setMounted] = useState<boolean>(false);
   const [article, setArticle] = useState<ArticleResponse | null>(null);
@@ -45,7 +49,7 @@ export default function ArticleEditorPage() {
     fetchArticle();
   });
 
-  if (!article && (!user || status === "loading")) return;
+  if (!article && (!user || authStatus === "loading")) return;
 
   if (mounted && !article) return notFound();
 

@@ -4,15 +4,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { CreateResponseType, CreateUserResponseZ } from "../../helpers/types";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { CreateResponseType, CreateUserResponseZ } from "../../../../../lib/types/AdminArticleTypes";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 export function CreateUserDialogue({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -25,6 +29,11 @@ export function CreateUserDialogue({
 
   const createUser = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      };
+
       if (!user?.user.isTopLevelAdmin) throw new Error();
 
       setIsSaving(true);
@@ -62,7 +71,7 @@ export function CreateUserDialogue({
       const data = await response.json();
       const parsed = CreateUserResponseZ.parse(data);
       setData(parsed);
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       toast({
         title: "Success",

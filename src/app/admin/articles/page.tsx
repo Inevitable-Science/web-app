@@ -5,14 +5,16 @@ import { Button } from "@/components/ui/button";
 import { UserTable } from "./components/userTable";
 import { OrganisationTable } from "./components/orgTable";
 import { ArticlesTable } from "./components/articlesTable";
-import { LoginResponseZ } from "./helpers/types";
-import { useArticleAuthContext } from "./helpers/articleAuthContext";
+import { LoginResponseZ } from "../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "./helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { useArticleAuth } from "../../../store/AdminAuthStore";
 
 export default function AdminArticlesPage() {
   const { toast } = useToast();
 
-  const { user, status, revalidateUser } = useArticleAuthContext();
+  //const { user, status, revalidateUser } = useArticleAuthContext();
+  const { user, status, revalidateUser } = useArticleAuth();
 
   const [isLogginIn, setIsLoggingIn] = useState(false);
 

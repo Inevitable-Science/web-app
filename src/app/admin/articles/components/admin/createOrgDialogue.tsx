@@ -5,10 +5,11 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { uploadImage } from "../../helpers/uploadHelper";
-import { AllUsersResponse, OrgCreateEditBody } from "../../helpers/types";
+import { AllUsersResponse, OrgCreateEditBody } from "../../../../../lib/types/AdminArticleTypes";
 import { CircleUserRound, Pencil, X } from "lucide-react";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface SelectedUser {
   userId: string;
@@ -33,7 +34,10 @@ export function CreateOrgDialogue({
   allUsers: AllUsersResponse;
   children: React.ReactNode;
 }) {
-  const { authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -144,6 +148,11 @@ export function CreateOrgDialogue({
 
   const createOrg = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       if (!organisationName) {
         toast({
           title: "Error",
@@ -209,7 +218,7 @@ export function CreateOrgDialogue({
 
       const data = await response.json();
       console.log(data);
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       resetModalState();
       toast({
@@ -354,7 +363,7 @@ export function CreateOrgDialogue({
                       {orgUsers.map((u) => (
                         <div
                           key={u.userId}
-                          className="rounded-lg bg-grey-450 p-2"
+                          className="rounded-lg bg-grey-450 p-2 mb-2"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
