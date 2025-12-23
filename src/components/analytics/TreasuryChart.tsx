@@ -9,19 +9,15 @@ import {
   Time,
   LineData,
 } from "lightweight-charts";
+import { HistoricalTreasuryResponse, HistoricalTreasuryType } from "@/lib/types/AnalyticTypes";
 
-interface ChartData {
-  historical_treasury: [number, number][];
-  historical_assets: [number, number][];
-  total_assets: [number, number][];
-}
 
 export function TreasuryChart({ organisation }: { organisation: string }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const treasuryLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const assetLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [data, setData] = useState<ChartData | null>(null);
+  const [data, setData] = useState<HistoricalTreasuryType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
@@ -29,12 +25,15 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        //const response = await fetch(`https://api.profiler.bio/api/historical/treasury/${organisation}`);
         const response = await fetch(
-          `https://inev.profiler.bio/charts/treasury/${organisation}`
+          `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/historical/${organisation}`
         );
-        const jsonData: ChartData = await response.json();
-        setData(jsonData);
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+        const parsedData = HistoricalTreasuryResponse.parse(data);
+        
+        setData(parsedData);
       } catch (error) {
         setError(true);
         console.error("Failed to fetch data:", error);
@@ -174,7 +173,7 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     <>
       <div
         ref={chartContainerRef}
-        className={data ? "opacity-1" : "!h-[1px] opacity-0"}
+        //className={data ? "opacity-1" : "opacity-1"}
         style={{
           width: "100%",
           height: "400px",

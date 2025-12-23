@@ -44,7 +44,7 @@ export function SwapWidget({ token }: TokenState) {
 
   return (
     <div>
-      <CowSwapWidget params={params} provider={provider as EthereumProvider} />
+      <CowSwapWidget params={params} provider={provider} />
     </div>
   );
 }

@@ -1,3 +1,7 @@
+import { REVNET_CASHOUT_FEE_PERCENT } from "@/app/constants";
+import { JBDAO_CASHOUT_FEE_PERCENT } from "juice-sdk-core";
+
+
 export function generateFeeData({
   grossBorrowedEth,
   ethToWallet,
@@ -39,4 +43,12 @@ export function generateFeeData({
   }
 
   return data;
+}
+
+export function applyRevFee(tokenAmount: bigint) {
+  return (tokenAmount * BigInt((1 - REVNET_CASHOUT_FEE_PERCENT) * 1000)) / 1000n;
+}
+
+export function applyNanaFee(reclaimableAmount: bigint) {
+  return (reclaimableAmount * BigInt((1 - JBDAO_CASHOUT_FEE_PERCENT) * 1000)) / 1000n;
 }

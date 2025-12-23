@@ -4,15 +4,19 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { uploadImage } from "../helpers/uploadHelper";
-import { useArticleAuthContext } from "../helpers/articleAuthContext";
+//import { useArticleAuthContext } from "../helpers/articleAuthContext";
 import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../store/AdminAuthStore";
 
 export function UserTable() {
-  const {
+  /*const {
     user: data,
     authToken,
     silentRevalidateUser,
-  } = useArticleAuthContext();
+  } = useArticleAuthContext();*/
+  const { user: data } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   if (!data) return;
   const user = data.user;
 
@@ -133,6 +137,11 @@ export function UserTable() {
 
   const saveChanges = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       if (!saveState) {
         toast({
           variant: "destructive",
@@ -189,7 +198,7 @@ export function UserTable() {
 
       if (!response.ok) throw new Error();
 
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       toast({
         title: "Success",
@@ -258,7 +267,7 @@ export function UserTable() {
                 <div className="flex items-center gap-1">
                   <input
                     type="text"
-                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                     placeholder="@..."
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -329,7 +338,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialX}
                   onChange={(e) => setSocialX(e.target.value)}
@@ -398,7 +407,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="@..."
                   value={socialLinkedIn}
                   onChange={(e) => setSocialLinkedIn(e.target.value)}
@@ -462,7 +471,7 @@ export function UserTable() {
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   placeholder="www.mysite.com"
                   value={socialWebsite}
                   onChange={(e) => setSocialWebsite(e.target.value)}

@@ -1,21 +1,40 @@
 "use client";
 
-import { ParticipantsDocument, SuckerGroupDocument } from "@/generated/graphql";
+import { ParticipantsDocument, ProjectOperatorDocument, SuckerGroupDocument } from "@/generated/graphql";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatDate } from "@/lib/utils";
 import {
   useJBProjectMetadataContext,
   useBendystrawQuery,
+  useJBChainId,
+  useJBContractContext,
 } from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useProjectContext } from "../../ProjectDataContext";
+import { JB_CHAINS } from "juice-sdk-core";
 
 export function Header() {
   const { project, dailyTotals } = useProjectContext();
   const { metadata } = useJBProjectMetadataContext();
+  const { projectId, version } = useJBContractContext();
+  const chainId = useJBChainId();
+
+  const { data: operator, isLoading } = useBendystrawQuery(ProjectOperatorDocument, {
+    chainId: Number(chainId),
+    projectId: Number(projectId),
+    version,
+    skip: !chainId || !projectId || !version || version !== 5,
+  });
+
+  const owner = 
+    (
+      (version === 4 || !operator?.permissionHolders?.items[0]?.operator) ?
+      project.owner : 
+      operator?.permissionHolders?.items[0]?.operator
+    ) as Address;
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -37,7 +56,8 @@ export function Header() {
 
     const difference = accCurVolume - accPrevVolume;
     const percentage = (Number(difference) * 100) / Number(accPrevVolume);
-    return `+${percentage.toFixed(2)}`;
+
+    return `+${Math.abs(percentage).toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);
 
   const {
@@ -54,13 +74,11 @@ export function Header() {
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
     where: {
-      suckerGroupId: suckerGroup.data?.suckerGroup?.id,
+      suckerGroupId: project.suckerGroupId,
       balance_gt: 0,
     },
-    limit: 1000, // BUG: will break once more than 1000 participants exist
+    limit: 10, // Limit this to 10, items length is unused
   });
-
-  const suckerGroupData = participants?.participants;
 
   return (
     <header>
@@ -105,7 +123,7 @@ export function Header() {
               <div className="hidden sm:block">
                 <Image
                   src={ipfsUriToGatewayUrl(logoUri)}
-                  className="block overflow-hidden rounded-2xl border-[4px] border-background"
+                  className="block overflow-hidden rounded-2xl border-4 border-background"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -113,7 +131,7 @@ export function Header() {
               </div>
             </>
           ) : (
-            <div className="flex h-36 w-36 items-center justify-center rounded bg-[var(--card)]">
+            <div className="flex h-36 w-36 items-center justify-center rounded bg-(--card)">
               <Image
                 src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}
@@ -134,11 +152,11 @@ export function Header() {
             {twitter && (
               <h5 className="text-base text-cerulean">
                 <a
-                  href={`https://x.com/@${twitter}`}
+                  href={`https://x.com/${twitter}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  @{twitter}
+                  {!twitter.startsWith("@") && "@"}{twitter}
                 </a>
               </h5>
             )}
@@ -166,7 +184,7 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full text-2xl font-semibold tracking-wider">
-                    {suckerGroupData?.totalCount ?? (
+                    {participants?.participants?.totalCount ?? (
                       <div className="activeSkeleton h-[32px] w-full max-w-[142px] rounded-md" />
                     )}
                   </h3>
@@ -182,7 +200,7 @@ export function Header() {
                     {weeklyVolumeChange != null ? (
                       `${weeklyVolumeChange}%`
                     ) : (
-                      <div className="activeSkeleton h-[24px] w-[64px] rounded-md !bg-transparent" />
+                      <div className="activeSkeleton h-[24px] w-[64px] rounded-md bg-transparent!" />
                     )}
                   </div>
                 </div>
@@ -194,16 +212,17 @@ export function Header() {
               <div className="rounded-2xl bg-grey-450 p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {project?.owner ? (
+                    {isLoading ?  (
+                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
+                    ) : (
                       <EthereumAddress
-                        address={project?.owner as Address}
+                        address={owner}
                         short
                         withEnsAvatar={false}
                         withEnsName
                         className="text-xl font-light"
+                        chain={JB_CHAINS[chainId ?? 1].chain}
                       />
-                    ) : (
-                      <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
                     )}
                   </h3>
                 </div>
@@ -232,12 +251,12 @@ export function Header() {
       </div>
 
       <div
-        className="max-w-screen absolute z-[-10] flex items-center justify-center overflow-hidden"
+        className="max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-60%)" }}
       >
         {/* Left cloud - shifted slightly right */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_left.webp"
           style={{ transform: "translateX(-40%)" }}
           alt=""
@@ -245,7 +264,7 @@ export function Header() {
 
         {/* Right cloud - shifted slightly left */}
         <img
-          className="z-[-10] w-screen select-none"
+          className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/dao_cloud_right.webp"
           style={{ transform: "translateX(40%)" }}
           alt=""

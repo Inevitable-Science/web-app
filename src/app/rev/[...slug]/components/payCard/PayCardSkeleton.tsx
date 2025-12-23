@@ -1,14 +1,12 @@
-import { ChainSelector } from "./ChainSelector";
+import { ChainSelector } from "./payTab/ChainSelector";
 import { Button } from "@/components/ui/button";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 
 export function PayCardSkeleton({
   selectedToken,
-  tokens,
 }: {
   selectedToken: Token;
-  tokens: Token[];
 }) {
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[12px]">
@@ -37,11 +35,11 @@ export function PayCardSkeleton({
               <div className="flex flex-col items-end gap-1">
                 <ChainSelector
                   value={selectedToken}
-                  options={tokens}
-                  disabled={true}
+                  options={[selectedToken]}
+                  disabled
                 />
                 <div className="flex items-center justify-end gap-1">
-                  <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+                  <p className="text-nowrap text-right text-sm font-light text-muted-foreground">
                     Balance:
                   </p>
                   <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
@@ -71,14 +69,14 @@ export function PayCardSkeleton({
 
           <input
             type="text"
-            className="background-color w-full cursor-not-allowed rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="background-color w-full cursor-not-allowed rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="Add a note... (optional)"
             disabled
           />
 
           <Button
             loading={true}
-            className="w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium hover:bg-primary focus:outline-none disabled:opacity-50"
+            className="w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium hover:bg-primary focus:outline-hidden disabled:opacity-50"
           >
             Loading
           </Button>

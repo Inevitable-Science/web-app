@@ -97,7 +97,16 @@ export function TransactionCard() {
         value,
         selectedToken
       );
-      setAmountB(payerTokens);
+      const numberPayerTokens = Number(payerTokens);
+      
+      if (numberPayerTokens < 0) {
+        // Round 3 to sigfigs then remove trailing 0's 
+        // this prevents strings like 0.0100000 and 0.000111111111
+        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
+        return;
+      }
+      
+      setAmountB(Number(numberPayerTokens.toFixed(4)).toString());
       return;
     }
   };
@@ -119,7 +128,15 @@ export function TransactionCard() {
         reservedPercent: rulesetMetadata.reservedPercent,
       }
     );
-    setAmountA(quote.format());
+    const numberPayerTokens = Number(quote.format());
+    
+    if (numberPayerTokens < 0) {
+      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
+      return;
+    }
+
+    setAmountA(Number(numberPayerTokens.toFixed(4)).toString());
+    return;
   };
 
   useEffect(() => {
@@ -207,10 +224,48 @@ export function TransactionCard() {
   };
 
   const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "-" || e.key === "Minus") {
+    const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
+
+    const key = e.key;
+
+    // Allow all control/navigation keys:
+    const controlKeys = [
+      "Backspace",
+      "Delete",
+      "Tab",
+      "Escape",
+      "Enter",
+      "Home",
+      "End",
+      "ArrowLeft",
+      "ArrowRight",
+    ];
+
+    if (controlKeys.includes(key)) {
+      return; // allow
+    }
+
+    // Block invalid characters
+    if (invalidKeys.includes(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    // Key is a single character. Ensure it's a digit or decimal point.
+    if (!/[\d.]/.test(key)) {
+      e.preventDefault();
+      return;
+    }
+
+    const current = e.currentTarget.value;
+    const next = current + key;
+
+    // Limit total length to 16
+    if (next.length > 16) {
       e.preventDefault();
     }
   };
+
 
   return (
     <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
@@ -220,8 +275,9 @@ export function TransactionCard() {
             <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 focus:placeholder:text-muted-foreground"
+              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
               placeholder="0.00"
+              max={7}
               value={amountA}
               onChange={(e) => handlePayAmountChange(e.target.value)}
               onKeyDown={preventMinusKey}
@@ -251,8 +307,9 @@ export function TransactionCard() {
             </p>
             <input
               type="number"
-              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-none ring-0 placeholder:text-white focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
+              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
               placeholder="0.00"
+              max={7}
               value={amountB}
               disabled={isTokenANative !== selectedTokenIsNative}
               onChange={handleReceiveAmountChange}

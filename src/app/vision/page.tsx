@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Vision() {
   return (
     <div>
-      <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden bg-[url('/assets/img/vision_hero_scene.webp')] bg-cover bg-[calc(50%+80px)_center] [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[100vh] sm:min-h-[750px] sm:items-end sm:bg-center">
+      <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden bg-[url('/assets/img/vision_hero_scene.webp')] bg-cover bg-position-[calc(50%+80px)_center] mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-screen sm:min-h-[750px] sm:items-end sm:bg-center">
         <div className="ctWrapper relative top-[15px] flex flex-col items-center">
           <div className="mb-8 flex flex-col items-center text-center font-optima">
             <p className="text-lg uppercase">It Is Inevitable</p>
@@ -79,12 +79,12 @@ export default function Vision() {
         </h2>
 
         <div
-          className="s max-w-screen absolute z-[-10] hidden items-center justify-center gap-[70vw] overflow-hidden sm:flex"
+          className="s max-w-screen absolute -z-10 hidden items-center justify-center gap-[70vw] overflow-hidden sm:flex"
           style={{ transform: "translateY(-50%)" }}
         >
           {/* Left cloud */}
           <img
-            className="z-[-10] w-[100vw] select-none"
+            className="-z-10 w-screen select-none"
             src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_1.webp"
             style={{ transform: "translateX(25%)" }}
             alt=""
@@ -92,7 +92,7 @@ export default function Vision() {
 
           {/* Right cloud */}
           <img
-            className="z-[-10] w-[100vw] select-none"
+            className="-z-10 w-screen select-none"
             src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_3.webp"
             style={{ transform: "translateX(-25%)" }}
             alt=""

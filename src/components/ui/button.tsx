@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 const buttonVariants = cva(
-  "inline-flex  items-center justify-center text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60",
+  "inline-flex cursor-pointer items-center justify-center text-sm font-medium ring-offset-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60",
   {
     variants: {
       variant: {
@@ -15,14 +15,15 @@ const buttonVariants = cva(
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
         destructive: "bg-red-600 hover:bg-red-600/90 rounded-lg",
         outline:
-          "border border-[var(--grey-500)] rounded-lg hover:bg-grey-450 hover:border-[var(--grey-100)]",
+          "border border-(--grey-500) rounded-lg hover:bg-grey-450 hover:border-(--grey-100)",
         bottomline:
           "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         tabSelected:
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         secondary: "rounded-lg background-color",
         ghost: "rounded hover:text-white hover:bg-grey-450",
-        link: "font-light text-base !p-0 hover:underline",
+        link: "font-light text-base p-0! hover:underline",
+        graphRounded: "block! font-normal! max-h-fit min-w-[28px] max-w-fit rounded rounded-full border-none px-2! py-1! text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)] disabled:opacity-100!",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -9,17 +9,17 @@ import {
 } from "@/components/home/ArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
 
-type SlideType = {
+interface SlideType {
   img: string;
   title: string;
   description: string;
-};
+}
 
-type Props = {
+interface Props {
   category?: string;
   slides?: SlideType[];
   options?: EmblaOptionsType;
-};
+}
 
 const DEFAULT_SLIDES: SlideType[] = [
   {

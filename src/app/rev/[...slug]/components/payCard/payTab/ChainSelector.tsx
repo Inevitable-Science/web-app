@@ -2,8 +2,8 @@
 import { JBChainId } from "juice-sdk-react";
 import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
-import { useProjectContext } from "../../ProjectDataContext";
-import { useSelectedSucker } from "./SelectedSuckerContext";
+import { useProjectContext } from "../../../ProjectDataContext";
+import { useSelectedSucker } from "../SelectedSuckerContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -97,11 +97,11 @@ export const ChainSelector = ({
                 onClick={() => {
                   handleChainChange
                     ? handleChainChange({
-                        chainId: sucker.peerChainId as JBChainId,
+                        chainId: sucker.peerChainId,
                       })
                     : undefined;
                 }}
-                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-[var(--grey-100)] !bg-grey-500"} rounded-xl`}
+                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-(--grey-100) bg-grey-500!"} rounded-xl`}
                 variant={"outline"}
                 size="icon"
               >
@@ -120,7 +120,7 @@ export const ChainSelector = ({
           return (
             <SelectItem
               key={`${token.address}-${index}`}
-              value={`${token.address}` as Address}
+              value={`${token.address}`}
               className="[&>*:last-child]:flex [&>*:last-child]:w-full"
             >
               {token.address.toLowerCase() === NATIVE_TOKEN.toLowerCase() ? (

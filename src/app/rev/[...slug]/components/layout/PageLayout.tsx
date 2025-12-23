@@ -3,7 +3,7 @@ import { useJBContractContext } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { zeroAddress } from "viem";
-import { PayCard } from "../payCard/PayCard";
+import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
@@ -26,7 +26,7 @@ export function PageLayout() {
     ...(analyticsData?.daoData === null //&& isAnalyticsLoading === false // Intended to prevent CLS
       ? []
       : [
-          ...(token.data && analyticsData?.tokenData
+          ...(analyticsData?.tokenData // && token.data
             ? [{ key: "analytics", label: "Analytics" }]
             : []),
           ...(analyticsData?.treasuryData
@@ -42,17 +42,17 @@ export function PageLayout() {
   return (
     <>
       <div className="relative w-full">
-        <div className="absolute inset-0 z-[-10] w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
-      <div className="ctWrapper mb-10 flex flex-wrap gap-10 px-4 pb-5 sm:mb-24 md:flex-nowrap">
+      <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
         <aside className="max-w-54 hidden lg:block">
           <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                   selectedTab === tab.key
                     ? "bg-gunmetal"
                     : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -83,7 +83,7 @@ export function PageLayout() {
                     <button
                       key={tab.key}
                       onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-none ${
+                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
                         selectedTab === tab.key
                           ? "bg-gunmetal"
                           : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"

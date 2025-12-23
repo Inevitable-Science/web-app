@@ -1,7 +1,8 @@
 // src/components/NetworkDetailsTable.tsx
+"use client"
 import { Button } from "@/components/ui/button";
-import { JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
-import { useNativeTokenSurplus } from "juice-sdk-react";
+import { JBChainId, JBRulesetData, JBRulesetMetadata, ReservedPercent } from "juice-sdk-core";
+import { useJBChainId, useJBContractContext, useJBProject, useNativeTokenSurplus } from "juice-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
@@ -12,19 +13,28 @@ import { formatEther } from "viem";
 import { SplitsSection } from "../token/SplitsSection";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
+import { IssuancePriceChart, ProjectionRange } from "./issuanceChart/IssuancePriceChart";
+import { getRulesets } from "./issuanceChart/getRulesets";
+import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
+
 
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
   const [showRules, setShowRules] = useState<boolean>(true);
+  const [range, setRange] = useState<ProjectionRange>("1y");
 
   // Get raw data from the context
   const { ruleset: currentRuleset, project } = useProjectContext();
+  const chainId = useJBChainId();
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
+  const currentIssuance = useFormattedTokenIssuance({ reservedPercent: new ReservedPercent(0) });
 
+  const { projectId, version } = useJBContractContext();
   const { allRulesets, isLoadingAllRulesets } = useRulesetData({
     projectId: project.projectId,
   });
-
+  console.log(allRulesets, "all rulesets");
+  
   const sortedRulesets = useMemo(() => {
     if (!allRulesets) return undefined;
     return [...allRulesets];
@@ -152,8 +162,60 @@ export function NetworkDetailsTable() {
   };
 
   return (
-    <div>
-      <div className="mb-4 rounded-2xl bg-grey-450 p-[12px]">
+    <div className="flex flex-col gap-4">
+      <div className="bg-grey-450 rounded-xl py-[16px] pr-[16px]">
+        <div className="flex items-center justify-between pl-[16px]">
+          <div className="mb-1">
+            <p className="text-sm font-light leading-[16px] uppercase text-muted-foreground">
+              Issuing
+            </p>
+            <h1 className="font-light text-lg leading-[24px]">{currentIssuance}</h1>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <Button 
+              variant={"graphRounded"}
+              onClick={() => setRange("1y")}
+              disabled={range === "1y"}
+            >
+              1y
+            </Button>
+            <Button 
+              variant={"graphRounded"}
+              onClick={() => setRange("5y")}
+              disabled={range === "5y"}
+            >
+              5y
+            </Button>
+            <Button 
+              variant={"graphRounded"}
+              onClick={() => setRange("10y")}
+              disabled={range === "10y"}
+            >
+              10y
+            </Button>
+            <Button 
+              variant={"graphRounded"}
+              onClick={() => setRange("20y")}
+              disabled={range === "20y"}
+            >
+              20y
+            </Button>
+            <Button 
+              variant={"graphRounded"}
+              onClick={() => setRange("all")}
+              disabled={range === "all"}
+            >
+              All
+            </Button>
+          </div>
+        </div>
+        
+        <IssuancePriceChart range={range} />
+      </div>
+      
+      
+      <div className="rounded-2xl bg-grey-450 p-[12px]">
         {/* Top grid with cycle #, status, etc. */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           {/* NEW: Updated Cycle # display and wired up buttons */}

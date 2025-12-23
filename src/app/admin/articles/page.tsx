@@ -5,14 +5,16 @@ import { Button } from "@/components/ui/button";
 import { UserTable } from "./components/userTable";
 import { OrganisationTable } from "./components/orgTable";
 import { ArticlesTable } from "./components/articlesTable";
-import { LoginResponseZ } from "./helpers/types";
-import { useArticleAuthContext } from "./helpers/articleAuthContext";
+import { LoginResponseZ } from "../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "./helpers/articleAuthContext";
 import { useToast } from "@/components/ui/use-toast";
+import { useArticleAuth } from "../../../store/AdminAuthStore";
 
 export default function AdminArticlesPage() {
   const { toast } = useToast();
 
-  const { user, status, revalidateUser } = useArticleAuthContext();
+  //const { user, status, revalidateUser } = useArticleAuthContext();
+  const { user, status, revalidateUser } = useArticleAuth();
 
   const [isLogginIn, setIsLoggingIn] = useState(false);
 
@@ -77,10 +79,10 @@ export default function AdminArticlesPage() {
         <h2 className="font-optima text-3xl">Login To View Articles</h2>
         <p className="mb-4">Login with your admin credentials.</p>
 
-        <div className="w-[400px] flex flex-col gap-2 bg-grey-450 p-4 rounded-lg border-[2px] border-color">
+        <div className="w-[400px] flex flex-col gap-2 bg-grey-450 p-4 rounded-lg border-2 border-color">
           <input
             type="text"
-            className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="w-full rounded-lg border-none p-2 background-color font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="User ID"
             autoComplete="username"
             value={userId}
@@ -89,7 +91,7 @@ export default function AdminArticlesPage() {
 
           <input
             type="password"
-            className="w-full rounded-lg border-none p-2 background-color font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="w-full rounded-lg border-none p-2 background-color font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="Password"
             autoComplete="new-password"
             value={password}
@@ -98,7 +100,7 @@ export default function AdminArticlesPage() {
 
           <input
             type="text"
-            className="w-full rounded-lg border-none background-color p-2 font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="w-full rounded-lg border-none background-color p-2 font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
             placeholder="MFA Code"
             maxLength={6}
             value={mfaCode}

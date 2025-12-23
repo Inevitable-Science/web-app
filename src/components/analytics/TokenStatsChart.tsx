@@ -158,21 +158,21 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
       <div className="flex items-center justify-between gap-x-6 gap-y-2 flex-wrap w-full mb-4">
         <div className="flex items-center flex-wrap gap-2">
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-(--foreground) disabled:font-normal disabled:border-primary disabled:cursor-auto"
             onClick={() => setChartType("volume")}
             disabled={chartType === "volume"}
           >
             VOL
           </button>
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-(--foreground) disabled:font-normal disabled:border-primary disabled:cursor-auto"
             onClick={() => setChartType("holders")}
             disabled={chartType === "holders"}
           >
             HOLDERS
           </button>
           <button
-            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-[var(--foreground)] disabled:font-normal disabled:border-primary disabled:cursor-auto"
+            className="cursor-pointer text-sm border-b border-transparent py-2 px-2 font-light text-muted-foreground disabled:text-(--foreground) disabled:font-normal disabled:border-primary disabled:cursor-auto"
             onClick={() => setChartType("marketCap")}
             disabled={chartType === "marketCap"}
           >
@@ -181,35 +181,35 @@ const TokenStatsChart: React.FC<TokenStatsProps> = ({ organisation, tokenName })
         </div>
         <div className="flex items-center flex-wrap gap-2">
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("1")}
             disabled={chartType === "holders" || timeRange === "1"}
           >
             24h
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("7")}
             disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("30")}
             disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
           </button>
           <button
-            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-[var(--background)] disabled:cursor-auto"
+            className="h-fit min-w-[28px] rounded border-none rounded-full px-2 py-1 text-sm uppercase cursor-pointer disabled:bg-(--background) disabled:cursor-auto"
             onClick={() => setTimeRange("max")}
             disabled={chartType === "holders" || timeRange === "max"}
           >
@@ -242,15 +242,16 @@ export default TokenStatsChart;*/
 
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { MarketChartResponse, TokenHoldersResponse } from "@/lib/types/AnalyticTypes";
 import {
   createChart,
   IChartApi,
   ISeriesApi,
-  Time,
-  LineData,
   LineSeriesOptions,
+  Time
 } from "lightweight-charts";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "../ui/button";
 
 interface TokenStatsProps {
   organisation: string;
@@ -261,6 +262,8 @@ interface ChartData {
   time: Time;
   value: number;
 }
+
+type ChartType = "volume" | "holders" | "marketCap";
 
 const cache = new Map<
   string,
@@ -274,24 +277,20 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
   const [timeRange, setTimeRange] = useState<"1" | "7" | "30" | "365" | "max">(
     "1"
   );
-  const [chartType, setChartType] = useState<
-    "volume" | "holders" | "marketCap"
-  >("volume");
+  const [chartType, setChartType] = useState<ChartType>("volume");
   const [dataFound, setDataFound] = useState<boolean>(true);
   const [passedData, setPassedData] = useState<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
 
   const fetchData = async (
     range: string,
-    type: string
+    type: ChartType
   ): Promise<ChartData[] | null> => {
     try {
       const apiUrl =
         type === "marketCap" || type === "volume"
-          ? //  ? `https://api.profiler.bio/api/market-chart?id=${organisation}&days=${range}`
-            //  : `https://api.profiler.bio/api/holders/${tokenName}`;
-            `https://inev.profiler.bio/chart/${organisation}-${range}`
-          : `https://inev.profiler.bio/charts/holders/${tokenName}`;
+        ? `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/market_chart/${tokenName}/${range}`
+        : `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/holders/${tokenName}`;
 
       const cacheKey = `${organisation}-${tokenName}-${range}-${type}`;
       const cacheEntry = cache.get(cacheKey);
@@ -309,19 +308,32 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
       setDataFound(true);
       const data = await response.json();
 
+      if (type === "marketCap" || type === "volume") {
+        const parsed = MarketChartResponse.parse(data);
+
+        const seriesData =
+          (type === "marketCap"
+            ? parsed.market_caps
+            : parsed.total_volumes
+          ).map(([timestamp, value]: [number, number]) => ({
+            time: Math.floor(timestamp / 1000) as Time,
+            value,
+          })) ?? null;
+
+        cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
+        return seriesData;
+      }
+
+      const parsed = TokenHoldersResponse.parse(data);
       const seriesData =
-        (type === "marketCap"
-          ? data?.market_caps
-          : type === "volume"
-            ? data?.total_volumes
-            : data?.holders
-        )?.map(([timestamp, value]: [number, number]) => ({
+        parsed.holders.map(([timestamp, value]: [number, number]) => ({
           time: Math.floor(timestamp / 1000) as Time,
           value,
         })) ?? null;
 
       cache.set(cacheKey, { data: seriesData, timestamp: Date.now() });
       return seriesData;
+
     } catch (error) {
       console.error("Error fetching data:", error);
       setDataFound(false);
@@ -331,7 +343,7 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
     }
   };
 
-  const updateChart = async (range: string, type: string) => {
+  const updateChart = async (range: string, type: ChartType) => {
     if (!isMountedRef.current) return; // Prevent updates if unmounted
 
     const prices = await fetchData(range, type);
@@ -431,21 +443,21 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
       <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("volume")}
             disabled={chartType === "volume"}
           >
             VOL
           </button>
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("holders")}
             disabled={chartType === "holders"}
           >
             HOLDERS
           </button>
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-[var(--foreground)]"
+            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("marketCap")}
             disabled={chartType === "marketCap"}
           >
@@ -453,41 +465,41 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+          <Button
+            variant={"graphRounded"}
             onClick={() => setTimeRange("1")}
             disabled={chartType === "holders" || timeRange === "1"}
           >
             24h
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("7")}
             disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("30")}
             disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365"}
           >
             1y
-          </button>
-          <button
-            className="h-fit min-w-[28px] cursor-pointer rounded rounded-full border-none px-2 py-1 text-sm uppercase disabled:cursor-auto disabled:bg-[var(--background)]"
+          </Button>
+          <Button 
+            variant={"graphRounded"}
             onClick={() => setTimeRange("max")}
             disabled={chartType === "holders" || timeRange === "max"}
           >
             MAX
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -507,7 +519,7 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
       {dataFound ? (
         <div
           ref={chartContainerRef}
-          className={`chartOverrideShow-token ${passedData ? "opacity-1" : "!h-[1px] opacity-0"}`}
+          //className={`chartOverrideShow-token ${passedData ? "opacity-1" : "h-px! opacity-0"}`}
           style={{ width: "100%", height: "400px", maxHeight: "400px" }}
         />
       ) : (

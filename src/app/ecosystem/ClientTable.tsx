@@ -32,11 +32,11 @@ interface v4ProjectInterface {
   vestingContract?: Address;
 }
 
-type Participant = {
+interface Participant {
   balance: string;
   erc20Balance: string;
   creditBalance: string;
-};
+}
 
 type ProjectBalanceMap = Record<string, bigint | string>;
 
@@ -283,7 +283,7 @@ export default function ClientTable() {
                 <span className="text-sm text-grey-50">LIQUID VALUE</span>0
               </div>
 
-              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-none">
+              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-hidden">
                 <Link
                   href={`/project/${project.href}`}
                   className="flex items-center gap-2"
@@ -359,7 +359,7 @@ export default function ClientTable() {
                 <span className="text-sm text-grey-50">LIQUID VALUE</span>0
               </div>
 
-              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-none">
+              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-hidden">
                 <Link
                   href={`/@${project.href}`}
                   className="flex items-center gap-2"

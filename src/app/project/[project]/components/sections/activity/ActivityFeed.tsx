@@ -9,23 +9,27 @@ import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import z from "zod";
 
-interface ActivityResponse {
-  page: number;
-  limit: number;
-  totalItems: number;
-  totalPages: number;
-  data: Transaction[];
-}
+const LegacyActivityResponse = z.object({
+  page: z.number(),
+  limit: z.number(),
+  totalItems: z.number(),
+  totalPages: z.number(),
+  data: z.array(
+    z.object({
+      date: z.string(),
+      eth_paid: z.string(),
+      usd_value: z.string(),
+      payer_address: z.string(),
+      beneficiary: z.string(),
+      transaction_hash: z.string()
+    })
+  )
+});
 
-interface Transaction {
-  Date: string;
-  "ETH paid": string;
-  "USD value of ETH paid": string;
-  Payer: string;
-  Beneficiary: string;
-  "Transaction hash": string;
-}
+type ActivityResponseType = z.infer<typeof LegacyActivityResponse>;
+
 
 function getRelativeTime(dateString: string): string {
   // Step 1: Parse the date string
@@ -39,10 +43,11 @@ function getRelativeTime(dateString: string): string {
   return relativeTime;
 }
 
+
 export function ActivityFeed() {
   const { analyticsData } = useData();
 
-  const [data, setData] = useState<ActivityResponse | null>(null);
+  const [data, setData] = useState<ActivityResponseType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [error, setError] = useState<boolean>(false);
@@ -53,7 +58,7 @@ export function ActivityFeed() {
         if (!analyticsData?.daoData?.name) return null;
 
         const response = await fetch(
-          `https://inev.profiler.bio/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`
+          `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/legacy/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`
         );
 
         if (!response.ok) {
@@ -62,7 +67,8 @@ export function ActivityFeed() {
         }
 
         const data = await response.json();
-        setData(data);
+        const parsedData = LegacyActivityResponse.parse(data);
+        setData(parsedData);
       } catch (err) {
         console.log(err);
         setError(true);
@@ -95,36 +101,33 @@ export function ActivityFeed() {
             </div>
           ) : (
             <div>
-              {data.data.map((transaction) => (
+              {data.data.map(tx => (
                 <div
-                  key={transaction["Transaction hash"]}
+                  key={tx.transaction_hash}
                   className="border-color mb-1 min-h-[80px] border-b pb-2"
                 >
                   <div className="flex items-center justify-between">
                     <h3 className="font-light text-grey-50">PAID</h3>
                     <div className="text-md mb-2 font-light text-grey-50">
-                      {/*<EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
-                      {formattedDate}
-                    </EtherscanLink>*/}
                       <EtherscanLink
                         type="tx"
-                        value={transaction["Transaction hash"]}
+                        value={tx.transaction_hash}
                         chain={mainnet}
                       >
-                        {getRelativeTime(transaction.Date)}
+                        {getRelativeTime(tx.date)}
                       </EtherscanLink>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div className="text-color font-light">
-                      Ξ{transaction["ETH paid"]}
+                      Ξ{tx.eth_paid}
                     </div>
 
                     {analyticsData?.tokenData?.selectedToken.chain_id && (
                       <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
                         <EthereumAddress
-                          address={transaction.Beneficiary as Address}
+                          address={tx.beneficiary as Address}
                           chain={
                             JB_CHAINS[
                               analyticsData?.tokenData?.selectedToken
@@ -137,28 +140,6 @@ export function ActivityFeed() {
                       </div>
                     )}
                   </div>
-
-                  {/*{activityItemData.memo && (
-                  <div className="pb-4 mt-1">
-                    {isMiniApp ? (
-                      <button
-                        onClick={() =>
-                          composeCast({
-                            text: shareText,
-                            embeds: [embedUrl],
-                          })
-                        }
-                        className="text-sm text-grey-50 font-light text-left hover:underline"
-                      >
-                        {activityItemData.memo}
-                      </button>
-                    ) : (
-                      <div className="text-sm text-grey-50 font-light">
-                        "{activityItemData.memo}"
-                      </div>
-                    )}
-                  </div>
-                )}*/}
                 </div>
               ))}
 

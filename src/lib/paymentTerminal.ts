@@ -17,9 +17,9 @@ export async function getPaymentTerminal(args: {
   chainId: JBChainId;
   projectId: bigint;
   token: Token;
-  primaryTokenNative?: boolean;
+  baseToken: Pick<Token, "isNative">;
 }) {
-  const { client, version, chainId, projectId, token, primaryTokenNative } =
+  const { client, version, chainId, projectId, token, baseToken } =
     args;
 
   const directory = getContract({
@@ -38,7 +38,7 @@ export async function getPaymentTerminal(args: {
   ]);
 
   const swapTerminal = getJBContractAddress(
-    primaryTokenNative
+    baseToken.isNative
       ? JBSwapTerminalContracts.JBSwapTerminalRegistry
       : JBSwapTerminalContracts.JBSwapTerminalUSDCRegistry,
     version,

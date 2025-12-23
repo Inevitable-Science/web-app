@@ -26,6 +26,7 @@ export const TabContent: FC<TabContentProps> = ({
   const { analyticsData } = useData();
   const SelectedComponent = tabComponents[selectedTab];
 
+  // This improves UX with the cowswap widget
   useSwitchToCorrectChain();
 
   if (!SelectedComponent) {

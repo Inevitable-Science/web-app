@@ -26,11 +26,11 @@ import {
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { useReadContract } from "wagmi";
 
-type UseRulesetDataProps = {
+interface UseRulesetDataProps {
   ruleset?: JBRulesetData;
   metadata?: JBRulesetMetadata;
   projectId?: number;
-};
+}
 
 /**
  * A hook that takes raw Juicebox ruleset data and metadata for a specific ruleset,

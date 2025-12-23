@@ -23,10 +23,6 @@ import {
 } from "@/lib/types/AnalyticTypes";
 import { AsyncData } from "juice-sdk-react/dist/contexts/types";
 import { type GetTokenReturnType } from "@wagmi/core";
-import {
-  SelectedSuckerContextType,
-  useSelectedSucker,
-} from "./components/payCard/SelectedSuckerContext";
 
 interface AnalyticsDataProp {
   daoData: DaoResponse;
@@ -44,7 +40,6 @@ interface NetworkDataContextType {
   analyticsData: AnalyticsDataProp | null;
   token: AsyncData<GetTokenReturnType | undefined>;
   metadata: AsyncData<JBProjectMetadata>;
-  selectedSucker: SelectedSuckerContextType;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(
@@ -63,7 +58,6 @@ export const ProjectDataProvider = ({
   // Foundational Hooks
   const { metadata } = useJBProjectMetadataContext();
   const { token } = useJBTokenContext();
-  const selectedSucker = useSelectedSucker();
 
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
@@ -86,8 +80,8 @@ export const ProjectDataProvider = ({
   // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
   const isFetching =
     areSuckersLoading ||
-    ruleset.isLoading ||
-    rulesetMetadata.isLoading ||
+    ruleset.isLoading || ruleset ||
+    rulesetMetadata.isLoading || !rulesetMetadata ||
     (!!project?.suckerGroupId && isVolumeLoading);
 
   const isInitialLoading = isFetching && !project;
@@ -106,7 +100,6 @@ export const ProjectDataProvider = ({
       analyticsData,
       token,
       metadata,
-      selectedSucker,
     };
   }, [
     suckers,
@@ -130,8 +123,8 @@ export const ProjectDataProvider = ({
   if (
     !isFetching &&
     (!value.suckers ||
-      !value.ruleset ||
-      !value.rulesetMetadata ||
+      //!value.ruleset ||
+      //!value.rulesetMetadata ||
       !value.project)
   ) {
     console.log("No project values found");

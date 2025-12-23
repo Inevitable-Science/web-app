@@ -3,17 +3,17 @@ import { useBendystrawQuery } from "juice-sdk-react";
 import { ParticipantSnapshotsInRangeDocument } from "@/generated/graphql";
 
 // Define the shape of the data our hook will return
-export type DailyVolume = {
+export interface DailyVolume {
   date: Date;
   volume: bigint;
-};
+}
 
 // Define the props for our hook
-type UseVolumeDataProps = {
+interface UseVolumeDataProps {
   suckerGroupId: string | undefined;
   startTimestamp: number;
   endTimestamp: number;
-};
+}
 
 /**
  * A reusable hook to fetch and process project volume data for a given date range.

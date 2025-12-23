@@ -75,7 +75,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 async function getProjectData(projectName: string): Promise<PageData | null> {
   try {
     const projectResponse = await fetch(
-      `https://inev.profiler.bio/dao/${projectName}`
+      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${projectName}`
     );
     if (!projectResponse) throw new Error("Failed to fetch project data");
 
@@ -83,9 +83,9 @@ async function getProjectData(projectName: string): Promise<PageData | null> {
     const validatedProjectData = DaoResponseSchema.parse(projectData);
 
     const [treasuryRes, tokenRes] = await Promise.all([
-      fetch(`https://inev.profiler.bio/treasury/${projectName}`),
+      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`),
       fetch(
-        `https://inev.profiler.bio/token/${validatedProjectData.nativeToken.name}`
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/${validatedProjectData.nativeToken.name}`
       ),
     ]);
 
@@ -106,7 +106,8 @@ async function getProjectData(projectName: string): Promise<PageData | null> {
       treasuryData: validatedTreasuryData,
       tokenData: validatedTokenData,
     };
-  } catch {
+  } catch (err) {
+    console.error(err);
     return null;
   }
 }

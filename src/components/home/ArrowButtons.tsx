@@ -8,12 +8,12 @@ import React, {
 import { EmblaCarouselType } from "embla-carousel";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-type UsePrevNextButtonsType = {
+interface UsePrevNextButtonsType {
   prevBtnDisabled: boolean;
   nextBtnDisabled: boolean;
   onPrevButtonClick: () => void;
   onNextButtonClick: () => void;
-};
+}
 
 export const usePrevNextButtons = (
   emblaApi: EmblaCarouselType | undefined

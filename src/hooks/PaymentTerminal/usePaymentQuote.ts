@@ -18,7 +18,7 @@ import {
 } from "juice-sdk-react";
 import { formatUnits, parseUnits } from "viem";
 import { useCurrencyPrice } from "./useCurrencyPrice";
-import { useProjectBaseToken } from "../useTokenBaseToken";
+import { useProjectBaseToken } from "../useProjectBaseToken";
 
 export function usePaymentQuote(chainId: JBChainId) {
   const { version } = useJBContractContext();

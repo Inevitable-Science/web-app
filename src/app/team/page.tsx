@@ -50,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Team() {
   return (
     <div>
-      <div className="absolute inset-0 z-[-10] w-full bg-[url('/assets/img/team/team_bg_image.webp')] bg-cover bg-center"></div>
+      <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/team/team_bg_image.webp')] bg-cover bg-center"></div>
       <section className="ctWrapper mt-[140px]">
         <div className="mb-[52px] flex flex-col gap-4 md:flex-row md:gap-12">
           <div className="flex flex-col gap-4 sm:min-w-[400px]">

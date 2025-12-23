@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { JBChainId, SuckerPair } from "juice-sdk-core";
+import { SuckerPair } from "juice-sdk-core";
 import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 
 export interface SelectedSuckerContextType {
@@ -20,7 +20,7 @@ export const SelectedSuckerProvider = ({
   const { projectId } = useJBContractContext();
 
   const [selectedSucker, setSelectedSucker] = useState<SuckerPair>(() => {
-    return { peerChainId: chainId as JBChainId, projectId };
+    return { peerChainId: chainId!, projectId };
   });
 
   return (

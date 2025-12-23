@@ -76,7 +76,8 @@ export const wagmiConfig = createConfig({
   });
 */
 
-import { getDefaultConnectors } from "connectkit";
+import { cache } from "react";
+import { createPublicClient } from "viem";
 import { arbitrum, base, mainnet, optimism } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
 import {
@@ -93,8 +94,52 @@ const safeConnector = safe({
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const chains = [
+  arbitrum,
+  base,
+  mainnet,
+  optimism
+] as const;
+
+const transports = {
+  [mainnet.id]: fallback([
+    http(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
+    http(
+      "https://eth-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
+  ]),
+  [optimism.id]: fallback([
+    http(
+      `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+    ),
+    http(
+      "https://opt-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
+  ]),
+  [base.id]: fallback([
+    http(
+      `https://base-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+    ),
+    http(
+      `https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_BASE_ID}`
+    ),
+    http(
+      "https://base-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
+  ]),
+  [arbitrum.id]: fallback([
+    http(
+      `https://arbitrum-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+    ),
+    http(
+      "https://arb-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
+  ]),
+};
+
 export const wagmiConfig = createConfig({
-  chains: [mainnet, optimism, arbitrum, base],
+  chains,
+  ssr: true,
   connectors: [
     coinbaseWallet({
       appName: "Inevitable Protocol",
@@ -114,39 +159,16 @@ export const wagmiConfig = createConfig({
       },
     }),
   ],
-  transports: {
-    [mainnet.id]: fallback([
-      http(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-      http(
-        "https://eth-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
-      ),
-    ]),
-    [optimism.id]: fallback([
-      http(
-        `https://optimism-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
-      ),
-      http(
-        "https://opt-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
-      ),
-    ]),
-    [base.id]: fallback([
-      http(
-        `https://base-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
-      ),
-      http(
-        `https://api.developer.coinbase.com/rpc/v1/base/${process.env.NEXT_PUBLIC_BASE_ID}`
-      ),
-      http(
-        "https://base-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
-      ),
-    ]),
-    [arbitrum.id]: fallback([
-      http(
-        `https://arbitrum-mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
-      ),
-      http(
-        "https://arb-mainnet.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
-      ),
-    ]),
-  },
+  transports,
+});
+
+export const getViemPublicClient = cache((chainId: keyof typeof transports) => {
+  const transport = transports[chainId];
+  if (!transport) throw new Error(`Transport not found for chainId: ${chainId}`);
+
+  return createPublicClient({
+    batch: { multicall: true },
+    chain: chains.find((chain) => chain.id === chainId),
+    transport,
+  });
 });

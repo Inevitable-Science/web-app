@@ -57,8 +57,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Page() {
   return (
     <div>
-      {/*<div className="bg-[url('/assets/img/home_landing.webp')] bg-cover bg-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
-      <div className="relative h-[500px] w-full overflow-hidden [mask-image:linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
+      {/*<div className="bg-[url('/assets/img/home_landing.webp')] bg-cover bg-position-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
+      <div className="relative h-[500px] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
         {/* Background Video */}
         <video
           className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
@@ -124,7 +124,7 @@ export default function Page() {
 
         <div className="relative">
           <img
-            className="sm-translate-up absolute left-1/2 top-0 z-[-10] w-full max-w-[1500px] select-none overflow-hidden"
+            className="sm-translate-up absolute left-1/2 top-0 -z-10 w-full max-w-[1500px] select-none overflow-hidden"
             src="https://cdn.inevitable.science/static/img/fog_bg.webp"
             alt=""
           />
@@ -140,14 +140,14 @@ export default function Page() {
 
             <div className="pointer-events-none absolute top-0 hidden w-full items-center justify-between overflow-hidden sm:flex">
               <img
-                className="z-[-10] select-none overflow-hidden"
+                className="-z-10 select-none overflow-hidden"
                 src="https://cdn.inevitable.science/static/img/clouds/cloud_left.webp"
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
               <img
-                className="relative z-[-10] select-none overflow-hidden"
+                className="relative -z-10 select-none overflow-hidden"
                 src="https://cdn.inevitable.science/static/img/clouds/cloud_right.webp"
                 style={{ transform: "translateX(40%)" }}
                 alt=""
@@ -158,7 +158,7 @@ export default function Page() {
           <DaosGrid />
         </div>
 
-        <section className="mb-[60px] mt-[40px] flex h-[100vh] min-h-[500px] items-center justify-center rounded-2xl bg-[url('/assets/img/light_future.webp')] bg-cover bg-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
+        <section className="mb-[60px] mt-[40px] flex h-screen min-h-[500px] items-center justify-center rounded-2xl bg-[url('/assets/img/light_future.webp')] bg-cover bg-center mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
           <div className="ctWrapper relative top-[15px] flex flex-col items-center">
             <div className="flex flex-col items-center gap-6 text-center">
               <Image

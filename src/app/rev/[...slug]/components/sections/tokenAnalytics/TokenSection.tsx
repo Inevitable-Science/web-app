@@ -95,19 +95,17 @@ export function TokenSection() {
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px]">
-                <div className="mb-[4px] flex h-[24px] gap-2">
+                <div className="flex h-[24px] mb-[4px]">
                   {suckers?.map((pair) => {
                     if (!pair) return null;
-
-                    const networkSlug =
-                      JB_CHAINS[pair?.peerChainId as JBChainId].slug;
                     return (
-                      <ChainLogo
-                        key={pair.peerChainId}
-                        chainId={pair.peerChainId as JBChainId}
-                        width={24}
-                        height={24}
-                      />
+                      <div className="w-[18px]" key={pair.peerChainId}>
+                        <ChainLogo
+                          chainId={pair.peerChainId}
+                          width={24}
+                          height={24}
+                        />
+                      </div>
                     );
                   })}
                 </div>
@@ -196,7 +194,7 @@ export function TokenSection() {
           )}
 
           <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-            <TokenStatsChart organisation="cryodao" tokenName="cryo" />
+            <TokenStatsChart organisation="cryodao" tokenName="cryo" /> {/* TODO: change */}
           </div>
         </div>
       ) : (

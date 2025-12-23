@@ -158,6 +158,8 @@ export function TransactionTable() {
             OR: [{ payEvent_not: null }, { cashOutTokensEvent_not: null }],
           }
         : undefined,
+      limit: 100, // only most recent 100 events
+      offset: 0
     },
     {
       pollInterval: 5000,

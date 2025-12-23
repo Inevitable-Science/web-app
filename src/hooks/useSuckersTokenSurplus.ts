@@ -70,7 +70,7 @@ export function useSuckersTokenSurplus(
         pairs.map(async (pair) => {
           const { peerChainId, projectId } = pair;
 
-          const tokenConfig = tokenMap[peerChainId as JBChainId];
+          const tokenConfig = tokenMap[peerChainId];
 
           if (!tokenConfig) {
             return { surplus: null, chainId: peerChainId, projectId };

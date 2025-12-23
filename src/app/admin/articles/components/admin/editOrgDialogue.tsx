@@ -11,9 +11,10 @@ import {
   FetchOrganisationResponse,
   FetchOrganisationResponseZ,
   OrgCreateEditBody,
-} from "../../helpers/types";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+} from "../../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { CircleUserRound, Loader2, Pencil, X } from "lucide-react";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface SelectedUser {
   userId: string;
@@ -40,7 +41,10 @@ export function EditOrgDialogue({
   organisationId: string;
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
 
   const [data, setData] = useState<FetchOrganisationResponse | null>(null);
@@ -219,6 +223,11 @@ export function EditOrgDialogue({
 
   const editOrg = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       if (!organisationName) {
         toast({
           title: "Error",
@@ -284,7 +293,7 @@ export function EditOrgDialogue({
 
       const data = await response.json();
       console.log(data);
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       resetModalState();
       toast({
@@ -326,7 +335,7 @@ export function EditOrgDialogue({
         <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
           <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-grey-450 p-6 shadow-lg">
             <div className="flex items-center justify-between">
@@ -384,7 +393,7 @@ export function EditOrgDialogue({
                   <div className="flex flex-col gap-2">
                     <input
                       type="text"
-                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                       placeholder="Organisation Name"
                       value={organisationName}
                       onChange={(e) => setOrganisationName(e.target.value)}
@@ -393,21 +402,21 @@ export function EditOrgDialogue({
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
-                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                         placeholder="Website"
                         value={socialWebsite}
                         onChange={(e) => setSocialWebsite(e.target.value)}
                       />
                       <input
                         type="text"
-                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                         placeholder="X/Twitter @"
                         value={socialX}
                         onChange={(e) => setSocialX(e.target.value)}
                       />
                       <input
                         type="text"
-                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                        className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                         placeholder="Discord URL"
                         value={socialDiscord}
                         onChange={(e) => setSocialDiscord(e.target.value)}
@@ -418,7 +427,7 @@ export function EditOrgDialogue({
 
                 <textarea
                   placeholder="Add Description"
-                  className="background-color mt-2 h-[90px] w-full resize-none rounded-lg border-none p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="background-color mt-2 h-[90px] w-full resize-none rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -432,7 +441,7 @@ export function EditOrgDialogue({
                         {orgUsers.map((u) => (
                           <div
                             key={u.userId}
-                            className="rounded-lg bg-grey-450 p-2"
+                            className="rounded-lg bg-grey-450 p-2 mb-2"
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
@@ -528,7 +537,7 @@ export function EditOrgDialogue({
                     <h3>Add Users</h3>
                     <input
                       type="text"
-                      className="h-[28px] w-full max-w-[150px] rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      className="h-[28px] w-full max-w-[150px] rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                       placeholder="Search..."
                       onChange={(e) => searchUsersQuery(e.target.value)}
                     />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Address } from "viem";
+import { Address, Chain } from "viem";
 
 import { Link, Loader2, RotateCw } from "lucide-react";
 
@@ -10,6 +10,8 @@ import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useData } from "../../../DataProvider";
+import EtherscanLink from "@/components/EtherscanLink";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 export function TreasurySection() {
   const { analyticsData } = useData();
@@ -19,7 +21,7 @@ export function TreasurySection() {
   const refreshData = async (): Promise<void> => {
     try {
       const response = await fetch(
-        `https://inev.profiler.bio/treasury/refresh/${data?.name}`,
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/refresh/${data?.name}`,
         {
           method: "POST",
         }
@@ -118,11 +120,23 @@ export function TreasurySection() {
                   return (
                     <div key={index} className="border-color border-b py-3">
                       <div className="flex items-center justify-between font-light text-grey-50">
-                        <p>
-                          {token.contractAddress
-                            ? truncateAddress(token.contractAddress as Address)
-                            : "Native Token"}
-                        </p>
+                        {token.contractAddress ? (
+                          <EtherscanLink 
+                            value={token.contractAddress}
+                            type={"token"}
+                            chain={JB_CHAINS[analyticsData.treasuryData?.treasury.chain_id as JBChainId].chain}
+                          >
+                            {token.contractAddress
+                              ? truncateAddress(token.contractAddress as Address)
+                              : "Native Token"}
+                          </EtherscanLink>
+                        ) : (
+                          <p>
+                            {token.contractAddress
+                              ? truncateAddress(token.contractAddress as Address)
+                              : "Native Token"}
+                          </p>
+                        )}
                         <p>{percentage}%</p>
                       </div>
 
@@ -148,8 +162,7 @@ export function TreasurySection() {
                 Portfolio Peformance
               </h3>
               <div className="flex flex-col text-sm font-light">
-                {Object.entries(data.historicalReturns || {}).map(
-                  ([label, value]) => {
+                {data.historicalReturns.map(value => {
                     const isPositive = !value.percentReturn.startsWith("-");
                     const textColor = isPositive
                       ? "text-green-500"
@@ -157,10 +170,10 @@ export function TreasurySection() {
 
                     return (
                       <div
-                        key={label}
+                        key={value.dateRange}
                         className="flex items-center justify-between border-b border-[#282828] py-1 py-4"
                       >
-                        <p className="w-8 text-grey-50">{label}</p>
+                        <p className="w-8 text-grey-50">{value.dateRange}</p>
                         <p className={`min-w-24 text-center ${textColor}`}>
                           {isPositive === true && "+"}
                           {value.dollarReturn}
@@ -183,26 +196,28 @@ export function TreasurySection() {
                 Accounts Manged
               </h3>
               <div className="flex flex-col text-sm font-light">
-                {Object.entries(data.managed_accounts).map(
-                  ([address, data]) => (
-                    <div
-                      key={address}
-                      className="flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light text-grey-50"
-                    >
-                      <span>
-                        {data.comment
-                          ? data.comment
-                          : truncateAddress(address as Address)}
-                      </span>
+                {data.managed_accounts.map(account => (
+                  <div
+                    key={account.address}
+                    className="flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light text-grey-50"
+                  >
+                    <span>
+                      {account.comment
+                        ? account.comment
+                        : truncateAddress(account.address as Address)}
+                    </span>
 
-                      <span>
-                        {data.ens
-                          ? data.ens
-                          : truncateAddress(address as Address)}
-                      </span>
-                    </div>
-                  )
-                )}
+                    <EtherscanLink 
+                      value={account.address}
+                      type={"address"}
+                      chain={JB_CHAINS[account.chain_id as JBChainId].chain}
+                    >
+                      {account.ens
+                        ? account.ens
+                        : truncateAddress(account.address as Address)}
+                    </EtherscanLink>
+                  </div>
+                ))}
               </div>
             </div>
           )}

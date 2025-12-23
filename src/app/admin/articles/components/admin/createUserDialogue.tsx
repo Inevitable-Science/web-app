@@ -4,15 +4,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { CreateResponseType, CreateUserResponseZ } from "../../helpers/types";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { CreateResponseType, CreateUserResponseZ } from "../../../../../lib/types/AdminArticleTypes";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 export function CreateUserDialogue({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -25,6 +29,11 @@ export function CreateUserDialogue({
 
   const createUser = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      };
+
       if (!user?.user.isTopLevelAdmin) throw new Error();
 
       setIsSaving(true);
@@ -62,7 +71,7 @@ export function CreateUserDialogue({
       const data = await response.json();
       const parsed = CreateUserResponseZ.parse(data);
       setData(parsed);
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
 
       toast({
         title: "Success",
@@ -93,7 +102,7 @@ export function CreateUserDialogue({
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg">
           <Dialog.Title className="text-lg font-semibold">

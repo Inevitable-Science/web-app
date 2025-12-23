@@ -26,9 +26,10 @@ import {
   ArticleCreateBodyZ,
   ArticleResponse,
   Organisation,
-} from "../../helpers/types";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+} from "../../../../../lib/types/AdminArticleTypes";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
 import { uploadImage } from "../../helpers/uploadHelper";
+import { useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface DisplayRules {
   hidden: boolean;
@@ -36,7 +37,9 @@ interface DisplayRules {
 }
 
 export function ArticleEditor({ article }: { article?: ArticleResponse }) {
-  const { authToken, user } = useArticleAuthContext();
+  //const { authToken, user } = useArticleAuthContext();
+  const { authToken } = useAuthToken();
+  const { user } = useUser();
   const { toast } = useToast();
 
   // Hooks first
@@ -268,7 +271,7 @@ export function ArticleEditor({ article }: { article?: ArticleResponse }) {
         <div className="text-md mb-4 mt-28 flex items-center gap-1 font-light text-muted-foreground">
           <Link
             href="/admin/articles"
-            className="flex items-start border-b border-transparent leading-[18px] hover:border-[var(--text-muted-foreground)]"
+            className="flex items-start border-b border-transparent leading-[18px] hover:border-(--text-muted-foreground)"
           >
             Admin Articles
             <ArrowUpRight height={14} width={14} />
@@ -280,7 +283,7 @@ export function ArticleEditor({ article }: { article?: ArticleResponse }) {
           <div className="flex w-full flex-col gap-2">
             <input
               type="text"
-              className="w-full rounded-lg border-none bg-grey-450 p-2 text-lg font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+              className="w-full rounded-lg border-none bg-grey-450 p-2 text-lg font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
               placeholder="Article Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -489,7 +492,7 @@ export function ArticleEditor({ article }: { article?: ArticleResponse }) {
               {keywords.map((keyword, index) => (
                 <input
                   key={index}
-                  className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   type="text"
                   placeholder={`Keyword ${index + 1}`}
                   value={keyword}
@@ -516,7 +519,7 @@ export function ArticleEditor({ article }: { article?: ArticleResponse }) {
               {tags.map((tag, index) => (
                 <input
                   key={index}
-                  className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
                   type="text"
                   placeholder={`Tag ${index + 1}`}
                   value={tag}

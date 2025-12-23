@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
+import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
 
 interface ArticleProp {
   articleId: string;
@@ -21,7 +22,10 @@ export function DeleteArticleDialogue({
   organisationId: string;
   children: React.ReactNode;
 }) {
-  const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  //const { user, authToken, silentRevalidateUser } = useArticleAuthContext();
+  const { user } = useUser();
+  const { authToken } = useAuthToken();
+  const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
   const pathname = usePathname();
 
@@ -29,6 +33,11 @@ export function DeleteArticleDialogue({
 
   const deleteArticle = async () => {
     try {
+      if (!authToken) {
+        await revalidateUser();
+        return;
+      }
+
       const userOrg = user?.organisations.find(
         (org) => org.organisationId === organisationId
       );
@@ -69,7 +78,7 @@ export function DeleteArticleDialogue({
         return;
       }
 
-      await silentRevalidateUser();
+      await silentRevalidateUser(authToken);
       setIsModalOpen(false);
 
       toast({
@@ -93,7 +102,7 @@ export function DeleteArticleDialogue({
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content
           //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"

@@ -17,7 +17,7 @@ export function TreasurySection() {
   const refreshData = async (): Promise<void> => {
     try {
       const response = await fetch(
-        `https://inev.profiler.bio/treasury/refresh/${data?.name}`,
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/treasury/refresh/${data?.name}`,
         {
           method: "POST",
         }

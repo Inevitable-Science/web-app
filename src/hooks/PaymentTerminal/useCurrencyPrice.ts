@@ -8,7 +8,7 @@ export function useCurrencyPrice(
   fromCurrencyId: number,
   toCurrencyId: number,
   chainId: JBChainId | undefined,
-  enabled: boolean = true
+  enabled = true
 ) {
   const { projectId, contractAddress } = useJBContractContext();
 
