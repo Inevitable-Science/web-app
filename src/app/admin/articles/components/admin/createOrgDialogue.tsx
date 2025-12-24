@@ -5,8 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-//import { useArticleAuthContext } from "../../helpers/articleAuthContext";
-import { uploadImage } from "../../helpers/uploadHelper";
+import { uploadImage } from "../../helpers/UploadHelper";
 import { AllUsersResponse, OrgCreateEditBody } from "../../../../../lib/types/AdminArticleTypes";
 import { CircleUserRound, Pencil, X } from "lucide-react";
 import { useArticleAuth, useAuthToken, useUser } from "../../../../../store/AdminAuthStore";
@@ -34,8 +33,6 @@ export function CreateOrgDialogue({
   allUsers: AllUsersResponse;
   children: React.ReactNode;
 }) {
-  //const { authToken, silentRevalidateUser } = useArticleAuthContext();
-  const { user } = useUser();
   const { authToken } = useAuthToken();
   const { silentRevalidateUser, revalidateUser } = useArticleAuth();
   const { toast } = useToast();
@@ -70,7 +67,7 @@ export function CreateOrgDialogue({
         return;
       }
 
-      const url = await uploadImage(file, "organisation", authToken);
+      const url = await uploadImage(file, "organisation");
 
       setOrgLogo(url);
       return;

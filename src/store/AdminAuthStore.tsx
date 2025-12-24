@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 
 import { UserResponseType, UserResponseZ } from "@/lib/types/AdminArticleTypes";
 
-interface ArticleStoreType {
+interface ArticleAuthStoreType {
   user: UserResponseType | null;
   authToken: string | null;
   authStatus: "loading" | "authenticated" | "unauthenticated";
@@ -20,7 +20,7 @@ interface ArticleStoreType {
   silentRevalidateUser: (token: string) => Promise<void>;
 }
 
-const useArticleAuthStore = create<ArticleStoreType>((set, get) => ({
+const useArticleAuthStore = create<ArticleAuthStoreType>((set, get) => ({
   user: null,
   authToken: null,
   authStatus: "loading",
@@ -104,7 +104,7 @@ const useArticleAuthStore = create<ArticleStoreType>((set, get) => ({
 }));
 
 // === Provider Component (only for side effects) ===
-export function ArticleAuthProviderNew({
+export function ArticleAuthProvider({
   children,
 }: {
   children: React.ReactNode;

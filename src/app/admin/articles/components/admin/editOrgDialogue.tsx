@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { uploadImage } from "../../helpers/uploadHelper";
+import { uploadImage } from "../../helpers/UploadHelper";
 import {
   AllUsersResponse,
   FetchOrganisationResponse,
@@ -144,7 +144,7 @@ export function EditOrgDialogue({
       }
 
       console.log("uploading");
-      const url = await uploadImage(file, "organisation", authToken);
+      const url = await uploadImage(file, "organisation");
 
       console.log(url);
       setOrgLogo(url);

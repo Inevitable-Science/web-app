@@ -73,7 +73,7 @@ export function OrganisationTable({
               </Button>
             </CreateUserDialogue>
           )}
-          {user?.user.isTopLevelAdmin && allUsers && (
+          {(user?.user.isTopLevelAdmin && allUsers) && (
             <CreateOrgDialogue allUsers={allUsers}>
               <Button variant={"secondary"} className="flex items-center gap-1">
                 Create Organisation

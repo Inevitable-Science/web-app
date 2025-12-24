@@ -1,6 +1,5 @@
 "use client";
-//import { ArticleAuthProvider } from "./helpers/articleAuthContext";
-import { ArticleAuthProviderNew } from "../../../store/AdminAuthStore";
+import { ArticleAuthProvider } from "../../../store/AdminAuthStore";
 
 export default function ArticleLayout({
   children,
@@ -8,11 +7,8 @@ export default function ArticleLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ArticleAuthProviderNew>
+    <ArticleAuthProvider>
       {children}
-      {/*<ArticleAuthProvider>
-        {children}
-      </ArticleAuthProvider>*/}
-    </ArticleAuthProviderNew>
+    </ArticleAuthProvider>
   );
 }

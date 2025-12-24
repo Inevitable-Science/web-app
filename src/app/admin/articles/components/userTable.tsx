@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { uploadImage } from "../helpers/uploadHelper";
+import { uploadImage } from "../helpers/UploadHelper";
 //import { useArticleAuthContext } from "../helpers/articleAuthContext";
 import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
 import { useArticleAuth, useAuthToken, useUser } from "../../../../store/AdminAuthStore";
@@ -121,7 +121,7 @@ export function UserTable() {
         return;
       }
 
-      const url = await uploadImage(file, "profile", authToken);
+      const url = await uploadImage(file, "profile");
       setProfilePicture(url);
       return;
     } catch (err) {
