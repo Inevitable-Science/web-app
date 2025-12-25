@@ -1,4 +1,4 @@
-import { fetchAllusers } from "@/lib/api/users";
+import { fetchAllUsers } from "@/lib/api/users";
 import { AllUsersResponse } from "@/lib/types/AdminArticleTypes"
 import { useAuthToken, useUser } from "@/store/AdminAuthStore";
 import { useQuery } from "@tanstack/react-query"
@@ -12,7 +12,7 @@ export const useFetchAllUsers = () => {
 
   return useQuery<AllUsersResponse>({
     queryKey: ["allUsers"],
-    queryFn: () => fetchAllusers(user?.user!, authToken!),
+    queryFn: () => fetchAllUsers(user?.user!, authToken!),
     enabled,
     staleTime: 0,
     retry: false,

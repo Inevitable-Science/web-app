@@ -1,5 +1,5 @@
 "use client";
-import { ArticleAuthProvider } from "../../../store/AdminAuthStore";
+import { ArticleAuthProvider } from "@/store/AdminAuthStore";
 
 export default function ArticleLayout({
   children,

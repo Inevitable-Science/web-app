@@ -2,12 +2,12 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { UserTable } from "./components/userTable";
-import { OrganisationTable } from "./components/orgTable";
-import { ArticlesTable } from "./components/articlesTable";
-import { LoginResponseZ } from "../../../lib/types/AdminArticleTypes";
+import { UserTable } from "./components/UserTable";
+import { OrganisationTable } from "./components/OrgTable";
+import { ArticlesTable } from "./components/ArticlesTable";
+import { LoginResponseZ } from "@/lib/types/AdminArticleTypes";
 import { useToast } from "@/components/ui/use-toast";
-import { useArticleAuth } from "../../../store/AdminAuthStore";
+import { useArticleAuth } from "@/store/AdminAuthStore";
 
 export default function AdminArticlesPage() {
   const { toast } = useToast();

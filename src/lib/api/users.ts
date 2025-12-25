@@ -1,7 +1,7 @@
 import { AllUsersResponseZ, User } from '../types/AdminArticleTypes';
 
 
-export const fetchAllusers = async (user: User, authToken: string) => {
+export const fetchAllUsers = async (user: User, authToken: string) => {
   if (!user?.isTopLevelAdmin || !authToken) {
     throw new Error('Unauthorized: Admin access or token missing');
   }

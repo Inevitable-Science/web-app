@@ -1,5 +1,5 @@
 "use client";
-import { useAuthStatus, useAuthToken, useUser } from "../../../../store/AdminAuthStore";
+import { useAuthStatus, useAuthToken, useUser } from "@/store/AdminAuthStore";
 import { LoadState } from "./[articleId]/LoadState";
 import { ArticleEditor } from "./components/ArticleEditor";
 
