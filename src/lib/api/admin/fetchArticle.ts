@@ -1,4 +1,4 @@
-import { ArticleResponse, ArticleResponseZ } from "../types/AdminArticleTypes";
+import { ArticleResponse, ArticleResponseZ } from "../../types/AdminArticleTypes";
 
 export const fetchArticle = async (
   articleId: string,

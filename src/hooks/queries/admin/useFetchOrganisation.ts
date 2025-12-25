@@ -1,6 +1,4 @@
-
-//fetchOrganisation
-import { fetchOrganisation } from "@/lib/api/organisation";
+import { fetchOrganisation } from "@/lib/api/admin/fetchOrganisation";
 import { FetchOrganisationResponse } from "@/lib/types/AdminArticleTypes";
 import { useAuthToken } from "@/store/AdminAuthStore";
 import { useQuery } from "@tanstack/react-query"

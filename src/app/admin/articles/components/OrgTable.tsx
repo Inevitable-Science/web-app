@@ -6,7 +6,7 @@ import { CreateUserDialogue } from "./admin/CreateUserDialogue";
 import { Organisation } from "@/lib/types/AdminArticleTypes";
 import { CircleUserRound, Pencil, Plus } from "lucide-react";
 import { useUser } from "@/store/AdminAuthStore";
-import { useFetchAllUsers } from "@/hooks/queries/useFetchAllUsers";
+import { useFetchAllUsers } from "@/hooks/queries/admin/useFetchAllUsers";
 
 export function OrganisationTable({
   organisations,

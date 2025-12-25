@@ -1,4 +1,4 @@
-import { FetchOrganisationResponseZ } from "../types/AdminArticleTypes";
+import { FetchOrganisationResponseZ } from "../../types/AdminArticleTypes";
 
 
 export const fetchOrganisation = async (organisationId: string, authToken: string) => {

@@ -1,4 +1,4 @@
-import { AllUsersResponseZ, User } from '../types/AdminArticleTypes';
+import { AllUsersResponseZ, User } from '../../types/AdminArticleTypes';
 
 
 export const fetchAllUsers = async (user: User, authToken: string) => {

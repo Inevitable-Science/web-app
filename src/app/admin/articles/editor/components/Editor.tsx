@@ -9,7 +9,7 @@ import ImageBlot from "quill/formats/image";
 import { uploadImage } from "../../helpers/UploadHelper";
 import { useToast } from "@/components/ui/use-toast";
 import { useAttachments, useEditorValue } from "@/store/ArticleEditorStore";
-import { useAdminArticleQuery } from "@/hooks/queries/useFetchAdminArticle";
+import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
 
 
 // Improve image blot to support alt text and revoke URLs on remove

@@ -5,51 +5,32 @@ import Link from "next/link";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { getBendystrawClient } from "@/graphql/bendystrawClient";
+import { SuckerGroupDocument, SuckerGroupQuery, SuckerGroupQueryVariables } from "@/generated/graphql";
 
 export default function AuctionComponent() {
-  const [projectVolume, setProjectVolume] = useState<
-    bigint | null | undefined
-  >();
+  const [projectVolume, setProjectVolume] = useState<bigint | null | undefined>(undefined);
 
-  // TODO: Lean out
-
-  const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
-  const query = `
-    query FetchVolume($chainId: Float!, $projectId: Float!, $version: Float!) {
-      project(
-        chainId: $chainId,
-        projectId: $projectId,
-        version: $version
-      ) {
-        volume
-      }
-    }`;
+  const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
+  const client = getBendystrawClient(1);
 
   useEffect(() => {
-    const fetchVolume = async () => {
+    async function fetchSuckerGroup() {
       try {
-        if (!endpoint) throw new Error("No Bendystraw endpoint found");
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query,
-            variables: { chainId: 1, projectId: 64, version: 4 },
-          }),
-        });
-        if (!response.ok) throw new Error("Could not fetch project volume");
+        const result = await client.request<SuckerGroupQuery, SuckerGroupQueryVariables>(
+          SuckerGroupDocument,
+          { id: suckerGroupId }
+        );
 
-        const data = await response.json();
-        setProjectVolume(data.data.project.volume);
-        return;
-      } catch (err) {
-        console.log(err);
+        setProjectVolume(result.suckerGroup?.volume);
+      } catch (error) {
+        console.error("Failed to fetch SuckerGroup:", error);
         setProjectVolume(null);
         return;
       }
     };
 
-    fetchVolume();
+    fetchSuckerGroup();
   }, []);
 
   return (

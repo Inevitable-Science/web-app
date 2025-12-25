@@ -14,7 +14,7 @@ import {
 } from "@/lib/types/AdminArticleTypes";
 import { CircleUserRound, Loader2, Pencil, X } from "lucide-react";
 import { useArticleAuth, useAuthToken, useUser } from "@/store/AdminAuthStore";
-import { useFetchOrganisation } from "@/hooks/queries/useFetchOrganisation";
+import { useFetchOrganisation } from "@/hooks/queries/admin/useFetchOrganisation";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface SelectedUser {

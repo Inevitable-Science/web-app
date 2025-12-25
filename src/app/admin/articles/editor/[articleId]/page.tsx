@@ -1,7 +1,7 @@
 "use client";
 import { notFound } from "next/navigation";
 import { ArticleEditor } from "../components/ArticleEditor";
-import { useAdminArticleQuery } from "@/hooks/queries/useFetchAdminArticle";
+import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
 import { LoadState } from "./LoadState";
 
 export default function ArticleEditorPage() {

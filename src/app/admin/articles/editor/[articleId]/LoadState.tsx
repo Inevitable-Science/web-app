@@ -1,4 +1,4 @@
-import { useAdminArticleQuery } from "@/hooks/queries/useFetchAdminArticle";
+import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
 import { useArticleIsHidden, useArticleIsShownOnMainSite, useAttachments, useKeywords, useLandingImage, useOrganisation, useTags, useTitle } from "@/store/ArticleEditorStore";
 import { useEffect } from "react";
 
