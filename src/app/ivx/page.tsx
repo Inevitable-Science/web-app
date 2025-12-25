@@ -1,6 +1,6 @@
 import {
-  TokenResponseSchema,
-  TreasuryResponseSchema,
+  TokenResponseZ,
+  TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
 import { Providers } from "./Providers";
 import { IvxPageDataProvider } from "./DataProvider";
@@ -72,8 +72,8 @@ async function fetchIvxData() {
       tokenRes.json(),
     ]);
 
-    const validatedTreasuryData = TreasuryResponseSchema.parse(treasuryData);
-    const validatedTokenData = TokenResponseSchema.parse(tokenData);
+    const validatedTreasuryData = TreasuryResponseZ.parse(treasuryData);
+    const validatedTokenData = TokenResponseZ.parse(tokenData);
 
     return {
       treasuryData: validatedTreasuryData,

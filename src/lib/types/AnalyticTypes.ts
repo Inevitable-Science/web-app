@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DaoResponseSchema = z.object({
+export const DaoResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   backdrop: z.string(),
@@ -27,9 +27,9 @@ export const DaoResponseSchema = z.object({
   }),
 });
 
-export type DaoResponse = z.infer<typeof DaoResponseSchema>;
+export type DaoResponse = z.infer<typeof DaoResponseZ>;
 
-export const TreasuryResponseSchema = z.object({
+export const TreasuryResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   description: z.string(),
@@ -85,9 +85,9 @@ export const TreasuryResponseSchema = z.object({
   ),
 });
 
-export type TreasuryResponse = z.infer<typeof TreasuryResponseSchema>;
+export type TreasuryResponse = z.infer<typeof TreasuryResponseZ>;
 
-export const TokenResponseSchema = z.object({
+export const TokenResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   assetsUnderManagement: z.number().nullable(),
@@ -126,10 +126,10 @@ export const TokenResponseSchema = z.object({
     .nullable(),
 });
 
-export type TokenResponse = z.infer<typeof TokenResponseSchema>;
+export type TokenResponse = z.infer<typeof TokenResponseZ>;
 
 
-export const HistoricalTreasuryResponse = z.object({
+export const HistoricalTreasuryResponseZ = z.object({
   historical_treasury: z.array(
     z.tuple([z.number(), z.number()])
   ),
@@ -141,7 +141,7 @@ export const HistoricalTreasuryResponse = z.object({
   ),
 });
 
-export type HistoricalTreasuryType = z.infer<typeof HistoricalTreasuryResponse>;
+export type HistoricalTreasury = z.infer<typeof HistoricalTreasuryResponseZ>;
 
 export const OHLCResponseZ = z.array(
   z.tuple([
@@ -153,7 +153,7 @@ export const OHLCResponseZ = z.array(
   ])
 );
 
-export const MarketChartResponse = z.object({
+export const MarketChartResponseZ = z.object({
   prices: z.array(
     z.tuple([
       z.number(),
@@ -174,13 +174,13 @@ export const MarketChartResponse = z.object({
   ),
 });
 
-export type MarketChartType = z.infer<typeof MarketChartResponse>;
+export type MarketChartType = z.infer<typeof MarketChartResponseZ>;
 
 
-export const TokenHoldersResponse = z.object({
+export const TokenHoldersResponseZ = z.object({
   holders: z.array(
     z.tuple([z.number(), z.number()]),
   )
 });
 
-export type TokenHoldersType = z.infer<typeof TokenHoldersResponse>;
+export type TokenHoldersType = z.infer<typeof TokenHoldersResponseZ>;

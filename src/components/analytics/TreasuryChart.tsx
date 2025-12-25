@@ -9,7 +9,7 @@ import {
   Time,
   LineData,
 } from "lightweight-charts";
-import { HistoricalTreasuryResponse, HistoricalTreasuryType } from "@/lib/types/AnalyticTypes";
+import { HistoricalTreasuryResponseZ, HistoricalTreasury } from "@/lib/types/AnalyticTypes";
 
 
 export function TreasuryChart({ organisation }: { organisation: string }) {
@@ -17,7 +17,7 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
   const chartRef = useRef<IChartApi | null>(null);
   const treasuryLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const assetLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [data, setData] = useState<HistoricalTreasuryType | null>(null);
+  const [data, setData] = useState<HistoricalTreasury | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
         if (!response.ok) throw new Error();
 
         const data = await response.json();
-        const parsedData = HistoricalTreasuryResponse.parse(data);
+        const parsedData = HistoricalTreasuryResponseZ.parse(data);
         
         setData(parsedData);
       } catch (error) {

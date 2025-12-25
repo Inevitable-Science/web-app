@@ -1,5 +1,5 @@
 import { LineData, Time } from "lightweight-charts";
-import { MarketChartResponse } from "../types/AnalyticTypes";
+import { MarketChartResponseZ } from "../types/AnalyticTypes";
 
 export interface PriceData {
   prices: LineData<Time>[];
@@ -14,7 +14,7 @@ export const fetchMarketChartData = async (tokenName: string, range: MarketChart
   if (!response.ok) throw new Error("Failed to fetch market chart data");
 
   const data = await response.json();
-  const parsedMarketResponse = MarketChartResponse.parse(data);
+  const parsedMarketResponse = MarketChartResponseZ.parse(data);
 
   const processedData: PriceData = {
     prices:

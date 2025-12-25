@@ -2,11 +2,11 @@ import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { ProjectDocument } from "@/generated/graphql";
 import {
   DaoResponse,
-  DaoResponseSchema,
+  DaoResponseZ,
   TokenResponse,
-  TokenResponseSchema,
+  TokenResponseZ,
   TreasuryResponse,
-  TreasuryResponseSchema,
+  TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
 import request from "graphql-request";
 
@@ -105,7 +105,7 @@ export async function fetchProjectAnalytics(
     );
     if (!daoResponse.ok) return null;
     const daoData = await daoResponse.json();
-    const validatedDaoData = DaoResponseSchema.parse(daoData);
+    const validatedDaoData = DaoResponseZ.parse(daoData);
 
     // make it fetch token with token name from daoResponse
     const [treasuryResponse, tokenResponse] = await Promise.all([
@@ -124,7 +124,7 @@ export async function fetchProjectAnalytics(
     if (treasuryResponse.ok) {
       try {
         const rawTreasury = await treasuryResponse.json();
-        treasuryData = TreasuryResponseSchema.parse(rawTreasury);
+        treasuryData = TreasuryResponseZ.parse(rawTreasury);
       } catch (err) {
         console.error("Failed to parse treasury response", err);
         treasuryData = null;
@@ -134,7 +134,7 @@ export async function fetchProjectAnalytics(
     if (tokenResponse.ok) {
       try {
         const rawToken = await tokenResponse.json();
-        tokenData = TokenResponseSchema.parse(rawToken);
+        tokenData = TokenResponseZ.parse(rawToken);
       } catch (err) {
         console.error("Failed to parse token response", err);
         tokenData = null;

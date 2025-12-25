@@ -1,10 +1,10 @@
 import {
   DaoResponse,
-  DaoResponseSchema,
+  DaoResponseZ,
   TokenResponse,
-  TokenResponseSchema,
+  TokenResponseZ,
   TreasuryResponse,
-  TreasuryResponseSchema,
+  TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
 import { DataProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
@@ -80,7 +80,7 @@ async function getProjectData(projectName: string): Promise<PageData | null> {
     if (!projectResponse) throw new Error("Failed to fetch project data");
 
     const projectData = await projectResponse.json();
-    const validatedProjectData = DaoResponseSchema.parse(projectData);
+    const validatedProjectData = DaoResponseZ.parse(projectData);
 
     const [treasuryRes, tokenRes] = await Promise.all([
       fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`),
@@ -98,8 +98,8 @@ async function getProjectData(projectName: string): Promise<PageData | null> {
       tokenRes.json(),
     ]);
 
-    const validatedTreasuryData = TreasuryResponseSchema.parse(treasuryData);
-    const validatedTokenData = TokenResponseSchema.parse(tokenData);
+    const validatedTreasuryData = TreasuryResponseZ.parse(treasuryData);
+    const validatedTokenData = TokenResponseZ.parse(tokenData);
 
     return {
       projectData: validatedProjectData,

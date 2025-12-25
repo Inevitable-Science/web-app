@@ -242,7 +242,7 @@ export default TokenStatsChart;*/
 
 "use client";
 
-import { MarketChartResponse, TokenHoldersResponse } from "@/lib/types/AnalyticTypes";
+import { MarketChartResponseZ, TokenHoldersResponseZ } from "@/lib/types/AnalyticTypes";
 import {
   createChart,
   IChartApi,
@@ -309,7 +309,7 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
       const data = await response.json();
 
       if (type === "marketCap" || type === "volume") {
-        const parsed = MarketChartResponse.parse(data);
+        const parsed = MarketChartResponseZ.parse(data);
 
         const seriesData =
           (type === "marketCap"
@@ -324,7 +324,7 @@ export function TokenStatsChart({ organisation, tokenName }: TokenStatsProps) {
         return seriesData;
       }
 
-      const parsed = TokenHoldersResponse.parse(data);
+      const parsed = TokenHoldersResponseZ.parse(data);
       const seriesData =
         parsed.holders.map(([timestamp, value]: [number, number]) => ({
           time: Math.floor(timestamp / 1000) as Time,

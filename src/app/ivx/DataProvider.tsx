@@ -23,8 +23,8 @@ import { notFound } from "next/navigation";
 import {
   TokenResponse,
   TreasuryResponse,
-  TokenResponseSchema,
-  TreasuryResponseSchema,
+  TokenResponseZ,
+  TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
 import { AsyncData } from "juice-sdk-react/dist/contexts/types";
 import { type GetTokenReturnType } from "@wagmi/core";
@@ -73,8 +73,8 @@ export const IvxPageDataProvider = ({
 }: {
   children: ReactNode;
   //token: AsyncData<GetTokenReturnType | undefined>;
-  tokenData: z.infer<typeof TokenResponseSchema>;
-  treasuryData: z.infer<typeof TreasuryResponseSchema>;
+  tokenData: z.infer<typeof TokenResponseZ>;
+  treasuryData: z.infer<typeof TreasuryResponseZ>;
 }) => {
   // Foundational Hooks
   const { address } = useAccount();
