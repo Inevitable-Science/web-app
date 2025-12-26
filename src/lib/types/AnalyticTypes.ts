@@ -141,7 +141,7 @@ export const HistoricalTreasuryResponseZ = z.object({
   ),
 });
 
-export type HistoricalTreasury = z.infer<typeof HistoricalTreasuryResponseZ>;
+export type HistoricalTreasuryResponse = z.infer<typeof HistoricalTreasuryResponseZ>;
 
 export const OHLCResponseZ = z.array(
   z.tuple([

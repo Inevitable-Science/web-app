@@ -1,5 +1,8 @@
 import { HistoricalTreasuryResponseZ } from "../types/AnalyticTypes";
 
+// implement useHistoricalTreasury
+// implement useLegacyActivity
+
 
 export const fetchHistoricalTreasury = async (daoName: string) => {
   const apiUrl = `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/historical/${daoName}`;

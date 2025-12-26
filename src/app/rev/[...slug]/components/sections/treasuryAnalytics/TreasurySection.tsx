@@ -242,7 +242,7 @@ export function TreasurySection() {
           <div className="max-w-full rounded-2xl bg-grey-450 p-[12px]">
             <h3 className="pb-3 pt-1 text-xl">Historical Asset Value</h3>
 
-            <TreasuryChart organisation={data.name} />
+            <TreasuryChart daoName={data.name} />
 
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-grey-50">
               <div className="flex items-center gap-2">
