@@ -34,7 +34,7 @@ export default function AuctionComponent() {
   }, []);
 
   return (
-    <section className="bg-[url('/assets/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
+    <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
       <div className="flex w-full flex-col justify-between gap-[112px] rounded-2xl bg-background p-[16px] sm:min-h-[650px] sm:p-[32px] md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
           <Image

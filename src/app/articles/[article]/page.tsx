@@ -29,16 +29,16 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   // Default metadata if article not found
   if (!article) {
     return {
-      title: "Article Not Found | Inevitable Protocol",
+      title: "Article Not Found | Inevitable Science",
       description: "The requested article could not be found.",
       alternates: { canonical: `${origin}/articles` },
       openGraph: {
-        title: "Article Not Found | Inevitable Protocol",
+        title: "Article Not Found | Inevitable Science",
         description: "The requested article could not be found.",
-        siteName: "Inevitable Protocol",
+        siteName: "Inevitable Science",
         images: [
           {
-            url: `${origin}/assets/img/branding/seo_banner.png`,
+            url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
             width: 700,
             height: 370,
             alt: "Inevitable preview image",
@@ -48,10 +48,10 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         type: "website",
       },
       twitter: {
-        title: "Article Not Found | Inevitable Protocol",
+        title: "Article Not Found | Inevitable Science",
         description: "The requested article could not be found.",
         card: "summary_large_image",
-        images: [`${origin}/assets/img/branding/seo_banner.png`],
+        images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
       },
       manifest: "/manifest/manifest.json",
     };
@@ -66,13 +66,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     : `${origin}${article.image}`;
 
   return {
-    title: `${article.title} | Inevitable Protocol`,
+    title: `${article.title} | Inevitable Science`,
     description: article.overview,
     alternates: { canonical: url },
     openGraph: {
-      title: `${article.title} | Inevitable Protocol`,
+      title: `${article.title} | Inevitable Science`,
       description: article.overview,
-      siteName: "Inevitable Protocol",
+      siteName: "Inevitable Science",
       images: [
         {
           url: imgUrl,
@@ -85,7 +85,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       type: "article",
     },
     twitter: {
-      title: `${article.title} | Inevitable Protocol`,
+      title: `${article.title} | Inevitable Science`,
       description: article.overview,
       card: "summary_large_image",
       images: [imgUrl],

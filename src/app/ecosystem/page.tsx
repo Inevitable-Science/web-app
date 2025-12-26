@@ -14,21 +14,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Ecosystem | Inevitable Protocol",
+    title: "Ecosystem | Inevitable Science",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Ecosystem | Inevitable Protocol",
+      title: "Ecosystem | Inevitable Science",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -38,10 +36,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Ecosystem | Inevitable Protocol",
+      title: "Ecosystem | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
     },
     manifest: metadata.manifest,
   };
@@ -50,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Ecosystem() {
   return (
     <div className="relative">
-      <div className="absolute inset-0 top-[-140px] z-[-1] w-full bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover bg-center" />
+      <div className="absolute inset-0 top-[-140px] z-[-1] w-full bg-[url('https://cdn.inevitable.science/static/img/ecosystem_backdrop.webp')] bg-cover bg-center" />
 
       <section className="ctWrapper mt-[140px]">
         <div className="mb-[52px] flex flex-col gap-4 md:flex-row md:gap-12">

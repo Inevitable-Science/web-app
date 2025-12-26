@@ -142,7 +142,7 @@ export const wagmiConfig = createConfig({
   ssr: true,
   connectors: [
     coinbaseWallet({
-      appName: "Inevitable Protocol",
+      appName: "Inevitable Science",
       appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
     }),
     safeConnector,

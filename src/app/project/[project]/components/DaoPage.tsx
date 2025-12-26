@@ -28,7 +28,7 @@ export function DaoPage() {
   return (
     <>
       <div className="relative w-full">
-        <div className="absolute inset-0 -z-10 w-full bg-[url('/assets/img/dao_landing.webp')] bg-cover bg-center"></div>
+        <div className="absolute inset-0 -z-10 w-full bg-[url('https://cdn.inevitable.science/static/img/dao_landing.webp')] bg-cover bg-center"></div>
         <Header />
       </div>
 

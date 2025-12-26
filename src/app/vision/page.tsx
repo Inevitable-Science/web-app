@@ -11,21 +11,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Vision | Inevitable Protocol",
+    title: "Vision | Inevitable Science",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Vision | Inevitable Protocol",
+      title: "Vision | Inevitable Science",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -35,10 +33,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Vision | Inevitable Protocol",
+      title: "Vision | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
     },
     manifest: metadata.manifest,
   };
@@ -47,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function Vision() {
   return (
     <div>
-      <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden bg-[url('/assets/img/vision_hero_scene.webp')] bg-cover bg-position-[calc(50%+80px)_center] mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-screen sm:min-h-[750px] sm:items-end sm:bg-center">
+      <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden bg-[url('https://cdn.inevitable.science/static/img/vision_hero_scene.webp')] bg-cover bg-position-[calc(50%+80px)_center] mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-screen sm:min-h-[750px] sm:items-end sm:bg-center">
         <div className="ctWrapper relative top-[15px] flex flex-col items-center">
           <div className="mb-8 flex flex-col items-center text-center font-optima">
             <p className="text-lg uppercase">It Is Inevitable</p>

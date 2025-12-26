@@ -44,13 +44,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   if (!projectData) return notFound();
 
   return {
-    title: `${projectData.name} | Inevitable Protocol`,
+    title: `${projectData.name} | Inevitable Science`,
     description: projectData.description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${projectData.name} | Inevitable Protocol`,
+      title: `${projectData.name} | Inevitable Science`,
       description: projectData.description,
-      siteName: "Inevitable Protocol",
+      siteName: "Inevitable Science",
       images: [
         {
           url: projectData.logo,
@@ -63,7 +63,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: `${projectData.name} | Inevitable Protocol`,
+      title: `${projectData.name} | Inevitable Science`,
       description: projectData.description,
       card: "summary_large_image",
       images: [projectData.logo],

@@ -47,7 +47,7 @@ export default function DaosGrid() {
       <div className="dGrid-1 dGrid mx-auto max-w-[1600px]">
         <Link
           href="/project/hydradao"
-          className="div1-1 bg-[url('/assets/img/daos/hydra.webp')] bg-cover bg-center"
+          className="div1-1 bg-[url('https://cdn.inevitable.science/static/img/daos/hydra.webp')] bg-cover bg-center"
         >
           <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
@@ -63,7 +63,7 @@ export default function DaosGrid() {
 
         <Link
           href="/project/cryodao"
-          className="div2-1 bg-[url('/assets/img/daos/cryo.webp')] bg-cover bg-center"
+          className="div2-1 bg-[url('https://cdn.inevitable.science/static/img/daos/cryo.webp')] bg-cover bg-center"
         >
           <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
@@ -117,7 +117,7 @@ export default function DaosGrid() {
         </div>*/}
         <Link
           href="/project/cryorat"
-          className="div1-mid bg-[url('/assets/img/daos/cryorat.webp')] bg-cover bg-center"
+          className="div1-mid bg-[url('https://cdn.inevitable.science/static/img/daos/cryorat.webp')] bg-cover bg-center"
         >
           <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
@@ -132,7 +132,7 @@ export default function DaosGrid() {
 
         <Link
           href="/project/erectusdao"
-          className="div2-mid bg-[url('/assets/img/daos/erectus.webp')] bg-cover bg-center"
+          className="div2-mid bg-[url('https://cdn.inevitable.science/static/img/daos/erectus.webp')] bg-cover bg-center"
         >
           <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE

@@ -12,7 +12,7 @@ export default function MainIvxLayout() {
   return (
     <>
       <div>
-        <div className="absolute z-[-1] h-[70vh] w-full bg-[url('/assets/img/layout/ivx/ivx_backdrop.webp')] bg-cover bg-center"></div>
+        <div className="absolute z-[-1] h-[70vh] w-full bg-[url('https://cdn.inevitable.science/static/img/layout/ivx/ivx_backdrop.webp')] bg-cover bg-center"></div>
         <div className="ctWrapper pt-[140px]">
           <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[420px_1fr]">
             <h1 className="text-5xl font-extralight">

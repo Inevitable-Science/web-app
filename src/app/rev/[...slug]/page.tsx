@@ -26,7 +26,6 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const fullPath = `/${decodeURIComponent(params.slug || "")}`;
   const url = new URL(fullPath, origin);
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
 
   let config;
   let projectData: ProjectQuery["project"] | null;
@@ -43,29 +42,30 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return notFound();
   }
 
+  const imgUrl = "https://cdn.inevitable.science/static/img/branding/seo_banner.png"; // used as fallback
   const projectLogo = await resolveIpfsLogo(projectData.metadataUri, imgUrl);
 
   return {
-    title: `${projectData.name} | Inevitable Protocol`,
+    title: `${projectData.name} | Inevitable Science`,
     description: "Begin your journey. Build the future of life—together.",
     alternates: { canonical: url },
     openGraph: {
-      title: `${projectData.name} | Inevitable Protocol`,
+      title: `${projectData.name} | Inevitable Science`,
       description: "Begin your journey. Build the future of life—together.",
-      siteName: "Inevitable Protocol",
+      siteName: "Inevitable Science",
       images: [
         {
           url: projectLogo,
           width: 800,
           height: 800,
-          alt: `${projectData.name} | Inevitable Protocol preview image`,
+          alt: `${projectData.name} | Inevitable Science preview image`,
         },
       ],
       url,
       type: "website",
     },
     twitter: {
-      title: `${projectData.name} | Inevitable Protocol`,
+      title: `${projectData.name} | Inevitable Science`,
       description: "Begin your journey. Build the future of life—together.",
       card: "summary_large_image",
       images: [projectLogo],

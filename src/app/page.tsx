@@ -21,21 +21,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Inevitable Protocol | Home",
+    title: "Inevitable Science | Home",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Inevitable Protocol | Home",
+      title: "Inevitable Science | Home",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -45,10 +43,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Inevitable Protocol | Home",
+      title: "Inevitable Science | Home",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
     },
     manifest: metadata.manifest,
   };
@@ -158,7 +156,7 @@ export default function Page() {
           <DaosGrid />
         </div>
 
-        <section className="mb-[60px] mt-[40px] flex h-screen min-h-[500px] items-center justify-center rounded-2xl bg-[url('/assets/img/light_future.webp')] bg-cover bg-center mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
+        <section className="mb-[60px] mt-[40px] flex h-screen min-h-[500px] items-center justify-center rounded-2xl bg-[url('https://cdn.inevitable.science/static/img/light_future.webp')] bg-cover bg-center mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
           <div className="ctWrapper relative top-[15px] flex flex-col items-center">
             <div className="flex flex-col items-center gap-6 text-center">
               <Image
