@@ -174,7 +174,7 @@ export const MarketChartResponseZ = z.object({
   ),
 });
 
-export type MarketChartType = z.infer<typeof MarketChartResponseZ>;
+export type MarketChartResponse = z.infer<typeof MarketChartResponseZ>;
 
 
 export const TokenHoldersResponseZ = z.object({

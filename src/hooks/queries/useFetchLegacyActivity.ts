@@ -11,7 +11,7 @@ export const useFetchLegacyActivity = (daoName?: string, page?: number) => {
     enabled,
     staleTime: 3600000,
     retry: false,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
     refetchOnMount: true,
     placeholderData: keepPreviousData,
   })

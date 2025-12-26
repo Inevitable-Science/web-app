@@ -316,7 +316,7 @@ export function TokenSection() {
           {data.selectedToken.ticker && data.selectedToken.name && (
             <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
               <TokenStatsChart
-                organisation={data.selectedToken.ticker}
+                daoName={data.selectedToken.ticker}
                 tokenName={data.selectedToken.name}
               />
             </div>

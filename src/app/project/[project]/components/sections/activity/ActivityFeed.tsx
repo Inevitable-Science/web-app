@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useData } from "../../../DataProvider";
 import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
@@ -9,7 +9,6 @@ import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
-import z from "zod";
 import { useFetchLegacyActivity } from "@/hooks/queries/useFetchLegacyActivity";
 
 function getRelativeTime(dateString: string): string {

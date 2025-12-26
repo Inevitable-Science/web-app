@@ -14,9 +14,10 @@ export const fetchMarketChartData = async (tokenName: string, range: MarketChart
   if (!response.ok) throw new Error("Failed to fetch market chart data");
 
   const data = await response.json();
-  const parsedMarketResponse = MarketChartResponseZ.parse(data);
+  return MarketChartResponseZ.parse(data);
+  // parsedMarketResponse = MarketChartResponseZ.parse(data);
 
-  const processedData: PriceData = {
+  /*const processedData: PriceData = {
     prices:
       parsedMarketResponse.prices.map(([timestamp, value]: [number, number]) => ({
         time: Math.floor(timestamp / 1000) as Time,
@@ -24,5 +25,5 @@ export const fetchMarketChartData = async (tokenName: string, range: MarketChart
       })) ?? [],
   };
 
-  return processedData;
+  return processedData;*/
 };

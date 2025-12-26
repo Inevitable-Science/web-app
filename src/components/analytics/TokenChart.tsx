@@ -1,8 +1,7 @@
 // todo, maybe update lightweight charts and review the license of tv-lightweight-charts
-
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createChart,
   IChartApi,
@@ -13,7 +12,7 @@ import {
 } from "lightweight-charts";
 import { Button } from "../ui/button";
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
-import { MarketChartRangeType } from "@/lib/api/fetchMarketChart";
+import { MarketChartRangeType, PriceData } from "@/lib/api/fetchMarketChart";
 
 
 export function TokenChart({ organisation }: { organisation: string }) {
@@ -26,8 +25,17 @@ export function TokenChart({ organisation }: { organisation: string }) {
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
-  const { data: priceData, isLoading } = useFetchMarketChart(organisation, timeRange);
+  const { data: priceDataResponse, isLoading } = useFetchMarketChart(organisation, timeRange);
 
+  const priceData: PriceData = useMemo(() => {
+    return {
+      prices:
+        priceDataResponse?.prices.map(([timestamp, value]: [number, number]) => ({
+          time: Math.floor(timestamp / 1000) as Time,
+          value,
+        })) ?? [],
+    }
+  }, [priceDataResponse]);
 
   // set latest price on mount + data fetched
   useEffect(() => {
@@ -218,7 +226,7 @@ export function TokenChart({ organisation }: { organisation: string }) {
       </div>
 
       {isLoading ? (
-        <div className={`activeSkeleton w-full h-[400px] aspect-11/10 rounded-lg ${priceData ? "hidden" : "block"}`} />
+        <div className="activeSkeleton w-full h-[400px] aspect-11/10 rounded-lg" />
       ) : (
         <>
           {priceData ? (
