@@ -10,7 +10,7 @@ export const useFetchHistoricalTreasury = (daoName: string) => {
     queryKey: ["historical_treasury", daoName],
     queryFn: () => fetchHistoricalTreasury(daoName!),
     enabled,
-    staleTime: 0,
+    staleTime: 3600000,
     retry: false,
     refetchOnWindowFocus: true,
     refetchOnMount: true,

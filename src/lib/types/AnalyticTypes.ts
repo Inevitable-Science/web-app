@@ -184,3 +184,22 @@ export const TokenHoldersResponseZ = z.object({
 });
 
 export type TokenHoldersType = z.infer<typeof TokenHoldersResponseZ>;
+
+export const LegacyActivityResponseZ = z.object({
+  page: z.number(),
+  limit: z.number(),
+  totalItems: z.number(),
+  totalPages: z.number(),
+  data: z.array(
+    z.object({
+      date: z.string(),
+      eth_paid: z.string(),
+      usd_value: z.string(),
+      payer_address: z.string(),
+      beneficiary: z.string(),
+      transaction_hash: z.string()
+    })
+  )
+});
+
+export type ActivityResponse = z.infer<typeof LegacyActivityResponseZ>;

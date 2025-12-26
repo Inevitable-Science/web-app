@@ -9,7 +9,7 @@ export const useFetchMarketChart = (tokenName: string, range: MarketChartRangeTy
     queryKey: ["market_chart", tokenName, range],
     queryFn: () => fetchMarketChartData(tokenName!, range!),
     enabled,
-    staleTime: 0,
+    staleTime: 900000,
     retry: false,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
