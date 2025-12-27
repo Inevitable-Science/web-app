@@ -7,7 +7,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBContractContext } from "juice-sdk-react";
+import { useJBContractContext, useJBProjectMetadataContext } from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
@@ -67,7 +67,8 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const { metadata, project } = useProjectContext();
+  const { /*metadata,*/ project } = useProjectContext();
+  const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
     projectId: project.projectId
   });

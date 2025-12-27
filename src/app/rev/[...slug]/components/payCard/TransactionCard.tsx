@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext, useSuckers } from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useSelectedSucker } from "./SelectedSuckerContext";

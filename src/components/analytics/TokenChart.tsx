@@ -15,7 +15,7 @@ import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
 import { MarketChartRangeType, PriceData } from "@/lib/api/fetchMarketChart";
 
 
-export function TokenChart({ organisation }: { organisation: string }) {
+export function TokenChart({ daoName }: { daoName: string }) {
   const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);
   const [returns, setReturns] = useState<number | null>(null);
   const [timeRange, setTimeRange] = useState<MarketChartRangeType>("1");
@@ -25,7 +25,7 @@ export function TokenChart({ organisation }: { organisation: string }) {
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
-  const { data: priceDataResponse, isLoading } = useFetchMarketChart(organisation, timeRange);
+  const { data: priceDataResponse, isLoading } = useFetchMarketChart(daoName, timeRange);
 
   const priceData: PriceData = useMemo(() => {
     return {
@@ -46,7 +46,7 @@ export function TokenChart({ organisation }: { organisation: string }) {
       const latestPrice = prices[prices.length - 1].value;
       setLatest24hPrice(latestPrice);
     }
-  }, [organisation, timeRange, isLoading]);
+  }, [daoName, timeRange, isLoading]);
 
   // set and alter price returns on timeRange change and onSuccess
   useEffect(() => {
@@ -113,7 +113,7 @@ export function TokenChart({ organisation }: { organisation: string }) {
       isMountedRef.current = false;
       chart.remove();
     };
-  }, [organisation, timeRange, isLoading]);
+  }, [daoName, timeRange, isLoading]);
 
 
   // helper functions

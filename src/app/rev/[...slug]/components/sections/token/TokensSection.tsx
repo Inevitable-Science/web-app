@@ -12,6 +12,8 @@ import {
   useJBContractContext,
   useBendystrawQuery,
   useJBChainId,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
 } from "juice-sdk-react";
 import {
   JBProjectToken,
@@ -28,8 +30,10 @@ type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
   const { connector } = useAccount();
-  const { project, token, metadata, ruleset, rulesetMetadata } =
-    useProjectContext();
+  const { project, /*token, metadata,*/ ruleset, rulesetMetadata } = useProjectContext();
+  const { token } = useJBTokenContext();
+  const { metadata } = useJBProjectMetadataContext();
+  
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
     ruleset: ruleset,

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTokenA } from "@/hooks/useTokenA";
-import { JBChainId, useJBContractContext } from "juice-sdk-react";
+import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits } from "viem";
 import {
@@ -34,12 +34,14 @@ export function PayTab({
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const {
-    metadata,
+    //metadata,
     suckers,
-    token: tokenBContext,
+    //token: tokenBContext,
     ruleset: rulesetContext,
     rulesetMetadata: rulesetMetadataContext,
   } = useProjectContext();
+  const { token: tokenBContext } = useJBTokenContext();
+  const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const tokenA = useTokenA();
   const { version } = useJBContractContext();

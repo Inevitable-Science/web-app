@@ -9,6 +9,7 @@ import { ChartSection } from "./ChartSection";
 //import { useUserPermissions } from "@/hooks/useUserPermissions";
 //import { EditMetadataDialog } from "./EditMetadataDialog";
 import { useProjectContext } from "../../../ProjectDataContext";
+import { useJBProjectMetadataContext } from "juice-sdk-react";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -55,8 +56,9 @@ interface DescriptionSectionProps {
 export function DescriptionSection({
   setSelectedTab,
 }: DescriptionSectionProps) {
-  const { metadata } = useProjectContext();
+  //const { metadata } = useProjectContext();
   //const { hasPermission } = useUserPermissions();
+  const { metadata } = useJBProjectMetadataContext();
 
   const { description, name } = metadata?.data ?? {};
 

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { JBChainId } from "juice-sdk-react";
+import { JBChainId, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
 import { useProjectContext } from "../../../ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
@@ -30,7 +30,9 @@ export const WithdrawSelector = ({
   suckersBalance,
   disabled,
 }: ChainSelectorProps) => {
-  const { suckers, metadata, token } = useProjectContext();
+  const { suckers, /*metadata, token*/ } = useProjectContext();
+  const { token } = useJBTokenContext();
+  const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   function handleChainChange( chainId: JBChainId ) {

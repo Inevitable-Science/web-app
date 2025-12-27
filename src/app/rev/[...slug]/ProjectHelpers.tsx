@@ -1,5 +1,5 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
-import { ProjectDocument } from "@/generated/graphql";
+import { ProjectDocument, ProjectQuery, ProjectQueryVariables } from "@/generated/graphql";
 import {
   DaoResponse,
   DaoResponseZ,
@@ -8,7 +8,8 @@ import {
   TreasuryResponse,
   TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
-import request from "graphql-request";
+import { cache } from "react";
+import { getBendystrawClient } from "@/graphql/bendystrawClient";
 
 interface ProjectAnalyticsResponse {
   daoData: DaoResponse;
@@ -79,14 +80,17 @@ export async function fetchProjectData(config: {
   chainId: number;
   version: number;
 }) {
-  const url = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
+  const client = getBendystrawClient(config.chainId);
 
   try {
-    const project = await request(url, ProjectDocument, {
+    const project = await client.request<ProjectQuery, ProjectQueryVariables>(
+      ProjectDocument,
+      {
       chainId: Number(config.chainId),
       projectId: Number(config.projectId),
       version: Number(config.version),
-    });
+      }
+    );
 
     return project;
   } catch (err) {
@@ -95,9 +99,10 @@ export async function fetchProjectData(config: {
   }
 }
 
-export async function fetchProjectAnalytics(
+/*export async function fetchProjectAnalytics(
   projectName: string
-): Promise<ProjectAnalyticsResponse | null> {
+): Promise<ProjectAnalyticsResponse | null> {*/
+export const fetchProjectAnalytics = cache(async (projectName: string) => {
   try {
     const daoResponse = await fetch(
       `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${projectName}`,
@@ -149,4 +154,4 @@ export async function fetchProjectAnalytics(
   } catch {
     return null;
   }
-}
+});

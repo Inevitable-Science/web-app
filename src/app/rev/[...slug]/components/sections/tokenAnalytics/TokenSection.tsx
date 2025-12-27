@@ -60,17 +60,17 @@ function getValuationLabel(
 }
 
 export function TokenSection() {
-  const { analyticsData } = useProjectContext();
+  const { analyticsData, suckers } = useProjectContext();
   const data = analyticsData?.tokenData;
 
-  const suckersQuery = useSuckers();
-  const suckers = suckersQuery.data;
+  //const suckersQuery = useSuckers();
+  //const suckers = suckersQuery.data;
 
   return (
     <section>
       {analyticsData?.daoData.name && (
         <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-          <TokenChart organisation={analyticsData?.daoData.name} />
+          <TokenChart daoName={analyticsData?.daoData.name} />
         </div>
       )}
 

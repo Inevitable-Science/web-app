@@ -14,6 +14,7 @@ import {
   useJBContractContext,
   useJBTokenContext,
   useBendystrawQuery,
+  useJBProjectMetadataContext,
 } from "juice-sdk-react";
 import { useState, useEffect, useMemo } from "react";
 import { Address, Chain, formatEther } from "viem";
@@ -92,7 +93,8 @@ function RedeemActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
-  const { metadata } = useProjectContext();
+  //const { metadata } = useProjectContext();
+  const { metadata } = useJBProjectMetadataContext();
   const chain = JB_CHAINS[cashOutEvent.chainId].chain;
 
   if (!cashOutEvent) return null;

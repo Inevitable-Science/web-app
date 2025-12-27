@@ -8,6 +8,7 @@ import { HoldersSection } from "../sections/token/TokensSection";
 import { TreasurySection } from "../sections/treasuryAnalytics/TreasurySection";
 import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
 import { useProjectContext } from "../../ProjectDataContext";
+import { useJBTokenContext } from "juice-sdk-react";
 
 interface TabContentProps {
   selectedTab: string;
@@ -25,7 +26,8 @@ const tabComponents: Record<string, FC<any>> = {
 };
 
 export function TabContent({ selectedTab, setSelectedTab }: TabContentProps) {
-  const { token, analyticsData } = useProjectContext();
+  const { analyticsData } = useProjectContext();
+  const { token } = useJBTokenContext();
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback

@@ -135,7 +135,7 @@ export function TokenSection() {
     <section>
       {data?.name && (
         <div className="h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-          <TokenChart organisation={data?.name} />
+          <TokenChart daoName={data?.name} />
         </div>
       )}
 

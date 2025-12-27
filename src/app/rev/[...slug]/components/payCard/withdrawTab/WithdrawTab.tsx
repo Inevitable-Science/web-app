@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   useBendystrawQuery,
+  useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "juice-sdk-react";
 import { formatNumber } from "@/lib/utils";
@@ -27,7 +28,8 @@ export interface Surplus {
 }
 
 export function WithdrawTab() {
-  const { project, token } = useProjectContext();
+  const { project, /*token*/ } = useProjectContext();
+  const { token } = useJBTokenContext();
   const { selectedSucker } = useSelectedSucker();
 
   const receiveToken = useProjectBaseToken();

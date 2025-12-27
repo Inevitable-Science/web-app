@@ -12,7 +12,7 @@ import { useProjectContext } from "../../ProjectDataContext";
 import { ArrowRight } from "lucide-react";
 
 export function PageLayout() {
-  const { token, analyticsData, metadata } = useProjectContext();
+  const { analyticsData } = useProjectContext();
   const { contracts } = useJBContractContext();
 
   // UI-specific state remains in this component.

@@ -38,8 +38,8 @@ interface NetworkDataContextType {
   dailyTotals: DailyVolume[];
   isRefetching: boolean;
   analyticsData: AnalyticsDataProp | null;
-  token: AsyncData<GetTokenReturnType | undefined>;
-  metadata: AsyncData<JBProjectMetadata>;
+  // token: AsyncData<GetTokenReturnType | undefined>;
+  // metadata: AsyncData<JBProjectMetadata>;
 }
 
 const NetworkDataContext = createContext<NetworkDataContextType | undefined>(
@@ -56,8 +56,8 @@ export const ProjectDataProvider = ({
   analyticsData: AnalyticsDataProp | null;
 }) => {
   // Foundational Hooks
-  const { metadata } = useJBProjectMetadataContext();
-  const { token } = useJBTokenContext();
+  // const { metadata } = useJBProjectMetadataContext();
+  // const { token } = useJBTokenContext();
 
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
@@ -98,8 +98,8 @@ export const ProjectDataProvider = ({
       dailyTotals,
       isRefetching,
       analyticsData,
-      token,
-      metadata,
+      // token,
+      // metadata,
     };
   }, [
     suckers,
@@ -109,7 +109,7 @@ export const ProjectDataProvider = ({
     dailyTotals,
     isRefetching,
     analyticsData,
-    token,
+    // token,
   ]);
 
   if (isInitialLoading) {
