@@ -28,7 +28,7 @@ export interface Surplus {
 }
 
 export function WithdrawTab() {
-  const { project, /*token*/ } = useProjectContext();
+  const { project } = useProjectContext();
   const { token } = useJBTokenContext();
   const { selectedSucker } = useSelectedSucker();
 

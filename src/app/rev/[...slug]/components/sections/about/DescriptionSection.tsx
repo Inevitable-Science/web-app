@@ -8,7 +8,7 @@ import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 //import { useUserPermissions } from "@/hooks/useUserPermissions";
 //import { EditMetadataDialog } from "./EditMetadataDialog";
-import { useProjectContext } from "../../../ProjectDataContext";
+//import { useProjectContext } from "../../../ProjectDataContext";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 
 const RichPreview = ({ source }: { source: string }) => {

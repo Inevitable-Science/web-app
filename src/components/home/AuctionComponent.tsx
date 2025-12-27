@@ -22,6 +22,11 @@ export default function AuctionComponent() {
           { id: suckerGroupId }
         );
 
+        const volume = result.suckerGroup?.volume;
+        if (!volume) {
+          setProjectVolume(null);
+        }
+
         setProjectVolume(result.suckerGroup?.volume);
       } catch (error) {
         console.error("Failed to fetch SuckerGroup:", error);

@@ -15,8 +15,8 @@ interface ChartSection {
 }
 
 export function ChartSection({ setSelectedTab }: ChartSection) {
-  const chainId = useJBChainId();
   const { projectId, version } = useJBContractContext();
+  const chainId = useJBChainId();
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),

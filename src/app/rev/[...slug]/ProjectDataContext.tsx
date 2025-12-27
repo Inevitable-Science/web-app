@@ -3,8 +3,6 @@ import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import {
   useJBRulesetContext,
   useSuckers,
-  useJBProjectMetadataContext,
-  useJBTokenContext,
 } from "juice-sdk-react";
 import { Loader2 } from "lucide-react";
 import {
@@ -21,8 +19,6 @@ import {
   DaoResponse,
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
-import { AsyncData } from "juice-sdk-react/dist/contexts/types";
-import { type GetTokenReturnType } from "@wagmi/core";
 
 interface AnalyticsDataProp {
   daoData: DaoResponse;

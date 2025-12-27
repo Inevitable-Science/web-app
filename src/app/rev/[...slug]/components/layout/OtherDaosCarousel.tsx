@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import {
   PrevButton,

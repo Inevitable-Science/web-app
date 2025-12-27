@@ -67,7 +67,7 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const { /*metadata,*/ project } = useProjectContext();
+  const { project } = useProjectContext();
   const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
     projectId: project.projectId

@@ -30,7 +30,7 @@ export const WithdrawSelector = ({
   suckersBalance,
   disabled,
 }: ChainSelectorProps) => {
-  const { suckers, /*metadata, token*/ } = useProjectContext();
+  const { suckers } = useProjectContext();
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();

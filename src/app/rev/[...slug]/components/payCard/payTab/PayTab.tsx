@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useTokenA } from "@/hooks/useTokenA";
 import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits } from "viem";
@@ -34,20 +33,16 @@ export function PayTab({
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const {
-    //metadata,
     suckers,
-    //token: tokenBContext,
     ruleset: rulesetContext,
     rulesetMetadata: rulesetMetadataContext,
   } = useProjectContext();
   const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
-  const tokenA = useTokenA();
   const { version } = useJBContractContext();
 
   const baseToken = useProjectBaseToken();
-
   const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
   const { balances, isLoading: isBalanceLoading } = useTokenBalances(tokens, selectedSucker.peerChainId);
 
@@ -87,8 +82,8 @@ export function PayTab({
     if (version === 4) {
       const quote = getTokenAToBQuote(
         new FixedInt(
-          parseUnits(value || "0", tokenA.decimals),
-          tokenA.decimals
+          parseUnits(value || "0", baseToken.decimals),
+          baseToken.decimals
         ),
         {
           weight: ruleset.weight,

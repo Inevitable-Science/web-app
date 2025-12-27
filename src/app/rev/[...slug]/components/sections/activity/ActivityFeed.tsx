@@ -25,7 +25,7 @@ import StaticVolumeChart, {
   ProjectTimelineView,
 } from "../../ActivityGraph";
 import { useVolumeData } from "@/hooks/useVolumeData";
-import { useProjectContext } from "../../../ProjectDataContext";
+//import { useProjectContext } from "../../../ProjectDataContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Button } from "@/components/ui/button";
 

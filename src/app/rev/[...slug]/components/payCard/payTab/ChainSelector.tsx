@@ -12,9 +12,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectScrollDownButton,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { ChevronDown } from "lucide-react";
 
