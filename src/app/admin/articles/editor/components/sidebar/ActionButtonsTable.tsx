@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DeleteArticleDialogue } from "../../../components/admin/DeleteArticleDialogue";
+import { DeleteArticleDialogue } from "../../../components_new/admin/DeleteArticleDialogue";
 import { ArticleCreateBodyType, ArticleCreateBodyZ, ArticleResponse } from "@/lib/types/AdminArticleTypes";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthToken } from "@/store/AdminAuthStore";
