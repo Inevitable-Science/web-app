@@ -1,7 +1,7 @@
 "use client";
 import { useAuthStatus, useAuthToken, useUser } from "@/store/AdminAuthStore";
 import { LoadState } from "./[articleId]/LoadState";
-import { ArticleEditor } from "./components_new/ArticleEditor";
+import { ArticleEditor } from "./components/ArticleEditor";
 
 export default function ArticleEditorPage() {
   const { user } = useUser();

@@ -2,9 +2,9 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { UserTable } from "./components_new/UserTable";
-import { OrganisationTable } from "./components_new/OrgTable";
-import { ArticlesTable } from "./components_new/ArticlesTable";
+import { UserTable } from "./components/UserTable";
+import { OrganisationTable } from "./components/OrgTable";
+import { ArticlesTable } from "./components/ArticlesTable";
 import { LoginResponseZ } from "@/lib/types/AdminArticleTypes";
 import { useToast } from "@/components/ui/use-toast";
 import { useArticleAuth } from "@/store/AdminAuthStore";
