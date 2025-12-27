@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { uploadImage } from "../helpers/UploadHelper";
+import { uploadImage } from "../UploadHelper";
 import { Check, CircleUserRound, Crown, Link, Pencil, X } from "lucide-react";
 import { useArticleAuth, useAuthToken, useUser } from "@/store/AdminAuthStore";
 

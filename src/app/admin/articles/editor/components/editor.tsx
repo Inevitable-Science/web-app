@@ -6,7 +6,7 @@ import "react-quill-new/dist/quill.bubble.css";
 
 // Revoke object URLs to prevent memory leaks
 import ImageBlot from "quill/formats/image";
-import { uploadImage } from "../../helpers/UploadHelper";
+import { uploadImage } from "../../UploadHelper";
 import { useToast } from "@/components/ui/use-toast";
 import { useAttachments, useEditorValue } from "@/store/ArticleEditorStore";
 import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";

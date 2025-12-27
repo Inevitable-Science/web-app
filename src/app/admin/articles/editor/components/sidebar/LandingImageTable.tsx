@@ -4,7 +4,7 @@ import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useAttachments, useLandingImage } from "@/store/ArticleEditorStore"
-import { uploadImage } from "../../../helpers/UploadHelper";
+import { uploadImage } from "../../../UploadHelper";
 
 
 export function LandingImageTable() {
