@@ -5,6 +5,7 @@ import DOMPurify from "dompurify";
 import Image from "next/image";
 import { useLegacyProjectStore } from "../../../DataProvider";
 import { Globe } from "lucide-react";
+import { AnalyticsPreview } from "./AnalyticsPreview";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -49,6 +50,10 @@ export function DescriptionSection() {
 
   return (
     <div className="text-sm">
+      <RichPreview source={daoData?.description || "..."} /> {/* TODO: change this to have 2 rich previews, ref to figma */}
+
+      <AnalyticsPreview />
+
       <RichPreview source={daoData?.description || "..."} />
 
       <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
