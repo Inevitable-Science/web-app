@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { getRulesets, type Ruleset } from "./getRulesets";
 import { prepareChartData } from "./prepareChartData";
+import { ViemChainIdType } from "@/lib/wagmiConfig";
 
 export type ProjectionRange = "1y" | "5y" | "10y" | "20y" | "all";
 
@@ -31,7 +32,6 @@ interface Props {
   rulesets: Ruleset[];
 }
 
-type transformedChainId = Exclude<JBChainId, 11155111 | 11155420 | 421614 | 84532>;
 
 export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
   const { projectId, version } = useJBContractContext();
@@ -47,7 +47,7 @@ export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
     async function loadRulesets() {
       const data = await getRulesets(
         projectId.toString(),
-        chainId as transformedChainId,
+        chainId as ViemChainIdType,
         version
       );
       console.log(data, "passed rulesets");

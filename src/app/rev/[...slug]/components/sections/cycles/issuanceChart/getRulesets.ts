@@ -1,6 +1,6 @@
 "use client"
 import { MAX_RULESET_COUNT } from "@/app/constants";
-import { getViemPublicClient } from "@/lib/wagmiConfig";
+import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
 import {
   getJBContractAddress,
   JBChainId,
@@ -19,7 +19,7 @@ export interface Ruleset {
   weightCutPercent: number;
 }
 
-export const getRulesets = async (projectId: string, chainId: Exclude<JBChainId, 11155111 | 11155420 | 421614 | 84532>, version: JBVersion): Promise<Ruleset[]> => {
+export const getRulesets = async (projectId: string, chainId: ViemChainIdType, version: JBVersion): Promise<Ruleset[]> => {
     const client = getViemPublicClient(chainId);
     const contract = getContract({
       address: getJBContractAddress(JBCoreContracts.JBRulesets, version, chainId),

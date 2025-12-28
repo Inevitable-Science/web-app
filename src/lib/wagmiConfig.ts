@@ -162,7 +162,9 @@ export const wagmiConfig = createConfig({
   transports,
 });
 
-export const getViemPublicClient = cache((chainId: keyof typeof transports) => {
+export type ViemChainIdType = keyof typeof transports;
+
+export const getViemPublicClient = cache((chainId: ViemChainIdType) => {
   const transport = transports[chainId];
   if (!transport) throw new Error(`Transport not found for chainId: ${chainId}`);
 

@@ -72,18 +72,17 @@ export function TokenSection() {
   const nativeTokenChainId = (tokenAnalytics?.selectedToken.chain_id ?? 1) as JBChainId;
   const tokenAddress = tokenAnalytics?.selectedToken.address as Address;
 
-  {/* TODO: use viem client */}
   const {
     data: tokenDataResult,
     isLoading,
   } = useReadContracts({
-    allowFailure: false, // makes typing easier
+    allowFailure: false,
     contracts: [
       {
         address: tokenAddress,
         abi: erc20Abi,
         functionName: "balanceOf",
-        args: [address!], // safe because we enable only when connected
+        args: [address!],
         chainId: nativeTokenChainId,
       },
       {
