@@ -9,13 +9,11 @@ import {
   useBendystrawQuery,
 } from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 
-interface ChartSection {
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export function ChartSection({ setSelectedTab }: ChartSection) {
+export function ChartSection() {
   const { projectId, version } = useJBContractContext();
+  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
   const chainId = useJBChainId();
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {

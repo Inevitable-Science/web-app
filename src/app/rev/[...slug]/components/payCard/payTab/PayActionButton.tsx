@@ -18,20 +18,19 @@ import {
   useWriteContract,
 } from "wagmi";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { Check, Loader2 } from "lucide-react";
+import { Check } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
-import { useProjectContext } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { formatWalletError } from "@/lib/utils";
 import { Token } from "@/lib/token";
-import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRulesetData } from "@/hooks/useRulesetData";
 
@@ -67,7 +66,7 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const { project } = useProjectContext();
+  const project = useProjectDataStore((state) => state.project);
   const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
     projectId: project.projectId
@@ -79,7 +78,6 @@ export function PayActionButton({
   } = useJBContractContext();
 
   const { peerChainId: chainId, projectId } = selectedSucker;
-  const { data: accountingContext } = useProjectAccountingContext();
 
   const { address, isConnected } = useAccount();
   const userChainId = useChainId();
@@ -131,7 +129,6 @@ export function PayActionButton({
     return "Agree & Buy";
   }, [loading, isSuccess]);
 
-  const primaryPayTokenAddress = accountingContext?.project?.token;
 
   useEffect(() => {
     if (isSuccess) {

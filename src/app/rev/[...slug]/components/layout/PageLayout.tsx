@@ -1,39 +1,41 @@
 "use client";
 import { useJBContractContext } from "juice-sdk-react";
 import { notFound } from "next/navigation";
-import { useState } from "react";
 import { zeroAddress } from "viem";
 import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
+import { SelectedTabType, useProjectDataStore } from "../../ProjectDataContext";
+import { TabsSelectorLG, TabsSelectorSM } from "./TabsSelector";
 
-import { useProjectContext } from "../../ProjectDataContext";
-import { ArrowRight } from "lucide-react";
+export interface TabType {
+  key: SelectedTabType;
+  label: string;
+}
 
 export function PageLayout() {
-  const { analyticsData } = useProjectContext();
+  const daoData = useProjectDataStore((state) => state.daoData);
+  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
+  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
   const { contracts } = useJBContractContext();
-
-  // UI-specific state remains in this component.
-  const [selectedTab, setSelectedTab] = useState("about");
 
   const tabs = [
     { key: "about", label: "About" },
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    ...(analyticsData?.daoData === null //&& isAnalyticsLoading === false // Intended to prevent CLS
+    ...(daoData === null
       ? []
       : [
-          ...(analyticsData?.tokenData // && token.data
+          ...(tokenAnalytics
             ? [{ key: "analytics", label: "Analytics" }]
             : []),
-          ...(analyticsData?.treasuryData
+          ...(treasuryAnalytics
             ? [{ key: "treasury", label: "Treasury" }]
             : []),
         ]),
-  ];
+  ] as TabType[];
 
   if (contracts.controller.data === zeroAddress) {
     notFound();
@@ -46,26 +48,7 @@ export function PageLayout() {
         <Header />
       </div>
       <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
-        <aside className="max-w-54 hidden lg:block">
-          <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
-                  selectedTab === tab.key
-                    ? "bg-gunmetal"
-                    : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
-                }`}
-              >
-                {tab.label}
-                <span className={selectedTab === tab.key ? "block" : "hidden"}>
-                  <ArrowRight height="18" width="18" />
-                </span>
-              </button>
-            ))}
-          </div>
-        </aside>
+        <TabsSelectorLG tabs={tabs} />
 
         {/* Column 1 */}
         <div className="flex-1">
@@ -77,28 +60,10 @@ export function PageLayout() {
 
           <div className="mx-auto max-w-4xl">
             <section className="mb-10">
-              <aside className="block lg:hidden">
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
-                        selectedTab === tab.key
-                          ? "bg-gunmetal"
-                          : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              </aside>
+              <TabsSelectorSM tabs={tabs} />
+
               <div className="sm:min-h-[700px]">
-                <TabContent
-                  selectedTab={selectedTab}
-                  setSelectedTab={setSelectedTab}
-                />
+                <TabContent />
               </div>
             </section>
           </div>

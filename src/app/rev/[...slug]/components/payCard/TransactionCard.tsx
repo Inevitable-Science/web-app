@@ -5,7 +5,7 @@ import { JBChainId, useJBChainId, useJBContractContext, useSuckers } from "juice
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useProjectContext } from "../../ProjectDataContext";
+import { useProjectDataStore } from "../../ProjectDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
@@ -14,7 +14,9 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 import { formatSeconds } from "@/lib/utils";
 
 export function TransactionCard() {
-  const { project, suckers, rulesetMetadata } = useProjectContext();
+  const project = useProjectDataStore((state) => state.project);
+  const suckers = useProjectDataStore((state) => state.suckers);
+  const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({
     projectId: project.projectId
   });
@@ -40,7 +42,7 @@ export function TransactionCard() {
 
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
-    if (!selectedSucker && suckers.length > 0) {
+    if (suckers && !selectedSucker && suckers.length > 0) {
       if (chainId) {
         const defaultSucker = activeChain
           ? suckers.find((s) => s.peerChainId === chainId)

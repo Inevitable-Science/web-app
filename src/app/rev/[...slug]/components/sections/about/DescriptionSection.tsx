@@ -1,14 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import DOMPurify from "dompurify";
-//import { useJBChainId, useJBProjectMetadataContext } from "juice-sdk-react";
 import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
-//import { useUserPermissions } from "@/hooks/useUserPermissions";
-//import { EditMetadataDialog } from "./EditMetadataDialog";
-//import { useProjectContext } from "../../../ProjectDataContext";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 
 const RichPreview = ({ source }: { source: string }) => {
@@ -49,39 +45,20 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 };
 
-interface DescriptionSectionProps {
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
 
-export function DescriptionSection({
-  setSelectedTab,
-}: DescriptionSectionProps) {
-  //const { metadata } = useProjectContext();
-  //const { hasPermission } = useUserPermissions();
+export function DescriptionSection() {
   const { metadata } = useJBProjectMetadataContext();
-
   const { description, name } = metadata?.data ?? {};
-
-  //const canEditMetadata = hasPermission("SET_PROJECT_URI");
-
-  //const suckerGroup = await getSuckerGroup(project.suckerGroupId, chainId);
-  //if (!suckerGroup) notFound();
 
   return (
     <div className="text-sm">
-      <ChartSection setSelectedTab={setSelectedTab} />
+      <ChartSection />
 
-      <DaoData setSelectedTab={setSelectedTab} />
+      <DaoData />
 
       <div className="mt-6">
         <RichPreview source={description || name || "..."} />
       </div>
-
-      {/*{canEditMetadata && (
-        <div className="mt-4">
-          <EditMetadataDialog projects={suckersGroup.projects?.items ?? []} />
-        </div>
-      )}*/}
 
       <SocialLinks {...metadata} />
     </div>

@@ -13,11 +13,12 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useProjectContext } from "../../ProjectDataContext";
+import { useProjectDataStore } from "../../ProjectDataContext";
 import { JB_CHAINS } from "juice-sdk-core";
 
 export function Header() {
-  const { project, dailyTotals } = useProjectContext();
+  const project = useProjectDataStore((state) => state.project);
+  const dailyTotals = useProjectDataStore((state) => state.dailyTotals);
   const { metadata } = useJBProjectMetadataContext();
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();

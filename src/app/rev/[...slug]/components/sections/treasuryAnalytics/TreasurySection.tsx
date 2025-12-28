@@ -6,18 +6,17 @@ import { Link, Loader2, RotateCw } from "lucide-react";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 
 export function TreasurySection() {
-  const { analyticsData } = useProjectContext();
-  const data = analyticsData?.treasuryData;
-
+  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
   const [responseData, setResponseData] = useState("");
 
+  
   const refreshData = async (): Promise<void> => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/treasury/refresh/${data?.name}`,
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/treasury/refresh/${treasuryAnalytics?.name}`,
         {
           method: "POST",
         }
@@ -40,12 +39,12 @@ export function TreasurySection() {
 
   return (
     <section>
-      {data ? (
+      {treasuryAnalytics ? (
         <div className="flex w-full flex-col gap-4">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
             <div className="background-color rounded-2xl p-[16px]">
               <h4 className="mb-0.5 text-xl tracking-wider">
-                ${formatNumber(Number(data.assetsUnderManagement))}
+                ${formatNumber(Number(treasuryAnalytics.assetsUnderManagement))}
               </h4>
               <p className="font-light uppercase text-muted-foreground">
                 Assets Manged
@@ -55,7 +54,7 @@ export function TreasurySection() {
             <div className="background-color rounded-2xl p-[16px]">
               <div className="flex items-center justify-between">
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  {data?.lastUpdated && formatDate(data.lastUpdated)}
+                  {treasuryAnalytics?.lastUpdated && formatDate(treasuryAnalytics.lastUpdated)}
                 </h4>
 
                 <RotateCw
@@ -76,7 +75,7 @@ export function TreasurySection() {
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-2xl p-[16px]">
                 <a className="mb-0.5 text-xl tracking-wider underline">
-                  {data.treasury.ens_name}
+                  {treasuryAnalytics.treasury.ens_name}
                 </a>
                 <p className="font-light uppercase text-muted-foreground">
                   Treasury Wallet
@@ -85,7 +84,7 @@ export function TreasurySection() {
 
               <div className="background-color rounded-2xl p-[16px]">
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(data.treasuryValue))}
+                  ${formatNumber(Number(treasuryAnalytics.treasuryValue))}
                 </h4>
                 <p className="font-light uppercase text-muted-foreground">
                   Total Holdings
@@ -102,14 +101,14 @@ export function TreasurySection() {
                   "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
               }}
             >
-              {data?.treasuryTokens
+              {treasuryAnalytics?.treasuryTokens
                 ?.slice()
                 .sort((a, b) => b.totalValue - a.totalValue)
                 .map((token, index) => {
                   const percentage =
                     token.totalValue > 0
                       ? (
-                          (token.totalValue / data?.treasuryValue) *
+                          (token.totalValue / treasuryAnalytics?.treasuryValue) *
                           100
                         ).toFixed(2)
                       : "0.00";
@@ -136,18 +135,18 @@ export function TreasurySection() {
           </div>
 
           <div className="flex h-[400px] items-center rounded-2xl bg-grey-450 p-[12px]">
-            {data?.treasuryTokens && (
-              <TreasuryPieChart filteredData={data.treasuryTokens} />
+            {treasuryAnalytics?.treasuryTokens && (
+              <TreasuryPieChart filteredData={treasuryAnalytics.treasuryTokens} />
             )}
           </div>
 
-          {data?.historicalReturns && (
+          {treasuryAnalytics?.historicalReturns && (
             <div className="rounded-2xl bg-grey-450 p-[12px]">
               <h3 className="py-1 text-sm uppercase text-grey-50">
                 Portfolio Peformance
               </h3>
               <div className="flex flex-col text-sm font-light">
-                {Object.entries(data.historicalReturns || {}).map(
+                {Object.entries(treasuryAnalytics.historicalReturns || {}).map(
                   ([label, value]) => {
                     const isPositive = !value.percentReturn.startsWith("-");
                     const textColor = isPositive
@@ -176,13 +175,13 @@ export function TreasurySection() {
             </div>
           )}
 
-          {data?.managed_accounts && (
+          {treasuryAnalytics?.managed_accounts && (
             <div className="rounded-2xl bg-grey-450 p-[12px]">
               <h3 className="py-1 text-sm uppercase text-grey-50">
                 Accounts Manged
               </h3>
               <div className="flex flex-col text-sm font-light">
-                {Object.entries(data.managed_accounts).map(
+                {Object.entries(treasuryAnalytics.managed_accounts).map(
                   ([address, data]) => (
                     <div
                       key={address}
@@ -206,19 +205,19 @@ export function TreasurySection() {
             </div>
           )}
 
-          {data.signers && (
+          {treasuryAnalytics.signers && (
             <div className="rounded-2xl bg-grey-450 p-[12px] text-sm text-grey-50">
               <h3 className="py-1 uppercase">Account Info</h3>
               {/* Required/Total Signers */}
               <div className="flex items-center justify-between border-b border-[#282828] py-3 font-light">
                 <span>Safe.Global Wallet</span>
                 <span>
-                  {data?.signers.required}/{data?.signers.total} Signs
+                  {treasuryAnalytics?.signers.required}/{treasuryAnalytics?.signers.total} Signs
                 </span>
               </div>
 
               {/* Signer List */}
-              {data.signers.signers.map((address, idx) => {
+              {treasuryAnalytics.signers.signers.map((address, idx) => {
                 return (
                   <div
                     key={`${address}-${idx}`}
@@ -242,7 +241,7 @@ export function TreasurySection() {
           <div className="max-w-full rounded-2xl bg-grey-450 p-[12px]">
             <h3 className="pb-3 pt-1 text-xl">Historical Asset Value</h3>
 
-            <TreasuryChart daoName={data.name} />
+            <TreasuryChart daoName={treasuryAnalytics.name} />
 
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-grey-50">
               <div className="flex items-center gap-2">

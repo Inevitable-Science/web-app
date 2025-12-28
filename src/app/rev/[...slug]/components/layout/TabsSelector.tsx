@@ -1,0 +1,57 @@
+import { ArrowRight } from "lucide-react";
+import { useProjectDataStore } from "../../ProjectDataContext";
+import { TabType } from "./PageLayout";
+
+
+export function TabsSelectorSM({ tabs }: { tabs: TabType[] }) {
+  const selectedTab = useProjectDataStore((state) => state.selectedTab);
+  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+
+  return (
+    <aside className="block lg:hidden">
+      <div className="mb-6 flex flex-wrap gap-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setSelectedTab(tab.key)}
+            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+              selectedTab === tab.key
+                ? "bg-gunmetal"
+                : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </aside>
+  )
+}
+
+export function TabsSelectorLG({ tabs }: { tabs: TabType[] }) {
+  const selectedTab = useProjectDataStore((state) => state.selectedTab);
+  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+
+  return (
+    <aside className="max-w-54 hidden lg:block">
+      <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setSelectedTab(tab.key)}
+            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+              selectedTab === tab.key
+                ? "bg-gunmetal"
+                : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
+            }`}
+          >
+            {tab.label}
+            <span className={selectedTab === tab.key ? "block" : "hidden"}>
+              <ArrowRight height="18" width="18" />
+            </span>
+          </button>
+        ))}
+      </div>
+    </aside>
+  )
+}

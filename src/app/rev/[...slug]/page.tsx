@@ -31,8 +31,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   let projectData: ProjectQuery["project"] | null;
   try {
     config = parseSlug(params.slug);
-    const projectResponse = await fetchProjectData(config);
-    projectData = projectResponse.project;
+    projectData = await fetchProjectData(config);
   } catch (err) {
     console.error(err);
     return notFound();
@@ -78,7 +77,7 @@ export default async function Page(props: Props) {
   const params = await props.params;
 
   let config;
-  let project: ProjectQuery | null;
+  let project: ProjectQuery["project"] | null;
   try {
     config = parseSlug(params.slug);
     project = await fetchProjectData(config);
@@ -86,15 +85,20 @@ export default async function Page(props: Props) {
     return notFound();
   }
 
-  if (!config || !project.project?.name) {
+  if (!config || !project || !project.name) {
     return notFound();
   }
 
-  const analytics = await fetchProjectAnalytics(project.project?.name);
+  const analytics = await fetchProjectAnalytics(project?.name);
 
   return (
     <Providers {...config}>
-      <ProjectDataProvider projectData={project} analyticsData={analytics}>
+      <ProjectDataProvider
+        projectData={project}
+        daoData={analytics?.daoData ?? null}
+        treasuryAnalytics={analytics?.treasuryData ?? null} 
+        tokenAnalytics={analytics?.tokenData ?? null}
+      >
         <PageLayout />
       </ProjectDataProvider>
     </Providers>

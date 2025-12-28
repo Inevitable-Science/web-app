@@ -1,65 +1,77 @@
+
+//  Weird but useful pattern - READ MORE: https://tkdodo.eu/blog/zustand-and-react-context
+//  Zustand + React Context allows for many benifits such as initialization using props
+//  This pattern reduces the caveats usually found with replacing context w/zustand stores.
+
 "use client";
-import { createContext, useContext, ReactNode, useMemo, useState } from "react";
+import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from "react";
 import {
   useJBRulesetContext,
   useSuckers,
 } from "juice-sdk-react";
-import { Loader2 } from "lucide-react";
 import {
   SuckerPair,
   JBRulesetData,
   JBRulesetMetadata,
-  JBProjectMetadata,
 } from "juice-sdk-core";
 import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
-import { notFound } from "next/navigation";
 import {
   TokenResponse,
   DaoResponse,
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
+import { createStore, StoreApi, useStore } from 'zustand'
 
-interface AnalyticsDataProp {
-  daoData: DaoResponse;
-  treasuryData: TreasuryResponse | null;
-  tokenData: TokenResponse | null;
-}
 
-interface NetworkDataContextType {
-  suckers: SuckerPair[];
-  ruleset: JBRulesetData;
-  rulesetMetadata: JBRulesetMetadata;
+export type SelectedTabType = "about" | "tokens" | "activity" | "cycles" | "analytics" | "treasury";
+
+interface ProjectDataStore {
+  // Interactive State
+  selectedTab: SelectedTabType;
+  setSelectedTab: (tab: SelectedTabType) => void;
+
+  // State
+  suckers: SuckerPair[] | undefined;
+  ruleset: JBRulesetData | undefined;
+  rulesetMetadata: JBRulesetMetadata | undefined;
   project: NonNullable<ProjectQuery["project"]>;
   dailyTotals: DailyVolume[];
-  isRefetching: boolean;
-  analyticsData: AnalyticsDataProp | null;
-  // token: AsyncData<GetTokenReturnType | undefined>;
-  // metadata: AsyncData<JBProjectMetadata>;
+
+  // Analytics State
+  daoData: DaoResponse | null;
+  treasuryAnalytics: TreasuryResponse | null;
+  tokenAnalytics: TokenResponse | null;
+
+  // Actions - Setters
+  setSuckers: (suckers: SuckerPair[]) => void;
+  setRuleset: (ruleset: JBRulesetData) => void;
+  setRulesetMetadata: (metadata: JBRulesetMetadata) => void;
+  setProject: (project: NonNullable<ProjectQuery["project"]>) => void;
+  setDailyTotals: (totals: DailyVolume[]) => void;
 }
 
-const NetworkDataContext = createContext<NetworkDataContextType | undefined>(
-  undefined
-);
+const NetworkDataContext = createContext<StoreApi<ProjectDataStore> | undefined>(undefined);
+
+
+interface ContextPropType {
+  children: ReactNode;
+  projectData: NonNullable<ProjectQuery["project"]>;
+  daoData: DaoResponse | null;
+  treasuryAnalytics: TreasuryResponse | null;
+  tokenAnalytics: TokenResponse | null;
+};
 
 export const ProjectDataProvider = ({
   children,
   projectData,
-  analyticsData,
-}: {
-  children: ReactNode;
-  projectData: ProjectQuery;
-  analyticsData: AnalyticsDataProp | null;
-}) => {
+  daoData,
+  treasuryAnalytics,
+  tokenAnalytics
+}: ContextPropType) => {
   // Foundational Hooks
-  // const { metadata } = useJBProjectMetadataContext();
-  // const { token } = useJBTokenContext();
-
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
-
-  // NOTE: `project` will hold the current or stale data from the query hook.
-  const project = projectData?.project;
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
   const twoWeeksAgo = useMemo(
@@ -68,67 +80,64 @@ export const ProjectDataProvider = ({
   );
 
   const { dailyTotals, isLoading: isVolumeLoading } = useVolumeData({
-    suckerGroupId: project?.suckerGroupId,
+    suckerGroupId: projectData.suckerGroupId,
     startTimestamp: twoWeeksAgo,
     endTimestamp: loadTimestamp,
   });
 
-  // `isFetching` is a general flag, true whenever *any* data fetching is in progress.
-  const isFetching =
-    areSuckersLoading ||
-    ruleset.isLoading || ruleset ||
-    rulesetMetadata.isLoading || !rulesetMetadata ||
-    (!!project?.suckerGroupId && isVolumeLoading);
 
-  const isInitialLoading = isFetching && !project;
+  const [store] = useState(() =>
+    createStore<ProjectDataStore>((set) => ({
+      selectedTab: "about",
+      setSelectedTab: (tab) => set({ selectedTab: tab }),
 
-  // `isRefetching` is true when we are fetching again (e.g., chain changed)
-  const isRefetching = isFetching && !!project;
-
-  const value = useMemo(() => {
-    return {
-      suckers,
-      ruleset: ruleset.data,
-      rulesetMetadata: rulesetMetadata.data,
-      project,
+      suckers: suckers,
+      ruleset: ruleset.data ?? undefined,
+      rulesetMetadata: rulesetMetadata.data!,
+      project: projectData,
       dailyTotals,
-      isRefetching,
-      analyticsData,
-      // token,
-      // metadata,
-    };
-  }, [
-    suckers,
-    ruleset.data,
-    rulesetMetadata.data,
-    project,
-    dailyTotals,
-    isRefetching,
-    analyticsData,
-    // token,
-  ]);
 
-  if (isInitialLoading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin" />
-      </div>
-    );
-  }
+      daoData,
+      treasuryAnalytics,
+      tokenAnalytics,
 
-  if (
-    !isFetching &&
-    (!value.suckers ||
-      //!value.ruleset ||
-      //!value.rulesetMetadata ||
-      !value.project)
-  ) {
-    console.log("No project values found");
-    notFound();
-  }
+      setRuleset: (newRuleset) =>
+        set({ ruleset: newRuleset }),
+
+      setRulesetMetadata: (metadata) =>
+        set({ rulesetMetadata: metadata }),
+
+      setProject: (newProject) =>
+        set({ project: newProject }),
+
+      setSuckers: (newSuckers) =>
+        set({ suckers: newSuckers }),
+
+      setDailyTotals: (totals) =>
+        set({ dailyTotals: totals }),
+        
+    }))
+  )
+
+  // Keep store in sync when data changes
+  useEffect(() => {
+    if (suckers) store.getState().setSuckers(suckers);
+  }, [suckers, store]);
+
+  useEffect(() => {
+    if (ruleset.data) store.getState().setRuleset(ruleset.data);
+  }, [ruleset.data, store]);
+
+  useEffect(() => {
+    if (rulesetMetadata.data) store.getState().setRulesetMetadata(rulesetMetadata.data);
+  }, [rulesetMetadata.data, store]);
+
+  useEffect(() => {
+    if (dailyTotals) store.getState().setDailyTotals(dailyTotals);
+  }, [dailyTotals, store]);
 
   return (
-    <NetworkDataContext.Provider value={value as NetworkDataContextType}>
+    <NetworkDataContext.Provider value={store}>
       {children}
     </NetworkDataContext.Provider>
   );
@@ -144,3 +153,14 @@ export const useProjectContext = () => {
   }
   return context;
 };
+
+
+export function useProjectDataStore<T>(selector: (state: ProjectDataStore) => T) {
+  const context = useContext(NetworkDataContext);
+
+  if (!context) {
+    throw new Error('NetworkDataContext Provider is missing');
+  }
+
+  return useStore(context, selector);
+}

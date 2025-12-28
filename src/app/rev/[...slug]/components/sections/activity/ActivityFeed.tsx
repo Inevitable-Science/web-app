@@ -220,7 +220,7 @@ export function ActivityFeed() {
     }
   );
 
-  const totalActivityEvents = activityEvents?.activityEvents.totalCount;
+  const totalActivityEvents = activityEvents?.activityEvents.totalCount ?? 0;
   const totalPages = useMemo(() => {
     return totalActivityEvents ? Math.ceil(totalActivityEvents / activityEventsLimit) : 0;
   }, [totalActivityEvents]);
@@ -240,6 +240,7 @@ export function ActivityFeed() {
           ) : activityEvents?.activityEvents.items &&
             activityEvents.activityEvents.items.length > 0 ? (
               <>
+              <div className="min-h-[150px]">
                 {activityEvents.activityEvents.items?.map((event) => {
                   if (event?.payEvent) {
                     return (
@@ -262,6 +263,7 @@ export function ActivityFeed() {
 
                   return null;
                 })}
+                </div>
                 
                 <div className="mt-6 flex flex-col items-center gap-2">
                   <p className="text-sm font-light text-muted-foreground">
@@ -310,7 +312,7 @@ export function ActivityFeed() {
                     </Button>
                   </div>
                   <p className="text-sm font-light text-muted-foreground">
-                    Showing {activityEventsLimit} items out of {totalActivityEvents}
+                    Showing {Math.min(activityEventsLimit, totalActivityEvents)} items out of {totalActivityEvents}
                   </p>
                 </div>
               </>

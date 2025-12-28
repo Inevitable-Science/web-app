@@ -1,27 +1,29 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
-import { useProjectContext } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 import { ArrowRight } from "lucide-react";
 
 interface TreasuryPreview {
   setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export function DaoData({ setSelectedTab }: TreasuryPreview) {
-  const { analyticsData } = useProjectContext();
-  const data = analyticsData?.treasuryData;
+export function DaoData() {
+  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
+  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
+  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
 
-  if (!analyticsData) return;
+  if (!treasuryAnalytics && !tokenAnalytics) return;
 
   return (
     <section className="mt-6 flex flex-col gap-6">
+      {treasuryAnalytics && (
       <div className="rounded-2xl bg-grey-450 p-[12px]">
         <div className="mb-2 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           <div className="background-color rounded-2xl p-[16px]">
-            {data ? (
+            {treasuryAnalytics ? (
               <h4 className="mb-0.5 text-xl tracking-wider">
-                ${formatNumber(Number(data.treasuryValue))}
+                ${formatNumber(Number(treasuryAnalytics.treasuryValue))}
               </h4>
             ) : (
               <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -31,9 +33,9 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
             </p>
           </div>
           <div className="background-color rounded-2xl p-[16px]">
-            {data ? (
+            {treasuryAnalytics ? (
               <h4 className="mb-0.5 text-xl tracking-wider">
-                ${formatNumber(Number(data.assetsUnderManagement))}
+                ${formatNumber(Number(treasuryAnalytics.assetsUnderManagement))}
               </h4>
             ) : (
               <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -53,30 +55,32 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
           <ArrowRight height="20" width="20" />
         </Button>
       </div>
+      )}
 
+      {tokenAnalytics && (
       <div className="rounded-2xl bg-grey-450 p-[12px]">
         <div className="mb-2 flex flex-col gap-2">
           <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
             <div className="background-color rounded-2xl p-[16px]">
-              {data ? (
+              {tokenAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
                   {formatNumber(
-                    Number(analyticsData.tokenData?.selectedToken.averageBal)
+                    Number(tokenAnalytics?.selectedToken.averageBal)
                   )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
               <p className="font-light uppercase text-muted-foreground">
-                Average {`${analyticsData?.daoData.nativeToken.mc_ticker} `}
+                Average {`${tokenAnalytics?.selectedToken.ticker} `}
                 Balance
               </p>
             </div>
             <div className="background-color rounded-2xl p-[16px]">
-              {data ? (
+              {tokenAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
                   {formatNumber(
-                    Number(analyticsData.tokenData?.selectedToken.totalSupply)
+                    Number(tokenAnalytics.selectedToken.totalSupply)
                   )}
                 </h4>
               ) : (
@@ -90,11 +94,11 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
             <div className="background-color rounded-2xl p-[16px]">
-              {data ? (
+              {tokenAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
                   $
                   {formatNumber(
-                    Number(analyticsData.tokenData?.selectedToken.marketCap)
+                    Number(tokenAnalytics.selectedToken.marketCap)
                   )}
                 </h4>
               ) : (
@@ -105,10 +109,10 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
               </p>
             </div>
             <div className="background-color rounded-2xl p-[16px]">
-              {data ? (
+              {tokenAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
                   {formatNumber(
-                    Number(analyticsData.tokenData?.selectedToken.totalHolders)
+                    Number(tokenAnalytics.selectedToken.totalHolders)
                   )}
                 </h4>
               ) : (
@@ -130,6 +134,7 @@ export function DaoData({ setSelectedTab }: TreasuryPreview) {
           <ArrowRight height="20" width="20" />
         </Button>
       </div>
+      )}
     </section>
   );
 }

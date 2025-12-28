@@ -1,20 +1,18 @@
 // src/components/NetworkDetailsTable.tsx
 "use client"
 import { Button } from "@/components/ui/button";
-import { JBChainId, JBRulesetData, JBRulesetMetadata, ReservedPercent } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useJBProject, useNativeTokenSurplus } from "juice-sdk-react";
+import { JBRulesetData, JBRulesetMetadata, ReservedPercent } from "juice-sdk-core";
+import { useJBContractContext, useNativeTokenSurplus } from "juice-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 
 import { formatEther } from "viem";
-import { SplitsSection } from "../token/SplitsSection";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 import { IssuancePriceChart, ProjectionRange } from "./issuanceChart/IssuancePriceChart";
-import { getRulesets } from "./issuanceChart/getRulesets";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
 
 
@@ -24,13 +22,13 @@ export function NetworkDetailsTable() {
   const [range, setRange] = useState<ProjectionRange>("1y");
 
   // Get raw data from the context
-  const { ruleset: currentRuleset, project } = useProjectContext();
-  const chainId = useJBChainId();
+  //const { ruleset: currentRuleset, project } = useProjectContext();
+  const project = useProjectDataStore((state) => state.project);
+  const currentRuleset = useProjectDataStore((state) => state.ruleset);
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
   const currentIssuance = useFormattedTokenIssuance({ reservedPercent: new ReservedPercent(0) });
 
-  const { projectId, version } = useJBContractContext();
-  const { allRulesets, isLoadingAllRulesets } = useRulesetData({
+  const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
   console.log(allRulesets, "all rulesets");

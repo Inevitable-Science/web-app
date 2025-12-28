@@ -1,21 +1,12 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 import { ProjectDocument, ProjectQuery, ProjectQueryVariables } from "@/generated/graphql";
 import {
-  DaoResponse,
   DaoResponseZ,
-  TokenResponse,
   TokenResponseZ,
-  TreasuryResponse,
   TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
 import { cache } from "react";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
-
-interface ProjectAnalyticsResponse {
-  daoData: DaoResponse;
-  treasuryData: TreasuryResponse | null;
-  tokenData: TokenResponse | null;
-}
 
 export function parseSlug(slug?: string) {
   if (!slug) throw new Error("No URN found");
@@ -79,10 +70,10 @@ export async function fetchProjectData(config: {
   projectId: bigint;
   chainId: number;
   version: number;
-}) {
-  const client = getBendystrawClient(config.chainId);
-
+}): Promise<ProjectQuery["project"] | null> {
   try {
+    const client = getBendystrawClient(config.chainId);
+
     const project = await client.request<ProjectQuery, ProjectQueryVariables>(
       ProjectDocument,
       {
@@ -92,16 +83,14 @@ export async function fetchProjectData(config: {
       }
     );
 
-    return project;
+    return project.project;
   } catch (err) {
     console.error("Failed to fetch project:", err);
-    throw err;
+    //throw err;
+    return null;
   }
 }
 
-/*export async function fetchProjectAnalytics(
-  projectName: string
-): Promise<ProjectAnalyticsResponse | null> {*/
 export const fetchProjectAnalytics = cache(async (projectName: string) => {
   try {
     const daoResponse = await fetch(

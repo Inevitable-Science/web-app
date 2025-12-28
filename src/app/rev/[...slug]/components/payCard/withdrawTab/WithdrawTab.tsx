@@ -7,7 +7,7 @@ import {
 } from "juice-sdk-react";
 import { formatNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -28,7 +28,7 @@ export interface Surplus {
 }
 
 export function WithdrawTab() {
-  const { project } = useProjectContext();
+  const project = useProjectDataStore((state) => state.project);
   const { token } = useJBTokenContext();
   const { selectedSucker } = useSelectedSucker();
 

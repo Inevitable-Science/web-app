@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { JBChainId, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {
@@ -30,13 +30,13 @@ export const WithdrawSelector = ({
   suckersBalance,
   disabled,
 }: ChainSelectorProps) => {
-  const { suckers } = useProjectContext();
+  const suckers = useProjectDataStore((state) => state.suckers);
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   function handleChainChange( chainId: JBChainId ) {
-    const foundSucker = suckers.find(sucker => sucker.peerChainId === chainId);
+    const foundSucker = suckers?.find(sucker => sucker.peerChainId === chainId);
     if (!foundSucker) return;
     setSelectedSucker(foundSucker);
   };
@@ -86,7 +86,7 @@ export const WithdrawSelector = ({
       </SelectTrigger>
       <SelectContent align="end">
         <div className="flex flex-col gap-1">
-          {suckers.map((sucker) => {
+          {suckers?.map((sucker) => {
 
             const formattedBalance = suckersBalance
               ?.find(s => s.chainId === sucker.peerChainId)

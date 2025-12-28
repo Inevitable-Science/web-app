@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
+import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBRulesetContext, useJBTokenContext } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits } from "viem";
 import {
@@ -14,7 +14,7 @@ import { formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { ChainSelector } from "./ChainSelector";
 import { useSelectedSucker } from "../SelectedSuckerContext";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
@@ -32,11 +32,10 @@ export function PayTab({
   selectedToken: Token;
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
-  const {
-    suckers,
-    ruleset: rulesetContext,
-    rulesetMetadata: rulesetMetadataContext,
-  } = useProjectContext();
+  const suckers = useProjectDataStore((state) => state.suckers);
+  const rulesetMetadataContext = useProjectDataStore((state) => state.rulesetMetadata);
+  const rulesetContext = useProjectDataStore((state) => state.ruleset);
+
   const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
@@ -79,7 +78,7 @@ export function PayTab({
       return;
     }
 
-    if (version === 4) {
+    if (version === 4 && ruleset && rulesetMetadata) {
       const quote = getTokenAToBQuote(
         new FixedInt(
           parseUnits(value || "0", baseToken.decimals),
@@ -118,6 +117,9 @@ export function PayTab({
       setAmountA("");
       return;
     }
+
+    if (!ruleset || !rulesetMetadata) return;
+
     const quote = getTokenBtoAQuote(
       new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
       tokenB.decimals,

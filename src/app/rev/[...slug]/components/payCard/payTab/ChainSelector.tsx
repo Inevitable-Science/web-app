@@ -2,7 +2,7 @@
 import { JBChainId } from "juice-sdk-react";
 import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";
@@ -35,7 +35,7 @@ export const ChainSelector = ({
   disabled,
   options,
 }: ChainSelectorProps) => {
-  const { suckers } = useProjectContext();
+  const suckers = useProjectDataStore((state) => state.suckers);
   const { selectedSucker } = useSelectedSucker();
 
   return (

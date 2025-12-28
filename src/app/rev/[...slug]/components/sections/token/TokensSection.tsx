@@ -3,10 +3,10 @@ import { ParticipantsDocument } from "@/generated/graphql";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
 import { ParticipantsTable } from "./ParticipantsTable";
-import { Address, formatUnits } from "viem";
+import { formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../ProjectDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
@@ -17,8 +17,6 @@ import {
 } from "juice-sdk-react";
 import {
   JBProjectToken,
-  JBRulesetData,
-  JBRulesetMetadata,
   JB_CHAINS,
   jbControllerAbi,
 } from "juice-sdk-core";
@@ -30,7 +28,10 @@ type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
   const { connector } = useAccount();
-  const { project, ruleset, rulesetMetadata } = useProjectContext();
+
+  const project = useProjectDataStore((state) => state.project);
+  const ruleset = useProjectDataStore((state) => state.ruleset);
+  const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   
