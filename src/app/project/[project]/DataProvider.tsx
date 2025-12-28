@@ -1,59 +1,62 @@
-"use client";
-import { createContext, useContext, useMemo, ReactNode } from "react";
+"use client"
+import { createContext, useContext, ReactNode, useState } from "react";
 import {
   TokenResponse,
   DaoResponse,
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
+import { createStore, StoreApi, useStore } from "zustand";
 
-const DataContext = createContext<DataContextType | null>(null);
+export type TabType = "about" | "activity" | "analytics" | "treasury";
 
 interface ContextProps {
   children: ReactNode;
   daoData: DaoResponse;
-  treasuryData: TreasuryResponse;
-  tokenData: TokenResponse;
+  treasuryAnalytics: TreasuryResponse | null;
+  tokenAnalytics: TokenResponse | null;
 }
 
-export interface AnalyticsData {
-  tokenData: TokenResponse | null;
-  daoData: DaoResponse | null;
-  treasuryData: TreasuryResponse | null;
+export interface LegacyProjectStore {
+  daoData: DaoResponse;
+  treasuryAnalytics: TreasuryResponse | null;
+  tokenAnalytics: TokenResponse | null;
+  selectedTab: TabType;
+  setSelectedTab: (tab: TabType) => void;
 }
 
-export interface DataContextType {
-  analyticsData: AnalyticsData | null;
-}
+const LegacyProjectContext = createContext<StoreApi<LegacyProjectStore> | undefined>(undefined);
 
-export function DataProvider({
+export function LegacyProjectProvider({
   children,
   daoData,
-  treasuryData,
-  tokenData,
+  treasuryAnalytics,
+  tokenAnalytics,
 }: ContextProps) {
-  const analyticsData: AnalyticsData = {
-    daoData,
-    treasuryData,
-    tokenData,
-  };
 
-  const value = useMemo(() => {
-    return {
-      analyticsData,
-    };
-  }, [analyticsData]);
+  const [store] = useState(() => 
+    createStore<LegacyProjectStore>((set) => ({
+      daoData,
+      treasuryAnalytics,
+      tokenAnalytics,
+
+      selectedTab: "about",
+      setSelectedTab: (selectedTab) => set({ selectedTab }),
+    }))
+  );
 
   return (
-    <DataContext.Provider value={value as DataContextType}>
+    <LegacyProjectContext.Provider value={store}>
       {children}
-    </DataContext.Provider>
+    </LegacyProjectContext.Provider>
   );
 }
 
-export function useData() {
-  const context = useContext(DataContext);
+export function useLegacyProjectStore<T>(selector: (state: LegacyProjectStore) => T) {
+  const context = useContext(LegacyProjectContext);
+
   if (!context) {
-    throw new Error("useData must be used within a DataProvider");
+    throw new Error('LegacyProjectContext Provider is missing');
   }
-  return context;
+
+  return useStore(context, selector);
 }

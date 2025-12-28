@@ -6,7 +6,7 @@ import {
   TreasuryResponse,
   TreasuryResponseZ,
 } from "@/lib/types/AnalyticTypes";
-import { DataProvider } from "./DataProvider";
+import { LegacyProjectProvider } from "./DataProvider";
 import { DaoPage } from "./components/DaoPage";
 
 import { headers } from "next/headers";
@@ -120,12 +120,12 @@ export default async function ProjectPage(props: Props) {
   if (!pageData) return notFound();
 
   return (
-    <DataProvider
+    <LegacyProjectProvider
       daoData={pageData.projectData}
-      treasuryData={pageData.treasuryData}
-      tokenData={pageData.tokenData}
+      treasuryAnalytics={pageData.treasuryData}
+      tokenAnalytics={pageData.tokenData}
     >
       <DaoPage />
-    </DataProvider>
+    </LegacyProjectProvider>
   );
 }

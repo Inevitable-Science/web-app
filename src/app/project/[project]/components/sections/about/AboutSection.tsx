@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import DOMPurify from "dompurify";
 import Image from "next/image";
-import { useData } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../DataProvider";
 import { Globe } from "lucide-react";
 
 const RichPreview = ({ source }: { source: string }) => {
@@ -45,17 +45,17 @@ const RichPreview = ({ source }: { source: string }) => {
 };
 
 export function DescriptionSection() {
-  const { analyticsData } = useData();
+  const daoData = useLegacyProjectStore((state) => state.daoData);  
 
   return (
     <div className="text-sm">
-      <RichPreview source={analyticsData?.daoData?.description || "..."} />
+      <RichPreview source={daoData?.description || "..."} />
 
       <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
-        {analyticsData?.daoData?.socials.site && (
+        {daoData?.socials.site && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={analyticsData?.daoData?.socials.site}
+            href={daoData?.socials.site}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -64,10 +64,10 @@ export function DescriptionSection() {
           </a>
         )}
 
-        {analyticsData?.daoData?.socials.discord && (
+        {daoData?.socials.discord && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={analyticsData?.daoData?.socials.discord}
+            href={daoData?.socials.discord}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -81,10 +81,10 @@ export function DescriptionSection() {
           </a>
         )}
 
-        {analyticsData?.daoData?.socials.discord && (
+        {daoData?.socials.discord && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={`https://x.com/${analyticsData?.daoData?.socials.x}`}
+            href={`https://x.com/${daoData?.socials.x}`}
             target="_blank"
             rel="noopener noreferrer"
           >

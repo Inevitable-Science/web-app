@@ -7,7 +7,7 @@ import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
 import { SelectedTabType, useProjectDataStore } from "../../ProjectDataContext";
-import { TabsSelectorLG, TabsSelectorSM } from "./TabsSelector";
+import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 
 export interface TabType {
   key: SelectedTabType;
@@ -48,7 +48,7 @@ export function PageLayout() {
         <Header />
       </div>
       <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
-        <TabsSelectorLG tabs={tabs} />
+        <TabSelectorLG tabs={tabs} />
 
         {/* Column 1 */}
         <div className="flex-1">
@@ -60,7 +60,7 @@ export function PageLayout() {
 
           <div className="mx-auto max-w-4xl">
             <section className="mb-10">
-              <TabsSelectorSM tabs={tabs} />
+              <TabSelectorSM tabs={tabs} />
 
               <div className="sm:min-h-[700px]">
                 <TabContent />

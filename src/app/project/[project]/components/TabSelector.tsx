@@ -1,11 +1,11 @@
-import { ArrowRight } from "lucide-react";
-import { useProjectDataStore } from "../../ProjectDataContext";
-import { TabType } from "./PageLayout";
+import { ArrowRightIcon } from "lucide-react";
+import { useLegacyProjectStore } from "../DataProvider";
+import { TabTypeArray } from "./DaoPage";
 
 
-export function TabsSelectorSM({ tabs }: { tabs: TabType[] }) {
-  const selectedTab = useProjectDataStore((state) => state.selectedTab);
-  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+export function TabSelectorSM({ tabs}: { tabs: TabTypeArray[] }) {
+  const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
+  const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
 
   return (
     <aside className="block lg:hidden">
@@ -14,7 +14,7 @@ export function TabsSelectorSM({ tabs }: { tabs: TabType[] }) {
           <button
             key={tab.key}
             onClick={() => setSelectedTab(tab.key)}
-            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key
                 ? "bg-gunmetal"
                 : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -28,9 +28,9 @@ export function TabsSelectorSM({ tabs }: { tabs: TabType[] }) {
   )
 }
 
-export function TabsSelectorLG({ tabs }: { tabs: TabType[] }) {
-  const selectedTab = useProjectDataStore((state) => state.selectedTab);
-  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+export function TabSelectorLG({ tabs}: { tabs: TabTypeArray[] }) {
+  const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
+  const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
 
   return (
     <aside className="max-w-54 hidden lg:block">
@@ -39,7 +39,7 @@ export function TabsSelectorLG({ tabs }: { tabs: TabType[] }) {
           <button
             key={tab.key}
             onClick={() => setSelectedTab(tab.key)}
-            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key
                 ? "bg-gunmetal"
                 : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -47,7 +47,7 @@ export function TabsSelectorLG({ tabs }: { tabs: TabType[] }) {
           >
             {tab.label}
             <span className={selectedTab === tab.key ? "block" : "hidden"}>
-              <ArrowRight height="18" width="18" />
+              <ArrowRightIcon height="18" width="18" />
             </span>
           </button>
         ))}

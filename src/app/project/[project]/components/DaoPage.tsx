@@ -1,29 +1,62 @@
 "use client";
-import { useState } from "react";
 import { Header } from "./Header";
-import { SwapWidget } from "./swapWidget/SwapWidget";
-import { useData } from "../DataProvider";
+import { TabType, useLegacyProjectStore } from "../DataProvider";
 import { TabContent } from "./TabsContent";
 import { OtherDaosCarousel } from "@/app/rev/[...slug]/components/layout/OtherDaosCarousel";
 
-import { ArrowRightIcon } from "lucide-react";
+import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
+import { useEffect, useMemo, useState } from "react";
+import { SwapWidget } from "./swapWidget/SwapWidget";
+
+export interface TabTypeArray {
+  key: TabType;
+  label: string;
+}
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobile(mq.matches);
+
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  return isMobile;
+}
 
 export function DaoPage() {
-  const { analyticsData } = useData();
-  const [selectedTab, setSelectedTab] = useState("about");
+  const isMobile = useIsMobile();
+  const daoData = useLegacyProjectStore((state) => state.daoData);
+  const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
+  const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
 
   const tabs = [
     { key: "about", label: "About" },
     { key: "activity", label: "Activity" },
-    ...(analyticsData?.daoData === null
+    ...(!daoData
       ? []
       : [
-          ...(analyticsData?.tokenData
+          ...(tokenAnalytics
             ? [{ key: "analytics", label: "Analytics" }]
             : []),
-          { key: "treasury", label: "Treasury" },
+          ...(treasuryAnalytics
+            ? [ { key: "treasury", label: "Treasury" }]
+            : []),
         ]),
-  ];
+  ] as TabTypeArray[];
+
+
+  const swapWidget = useMemo(() => {
+    if (!tokenAnalytics?.selectedToken.address) return null;
+
+    return (
+      <SwapWidget token={tokenAnalytics.selectedToken.address} />
+    );
+  }, [tokenAnalytics?.selectedToken.address]);
 
   return (
     <>
@@ -33,74 +66,36 @@ export function DaoPage() {
       </div>
 
       <div className="ctWrapper mb-10 flex flex-wrap gap-10 px-4 pb-5 sm:mb-24 md:flex-nowrap">
-        <aside className="max-w-54 hidden lg:block">
-          <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setSelectedTab(tab.key)}
-                className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
-                  selectedTab === tab.key
-                    ? "bg-gunmetal"
-                    : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
-                }`}
-              >
-                {tab.label}
-                <span className={selectedTab === tab.key ? "block" : "hidden"}>
-                  <ArrowRightIcon height="18" width="18" />
-                </span>
-              </button>
-            ))}
-          </div>
-        </aside>
+        <TabSelectorLG tabs={tabs} />
 
         {/* Column 1 */}
         <div className="flex-1">
           <div className="block md:hidden">
-            <div className="mt-1 max-h-[700px]">
-              <SwapWidget
-                token={
-                  analyticsData?.tokenData?.selectedToken.address!
-                }
-              />
-            </div>
+            {isMobile === true && (
+              <div className="mt-1 max-h-[700px]">
+                {swapWidget}
+              </div>
+            )}
           </div>
 
           <div className="mx-auto max-w-4xl">
             <section className="mb-10">
-              <aside className="block lg:hidden">
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setSelectedTab(tab.key)}
-                      className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
-                        selectedTab === tab.key
-                          ? "bg-gunmetal"
-                          : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              </aside>
+
+              <TabSelectorSM tabs={tabs} />
+
               <div className="sm:min-h-[700px]">
-                <TabContent
-                  selectedTab={selectedTab}
-                  setSelectedTab={setSelectedTab}
-                />
+                <TabContent />
               </div>
             </section>
           </div>
         </div>
 
         <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
-          <div className="mb-4">
-            <SwapWidget
-              token={analyticsData?.tokenData?.selectedToken.address!}
-            />
-          </div>
+          {isMobile === false && (
+            <div className="mb-4">
+              {swapWidget}
+            </div>
+          )}
         </div>
       </div>
 

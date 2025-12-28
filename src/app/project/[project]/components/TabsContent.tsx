@@ -1,16 +1,11 @@
 "use client";
 import { FC } from "react";
-import { useData } from "../DataProvider";
+import { useLegacyProjectStore } from "../DataProvider";
 import { DescriptionSection } from "./sections/about/AboutSection";
 import { ActivityFeed } from "./sections/activity/ActivityFeed";
 import { TreasurySection } from "./sections/treasury/TreasurySection";
 import { TokenSection } from "./sections/tokenAnalytics/TokenAnalytics";
 import { useSwitchToCorrectChain } from "../useEnsureCorrectChain";
-
-interface TabContentProps {
-  selectedTab: string;
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
 
 const tabComponents: Record<string, FC<any>> = {
   about: DescriptionSection,
@@ -19,11 +14,11 @@ const tabComponents: Record<string, FC<any>> = {
   treasury: TreasurySection,
 };
 
-export const TabContent: FC<TabContentProps> = ({
-  selectedTab,
-  setSelectedTab,
-}) => {
-  const { analyticsData } = useData();
+export function TabContent() {
+  const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
+  const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
+
+  const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
   const SelectedComponent = tabComponents[selectedTab];
 
   // This improves UX with the cowswap widget
@@ -39,12 +34,12 @@ export const TabContent: FC<TabContentProps> = ({
 
       {selectedTab === "activity" && <ActivityFeed />}
 
-      {analyticsData?.tokenData && (
-        <>{selectedTab === "analytics" && <TokenSection />}</>
+      {tokenAnalytics && selectedTab === "analytics" && (
+        <TokenSection />
       )}
 
-      {analyticsData?.treasuryData && (
-        <>{selectedTab === "treasury" && <TreasurySection />}</>
+      {treasuryAnalytics && selectedTab === "treasury" && (
+        <TreasurySection />
       )}
     </div>
   );

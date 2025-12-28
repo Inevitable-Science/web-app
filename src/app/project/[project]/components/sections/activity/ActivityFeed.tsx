@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useData } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../DataProvider";
 import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Address } from "viem";
@@ -25,10 +25,11 @@ function getRelativeTime(dateString: string): string {
 
 
 export function ActivityFeed() {
-  const { analyticsData } = useData();
+  const daoData = useLegacyProjectStore((state) => state.daoData);
+  const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
   const [page, setPage] = useState<number>(1);
 
-  const daoName = analyticsData?.daoData?.name;
+  const daoName = daoData?.name;
   const { data, isLoading, isError } = useFetchLegacyActivity(daoName, page);
 
   return (
@@ -73,13 +74,13 @@ export function ActivityFeed() {
                       Ξ{tx.eth_paid}
                     </div>
 
-                    {analyticsData?.tokenData?.selectedToken.chain_id && (
+                    {tokenAnalytics?.selectedToken.chain_id && (
                       <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
                         <EthereumAddress
                           address={tx.beneficiary as Address}
                           chain={
                             JB_CHAINS[
-                              analyticsData?.tokenData?.selectedToken
+                              tokenAnalytics?.selectedToken
                                 .chain_id as JBChainId
                             ].chain
                           }
