@@ -89,7 +89,7 @@ export function Nav() {
             <Image
               src="https://cdn.inevitable.science/static/img/branding/logo.svg"
               width={240}
-              height={68}
+              height={46}
               className="logoNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
               alt="Logo Image"
             />

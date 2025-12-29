@@ -143,7 +143,7 @@ export const wagmiConfig = createConfig({
   connectors: [
     coinbaseWallet({
       appName: "Inevitable Science",
-      appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
+      appLogoUrl: "https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png", // coinbase wallet defaults to favicon
     }),
     safeConnector,
     walletConnect({
@@ -155,7 +155,7 @@ export const wagmiConfig = createConfig({
         url: isProduction
           ? "https://inevitable.science"
           : "http://localhost:3000",
-        icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
+        icons: ["https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png"],
       },
     }),
   ],
