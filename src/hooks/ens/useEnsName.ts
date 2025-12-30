@@ -1,6 +1,6 @@
 import { Address, isAddress, PublicClient } from "viem";
 import { sepolia, mainnet } from "viem/chains";
-import { useChainId, usePublicClient } from "wagmi";
+import { usePublicClient } from "wagmi";
 import { useQuery } from "wagmi/query";
 
 const ENS_IDEAS_BASE_URL = "https://api.ensideas.com";

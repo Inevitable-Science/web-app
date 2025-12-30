@@ -9,7 +9,7 @@ export const useFetchOrganisation = (organisationId: string) => {
 
   return useQuery<FetchOrganisationResponse>({
     queryKey: ["organisation", organisationId],
-    queryFn: () => fetchOrganisation(organisationId!, authToken!),
+    queryFn: () => fetchOrganisation(organisationId, authToken!),
     enabled,
     staleTime: 0,
     retry: false,

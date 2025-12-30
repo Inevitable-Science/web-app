@@ -7,7 +7,7 @@ export const useFetchAllUsers = () => {
   const { user } = useUser();
   const { authToken } = useAuthToken();
 
-  const enabled = !!user && !!authToken;
+  const enabled = !!user?.user && !!authToken;
 
   return useQuery<AllUsersResponse>({
     queryKey: ["allUsers"],

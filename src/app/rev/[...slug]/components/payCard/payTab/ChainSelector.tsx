@@ -44,7 +44,7 @@ export const ChainSelector = ({
         handleTokenChange ? handleTokenChange({ address: value }) : undefined;
       }}
       disabled={disabled}
-      defaultValue={String(value)}
+      defaultValue={String(value.address)}
     >
       <SelectTrigger
         className="text-color bg-grey-450 h-fit w-fit rounded-full border-none px-1.5 pt-1.5 pb-0 text-xs"

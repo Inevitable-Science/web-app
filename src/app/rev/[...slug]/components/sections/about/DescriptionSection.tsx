@@ -21,28 +21,29 @@ const RichPreview = ({ source }: { source: string }) => {
     return null;
   }
 
-  try {
-    // Convert markdown links [text](url) → <a href="url">text</a>
-    const withLinks = source.replace(
-      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      '<a href="$2">$1</a>'
-    );
+  // Convert markdown links [text](url) → <a href="url">text</a>
+  const withLinks = source.replace(
+    /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+    '<a href="$2">$1</a>'
+  );
 
-    // Sanitize the generated HTML
-    const purified = DOMPurify.sanitize(withLinks);
+  // Sanitize the generated HTML
+  const purified = DOMPurify.sanitize(withLinks);
 
-    return (
-      <div
-        className="[&_a]:text-cerulean w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a]:break-all [&_a:hover]:underline"
-        dangerouslySetInnerHTML={{
-          __html: purified,
-        }}
-      />
-    );
-  } catch (error) {
-    console.error("HTML sanitization failed:", error);
-    return <div className="wrap-break-word">{source}</div>;
-  }
+  return (
+    <>
+      {purified ? (
+        <div
+          className="[&_a]:text-cerulean w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a]:break-all [&_a:hover]:underline"
+          dangerouslySetInnerHTML={{
+            __html: purified,
+          }}
+        />
+      ) : (
+        <div className="wrap-break-word">{source}</div>
+      )}
+    </>
+  )
 };
 
 export function DescriptionSection() {

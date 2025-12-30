@@ -18,15 +18,4 @@ export const fetchMarketChartData = async (
 
   const data = await response.json();
   return MarketChartResponseZ.parse(data);
-  // parsedMarketResponse = MarketChartResponseZ.parse(data);
-
-  /*const processedData: PriceData = {
-    prices:
-      parsedMarketResponse.prices.map(([timestamp, value]: [number, number]) => ({
-        time: Math.floor(timestamp / 1000) as Time,
-        value,
-      })) ?? [],
-  };
-
-  return processedData;*/
 };

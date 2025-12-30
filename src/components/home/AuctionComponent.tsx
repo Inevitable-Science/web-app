@@ -28,7 +28,7 @@ export default function AuctionComponent() {
           SuckerGroupQueryVariables
         >(SuckerGroupDocument, { id: suckerGroupId });
 
-        const volume = result.suckerGroup?.volume;
+        const volume: bigint | undefined = result.suckerGroup?.volume;
         if (!volume) {
           setProjectVolume(null);
         }
