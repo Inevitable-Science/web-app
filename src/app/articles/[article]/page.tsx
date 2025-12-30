@@ -1,16 +1,53 @@
-import { DynamicArticleCarousel } from "../ArticleCarousel";
-import articleSchema, { Article } from "../Articles";
+import { formatDate } from "@/lib/utils";
+import { Metadata } from "next";
 import { headers } from "next/headers";
-import type { Metadata } from "next";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import z from "zod";
 
-interface Props {
+interface ParamsProp {
   params: Promise<{
     article: string;
-  }>;
+  }>
+}
+
+const fetchArticle = async (articleId: string): Promise<ArticleResponse | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/article/id/${articleId}`);
+    
+    const data = await response.json();
+    const parsedData = ArticleResponseZ.parse(data);
+
+    return parsedData;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export function htmlToText(html: string): string {
+  let text = html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // Optional: normalize multiple newlines/spaces
+  text = text.replace(/\n{3,}/g, '\n\n').trim();
+  
+  return text;
+}
+
+function sliceToWord(text: string, maxLength: number) {
+  if (text.length <= maxLength) return text;
+
+  return text
+    .slice(0, maxLength)
+    .replace(/\s+\S*$/, "") // remove partial word at the end
+    .trim();
 }
 
 // Generate dynamic metadata based on the article
-export async function generateMetadata(props: Props): Promise<Metadata> {
+export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
   const params = await props.params;
   const headersList = await headers();
   const host = headersList.get("host");
@@ -18,13 +55,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const origin = `${proto}://${host}`;
 
   // Find the article by slug
-  const article = articleSchema.articles.find(
-    (a) =>
-      a.title
-        .toLowerCase()
-        .replace(/ /g, "-")
-        .replace(/[^a-z0-9-]/g, "") === params.article
-  );
+  const article = await fetchArticle(params.article);
 
   // Default metadata if article not found
   if (!article) {
@@ -61,17 +92,22 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const fullPath = `/articles/${params.article}`;
   const url = new URL(fullPath, origin);
 
-  const imgUrl = article.image.startsWith("http")
-    ? article.image
-    : `${origin}${article.image}`;
+  const imgUrl = article.content.landingImage
+    ? article.content.landingImage
+    : "https://cdn.inevitable.science/static/img/branding/seo_banner.png";
+
+  const overview = `${sliceToWord(
+    htmlToText(article.content.content),
+    130
+  )}...`;
 
   return {
     title: `${article.title} | Inevitable Science`,
-    description: article.overview,
+    description: overview,
     alternates: { canonical: url },
     openGraph: {
       title: `${article.title} | Inevitable Science`,
-      description: article.overview,
+      description: overview,
       siteName: "Inevitable Science",
       images: [
         {
@@ -86,7 +122,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     },
     twitter: {
       title: `${article.title} | Inevitable Science`,
-      description: article.overview,
+      description: overview,
       card: "summary_large_image",
       images: [imgUrl],
     },
@@ -94,77 +130,64 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-//const ArticlePage: FC<Props> = async props => {
-export default async function ArticlePage({ params }: Props) {
-  const { article } = await params;
+const ArticleResponseZ = z.object({
+  title: z.string(),
+  content: z.object({
+    keywords: z.array(z.string()),
+    tags: z.array(z.string()),
+    landingImage: z.string().nullable(),
+    content: z.string()
+  }),
+  author: z.object({
+    username: z.string(),
+    profilePicture: z.string(),
+    dateWritten: z.string(),
+  }),
+  organisation: z.object({
+    name: z.string(),
+    organisationId: z.string(),
+    logo: z.string().nullable(),
+  }),
+});
 
-  const fetchedArticle = articleSchema.articles.find(
-    (a) =>
-      a.title
-        .toLowerCase()
-        .replace(/ /g, "-")
-        .replace(/[^a-z0-9-]/g, "") === article
-  );
+type ArticleResponse = z.infer<typeof ArticleResponseZ>;
 
-  if (!fetchedArticle) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center text-center text-white">
-        <div className="flex items-center gap-2">
-          <h1 className="text-5xl font-semibold">404</h1>
-          <div className="border-color h-16 w-1 border-l" />
-          <p>Article Not Found</p>
-        </div>
+export default async function ArticlePage(props: ParamsProp) {
+  const params = await props.params;
+  const articleId = params.article;
 
-        <style>{`
-          footer {
-            display: none !important;
-          }
-        `}</style>
-      </div>
-    );
-  }
+  const article = await fetchArticle(articleId);
 
-  const date = new Date(fetchedArticle.date);
-  const relativeDate = (() => {
-    const diffMs = new Date().getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      return "today";
-    } else if (diffDays < 7) {
-      return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
-    } else {
-      return date.toLocaleDateString();
-    }
-  })();
-
-  const relatedArticles = articleSchema.articles
-    .filter(
-      (a) =>
-        a !== fetchedArticle &&
-        a.category.some((cat) => fetchedArticle.category.includes(cat))
-    )
-    .slice(0, 4) // Limit to 4 related articles
-    .map((a: Article) => ({
-      img: a.image,
-      title: a.title,
-      description: a.overview,
-    }));
+  if (!article) {
+    return notFound();
+  };
 
   return (
-    <div className="ctWrapper">
+     <div className="ctWrapper">
       <div className="mx-auto max-w-[960px]">
         <div className="mt-28">
           <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
-            {fetchedArticle.title}
+            {article.title}
           </h1>
 
-          <p className="my-4 font-light capitalize">
-            {fetchedArticle.author} | {relativeDate}
-          </p>
+          <div className="flex font-light my-4 gap-2 items-center">
+              {article.author.profilePicture && (
+                <Image
+                  className="rounded-full"
+                  src={article.author.profilePicture}
+                  alt="Author Profile Picture"
+                  height={24}
+                  width={24}
+                />
+              )}
+            
+            <p>
+              {article.author.username} | {formatDate(article.author.dateWritten, true)}
+             </p>
+          </div>
 
           <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap">
-            {fetchedArticle.category.map((cat) => (
+            {article.content.keywords.map((cat) => (
               <span
                 key={cat}
                 className="rounded-full bg-gunmetal px-[12px] py-[6px] text-sm focus:outline-hidden"
@@ -176,33 +199,79 @@ export default async function ArticlePage({ params }: Props) {
         </div>
 
         <section>
-          <div className="h-auto w-full">
-            <img
-              className="my-4 h-auto w-full rounded"
-              src={fetchedArticle.image}
-              alt={`${fetchedArticle.title} image`}
-            />
-          </div>
+          {article.content.landingImage && (
+            <div className="h-auto w-full">
+              <img
+                className="my-4 h-auto w-full rounded"
+                src={article.content.landingImage}
+                alt={`${article.title} image`}
+              />
+            </div>
+          )}
 
           <div className="flex flex-col gap-6 font-light">
-            <p className="sm:text-xl">{fetchedArticle.overview}</p>
-
             <div
-              className="sm:text-xl"
-              dangerouslySetInnerHTML={{ __html: fetchedArticle.content }}
+              className="articleParent"
+              dangerouslySetInnerHTML={{ __html: article.content.content }}
             />
           </div>
         </section>
       </div>
 
       <div className="mt-16 sm:mt-24 md:pt-12">
-        <DynamicArticleCarousel
+        {/*<DynamicArticleCarousel
           category="More articles"
           slides={relatedArticles}
-        />
+        />*/}
       </div>
+
+      <style>{`
+        .articleParent p {
+          font-size: 18px;
+        }
+
+        .articleParent h1 {
+          font-size: 30px;
+        }
+
+        .articleParent h2 {
+          font-size: 24px;
+        }
+
+        .articleParent h3 {
+          font-size: 20px;
+        }
+
+        .articleParent h4 {
+          font-size: 16px;
+        }
+
+        .articleParent a {
+          text-decoration: underline;
+          color: var(--cerulean);
+          font-weight: 400;
+        }
+
+        .articleParent img {
+          border-radius: 8px;
+        }
+
+        .articleParent ol [data-list="ordered"] {
+          list-style: decimal;
+          padding-left: 0.5em;
+          margin-left: 1.5em;
+        }
+
+        .articleParent ol [data-list="bullet"] {
+          list-style: disc;
+          padding-left: 0.5em;
+          margin-left: 1.5em;
+        }
+
+        .articleParent strong {
+          font-weight: 600;
+        }
+      `}</style>
     </div>
   );
 }
-
-//export default ArticlePage;

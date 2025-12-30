@@ -103,6 +103,7 @@ export default function Editor() {
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
           ["link", "image"],
+          [{ script: "sub" }, { script: "super" }],
           ["clean"],
         ],
         handlers: {
@@ -192,7 +193,11 @@ export default function Editor() {
           color: white;
           stroke: white;
         }
-        
+
+        .ql-tooltip-editor input::placeholder {
+          color: var(--muted-foreground);
+        }
+
       `}</style>
     </div>
   );

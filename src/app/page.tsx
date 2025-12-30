@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import ExploreButton from "@/components/home/ExploreButton";
-import ArticleCarousel from "@/components/home/ArticleCarousel";
+//import ArticleCarousel from "@/components/home/ArticleCarousel";
 import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
 
@@ -192,7 +192,7 @@ export default function Page() {
           </div>
         </section>
 
-        <ArticleCarousel />
+        {/*<ArticleCarousel />*/}
       </div>
 
       <style>{`

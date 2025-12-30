@@ -1,4 +1,4 @@
-"use client";
+{/*"use client";
 
 import React, { useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
@@ -51,7 +51,7 @@ export default function ArticleCarousel({
         className="max-w-screen absolute -z-10 hidden items-center justify-center overflow-hidden md:flex"
         style={{ transform: "translateY(-40%)" }}
       >
-        {/* Left cloud - shifted slightly right */}
+        {/* Left cloud - shifted slightly right * /}
         <img
           className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_1.webp"
@@ -59,7 +59,7 @@ export default function ArticleCarousel({
           alt=""
         />
 
-        {/* Right cloud - shifted slightly left */}
+        {/* Right cloud - shifted slightly left * /}
         <img
           className="-z-10 w-screen select-none"
           src="https://cdn.inevitable.science/static/img/clouds/cloud_bg_3.webp"
@@ -72,3 +72,4 @@ export default function ArticleCarousel({
     </section>
   );
 }
+*/}

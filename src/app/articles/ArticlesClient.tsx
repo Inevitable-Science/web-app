@@ -4,15 +4,38 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "./SearchComponent";
 import { DynamicArticleCarousel } from "./ArticleCarousel";
-import { Article } from "./Articles";
+
+interface Slide {
+  img: string;
+  title: string;
+  description: string;
+  articleId: string;
+}
+
+interface Carousel {
+  category: string;
+  slides: Slide[];
+}
+
+interface Article {
+  title: string;
+  datePublished: string;
+  articleId: string;
+  landingImage: string;
+  keywords: string[];
+  description: string; // added for search
+  img: string; // alias for landingImage
+  organisation: {
+    organisationName: string;
+    organisationId: string;
+  };
+}
 
 interface ArticlesClientProps {
-  initialCarousels: {
-    category: string;
-    slides: { img: string; title: string; description: string }[];
-  }[];
+  initialCarousels: Carousel[];
   initialCategories: string[];
   initialArticles: Article[];
+  organisations?: { organisationId: string; organisationName: string }[];
 }
 
 export function ArticlesClient({
@@ -24,36 +47,33 @@ export function ArticlesClient({
   const [searchQuery, setSearchQuery] = useState("");
   const [carousels, setCarousels] = useState(initialCarousels);
 
-  // Update carousels based on category filter and search
   useEffect(() => {
     let updatedCarousels = [...initialCarousels];
 
+    // Filter by selected keywords (categories)
     if (selectedCategories.length > 0) {
       updatedCarousels = updatedCarousels.filter(
         (carousel) =>
           carousel.category === "Trending" ||
-          selectedCategories.some((cat) => carousel.category === cat)
+          selectedCategories.includes(carousel.category)
       );
     }
 
+    // Filter by search query
     if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
       const filteredArticles = initialArticles.filter(
         (article) =>
-          article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.overview.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          article.content.toLowerCase().includes(searchQuery.toLowerCase())
+          article.title.toLowerCase().includes(lowerQuery) ||
+          article.keywords.some((kw) => kw.toLowerCase().includes(lowerQuery)) ||
+          article.description.toLowerCase().includes(lowerQuery)
       );
 
       updatedCarousels = updatedCarousels
         .map((carousel) => ({
           ...carousel,
           slides: carousel.slides.filter((slide) =>
-            filteredArticles.some(
-              (article) =>
-                article.title === slide.title &&
-                article.overview === slide.description
-            )
+            filteredArticles.some((art) => art.articleId === slide.articleId)
           ),
         }))
         .filter((carousel) => carousel.slides.length > 0);
@@ -62,7 +82,6 @@ export function ArticlesClient({
     setCarousels(updatedCarousels);
   }, [selectedCategories, searchQuery, initialCarousels, initialArticles]);
 
-  // Toggle category selection
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -71,7 +90,6 @@ export function ArticlesClient({
     );
   };
 
-  // Check if there are no results
   const hasNoResults = searchQuery && carousels.length === 0;
 
   return (
@@ -118,7 +136,7 @@ export function ArticlesClient({
         ) : (
           carousels.map(({ category, slides }, index) => (
             <DynamicArticleCarousel
-              key={index}
+              key={`${category}-${index}`}
               category={category}
               slides={slides}
             />
