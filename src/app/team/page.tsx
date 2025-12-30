@@ -39,7 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Team | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };

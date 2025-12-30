@@ -1,5 +1,14 @@
 import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
-import { useArticleIsHidden, useArticleIsShownOnMainSite, useAttachments, useKeywords, useLandingImage, useOrganisation, useTags, useTitle } from "@/store/ArticleEditorStore";
+import {
+  useArticleIsHidden,
+  useArticleIsShownOnMainSite,
+  useAttachments,
+  useKeywords,
+  useLandingImage,
+  useOrganisation,
+  useTags,
+  useTitle,
+} from "@/store/ArticleEditorStore";
 import { useEffect } from "react";
 
 export function LoadState() {
@@ -31,7 +40,7 @@ export function LoadState() {
     };
 
     initializeEditor();
-  }, [article, isLoading, ]);
+  }, [article, isLoading]);
 
   return null;
-};
+}

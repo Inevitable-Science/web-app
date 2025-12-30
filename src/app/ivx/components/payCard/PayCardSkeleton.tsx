@@ -11,11 +11,11 @@ export function PayCardSkeleton({
   tokens: Token[];
 }) {
   return (
-    <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
+    <div className="bg-grey-450 flex flex-col rounded-xl p-[10px]">
       <div className="flex flex-col gap-2">
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
+            <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
             <div className="activeSkeleton mt-1 h-[30px] w-[130px] max-w-full rounded-lg opacity-30" />
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -25,7 +25,7 @@ export function PayCardSkeleton({
               disabled={true}
             />
             <div className="flex items-center justify-end gap-1">
-              <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground">
+              <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap">
                 Balance:
               </p>
               <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
@@ -34,12 +34,12 @@ export function PayCardSkeleton({
         </div>
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light">
               YOU RECEIVE
             </p>
             <div className="activeSkeleton mt-1 h-[30px] w-[130px] max-w-full rounded-lg opacity-30" />
           </div>
-          <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 py-1 pl-1.5 pr-3">
+          <div className="bg-grey-450 flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
             <Image
               src="https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-192x192.png"
               className="rounded-full"
@@ -52,7 +52,7 @@ export function PayCardSkeleton({
         </div>
         <Button
           loading={true}
-          className="w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-hidden disabled:opacity-50"
+          className="bg-primary hover:bg-primary w-full rounded-full px-5 py-2.5 text-center text-sm font-medium text-black focus:outline-hidden disabled:opacity-50"
         >
           Loading
         </Button>

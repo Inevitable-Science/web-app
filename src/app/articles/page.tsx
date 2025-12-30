@@ -28,15 +28,17 @@ const AllArticlesResponseZ = z.array(
         discord: z.string(),
       }),
     }),
-  }),
+  })
 );
 
 type AllArticlesResponse = z.infer<typeof AllArticlesResponseZ>;
 
 const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles`);
-    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles`
+    );
+
     const data = await response.json();
     const parsedData = AllArticlesResponseZ.parse(data);
 
@@ -81,19 +83,20 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Articles | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
-};
-
+}
 
 export default async function Articles() {
   const articles = await fetchArticles();
 
   if (!articles) {
     return notFound();
-  };
+  }
 
   // Sort articles by datePublished (latest first)
   const sortedArticles = [...articles].sort(

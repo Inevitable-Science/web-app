@@ -23,7 +23,6 @@ function getRelativeTime(dateString: string): string {
   return relativeTime;
 }
 
-
 export function ActivityFeed() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
@@ -42,23 +41,23 @@ export function ActivityFeed() {
         <>
           {isError || !data ? (
             <div>
-              <p className="mt-12 text-center text-muted-foreground">
+              <p className="text-muted-foreground mt-12 text-center">
                 Unable To Fetch DAO Activity
               </p>
-              <p className="mt-1 text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-center text-sm">
                 Please Try Again Later
               </p>
             </div>
           ) : (
             <>
-              {data.data.map(tx => (
+              {data.data.map((tx) => (
                 <div
                   key={tx.transaction_hash}
                   className="border-color mb-1 min-h-[80px] border-b pb-2"
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="font-light text-grey-50">PAID</h3>
-                    <div className="text-md mb-2 font-light text-grey-50">
+                    <h3 className="text-grey-50 font-light">PAID</h3>
+                    <div className="text-md text-grey-50 mb-2 font-light">
                       <EtherscanLink
                         type="tx"
                         value={tx.transaction_hash}
@@ -70,12 +69,10 @@ export function ActivityFeed() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-color font-light">
-                      Ξ{tx.eth_paid}
-                    </div>
+                    <div className="text-color font-light">Ξ{tx.eth_paid}</div>
 
                     {tokenAnalytics?.selectedToken.chain_id && (
-                      <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
+                      <div className="text-md text-grey-100 flex flex-wrap items-center gap-1 font-light">
                         <EthereumAddress
                           address={tx.beneficiary as Address}
                           chain={
@@ -92,10 +89,10 @@ export function ActivityFeed() {
                   </div>
                 </div>
               ))}
-              
+
               {data && (
                 <div className="mt-6 flex flex-col items-center gap-2">
-                  <p className="text-sm font-light text-muted-foreground">
+                  <p className="text-muted-foreground text-sm font-light">
                     Page {page} out of {data?.totalPages}
                   </p>
 
@@ -140,7 +137,7 @@ export function ActivityFeed() {
                       <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
-                  <p className="text-sm font-light text-muted-foreground">
+                  <p className="text-muted-foreground text-sm font-light">
                     Showing {data.limit} items out of {data.totalItems}
                   </p>
                 </div>

@@ -83,7 +83,9 @@ async function getProjectData(projectName: string): Promise<PageData | null> {
     const validatedProjectData = DaoResponseZ.parse(projectData);
 
     const [treasuryRes, tokenRes] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`),
+      fetch(
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`
+      ),
       fetch(
         `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/${validatedProjectData.nativeToken.name}`
       ),

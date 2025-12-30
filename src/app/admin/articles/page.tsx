@@ -37,17 +37,17 @@ export default function AdminArticlesPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(reqBody),
-        },
+        }
       );
-      
+
       if (!res.ok) {
         toast({
           title: "Error",
           variant: "destructive",
-          description: "Incorrect Credentials"
+          description: "Incorrect Credentials",
         });
         return;
-      };
+      }
 
       const data = await res.json();
       const parsed = LoginResponseZ.parse(data);
@@ -58,7 +58,7 @@ export default function AdminArticlesPage() {
       toast({
         title: "Error",
         variant: "destructive",
-        description: "Error Occured Logging In"
+        description: "Error Occured Logging In",
       });
       return;
     } finally {
@@ -66,7 +66,7 @@ export default function AdminArticlesPage() {
       setPassword("");
       setMfaCode("");
       setIsLoggingIn(false);
-    };
+    }
   };
 
   if (status === "loading") return;
@@ -77,10 +77,10 @@ export default function AdminArticlesPage() {
         <h2 className="font-optima text-3xl">Login To View Articles</h2>
         <p className="mb-4">Login with your admin credentials.</p>
 
-        <div className="w-[400px] flex flex-col gap-2 bg-grey-450 p-4 rounded-lg border-2 border-color">
+        <div className="bg-grey-450 border-color flex w-[400px] flex-col gap-2 rounded-lg border-2 p-4">
           <input
             type="text"
-            className="w-full rounded-lg border-none p-2 background-color font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="User ID"
             autoComplete="username"
             value={userId}
@@ -89,7 +89,7 @@ export default function AdminArticlesPage() {
 
           <input
             type="password"
-            className="w-full rounded-lg border-none p-2 background-color font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="Password"
             autoComplete="new-password"
             value={password}
@@ -98,7 +98,7 @@ export default function AdminArticlesPage() {
 
           <input
             type="text"
-            className="w-full rounded-lg border-none background-color p-2 font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+            className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="MFA Code"
             maxLength={6}
             value={mfaCode}
@@ -109,7 +109,7 @@ export default function AdminArticlesPage() {
             loading={isLogginIn}
             disabled={!userId || !password || !mfaCode}
             variant={"accent"}
-            className="w-full mt-2"
+            className="mt-2 w-full"
             onClick={() => login()}
           >
             Login

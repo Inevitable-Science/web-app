@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createContext, useContext, ReactNode, useState } from "react";
 import {
   TokenResponse,
@@ -24,7 +24,9 @@ export interface LegacyProjectStore {
   setSelectedTab: (tab: TabType) => void;
 }
 
-const LegacyProjectContext = createContext<StoreApi<LegacyProjectStore> | undefined>(undefined);
+const LegacyProjectContext = createContext<
+  StoreApi<LegacyProjectStore> | undefined
+>(undefined);
 
 export function LegacyProjectProvider({
   children,
@@ -32,8 +34,7 @@ export function LegacyProjectProvider({
   treasuryAnalytics,
   tokenAnalytics,
 }: ContextProps) {
-
-  const [store] = useState(() => 
+  const [store] = useState(() =>
     createStore<LegacyProjectStore>((set) => ({
       daoData,
       treasuryAnalytics,
@@ -51,11 +52,13 @@ export function LegacyProjectProvider({
   );
 }
 
-export function useLegacyProjectStore<T>(selector: (state: LegacyProjectStore) => T) {
+export function useLegacyProjectStore<T>(
+  selector: (state: LegacyProjectStore) => T
+) {
   const context = useContext(LegacyProjectContext);
 
   if (!context) {
-    throw new Error('LegacyProjectContext Provider is missing');
+    throw new Error("LegacyProjectContext Provider is missing");
   }
 
   return useStore(context, selector);

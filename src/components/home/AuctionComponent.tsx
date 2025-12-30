@@ -6,10 +6,16 @@ import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
-import { SuckerGroupDocument, SuckerGroupQuery, SuckerGroupQueryVariables } from "@/generated/graphql";
+import {
+  SuckerGroupDocument,
+  SuckerGroupQuery,
+  SuckerGroupQueryVariables,
+} from "@/generated/graphql";
 
 export default function AuctionComponent() {
-  const [projectVolume, setProjectVolume] = useState<bigint | null | undefined>(undefined);
+  const [projectVolume, setProjectVolume] = useState<bigint | null | undefined>(
+    undefined
+  );
 
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
   const client = getBendystrawClient(1);
@@ -17,10 +23,10 @@ export default function AuctionComponent() {
   useEffect(() => {
     async function fetchSuckerGroup() {
       try {
-        const result = await client.request<SuckerGroupQuery, SuckerGroupQueryVariables>(
-          SuckerGroupDocument,
-          { id: suckerGroupId }
-        );
+        const result = await client.request<
+          SuckerGroupQuery,
+          SuckerGroupQueryVariables
+        >(SuckerGroupDocument, { id: suckerGroupId });
 
         const volume = result.suckerGroup?.volume;
         if (!volume) {
@@ -33,14 +39,14 @@ export default function AuctionComponent() {
         setProjectVolume(null);
         return;
       }
-    };
+    }
 
     fetchSuckerGroup();
   }, []);
 
   return (
     <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
-      <div className="flex w-full flex-col justify-between gap-[112px] rounded-2xl bg-background p-[16px] sm:min-h-[650px] sm:p-[32px] md:w-[40%] md:min-w-[490px]">
+      <div className="bg-background flex w-full flex-col justify-between gap-[112px] rounded-2xl p-[16px] sm:min-h-[650px] sm:p-[32px] md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
           <Image
             className="mb-3 block rounded-2xl md:hidden"

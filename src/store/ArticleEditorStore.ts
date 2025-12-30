@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { useShallow } from "zustand/shallow";
 
-
 interface ArticleEditorStoreType {
   title: string;
   editorValue: string;
@@ -27,52 +26,58 @@ interface ArticleEditorStoreType {
 
   toggleArticleIsHidden: () => void;
   toggleArticleIsShownOnMainSite: () => void;
-};
+}
 
-export const useArticleEditorStore = create<ArticleEditorStoreType>((set, get) => ({
-  title: "",
-  editorValue: "",
-  landingImage: "",
-  organisation: "",
-  keywords: [],
-  tags: [],
-  attachments: [],
+export const useArticleEditorStore = create<ArticleEditorStoreType>(
+  (set, get) => ({
+    title: "",
+    editorValue: "",
+    landingImage: "",
+    organisation: "",
+    keywords: [],
+    tags: [],
+    attachments: [],
 
-  articleIsHidden: false,
-  articleIsShownOnMainSite: true,
+    articleIsHidden: false,
+    articleIsShownOnMainSite: true,
 
-  setTitle: (title) => set({ title }),
-  setEditorValue: (editorValue) => set({ editorValue }),
-  setLandingImage: (landingImage) => set({ landingImage }),
-  setOrganisation: (organisation) => set({ organisation }),
-  setKeywords: (updater) =>
-    set((state) => ({
-      keywords: typeof updater === "function" ? updater(state.keywords) : updater,
-    })),
-  setTags: (updater) =>
-    set((state) => ({
-      tags: typeof updater === "function" ? updater(state.tags) : updater,
-    })),
-  setAttachments: (updater) =>
-    set((state) => ({
-      attachments: typeof updater === "function" ? updater(state.attachments) : updater,
-    })),
+    setTitle: (title) => set({ title }),
+    setEditorValue: (editorValue) => set({ editorValue }),
+    setLandingImage: (landingImage) => set({ landingImage }),
+    setOrganisation: (organisation) => set({ organisation }),
+    setKeywords: (updater) =>
+      set((state) => ({
+        keywords:
+          typeof updater === "function" ? updater(state.keywords) : updater,
+      })),
+    setTags: (updater) =>
+      set((state) => ({
+        tags: typeof updater === "function" ? updater(state.tags) : updater,
+      })),
+    setAttachments: (updater) =>
+      set((state) => ({
+        attachments:
+          typeof updater === "function" ? updater(state.attachments) : updater,
+      })),
 
-  setArticleIsHidden: (value) => set({ articleIsHidden: value }),
-  setArticleShownOnMainSite: (value) => set({ articleIsShownOnMainSite: value }),
+    setArticleIsHidden: (value) => set({ articleIsHidden: value }),
+    setArticleShownOnMainSite: (value) =>
+      set({ articleIsShownOnMainSite: value }),
 
-  toggleArticleIsHidden: () => set((state) => ({ 
-    articleIsHidden: !state.articleIsHidden 
-  })),
-  toggleArticleIsShownOnMainSite: () => set((state) => ({ 
-    articleIsShownOnMainSite: !state.articleIsShownOnMainSite 
-  })),
-}));
-
+    toggleArticleIsHidden: () =>
+      set((state) => ({
+        articleIsHidden: !state.articleIsHidden,
+      })),
+    toggleArticleIsShownOnMainSite: () =>
+      set((state) => ({
+        articleIsShownOnMainSite: !state.articleIsShownOnMainSite,
+      })),
+  })
+);
 
 export const useTitle = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       title: state.title,
       setTitle: state.setTitle,
     }))
@@ -80,7 +85,7 @@ export const useTitle = () =>
 
 export const useEditorValue = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       editorValue: state.editorValue,
       setEditorValue: state.setEditorValue,
     }))
@@ -88,23 +93,23 @@ export const useEditorValue = () =>
 
 export const useLandingImage = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       landingImage: state.landingImage,
       setLandingImage: state.setLandingImage,
     }))
   );
 
-export const useOrganisation = () => 
+export const useOrganisation = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       organisation: state.organisation,
-      setOrganisation: state.setOrganisation
+      setOrganisation: state.setOrganisation,
     }))
-  )
+  );
 
 export const useKeywords = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       keywords: state.keywords,
       setKeywords: state.setKeywords,
     }))
@@ -112,7 +117,7 @@ export const useKeywords = () =>
 
 export const useTags = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       tags: state.tags,
       setTags: state.setTags,
     }))
@@ -120,7 +125,7 @@ export const useTags = () =>
 
 export const useAttachments = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       attachments: state.attachments,
       setAttachments: state.setAttachments,
     }))
@@ -128,7 +133,7 @@ export const useAttachments = () =>
 
 export const useArticleIsHidden = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       articleIsHidden: state.articleIsHidden,
       setArticleIsHidden: state.setArticleIsHidden,
     }))
@@ -136,14 +141,14 @@ export const useArticleIsHidden = () =>
 
 export const useArticleIsShownOnMainSite = () =>
   useArticleEditorStore(
-    useShallow(state => ({
+    useShallow((state) => ({
       articleIsShownOnMainSite: state.articleIsShownOnMainSite,
       setArticleShownOnMainSite: state.setArticleShownOnMainSite,
     }))
   );
 
 export const useToggleArticleIsHidden = () =>
-  useArticleEditorStore(state => state.toggleArticleIsHidden);
+  useArticleEditorStore((state) => state.toggleArticleIsHidden);
 
 export const useToggleArticleIsShownOnMainSite = () =>
-  useArticleEditorStore(state => state.toggleArticleIsShownOnMainSite);
+  useArticleEditorStore((state) => state.toggleArticleIsShownOnMainSite);

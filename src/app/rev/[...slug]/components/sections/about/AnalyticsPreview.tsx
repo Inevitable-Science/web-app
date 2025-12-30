@@ -5,7 +5,9 @@ import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 import { ArrowRight } from "lucide-react";
 
 export function DaoData() {
-  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
+  const treasuryAnalytics = useProjectDataStore(
+    (state) => state.treasuryAnalytics
+  );
   const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
   const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
 
@@ -14,7 +16,7 @@ export function DaoData() {
   return (
     <section className="mt-6 flex flex-col gap-6">
       {treasuryAnalytics && (
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <div className="mb-2 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
             <div className="background-color rounded-2xl p-[16px]">
               {treasuryAnalytics ? (
@@ -24,19 +26,22 @@ export function DaoData() {
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="font-light uppercase text-muted-foreground">
+              <p className="text-muted-foreground font-light uppercase">
                 Treasury Holdings
               </p>
             </div>
             <div className="background-color rounded-2xl p-[16px]">
               {treasuryAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(treasuryAnalytics.assetsUnderManagement))}
+                  $
+                  {formatNumber(
+                    Number(treasuryAnalytics.assetsUnderManagement)
+                  )}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
               )}
-              <p className="font-light uppercase text-muted-foreground">
+              <p className="text-muted-foreground font-light uppercase">
                 Assets Under Management
               </p>
             </div>
@@ -54,7 +59,7 @@ export function DaoData() {
       )}
 
       {tokenAnalytics && (
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <div className="mb-2 flex flex-col gap-2">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-2xl p-[16px]">
@@ -67,7 +72,7 @@ export function DaoData() {
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
                 )}
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Average {`${tokenAnalytics?.selectedToken.ticker} `}
                   Balance
                 </p>
@@ -82,7 +87,7 @@ export function DaoData() {
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
                 )}
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Total Supply
                 </p>
               </div>
@@ -100,7 +105,7 @@ export function DaoData() {
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
                 )}
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Market Cap
                 </p>
               </div>
@@ -114,7 +119,7 @@ export function DaoData() {
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
                 )}
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Total Holders
                 </p>
               </div>

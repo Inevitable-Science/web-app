@@ -16,7 +16,9 @@ const tabComponents: Record<string, FC<any>> = {
 
 export function TabContent() {
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
-  const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
+  const treasuryAnalytics = useLegacyProjectStore(
+    (state) => state.treasuryAnalytics
+  );
 
   const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
   const SelectedComponent = tabComponents[selectedTab];
@@ -34,13 +36,9 @@ export function TabContent() {
 
       {selectedTab === "activity" && <ActivityFeed />}
 
-      {tokenAnalytics && selectedTab === "analytics" && (
-        <TokenSection />
-      )}
+      {tokenAnalytics && selectedTab === "analytics" && <TokenSection />}
 
-      {treasuryAnalytics && selectedTab === "treasury" && (
-        <TreasurySection />
-      )}
+      {treasuryAnalytics && selectedTab === "treasury" && <TreasurySection />}
     </div>
   );
-};
+}

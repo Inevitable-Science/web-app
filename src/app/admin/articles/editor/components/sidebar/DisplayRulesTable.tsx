@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { useArticleIsHidden, useArticleIsShownOnMainSite, useToggleArticleIsHidden, useToggleArticleIsShownOnMainSite } from "@/store/ArticleEditorStore";
-
+import {
+  useArticleIsHidden,
+  useArticleIsShownOnMainSite,
+  useToggleArticleIsHidden,
+  useToggleArticleIsShownOnMainSite,
+} from "@/store/ArticleEditorStore";
 
 export function DisplayRulesTable() {
   const { articleIsHidden } = useArticleIsHidden();
@@ -9,7 +13,7 @@ export function DisplayRulesTable() {
   const toggleArticleIsShownOnMainSite = useToggleArticleIsShownOnMainSite();
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border-none bg-grey-450 p-2 font-light">
+    <div className="bg-grey-450 flex w-full flex-col gap-2 rounded-lg border-none p-2 font-light">
       <h4 className="">Display Rules</h4>
       <Button
         onClick={toggleArticleIsHidden}
@@ -18,14 +22,14 @@ export function DisplayRulesTable() {
         {articleIsHidden ? (
           <span className="flex flex-col">
             Show Article
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               (Currently Hidden)
             </span>
           </span>
         ) : (
           <span className="flex flex-col">
             Hide Article
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               (Currently Visible)
             </span>
           </span>
@@ -39,19 +43,19 @@ export function DisplayRulesTable() {
         {articleIsShownOnMainSite ? (
           <span className="flex flex-col">
             Hide On Inev Site
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               (Currently Visible)
             </span>
           </span>
         ) : (
           <span className="flex flex-col">
             Show On Inev Site
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               (Currently Hidden)
             </span>
           </span>
         )}
       </Button>
     </div>
-  )
+  );
 }

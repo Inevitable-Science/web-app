@@ -68,7 +68,7 @@ export function OtherDaosCarousel({
   return (
     <section className="mx-auto w-full">
       <div
-        className="absolute left-0 right-0 -z-10 flex justify-center overflow-hidden"
+        className="absolute right-0 left-0 -z-10 flex justify-center overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <div className="mx-auto hidden w-full max-w-[1500px] items-center justify-center md:flex">
@@ -115,12 +115,12 @@ export function OtherDaosCarousel({
                 className="flex min-w-[280px] pl-4 sm:min-w-[440px]"
               >
                 <div
-                  className="flex h-full min-h-[370px] select-none flex-col items-start justify-between rounded-2xl bg-background bg-cover bg-center p-4"
+                  className="bg-background flex h-full min-h-[370px] flex-col items-start justify-between rounded-2xl bg-cover bg-center p-4 select-none"
                   style={{ backgroundImage: `url(${slide.img})` }}
                 >
                   <div />
                   <div className="w-full rounded-lg p-2">
-                    <h4 className="mt-2 font-optima text-xl">{slide.title}</h4>
+                    <h4 className="font-optima mt-2 text-xl">{slide.title}</h4>
                     <p className="line-clamp-2 text-sm">{slide.description}</p>
                   </div>
                 </div>

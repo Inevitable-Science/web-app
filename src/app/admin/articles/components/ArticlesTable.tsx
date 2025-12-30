@@ -23,7 +23,7 @@ export function ArticlesTable() {
     return;
 
   return (
-    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+    <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <div className="flex items-center justify-between">
         <h3 className="text-xl">Articles</h3>
         <Button
@@ -93,7 +93,7 @@ function ArticleTable({
             >
               <div className="flex flex-col">
                 <h4>{article.title}</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {article.articleId}
                 </p>
               </div>
@@ -125,7 +125,7 @@ function ArticleTable({
                     (org) => org.organisationId === article.organisationId
                   )?.userPermissions.canEdit ||
                     isTopLevelAdmin) && (
-                    <Button className="h-8 bg-cerulean p-0 px-3 hover:bg-cerulean">
+                    <Button className="bg-cerulean hover:bg-cerulean h-8 p-0 px-3">
                       <Link
                         className="flex items-center gap-1"
                         href={`/admin/articles/editor/${article.articleId}`}
@@ -141,7 +141,7 @@ function ArticleTable({
         </>
       ) : (
         <div className="border-color flex h-[60px] items-center justify-center border-b pb-4">
-          <p className="text-sm text-muted-foreground">No {articleType}</p>
+          <p className="text-muted-foreground text-sm">No {articleType}</p>
         </div>
       )}
     </div>

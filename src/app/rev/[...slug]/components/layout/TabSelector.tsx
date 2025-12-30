@@ -2,7 +2,6 @@ import { ArrowRight } from "lucide-react";
 import { useProjectDataStore } from "../../ProjectDataContext";
 import { TabType } from "./PageLayout";
 
-
 export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
   const selectedTab = useProjectDataStore((state) => state.selectedTab);
   const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
@@ -14,7 +13,7 @@ export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
           <button
             key={tab.key}
             onClick={() => setSelectedTab(tab.key)}
-            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+            className={`-mb-px flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key
                 ? "bg-gunmetal"
                 : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -25,7 +24,7 @@ export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
         ))}
       </div>
     </aside>
-  )
+  );
 }
 
 export function TabSelectorLG({ tabs }: { tabs: TabType[] }) {
@@ -33,13 +32,13 @@ export function TabSelectorLG({ tabs }: { tabs: TabType[] }) {
   const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
 
   return (
-    <aside className="max-w-54 hidden lg:block">
+    <aside className="hidden max-w-54 lg:block">
       <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setSelectedTab(tab.key)}
-            className={`-mb-px flex items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden cursor-pointer ${
+            className={`-mb-px flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key
                 ? "bg-gunmetal"
                 : "text-muted-foreground hover:bg-grey-450 hover:text-foreground"
@@ -53,5 +52,5 @@ export function TabSelectorLG({ tabs }: { tabs: TabType[] }) {
         ))}
       </div>
     </aside>
-  )
+  );
 }

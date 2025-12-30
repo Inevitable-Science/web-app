@@ -1,7 +1,6 @@
 import { fetchLegacyActivity } from "@/lib/api/fetchLegacyActivity";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-
 export const useFetchLegacyActivity = (daoName?: string, page?: number) => {
   const enabled = !!daoName && page !== undefined;
 
@@ -14,5 +13,5 @@ export const useFetchLegacyActivity = (daoName?: string, page?: number) => {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
     placeholderData: keepPreviousData,
-  })
-}
+  });
+};

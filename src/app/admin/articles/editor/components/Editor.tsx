@@ -12,7 +12,6 @@ import { useAttachments, useEditorValue } from "@/store/ArticleEditorStore";
 import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
 import { useArticleAuth, useAuthToken } from "@/store/AdminAuthStore";
 
-
 // Improve image blot to support alt text and revoke URLs on remove
 class BetterImageBlot extends ImageBlot {
   static create(value: any) {
@@ -64,7 +63,11 @@ export default function Editor() {
       const range = quill.getSelection(true);
       if (range == null) return;
 
-      quill.insertEmbed(range.index, "image", "https://cdn.inevitable.science/static/img/branding/logo.svg");
+      quill.insertEmbed(
+        range.index,
+        "image",
+        "https://cdn.inevitable.science/static/img/branding/logo.svg"
+      );
       quill.setSelection(range.index + 1, 0);
 
       try {
@@ -74,7 +77,7 @@ export default function Editor() {
         if (!authToken) {
           revalidateUser();
           throw new Error();
-        };
+        }
 
         const uploadedUrl = await uploadImage(file, "article", authToken);
 
@@ -127,7 +130,7 @@ export default function Editor() {
   );
 
   return (
-    <div className="prose max-w-none rounded-xl bg-grey-450">
+    <div className="prose bg-grey-450 max-w-none rounded-xl">
       <ReactQuill
         ref={quillRef}
         theme="bubble"

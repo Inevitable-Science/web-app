@@ -1,8 +1,7 @@
 import { fetchAllUsers } from "@/lib/api/admin/fetchUsers";
-import { AllUsersResponse } from "@/lib/types/AdminArticleTypes"
+import { AllUsersResponse } from "@/lib/types/AdminArticleTypes";
 import { useAuthToken, useUser } from "@/store/AdminAuthStore";
-import { useQuery } from "@tanstack/react-query"
-
+import { useQuery } from "@tanstack/react-query";
 
 export const useFetchAllUsers = () => {
   const { user } = useUser();
@@ -19,4 +18,4 @@ export const useFetchAllUsers = () => {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
   });
-}
+};

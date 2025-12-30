@@ -25,7 +25,7 @@ export function ChartSection() {
   const suckerGroupId = project?.project?.suckerGroupId;
 
   return (
-    <section className="flex flex-col rounded-2xl bg-grey-450 p-[16px]">
+    <section className="bg-grey-450 flex flex-col rounded-2xl p-[16px]">
       <StaticVolumeChart suckerGroupId={suckerGroupId} />
 
       <Button

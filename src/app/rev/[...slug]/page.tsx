@@ -41,7 +41,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return notFound();
   }
 
-  const imgUrl = "https://cdn.inevitable.science/static/img/branding/seo_banner.png"; // used as fallback
+  const imgUrl =
+    "https://cdn.inevitable.science/static/img/branding/seo_banner.png"; // used as fallback
   const projectLogo = await resolveIpfsLogo(projectData.metadataUri, imgUrl);
 
   return {
@@ -96,7 +97,7 @@ export default async function Page(props: Props) {
       <ProjectDataProvider
         projectData={project}
         daoData={analytics?.daoData ?? null}
-        treasuryAnalytics={analytics?.treasuryData ?? null} 
+        treasuryAnalytics={analytics?.treasuryData ?? null}
         tokenAnalytics={analytics?.tokenData ?? null}
       >
         <PageLayout />

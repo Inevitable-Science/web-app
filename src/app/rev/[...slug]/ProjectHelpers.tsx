@@ -1,5 +1,9 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
-import { ProjectDocument, ProjectQuery, ProjectQueryVariables } from "@/generated/graphql";
+import {
+  ProjectDocument,
+  ProjectQuery,
+  ProjectQueryVariables,
+} from "@/generated/graphql";
 import {
   DaoResponseZ,
   TokenResponseZ,
@@ -77,9 +81,9 @@ export async function fetchProjectData(config: {
     const project = await client.request<ProjectQuery, ProjectQueryVariables>(
       ProjectDocument,
       {
-      chainId: Number(config.chainId),
-      projectId: Number(config.projectId),
-      version: Number(config.version),
+        chainId: Number(config.chainId),
+        projectId: Number(config.projectId),
+        version: Number(config.version),
       }
     );
 
@@ -103,9 +107,12 @@ export const fetchProjectAnalytics = cache(async (projectName: string) => {
 
     // make it fetch token with token name from daoResponse
     const [treasuryResponse, tokenResponse] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`, {
-        next: { revalidate: 900 },
-      }),
+      fetch(
+        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`,
+        {
+          next: { revalidate: 900 },
+        }
+      ),
       fetch(
         `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/${validatedDaoData.nativeToken.name}`,
         { next: { revalidate: 900 } }

@@ -54,8 +54,8 @@ function PayActivityItem(
   return (
     <div className="border-color mb-1 min-h-[80px] border-b pb-2">
       <div className="flex items-center justify-between">
-        <h3 className="font-light text-grey-50">PAID</h3>
-        <div className="text-md mb-2 font-light text-grey-50">
+        <h3 className="text-grey-50 font-light">PAID</h3>
+        <div className="text-md text-grey-50 mb-2 font-light">
           <EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
             {formattedDate}
           </EtherscanLink>
@@ -67,7 +67,7 @@ function PayActivityItem(
           Ξ{activityItemData.amount.format(6)}
         </div>
 
-        <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
+        <div className="text-md text-grey-100 flex flex-wrap items-center gap-1 font-light">
           <EthereumAddress
             address={activityItemData.beneficiary as Address}
             chain={chain}
@@ -111,9 +111,9 @@ function RedeemActivityItem(
     <div className="border-color mb-1 border-b pb-2">
       <div className="flex items-center justify-between">
         <div className="text-md mb-2 text-zinc-500">
-          <h3 className="font-light text-grey-50">WITHDREW</h3>
+          <h3 className="text-grey-50 font-light">WITHDREW</h3>
         </div>
-        <div className="text-md mb-2 flex items-center gap-1 font-light text-grey-50">
+        <div className="text-md text-grey-50 mb-2 flex items-center gap-1 font-light">
           <EtherscanLink
             className="hover:underline"
             type="tx"
@@ -131,7 +131,7 @@ function RedeemActivityItem(
           )}
         </div>
 
-        <div className="text-md font-light text-grey-100">
+        <div className="text-md text-grey-100 font-light">
           <EthereumAddress
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
@@ -146,11 +146,13 @@ function RedeemActivityItem(
 }
 
 export function ActivityFeed() {
-  const project = useProjectDataStore(state => state.project);
+  const project = useProjectDataStore((state) => state.project);
   const suckerGroupId = project.suckerGroupId;
 
   const [indexNum, setIndexNum] = useState(0);
-  const [currentData, setCurrentData] = useState<ActivityEventsQuery | null>(null);
+  const [currentData, setCurrentData] = useState<ActivityEventsQuery | null>(
+    null
+  );
 
   const activityEventsLimit = 45;
   const activityEventsOffset = indexNum * activityEventsLimit;
@@ -159,7 +161,7 @@ export function ActivityFeed() {
   const {
     data: activityEvents,
     isLoading,
-    isFetching
+    isFetching,
   } = useBendystrawQuery(
     ActivityEventsDocument,
     {
@@ -172,7 +174,7 @@ export function ActivityFeed() {
           }
         : undefined,
       limit: activityEventsLimit,
-      offset: activityEventsOffset
+      offset: activityEventsOffset,
     },
     {
       pollInterval: 5000,
@@ -188,12 +190,14 @@ export function ActivityFeed() {
 
   const totalActivityEvents = currentData?.activityEvents.totalCount ?? 0;
   const totalPages = useMemo(() => {
-    return totalActivityEvents ? Math.ceil(totalActivityEvents / activityEventsLimit) : 0;
+    return totalActivityEvents
+      ? Math.ceil(totalActivityEvents / activityEventsLimit)
+      : 0;
   }, [totalActivityEvents]);
 
   return (
     <>
-      <section className="mb-6 flex flex-col rounded-2xl bg-grey-450 p-[16px]">
+      <section className="bg-grey-450 mb-6 flex flex-col rounded-2xl p-[16px]">
         <StaticVolumeChart suckerGroupId={suckerGroupId} />
       </section>
 
@@ -201,35 +205,36 @@ export function ActivityFeed() {
         <div className="my-[15vh] flex w-full justify-center">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
-      ) : currentData?.activityEvents.items && currentData.activityEvents.items.length > 0 ? (
+      ) : currentData?.activityEvents.items &&
+        currentData.activityEvents.items.length > 0 ? (
         <>
-        <div className="min-h-[150px]">
-          {currentData.activityEvents.items?.map((event) => {
-            if (event?.payEvent) {
-              return (
-                <PayActivityItem
-                  key={event.id}
-                  chainId={event.chainId as JBChainId}
-                  {...event.payEvent}
-                />
-              );
-            }
-            if (event?.cashOutTokensEvent) {
-              return (
-                <RedeemActivityItem
-                  key={event.id}
-                  chainId={event.chainId as JBChainId}
-                  {...event.cashOutTokensEvent}
-                />
-              );
-            }
+          <div className="min-h-[150px]">
+            {currentData.activityEvents.items?.map((event) => {
+              if (event?.payEvent) {
+                return (
+                  <PayActivityItem
+                    key={event.id}
+                    chainId={event.chainId as JBChainId}
+                    {...event.payEvent}
+                  />
+                );
+              }
+              if (event?.cashOutTokensEvent) {
+                return (
+                  <RedeemActivityItem
+                    key={event.id}
+                    chainId={event.chainId as JBChainId}
+                    {...event.cashOutTokensEvent}
+                  />
+                );
+              }
 
-            return null;
-          })}
+              return null;
+            })}
           </div>
-            
+
           <div className="mt-6 flex flex-col items-center gap-2">
-            <p className="text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light">
               Page {page} out of {totalPages}
             </p>
             <div className="flex items-center gap-2">
@@ -243,10 +248,7 @@ export function ActivityFeed() {
               </Button>
 
               {Array.from({ length: 3 }, (_, i) => {
-                const start = Math.max(
-                  1,
-                  Math.min(page - 1, totalPages - 2)
-                );
+                const start = Math.max(1, Math.min(page - 1, totalPages - 2));
 
                 const pageNum = start + i;
                 if (pageNum > totalPages) return null;
@@ -275,15 +277,14 @@ export function ActivityFeed() {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-sm font-light text-muted-foreground">
-              Showing {Math.min(activityEventsLimit, totalActivityEvents)} items out of {totalActivityEvents}
+            <p className="text-muted-foreground text-sm font-light">
+              Showing {Math.min(activityEventsLimit, totalActivityEvents)} items
+              out of {totalActivityEvents}
             </p>
           </div>
         </>
       ) : (
-        <span className="text-md text-muted-foreground">
-          No activity yet.
-        </span>
+        <span className="text-md text-muted-foreground">No activity yet.</span>
       )}
     </>
   );

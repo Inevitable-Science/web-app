@@ -39,7 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Ecosystem | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
@@ -71,37 +73,37 @@ export default function Ecosystem() {
 
         <div className="flex flex-col gap-[12px]">
           <div className="flex flex-col items-center gap-3 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-            <div className="flex w-full flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px] uppercase">
+            <div className="bg-grey-450 flex w-full flex-col gap-[12px] rounded-2xl p-[12px] uppercase">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <p className="text-muted-foreground font-light">
                   Token Marketcap
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <p className="text-muted-foreground font-light">
                   Total Project Funding
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <p className="text-muted-foreground font-light">
                   Ecosystem Token Holders
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <p className="text-muted-foreground font-light">
                   Community Size
                 </p>
               </div>
             </div>
 
-            <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+            <div className="bg-grey-450 flex h-full w-full flex-col justify-center gap-[12px] rounded-2xl p-[12px]">
               <PlaceholderActivityGraph />
             </div>
           </div>

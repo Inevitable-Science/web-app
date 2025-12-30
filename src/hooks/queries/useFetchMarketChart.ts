@@ -1,9 +1,15 @@
-import { fetchMarketChartData, PriceData, MarketChartRangeType } from "@/lib/api/fetchMarketChart";
+import {
+  fetchMarketChartData,
+  PriceData,
+  MarketChartRangeType,
+} from "@/lib/api/fetchMarketChart";
 import { MarketChartResponse } from "@/lib/types/AnalyticTypes";
-import { useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query";
 
-
-export const useFetchMarketChart = (tokenName: string, range: MarketChartRangeType) => {
+export const useFetchMarketChart = (
+  tokenName: string,
+  range: MarketChartRangeType
+) => {
   const enabled = !!tokenName && !!range;
 
   return useQuery<MarketChartResponse>({
@@ -14,5 +20,5 @@ export const useFetchMarketChart = (tokenName: string, range: MarketChartRangeTy
     retry: false,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
-  })
+  });
 };

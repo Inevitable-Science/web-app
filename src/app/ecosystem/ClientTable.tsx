@@ -236,12 +236,12 @@ export default function ClientTable() {
   }, [address, isConnected, isSwitchingChain]);
 
   return (
-    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+    <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <h3 className="text-xl">Projects</h3>
 
       <div className="background-color rounded-xl p-[8px] font-light">
         {projectVars.map((project, index) => (
-          <div key={index} className="border-b border-grey-500">
+          <div key={index} className="border-grey-500 border-b">
             <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
               <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
                 <Image
@@ -254,7 +254,7 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">AMOUNT</span>
+                <span className="text-grey-50 text-sm">AMOUNT</span>
                 {Object.keys(balances).length === 0 ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
@@ -263,7 +263,7 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">vAMOUNT</span>
+                <span className="text-grey-50 text-sm">vAMOUNT</span>
                 {Object.keys(balances).length === 0 ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
@@ -276,14 +276,14 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>0
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
               </div>
 
-              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-hidden">
+              <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
                 <Link
                   href={`/project/${project.href}`}
                   className="flex items-center gap-2"
@@ -296,22 +296,22 @@ export default function ClientTable() {
 
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">AMOUNT</span>0
+                <span className="text-grey-50 text-sm">AMOUNT</span>0
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">vAMOUNT</span>0
+                <span className="text-grey-50 text-sm">vAMOUNT</span>0
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
               </div>
             </div>
           </div>
         ))}
 
         {v4ProjectVars.map((project, index) => (
-          <div key={index} className="border-b border-grey-500">
+          <div key={index} className="border-grey-500 border-b">
             <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
               <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
                 <Image
@@ -324,7 +324,7 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">AMOUNT</span>
+                <span className="text-grey-50 text-sm">AMOUNT</span>
                 {Object.keys(v4Balances).length === 0 ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
@@ -339,7 +339,7 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">vAMOUNT</span>
+                <span className="text-grey-50 text-sm">vAMOUNT</span>
                 {Object.keys(balances).length === 0 ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
@@ -352,14 +352,14 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>0
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
               </div>
 
-              <button className="rounded-full bg-gunmetal px-[12px] py-[6px] font-normal focus:outline-hidden">
+              <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
                 <Link
                   href={`/@${project.href}`}
                   className="flex items-center gap-2"
@@ -372,15 +372,15 @@ export default function ClientTable() {
 
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">AMOUNT</span>0
+                <span className="text-grey-50 text-sm">AMOUNT</span>0
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">vAMOUNT</span>0
+                <span className="text-grey-50 text-sm">vAMOUNT</span>0
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-sm text-grey-50">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
               </div>
             </div>
           </div>

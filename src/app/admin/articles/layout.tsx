@@ -6,9 +6,5 @@ export default function ArticleLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <ArticleAuthProvider>
-      {children}
-    </ArticleAuthProvider>
-  );
+  return <ArticleAuthProvider>{children}</ArticleAuthProvider>;
 }

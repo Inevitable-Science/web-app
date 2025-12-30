@@ -2,8 +2,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { useLegacyProjectStore } from "../DataProvider";
 import { TabTypeArray } from "./DaoPage";
 
-
-export function TabSelectorSM({ tabs}: { tabs: TabTypeArray[] }) {
+export function TabSelectorSM({ tabs }: { tabs: TabTypeArray[] }) {
   const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
   const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
 
@@ -25,15 +24,15 @@ export function TabSelectorSM({ tabs}: { tabs: TabTypeArray[] }) {
         ))}
       </div>
     </aside>
-  )
+  );
 }
 
-export function TabSelectorLG({ tabs}: { tabs: TabTypeArray[] }) {
+export function TabSelectorLG({ tabs }: { tabs: TabTypeArray[] }) {
   const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
   const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
 
   return (
-    <aside className="max-w-54 hidden lg:block">
+    <aside className="hidden max-w-54 lg:block">
       <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
         {tabs.map((tab) => (
           <button
@@ -53,5 +52,5 @@ export function TabSelectorLG({ tabs}: { tabs: TabTypeArray[] }) {
         ))}
       </div>
     </aside>
-  )
+  );
 }

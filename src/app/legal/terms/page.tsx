@@ -36,7 +36,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Terms and Conditions | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
@@ -48,8 +50,8 @@ export default function Terms() {
 
   return (
     <section className="ctWrapper">
-      <div className="mb-[28px] mt-[128px] flex flex-col gap-[18px]">
-        <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
+      <div className="mt-[128px] mb-[28px] flex flex-col gap-[18px]">
+        <h1 className="text-primary text-3xl font-extralight sm:text-5xl">
           Terms and Conditions
         </h1>
 

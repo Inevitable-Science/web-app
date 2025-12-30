@@ -1,6 +1,5 @@
 import { TokenHoldersResponseZ } from "../types/AnalyticTypes";
 
-
 export const fetchHistoricalHolders = async (tokenName: string) => {
   const apiUrl = `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/holders/${tokenName}`;
 

@@ -14,7 +14,9 @@ interface ArticleAuthStoreType {
 
   setUser: (user: UserResponseType | null) => void;
   setAuthToken: (authToken: string | null) => void;
-  setAuthStatus: (status: "loading" | "authenticated" | "unauthenticated") => void;
+  setAuthStatus: (
+    status: "loading" | "authenticated" | "unauthenticated"
+  ) => void;
   logout: () => void;
   revalidateUser: () => Promise<boolean>;
   silentRevalidateUser: (token: string) => Promise<void>;

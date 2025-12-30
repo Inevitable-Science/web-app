@@ -7,7 +7,10 @@ export interface PriceData {
 
 export type MarketChartRangeType = "1" | "7" | "30" | "365" | "max";
 
-export const fetchMarketChartData = async (tokenName: string, range: MarketChartRangeType) => {
+export const fetchMarketChartData = async (
+  tokenName: string,
+  range: MarketChartRangeType
+) => {
   const apiUrl = `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/chart/market_chart/${tokenName}/${range}`;
 
   const response = await fetch(apiUrl);

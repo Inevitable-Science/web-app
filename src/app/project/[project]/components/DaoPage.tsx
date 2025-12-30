@@ -32,7 +32,9 @@ export function DaoPage() {
   const isMobile = useIsMobile();
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
-  const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
+  const treasuryAnalytics = useLegacyProjectStore(
+    (state) => state.treasuryAnalytics
+  );
 
   const tabs = [
     { key: "about", label: "About" },
@@ -40,22 +42,17 @@ export function DaoPage() {
     ...(!daoData
       ? []
       : [
-          ...(tokenAnalytics
-            ? [{ key: "analytics", label: "Analytics" }]
-            : []),
+          ...(tokenAnalytics ? [{ key: "analytics", label: "Analytics" }] : []),
           ...(treasuryAnalytics
-            ? [ { key: "treasury", label: "Treasury" }]
+            ? [{ key: "treasury", label: "Treasury" }]
             : []),
         ]),
   ] as TabTypeArray[];
 
-
   const swapWidget = useMemo(() => {
     if (!tokenAnalytics?.selectedToken.address) return null;
 
-    return (
-      <SwapWidget token={tokenAnalytics.selectedToken.address} />
-    );
+    return <SwapWidget token={tokenAnalytics.selectedToken.address} />;
   }, [tokenAnalytics?.selectedToken.address]);
 
   return (
@@ -72,15 +69,12 @@ export function DaoPage() {
         <div className="flex-1">
           <div className="block md:hidden">
             {isMobile === true && (
-              <div className="mt-1 max-h-[700px]">
-                {swapWidget}
-              </div>
+              <div className="mt-1 max-h-[700px]">{swapWidget}</div>
             )}
           </div>
 
           <div className="mx-auto max-w-4xl">
             <section className="mb-10">
-
               <TabSelectorSM tabs={tabs} />
 
               <div className="sm:min-h-[700px]">
@@ -91,11 +85,7 @@ export function DaoPage() {
         </div>
 
         <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
-          {isMobile === false && (
-            <div className="mb-4">
-              {swapWidget}
-            </div>
-          )}
+          {isMobile === false && <div className="mb-4">{swapWidget}</div>}
         </div>
       </div>
 

@@ -3,7 +3,12 @@
 import { ChartConfig, ChartContainer, ChartTooltip } from "./chartHelper";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { format } from "date-fns";
-import { JBChainId, useJBChainId, useJBContractContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   Area,
@@ -32,7 +37,6 @@ interface Props {
   rulesets: Ruleset[];
 }
 
-
 export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
@@ -57,146 +61,161 @@ export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
     loadRulesets();
   }, [projectId, chainId, version]);
 
-  const { chartData, stages, stageAreas, todayVisualX, toReal } = useMemo(() => {
-    if (!rulesets) return { chartData: [], stages: [], stageAreas: [], todayVisualX: 0, toReal: () => 0 };
-    return prepareChartData(rulesets, range);
-  }, [rulesets, range]);
+  const { chartData, stages, stageAreas, todayVisualX, toReal } =
+    useMemo(() => {
+      if (!rulesets)
+        return {
+          chartData: [],
+          stages: [],
+          stageAreas: [],
+          todayVisualX: 0,
+          toReal: () => 0,
+        };
+      return prepareChartData(rulesets, range);
+    }, [rulesets, range]);
 
   const tokenSymbol = token.data?.symbol ?? "$TOKEN";
 
   if (!chartData?.length) {
     return (
-      <div className="ml-[16px] mt-2">
-        <div className="aspect-[2/1] sm:aspect-[5/2] min-w-full rounded-lg activeSkeleton" />
+      <div className="mt-2 ml-[16px]">
+        <div className="activeSkeleton aspect-[2/1] min-w-full rounded-lg sm:aspect-[5/2]" />
       </div>
     );
   }
 
   return (
-      <ChartContainer
-        key={range}
-        config={chartConfig}
-        className="bg-grey-450 aspect-[2/1] sm:aspect-[5/2] w-full [&_.recharts-surface]:fill-grey-450 [&_.recharts-rectangle]:fill-grey-450"
+    <ChartContainer
+      key={range}
+      config={chartConfig}
+      className="bg-grey-450 [&_.recharts-surface]:fill-grey-450 [&_.recharts-rectangle]:fill-grey-450 aspect-[2/1] w-full sm:aspect-[5/2]"
+    >
+      <AreaChart
+        accessibilityLayer
+        data={chartData}
+        margin={{ left: 0, right: 12, top: 24, bottom: 0 }}
       >
-        <AreaChart
-          accessibilityLayer
-          data={chartData}
-          margin={{ left: 0, right: 12, top: 24, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--columbia-blue)" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="var(--cerulean)" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-          <XAxis
-            dataKey="visualX"
-            tickLine={false}
-            fill={"var(--muted-foreground)"}
-            axisLine={true}
-            tickMargin={10}
-            tickFormatter={(v) => format(new Date(toReal(v) * 1000), "yyyy")}
-            minTickGap={40}
-            type="number"
-            domain={["dataMin", "dataMax"]}
-          />
-          <YAxis
-            fill={"var(--muted-foreground)"}
-            tickLine={false}
-            axisLine={true}
-            tickMargin={6}
-            tickFormatter={formatYAxis}
-            width={70}
-            domain={["auto", "auto"]}
-          />
-          <ChartTooltip
-            content={({ active, payload }) => {
-              if (!active || !payload?.length) return null;
-              const data = payload[0]?.payload;
-              if (!data?.timestamp) return null;
+        <defs>
+          <linearGradient id="priceFill" x1="0" y1="0" x2="0" y2="1">
+            <stop
+              offset="0%"
+              stopColor="var(--columbia-blue)"
+              stopOpacity={0.3}
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--cerulean)"
+              stopOpacity={0.02}
+            />
+          </linearGradient>
+        </defs>
+        <XAxis
+          dataKey="visualX"
+          tickLine={false}
+          fill={"var(--muted-foreground)"}
+          axisLine={true}
+          tickMargin={10}
+          tickFormatter={(v) => format(new Date(toReal(v) * 1000), "yyyy")}
+          minTickGap={40}
+          type="number"
+          domain={["dataMin", "dataMax"]}
+        />
+        <YAxis
+          fill={"var(--muted-foreground)"}
+          tickLine={false}
+          axisLine={true}
+          tickMargin={6}
+          tickFormatter={formatYAxis}
+          width={70}
+          domain={["auto", "auto"]}
+        />
+        <ChartTooltip
+          content={({ active, payload }) => {
+            if (!active || !payload?.length) return null;
+            const data = payload[0]?.payload;
+            if (!data?.timestamp) return null;
 
-              const stage = stages.findLast((s) => data.timestamp >= s.start);
-              const value = payload[0].value as number;
+            const stage = stages.findLast((s) => data.timestamp >= s.start);
+            const value = payload[0].value as number;
 
-              return (
-                <div className="min-w-[230px] background-color border border-color rounded-lg shadow-xl p-3 text-sm">
-                  <div className="flex items-center gap-3 justify-between">
-                    {stage && (
-                      <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-semibold">
-                        {stage.name}
-                      </div>
-                    )}
-                    <div className="font-medium mb-1 text-muted-foreground">
-                      {format(new Date(data.timestamp * 1000), "MMM d, yyyy")}
+            return (
+              <div className="background-color border-color min-w-[230px] rounded-lg border p-3 text-sm shadow-xl">
+                <div className="flex items-center justify-between gap-3">
+                  {stage && (
+                    <div className="text-muted-foreground mb-2 text-xs font-semibold tracking-wider uppercase">
+                      {stage.name}
                     </div>
-                  </div>
-                  
-                  <div className="flex flex-col">
-                    <span className="text-muted-foreground">Price:</span>
-                    <span className="text-white">
-                      {formatPrice(value, baseToken.symbol)} / {tokenSymbol}
-                    </span>
+                  )}
+                  <div className="text-muted-foreground mb-1 font-medium">
+                    {format(new Date(data.timestamp * 1000), "MMM d, yyyy")}
                   </div>
                 </div>
-              );
+
+                <div className="flex flex-col">
+                  <span className="text-muted-foreground">Price:</span>
+                  <span className="text-white">
+                    {formatPrice(value, baseToken.symbol)} / {tokenSymbol}
+                  </span>
+                </div>
+              </div>
+            );
+          }}
+        />
+
+        {stageAreas.map((area) => (
+          <ReferenceArea
+            key={area.name}
+            x1={area.x1}
+            x2={area.x2}
+            fill={area.fill}
+            fillOpacity={1}
+          />
+        ))}
+
+        <Area
+          type="monotone"
+          dataKey="price"
+          stroke="var(--color-price)"
+          strokeWidth={2}
+          fill="url(#priceFill)"
+          connectNulls
+          isAnimationActive={false}
+        />
+
+        {stageAreas.map((area) => (
+          <ReferenceLine
+            key={`line-${area.name}`}
+            x={area.x1}
+            stroke="var(--muted-foreground)"
+            strokeDasharray="3 3"
+            label={{
+              value: area.name,
+              position: "insideTopLeft",
+              fill: "var(--muted-foreground)",
+              fontSize: 12,
+              offset: 10,
+              fontWeight: 500,
             }}
           />
-
-          {stageAreas.map((area) => (
-            <ReferenceArea
-              key={area.name}
-              x1={area.x1}
-              x2={area.x2}
-              fill={area.fill}
-              fillOpacity={1}
-            />
-          ))}
-
-          <Area
-            type="monotone"
-            dataKey="price"
-            stroke="var(--color-price)"
-            strokeWidth={2}
-            fill="url(#priceFill)"
-            connectNulls
-            isAnimationActive={false}
+        ))}
+        {todayVisualX !== null && (
+          <ReferenceLine
+            x={todayVisualX}
+            stroke="var(--grey-100)"
+            strokeDasharray="4 4"
+            strokeWidth={1}
+            label={{
+              value: "Today",
+              position: "top",
+              fill: "var(--grey-100)",
+              fontSize: 12,
+              offset: 10,
+              fontWeight: 500,
+            }}
           />
-
-          {stageAreas.map(area => (
-            <ReferenceLine
-              key={`line-${area.name}`}
-              x={area.x1}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="3 3"
-              label={{
-                value: area.name,
-                position: "insideTopLeft",
-                fill: "var(--muted-foreground)",
-                fontSize: 12,
-                offset: 10,
-                fontWeight: 500,
-              }}
-            />
-            )
-          )}
-          {todayVisualX !== null && (
-            <ReferenceLine
-              x={todayVisualX}
-              stroke="var(--grey-100)"
-              strokeDasharray="4 4"
-              strokeWidth={1}
-              label={{
-                value: "Today",
-                position: "top",
-                fill: "var(--grey-100)",
-                fontSize: 12,
-                offset: 10,
-                fontWeight: 500,
-              }}
-            />
-          )}
-        </AreaChart>
-      </ChartContainer>
+        )}
+      </AreaChart>
+    </ChartContainer>
   );
 }
 

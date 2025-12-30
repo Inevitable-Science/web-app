@@ -26,7 +26,9 @@ const tabComponents: Record<string, FC<any>> = {
 };
 
 export function TabContent() {
-  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
+  const treasuryAnalytics = useProjectDataStore(
+    (state) => state.treasuryAnalytics
+  );
   const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
   const { token } = useJBTokenContext();
 
@@ -40,14 +42,14 @@ export function TabContent() {
 
   return (
     <div className="pb-10">
-      {selectedTab === "about" && (
-        <DescriptionSection />
-      )}
+      {selectedTab === "about" && <DescriptionSection />}
       {selectedTab === "tokens" && <HoldersSection />}
       {selectedTab === "activity" && <ActivityFeed />}
       {selectedTab === "cycles" && <NetworkDetailsTable />}
 
-      {token?.data && tokenAnalytics && selectedTab === "analytics" && <TokenSection />}
+      {token?.data && tokenAnalytics && selectedTab === "analytics" && (
+        <TokenSection />
+      )}
       {treasuryAnalytics && selectedTab === "treasury" && <TreasurySection />}
     </div>
   );

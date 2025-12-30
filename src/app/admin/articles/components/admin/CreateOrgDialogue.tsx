@@ -6,7 +6,10 @@ import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { uploadImage } from "../../UploadHelper";
-import { AllUsersResponse, OrgCreateEditBody } from "@/lib/types/AdminArticleTypes";
+import {
+  AllUsersResponse,
+  OrgCreateEditBody,
+} from "@/lib/types/AdminArticleTypes";
 import { CircleUserRound, Pencil, X } from "lucide-react";
 import { useArticleAuth, useAuthToken, useUser } from "@/store/AdminAuthStore";
 
@@ -70,7 +73,7 @@ export function CreateOrgDialogue({
       if (!authToken) {
         revalidateUser();
         throw new Error();
-      };
+      }
 
       const url = await uploadImage(file, "organisation", authToken);
 
@@ -262,7 +265,7 @@ export function CreateOrgDialogue({
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
-          <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl bg-grey-450 p-6 shadow-lg">
+          <Dialog.Content className="bg-grey-450 fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl p-6 shadow-lg">
             <div className="flex items-center justify-between">
               <Dialog.Title className="text-lg font-semibold">
                 Create Organisation
@@ -277,7 +280,7 @@ export function CreateOrgDialogue({
             <Dialog.Description className="hidden"></Dialog.Description>
             <div className="mt-4">
               <div className="flex items-center gap-2">
-                <div className="group relative h-[48px] min-w-[48px] max-w-[48px] overflow-hidden">
+                <div className="group relative h-[48px] max-w-[48px] min-w-[48px] overflow-hidden">
                   {orgLogo ? (
                     <Image
                       src={orgLogo}
@@ -317,7 +320,7 @@ export function CreateOrgDialogue({
                 <div className="flex flex-col gap-2">
                   <input
                     type="text"
-                    className="background-color h-[28px] w-full rounded-lg border-none p-2 text-[19px] font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full rounded-lg border-none p-2 text-[19px] font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                     placeholder="Organisation Name"
                     value={organisationName}
                     onChange={(e) => setOrganisationName(e.target.value)}
@@ -326,21 +329,21 @@ export function CreateOrgDialogue({
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
-                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                       placeholder="Website"
                       value={socialWebsite}
                       onChange={(e) => setSocialWebsite(e.target.value)}
                     />
                     <input
                       type="text"
-                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                       placeholder="X/Twitter @"
                       value={socialX}
                       onChange={(e) => setSocialX(e.target.value)}
                     />
                     <input
                       type="text"
-                      className="background-color h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                      className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                       placeholder="Discord URL"
                       value={socialDiscord}
                       onChange={(e) => setSocialDiscord(e.target.value)}
@@ -351,7 +354,7 @@ export function CreateOrgDialogue({
 
               <textarea
                 placeholder="Add Description"
-                className="background-color mt-2 h-[90px] w-full resize-none rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 mt-2 h-[90px] w-full resize-none rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -359,13 +362,13 @@ export function CreateOrgDialogue({
               <div className="background-color mt-2 rounded-lg p-3">
                 <h3>Users</h3>
 
-                <div className="mb-6 mt-2">
+                <div className="mt-2 mb-6">
                   {orgUsers.length > 0 ? (
                     <>
                       {orgUsers.map((u) => (
                         <div
                           key={u.userId}
-                          className="rounded-lg bg-grey-450 p-2 mb-2"
+                          className="bg-grey-450 mb-2 rounded-lg p-2"
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -459,7 +462,7 @@ export function CreateOrgDialogue({
                   <h3>Add Users</h3>
                   <input
                     type="text"
-                    className="h-[28px] w-full max-w-[150px] rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="bg-grey-450 placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full max-w-[150px] rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                     placeholder="Search..."
                     onChange={(e) => searchUsersQuery(e.target.value)}
                   />
@@ -469,7 +472,7 @@ export function CreateOrgDialogue({
                   {searchUsers.map((u) => (
                     <div
                       key={u.userId}
-                      className="flex items-center justify-between rounded-lg bg-grey-450 p-2"
+                      className="bg-grey-450 flex items-center justify-between rounded-lg p-2"
                     >
                       <div className="flex items-center gap-2">
                         {u.profilePicture ? (

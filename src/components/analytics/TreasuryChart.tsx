@@ -11,7 +11,6 @@ import {
 } from "lightweight-charts";
 import { useFetchHistoricalTreasury } from "@/hooks/queries/useFetchHistoricalTreasury";
 
-
 export function TreasuryChart({ daoName }: { daoName: string }) {
   const { data, isLoading, isError } = useFetchHistoricalTreasury(daoName);
 

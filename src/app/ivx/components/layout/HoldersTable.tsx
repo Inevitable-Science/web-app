@@ -50,8 +50,8 @@ export function HoldersTable() {
   const participants = Object.values(participantsDataAggregate);
 
   return (
-    <div className="flex h-[400px] flex-col overflow-auto rounded-2xl bg-grey-450 p-[12px] lg:h-full">
-      <p className="py-1 text-sm uppercase text-muted-foreground">Holders</p>
+    <div className="bg-grey-450 flex h-[400px] flex-col overflow-auto rounded-2xl p-[12px] lg:h-full">
+      <p className="text-muted-foreground py-1 text-sm uppercase">Holders</p>
       <div
         className="scrollbar-hide overflow-y-scroll pb-[56px]"
         style={{
@@ -69,7 +69,7 @@ export function HoldersTable() {
             key={participant?.address}
             className="border-color flex flex-col border-b px-2 py-3"
           >
-            <div className="text-md flex items-center justify-between font-light text-muted-foreground">
+            <div className="text-md text-muted-foreground flex items-center justify-between font-light">
               <EthereumAddress
                 address={participant?.address as Address}
                 short
@@ -77,7 +77,7 @@ export function HoldersTable() {
                 withEnsName
               />
               <div>
-                <span className="whitespace-nowrap text-sm">
+                <span className="text-sm whitespace-nowrap">
                   {formatNumber(
                     Number(
                       formatUnits(

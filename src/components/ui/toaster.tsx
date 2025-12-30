@@ -21,7 +21,7 @@ export function Toaster() {
             <div className="flex w-full flex-col gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
-                <ToastDescription className="grow whitespace-pre-wrap wrap-break-word">
+                <ToastDescription className="grow wrap-break-word whitespace-pre-wrap">
                   {description}
                 </ToastDescription>
               )}

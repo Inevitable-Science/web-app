@@ -61,8 +61,8 @@ export function RulesTable() {
 
   if (!primaryRuleset || !primaryRulesetMetadata || isLoading) {
     return (
-      <div className="rounded-2xl bg-grey-450 p-[12px]">
-        <p className="py-1 text-sm uppercase text-muted-foreground">
+      <div className="bg-grey-450 rounded-2xl p-[12px]">
+        <p className="text-muted-foreground py-1 text-sm uppercase">
           Supply Schedule
         </p>
         <div className="activeSkeleton h-[calc(100%-28px)] w-full items-center justify-center rounded-xl" />
@@ -115,25 +115,30 @@ export function RulesTable() {
     return `, ${days} days`;
   };
 
-  console.log(primaryRuleset.weightCutPercent._value, primaryRuleset.duration, issuance, "PRP");
+  console.log(
+    primaryRuleset.weightCutPercent._value,
+    primaryRuleset.duration,
+    issuance,
+    "PRP"
+  );
 
   return (
     <>
-      <div className="rounded-2xl bg-grey-450 p-[12px]">
-        <p className="py-1 text-sm uppercase text-muted-foreground">
+      <div className="bg-grey-450 rounded-2xl p-[12px]">
+        <p className="text-muted-foreground py-1 text-sm uppercase">
           Supply Schedule
         </p>
 
         <div className="mt-1 flex flex-col gap-[8px] md:grid md:grid-cols-2 md:gap-[12px]">
           <div className="background-color rounded-xl p-[12px]">
-            <p className="text-md font-light uppercase text-muted-foreground">
+            <p className="text-md text-muted-foreground font-light uppercase">
               Issuing
             </p>
             <h3 className="text-lg">{issuance}</h3>
           </div>
 
           <div className="background-color rounded-xl p-[12px]">
-            <p className="text-md font-light uppercase text-muted-foreground">
+            <p className="text-md text-muted-foreground font-light uppercase">
               Receive
             </p>
             <h3 className="text-lg">
@@ -143,17 +148,17 @@ export function RulesTable() {
           </div>
         </div>
 
-        <p className="py-2 pl-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground py-2 pl-1 text-sm">
           {devTax.formatPercentage().toFixed(2)}% of issuance and buybacks to
           splits.
         </p>
 
         <div className="background-color rounded-2xl p-[12px]">
-          <p className="py-1 text-sm text-muted-foreground">
+          <p className="text-muted-foreground py-1 text-sm">
             IVX's issuance and cash out terms change automatically in permanent
             sequential stages.
           </p>
-          <div className="mt-2 flex flex-col gap-1 rounded-xl bg-grey-450 p-[12px] text-sm text-muted-foreground md:gap-0.5">
+          <div className="bg-grey-450 text-muted-foreground mt-2 flex flex-col gap-1 rounded-xl p-[12px] text-sm md:gap-0.5">
             <p className="mb-1 uppercase">
               Stage {primaryRuleset.cycleNumber}
               {": "}
@@ -169,12 +174,12 @@ export function RulesTable() {
               Paid Issuance: {issuance}
               {!!primaryRuleset.weightCutPercent._value &&
                 !!primaryRuleset.duration && (
-                <>
-                  {" "}cut{" "}
-                  {primaryRuleset.weightCutPercent.formatPercentage()}% every{" "}
-                  {(primaryRuleset.duration / 86400).toString()} days
-                </>
-              )}
+                  <>
+                    {" "}
+                    cut {primaryRuleset.weightCutPercent.formatPercentage()}%
+                    every {(primaryRuleset.duration / 86400).toString()} days
+                  </>
+                )}
             </p>
 
             <p>

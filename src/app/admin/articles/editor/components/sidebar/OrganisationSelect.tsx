@@ -9,7 +9,6 @@ import {
 import { useUser } from "@/store/AdminAuthStore";
 import { useOrganisation } from "@/store/ArticleEditorStore";
 
-
 export function OrganisationSelect() {
   const { user } = useUser();
   const { organisation, setOrganisation } = useOrganisation();
@@ -17,13 +16,15 @@ export function OrganisationSelect() {
   const userCanCreateOrg =
     user?.organisations.filter(
       (org) => org.userPermissions.canCreate || org.userPermissions.isAdmin
-  ) ?? [];
-  const currentOrg = userCanCreateOrg.find(org => org.organisationId === organisation);
+    ) ?? [];
+  const currentOrg = userCanCreateOrg.find(
+    (org) => org.organisationId === organisation
+  );
 
   console.log(currentOrg);
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border-none bg-grey-450 p-2 font-light">
+    <div className="bg-grey-450 flex w-full flex-col gap-2 rounded-lg border-none p-2 font-light">
       <h4>Organisation</h4>
 
       <Select
@@ -37,9 +38,9 @@ export function OrganisationSelect() {
           aria-label="Select Organisation"
         >
           {currentOrg ? (
-            <div className="flex select-none items-center font-light">
+            <div className="flex items-center font-light select-none">
               <div className="mr-1 flex items-end">
-                <div className="h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+                <div className="border-grey-450 bg-grey-450 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                   {currentOrg.metadata.logo ? (
                     <Image
                       src={currentOrg.metadata.logo}
@@ -78,14 +79,12 @@ export function OrganisationSelect() {
                 ) : (
                   <Building2 width={18} height={18} />
                 )}
-                <span className="ml-2 grow">
-                  {org.organisationName}
-                </span>
+                <span className="ml-2 grow">{org.organisationName}</span>
               </SelectItem>
             );
           })}
         </SelectContent>
       </Select>
     </div>
-  )
+  );
 }

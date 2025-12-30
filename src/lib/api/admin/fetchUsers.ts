@@ -1,9 +1,8 @@
-import { AllUsersResponseZ, User } from '../../types/AdminArticleTypes';
-
+import { AllUsersResponseZ, User } from "../../types/AdminArticleTypes";
 
 export const fetchAllUsers = async (user: User, authToken: string) => {
   if (!user?.isTopLevelAdmin || !authToken) {
-    throw new Error('Unauthorized: Admin access or token missing');
+    throw new Error("Unauthorized: Admin access or token missing");
   }
 
   const response = await fetch(
@@ -16,7 +15,7 @@ export const fetchAllUsers = async (user: User, authToken: string) => {
   );
 
   if (!response.ok) {
-    throw new Error('Failed to fetch users');
+    throw new Error("Failed to fetch users");
   }
 
   const data = await response.json();

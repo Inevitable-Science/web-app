@@ -14,7 +14,6 @@ import { Button } from "../ui/button";
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
 import { MarketChartRangeType, PriceData } from "@/lib/api/fetchMarketChart";
 
-
 export function TokenChart({ daoName }: { daoName: string }) {
   const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);
   const [returns, setReturns] = useState<number | null>(null);
@@ -25,16 +24,21 @@ export function TokenChart({ daoName }: { daoName: string }) {
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
-  const { data: priceDataResponse, isLoading } = useFetchMarketChart(daoName, timeRange);
+  const { data: priceDataResponse, isLoading } = useFetchMarketChart(
+    daoName,
+    timeRange
+  );
 
   const priceData: PriceData = useMemo(() => {
     return {
       prices:
-        priceDataResponse?.prices.map(([timestamp, value]: [number, number]) => ({
-          time: Math.floor(timestamp / 1000) as Time,
-          value,
-        })) ?? [],
-    }
+        priceDataResponse?.prices.map(
+          ([timestamp, value]: [number, number]) => ({
+            time: Math.floor(timestamp / 1000) as Time,
+            value,
+          })
+        ) ?? [],
+    };
   }, [priceDataResponse]);
 
   // set latest price on mount + data fetched
@@ -115,7 +119,6 @@ export function TokenChart({ daoName }: { daoName: string }) {
     };
   }, [daoName, timeRange, isLoading]);
 
-
   // helper functions
   const formatClippedPrice = (value: number | null): string => {
     if (value === null || isNaN(value)) {
@@ -166,56 +169,51 @@ export function TokenChart({ daoName }: { daoName: string }) {
     <div>
       <div className="mb-2 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div>
-            <div className="flex w-fit flex-col justify-center">
-              <h3 className="text-xl">
-                ${latest24hPrice ? formatClippedPrice(latest24hPrice) : "--"}
-              </h3>
-              {returns ? (
-                <p
-                  className={`text-center text-sm ${returns > 0 ? "text-green-500" : "text-red-500"} `}
-                >
-                  {returns > 0
-                    ? `+${returns.toFixed(2)}`
-                    : returns.toFixed(2)}
-                  %
-                </p>
-              ) : (
-                <p className="text-center text-sm">
-                  -%
-                </p>
-              )}
-            </div>
+          <div className="flex w-fit flex-col justify-center">
+            <h3 className="text-xl">
+              ${latest24hPrice ? formatClippedPrice(latest24hPrice) : "--"}
+            </h3>
+            {returns ? (
+              <p
+                className={`text-center text-sm ${returns > 0 ? "text-green-500" : "text-red-500"} `}
+              >
+                {returns > 0 ? `+${returns.toFixed(2)}` : returns.toFixed(2)}%
+              </p>
+            ) : (
+              <p className="text-center text-sm">-%</p>
+            )}
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("1")}
             disabled={timeRange === "1"}
           >
             24h
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("7")}
             disabled={timeRange === "7" || (timeRange === "1" && isLoading)}
           >
             7d
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("30")}
             disabled={timeRange === "30" || (timeRange === "1" && isLoading)}
           >
             1m
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("365")}
             disabled={timeRange === "365" || (timeRange === "1" && isLoading)}
           >
             1y
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("max")}
             disabled={timeRange === "max" || (timeRange === "1" && isLoading)}
@@ -226,7 +224,7 @@ export function TokenChart({ daoName }: { daoName: string }) {
       </div>
 
       {isLoading ? (
-        <div className="activeSkeleton w-full h-[400px] aspect-11/10 rounded-lg" />
+        <div className="activeSkeleton aspect-11/10 h-[400px] w-full rounded-lg" />
       ) : (
         <>
           {priceData ? (

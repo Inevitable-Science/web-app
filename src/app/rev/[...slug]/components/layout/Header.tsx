@@ -1,6 +1,10 @@
 "use client";
 
-import { ParticipantsDocument, ProjectOperatorDocument, SuckerGroupDocument } from "@/generated/graphql";
+import {
+  ParticipantsDocument,
+  ProjectOperatorDocument,
+  SuckerGroupDocument,
+} from "@/generated/graphql";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatDate } from "@/lib/utils";
 import {
@@ -23,19 +27,21 @@ export function Header() {
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
 
-  const { data: operator, isLoading } = useBendystrawQuery(ProjectOperatorDocument, {
-    chainId: Number(chainId),
-    projectId: Number(projectId),
-    version,
-    skip: !chainId || !projectId || !version || version !== 5,
-  });
+  const { data: operator, isLoading } = useBendystrawQuery(
+    ProjectOperatorDocument,
+    {
+      chainId: Number(chainId),
+      projectId: Number(projectId),
+      version,
+      skip: !chainId || !projectId || !version || version !== 5,
+    }
+  );
 
-  const owner = 
-    (
-      (version === 4 || !operator?.permissionHolders?.items[0]?.operator) ?
-      project.owner : 
-      operator?.permissionHolders?.items[0]?.operator
-    ) as Address;
+  const owner = (
+    version === 4 || !operator?.permissionHolders?.items[0]?.operator
+      ? project.owner
+      : operator?.permissionHolders?.items[0]?.operator
+  ) as Address;
 
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -115,7 +121,7 @@ export function Header() {
               <div className="sm:hidden">
                 <Image
                   src={ipfsUriToGatewayUrl(logoUri)}
-                  className="block overflow-hidden rounded-xl border-[3px] border-background"
+                  className="border-background block overflow-hidden rounded-xl border-[3px]"
                   alt={"Project Logo"}
                   width={120}
                   height={10}
@@ -124,7 +130,7 @@ export function Header() {
               <div className="hidden sm:block">
                 <Image
                   src={ipfsUriToGatewayUrl(logoUri)}
-                  className="block overflow-hidden rounded-2xl border-4 border-background"
+                  className="border-background block overflow-hidden rounded-2xl border-4"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -151,20 +157,21 @@ export function Header() {
               <div className="activeSkeleton h-[36px] w-[130px] rounded-lg opacity-70" />
             )}
             {twitter && (
-              <h5 className="text-base text-cerulean">
+              <h5 className="text-cerulean text-base">
                 <a
                   href={`https://x.com/${twitter}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {!twitter.startsWith("@") && "@"}{twitter}
+                  {!twitter.startsWith("@") && "@"}
+                  {twitter}
                 </a>
               </h5>
             )}
           </div>
           <div className="items-leading flex flex-col items-start sm:flex-row sm:items-center sm:gap-4">
             <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
                     Ξ
@@ -177,12 +184,12 @@ export function Header() {
                       : "0.00"}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Raised
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full text-2xl font-semibold tracking-wider">
                     {participants?.participants?.totalCount ?? (
@@ -190,14 +197,14 @@ export function Header() {
                     )}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Payments
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
-                  <div className="w-fit rounded-full bg-cerulean px-2 py-1 font-medium">
+                  <div className="bg-cerulean w-fit rounded-full px-2 py-1 font-medium">
                     {weeklyVolumeChange != null ? (
                       `${weeklyVolumeChange}%`
                     ) : (
@@ -205,15 +212,15 @@ export function Header() {
                     )}
                   </div>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Weekly Vol Change
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {isLoading ?  (
+                    {isLoading ? (
                       <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
                     ) : (
                       <EthereumAddress
@@ -227,12 +234,12 @@ export function Header() {
                     )}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Owner
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="text-xl font-light">
                     {project?.createdAt ? (
@@ -242,7 +249,7 @@ export function Header() {
                     )}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Date Created
                 </p>
               </div>
@@ -252,7 +259,7 @@ export function Header() {
       </div>
 
       <div
-        className="max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
+        className="absolute -z-10 flex max-w-screen items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-60%)" }}
       >
         {/* Left cloud - shifted slightly right */}

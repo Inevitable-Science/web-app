@@ -1,7 +1,4 @@
-import {
-  TokenResponseZ,
-  TreasuryResponseZ,
-} from "@/lib/types/AnalyticTypes";
+import { TokenResponseZ, TreasuryResponseZ } from "@/lib/types/AnalyticTypes";
 import { Providers } from "./Providers";
 import { IvxPageDataProvider } from "./DataProvider";
 import { JBChainId } from "juice-sdk-react";
@@ -48,7 +45,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "IVX Token | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };

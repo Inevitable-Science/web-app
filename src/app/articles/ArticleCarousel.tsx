@@ -53,9 +53,9 @@ export function DynamicArticleCarousel({
             <a
               key={slide.articleId}
               href={`/articles/${slide.articleId}`}
-              className="flex min-w-[280px] max-w-[520px] pl-4 sm:min-w-[440px]"
+              className="flex max-w-[520px] min-w-[280px] pl-4 sm:min-w-[440px]"
             >
-              <div className="flex h-full select-none flex-col items-start rounded-2xl border border-grey-500 bg-background p-4">
+              <div className="border-grey-500 bg-background flex h-full flex-col items-start rounded-2xl border p-4 select-none">
                 <img
                   src={slide.img || "/placeholder.png"}
                   alt={slide.title}
@@ -63,7 +63,7 @@ export function DynamicArticleCarousel({
                 />
                 <div className="mt-4">
                   <h4 className="font-optima text-xl">{slide.title}</h4>
-                  <p className="line-clamp-2 text-sm font-light text-muted-foreground">
+                  <p className="text-muted-foreground line-clamp-2 text-sm font-light">
                     {slide.description}
                   </p>
                 </div>

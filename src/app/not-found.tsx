@@ -39,7 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Page Not Found | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
@@ -47,20 +49,17 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function NotFound() {
   return (
-    <div className="bg-[url('https://cdn.inevitable.science/static/img/layout/footer.webp')] bg-cover bg-screen relative mask-[linear-gradient(to_bottom,black_30%,black_90%,transparent_100%)]">
-      <section className="ctWrapper pt-12 h-screen">
+    <div className="bg-screen relative bg-[url('https://cdn.inevitable.science/static/img/layout/footer.webp')] mask-[linear-gradient(to_bottom,black_30%,black_90%,transparent_100%)] bg-cover">
+      <section className="ctWrapper h-screen pt-12">
         <div className="flex flex-col">
-          <div className="flex uppercase flex-col md:flex-row">
-            <h1 className="font-optima text-5xl sm:text-6xl">
-              Page
-            </h1>
-            <div className="not-italic md:pt-[3.75rem] flex flex-col inline-block">
-              <h1 className="font-optima text-5xl sm:text-6xl">
-                Not Found
-              </h1>
+          <div className="flex flex-col uppercase md:flex-row">
+            <h1 className="font-optima text-5xl sm:text-6xl">Page</h1>
+            <div className="flex inline-block flex-col not-italic md:pt-[3.75rem]">
+              <h1 className="font-optima text-5xl sm:text-6xl">Not Found</h1>
 
               <p className="my-8 max-w-[350px] text-wrap">
-                Looks like this page wandered off... Try heading back to the homepage to get back on track.
+                Looks like this page wandered off... Try heading back to the
+                homepage to get back on track.
               </p>
 
               <Button variant={"accent"}>
@@ -76,7 +75,7 @@ export default function NotFound() {
             <img // use img as Image does not preserve image quality
               src="https://cdn.inevitable.science/static/img/hero.webp"
               alt="Hero Image"
-              className="notFoundHero w-[230px] sm:block hidden"
+              className="notFoundHero hidden w-[230px] sm:block"
             />
           </div>
         </div>

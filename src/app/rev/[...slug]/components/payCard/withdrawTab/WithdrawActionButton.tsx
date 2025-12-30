@@ -35,7 +35,9 @@ export function WithdrawActionButton({
   disabled?: boolean;
 }) {
   const { selectedSucker } = useSelectedSucker();
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
+  const {
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
   const { address, chainId } = useAccount();
   const { toast } = useToast();
   const {
@@ -88,7 +90,6 @@ export function WithdrawActionButton({
       return;
     }
 
-
     await writeContractAsync({
       abi: jbMultiTerminalAbi,
       functionName: "cashOutTokensOf",
@@ -117,12 +118,10 @@ export function WithdrawActionButton({
     <ButtonWithWallet
       targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
       disabled={
-        disabled || 
-        (
-          (insufficientFunds ||!withdrawAmount) &&
-          chainId === selectedSucker?.peerChainId
-        )
-        }
+        disabled ||
+        ((insufficientFunds || !withdrawAmount) &&
+          chainId === selectedSucker?.peerChainId)
+      }
       loading={loading}
       onClick={handleWithdraw}
       className={shimmerClasses}

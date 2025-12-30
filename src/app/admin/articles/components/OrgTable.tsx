@@ -18,7 +18,7 @@ export function OrganisationTable({
   const { user } = useUser();
 
   return (
-    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+    <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-xl">Organisations</h3>
         <div className="flex items-center gap-2">
@@ -30,7 +30,7 @@ export function OrganisationTable({
               </Button>
             </CreateUserDialogue>
           )}
-          {(allUsers && user?.user.isTopLevelAdmin) && (
+          {allUsers && user?.user.isTopLevelAdmin && (
             <CreateOrgDialogue allUsers={allUsers}>
               <Button variant={"secondary"} className="flex items-center gap-1">
                 Create Organisation

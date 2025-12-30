@@ -7,7 +7,10 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBContractContext, useJBProjectMetadataContext } from "juice-sdk-react";
+import {
+  useJBContractContext,
+  useJBProjectMetadataContext,
+} from "juice-sdk-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
@@ -69,7 +72,7 @@ export function PayActionButton({
   const project = useProjectDataStore((state) => state.project);
   const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
-    projectId: project.projectId
+    projectId: project.projectId,
   });
   const { selectedSucker } = useSelectedSucker();
   const {
@@ -129,7 +132,6 @@ export function PayActionButton({
     return "Agree & Buy";
   }, [loading, isSuccess]);
 
-
   useEffect(() => {
     if (isSuccess) {
       toast({
@@ -180,7 +182,7 @@ export function PayActionButton({
           chainId,
           projectId,
           token: paymentToken,
-          baseToken
+          baseToken,
         });
 
         if (!paymentToken.isNative) {
@@ -222,7 +224,7 @@ export function PayActionButton({
   if (!hasStarted) {
     return (
       <Button
-        className={`${primaryButtonClasses} cursor-not-allowed opacity-50 hover:bg-cerulean hover:text-white`}
+        className={`${primaryButtonClasses} hover:bg-cerulean cursor-not-allowed opacity-50 hover:text-white`}
       >
         Payments Haven't Started Yet
       </Button>
@@ -294,19 +296,19 @@ export function PayActionButton({
 
         <Dialog.Content
           //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg"
+          className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg"
         >
           <Dialog.Title className="text-lg font-semibold">
             Before you continue...
           </Dialog.Title>
-          <Dialog.Description className="mt-2 text-sm text-muted-foreground">
+          <Dialog.Description className="text-muted-foreground mt-2 text-sm">
             Please review and agree to the project's terms before proceeding.
           </Dialog.Description>
 
           <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
             {metadata.data?.payDisclosure ? (
               <>
-                <p className="whitespace-pre-wrap font-semibold">
+                <p className="font-semibold whitespace-pre-wrap">
                   {metadata.data.payDisclosure}
                 </p>
               </>
@@ -317,7 +319,7 @@ export function PayActionButton({
               id="terms"
               checked={agreedToTerms}
               onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
-              className="peer h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:bg-cerulean data-[state=checked]:text-white"
+              className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
             >
               <Checkbox.Indicator className="flex items-center justify-center text-current">
                 <Check className="h-4 w-4" />
@@ -325,7 +327,7 @@ export function PayActionButton({
             </Checkbox.Root>
             <label
               htmlFor="terms"
-              className="cursor-pointer select-none text-sm font-medium font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               I have read and agree to the terms.
             </label>
@@ -342,7 +344,7 @@ export function PayActionButton({
               disabled={!agreedToTerms || loading}
               loading={loading}
               onClick={handlePay}
-              className="inline-flex items-center justify-center rounded-md bg-cerulean! px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gunmetal! disabled:text-grey-100"
+              className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
             >
               {actionButtonContent}
             </ButtonWithWallet>

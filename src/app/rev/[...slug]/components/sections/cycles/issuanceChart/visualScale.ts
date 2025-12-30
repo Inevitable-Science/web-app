@@ -19,7 +19,10 @@ export interface VisualScale {
  * Creates a visual scale that ensures each stage takes at least MIN_STAGE_WIDTH_PERCENT
  * of the chart width, preventing tiny stages from being invisible.
  */
-export function createVisualScale(stages: Stage[], endTimestamp: number): VisualScale {
+export function createVisualScale(
+  stages: Stage[],
+  endTimestamp: number
+): VisualScale {
   if (stages.length === 0) {
     return { mappings: [], toVisual: (ts) => ts, toReal: (v) => v };
   }
@@ -36,8 +39,12 @@ export function createVisualScale(stages: Stage[], endTimestamp: number): Visual
     };
   });
 
-  const underMinStages = stageDurations.filter((s) => s.naturalWidth < MIN_STAGE_WIDTH_PERCENT);
-  const overMinStages = stageDurations.filter((s) => s.naturalWidth >= MIN_STAGE_WIDTH_PERCENT);
+  const underMinStages = stageDurations.filter(
+    (s) => s.naturalWidth < MIN_STAGE_WIDTH_PERCENT
+  );
+  const overMinStages = stageDurations.filter(
+    (s) => s.naturalWidth >= MIN_STAGE_WIDTH_PERCENT
+  );
 
   // If no stages need adjustment, use identity mapping
   if (underMinStages.length === 0) {
@@ -53,9 +60,12 @@ export function createVisualScale(stages: Stage[], endTimestamp: number): Visual
   // Calculate how much width needs to be redistributed
   const widthNeeded = underMinStages.reduce(
     (sum, s) => sum + (MIN_STAGE_WIDTH_PERCENT - s.naturalWidth),
-    0,
+    0
   );
-  const widthAvailable = overMinStages.reduce((sum, s) => sum + s.naturalWidth, 0);
+  const widthAvailable = overMinStages.reduce(
+    (sum, s) => sum + s.naturalWidth,
+    0
+  );
   const scaleFactor = (widthAvailable - widthNeeded) / widthAvailable;
 
   const adjustedWidths = stageDurations.map((s) => ({
@@ -82,17 +92,22 @@ export function createVisualScale(stages: Stage[], endTimestamp: number): Visual
 
   const toVisual = (ts: number): number => {
     const mapping =
-      mappings.find((m) => ts >= m.start && ts < m.end) ?? mappings[mappings.length - 1];
+      mappings.find((m) => ts >= m.start && ts < m.end) ??
+      mappings[mappings.length - 1];
     if (!mapping) return ts;
     const progress = (ts - mapping.start) / (mapping.end - mapping.start);
-    return mapping.visualStart + progress * (mapping.visualEnd - mapping.visualStart);
+    return (
+      mapping.visualStart + progress * (mapping.visualEnd - mapping.visualStart)
+    );
   };
 
   const toReal = (v: number): number => {
     const mapping =
-      mappings.find((m) => v >= m.visualStart && v < m.visualEnd) ?? mappings[mappings.length - 1];
+      mappings.find((m) => v >= m.visualStart && v < m.visualEnd) ??
+      mappings[mappings.length - 1];
     if (!mapping) return v;
-    const progress = (v - mapping.visualStart) / (mapping.visualEnd - mapping.visualStart);
+    const progress =
+      (v - mapping.visualStart) / (mapping.visualEnd - mapping.visualStart);
     return mapping.start + progress * (mapping.end - mapping.start);
   };
 

@@ -79,7 +79,7 @@ export default function DaosGrid() {
 
       <div
         ref={cloudTopRef}
-        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
+        className="hiddenDaoCloud absolute -z-10 flex max-w-screen items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud */}
@@ -149,7 +149,7 @@ export default function DaosGrid() {
 
       <div
         ref={cloudMidRef}
-        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-end overflow-hidden"
+        className="hiddenDaoCloud absolute -z-10 flex max-w-screen items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img
@@ -184,7 +184,7 @@ export default function DaosGrid() {
 
       <div
         ref={cloudBottomRef}
-        className="hiddenDaoCloud max-w-screen absolute -z-10 flex items-center justify-end overflow-hidden"
+        className="hiddenDaoCloud absolute -z-10 flex max-w-screen items-center justify-end overflow-hidden"
         style={{ transform: "translateY(-50%)" }}
       >
         <img

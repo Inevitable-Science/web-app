@@ -8,17 +8,17 @@ export function IvxPageHeader() {
   return (
     <div className="mb-[12px] flex flex-col-reverse gap-[12px] lg:grid lg:grid-cols-3">
       <div className="flex flex-col gap-[12px] uppercase md:grid md:grid-cols-3 lg:flex lg:h-[254px] lg:flex-col">
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             $
             {analyticsData?.treasury?.treasuryValue
               ? formatNumber(analyticsData?.treasury?.treasuryValue, false)
               : "--"}
           </h3>
-          <p className="font-light text-muted-foreground">Treasury Holdings</p>
+          <p className="text-muted-foreground font-light">Treasury Holdings</p>
         </div>
 
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {analyticsData?.token?.selectedToken.averageBal
               ? formatNumber(
@@ -27,12 +27,12 @@ export function IvxPageHeader() {
                 )
               : "--"}
           </h3>
-          <p className="font-light text-muted-foreground">
+          <p className="text-muted-foreground font-light">
             Average IVX Balance
           </p>
         </div>
 
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {analyticsData?.token?.selectedToken.totalHolders
               ? formatNumber(
@@ -41,12 +41,12 @@ export function IvxPageHeader() {
                 )
               : "--"}
           </h3>
-          <p className="font-light text-muted-foreground">Total Holders</p>
+          <p className="text-muted-foreground font-light">Total Holders</p>
         </div>
       </div>
 
       <div className="hidden gap-[12px] uppercase md:grid md:grid-cols-3 lg:flex lg:flex-col">
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {analyticsData?.token?.selectedToken.totalSupply
               ? formatNumber(
@@ -55,10 +55,10 @@ export function IvxPageHeader() {
                 )
               : "--"}
           </h3>
-          <p className="font-light text-muted-foreground">Total IVX Supply</p>
+          <p className="text-muted-foreground font-light">Total IVX Supply</p>
         </div>
 
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {analyticsData?.token?.selectedToken.medianBal
               ? formatNumber(
@@ -67,14 +67,14 @@ export function IvxPageHeader() {
                 )
               : "--"}
           </h3>
-          <p className="font-light text-muted-foreground">Median IVX Balance</p>
+          <p className="text-muted-foreground font-light">Median IVX Balance</p>
         </div>
 
-        <div className="rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl normal-case">
             {formatDate(analyticsData?.treasury?.lastUpdated)}
           </h3>
-          <p className="font-light text-muted-foreground">Last Updated</p>
+          <p className="text-muted-foreground font-light">Last Updated</p>
         </div>
       </div>
 

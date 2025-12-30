@@ -1,7 +1,12 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { JBChainId, useJBChainId, useJBContractContext, useSuckers } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBChainId,
+  useJBContractContext,
+  useSuckers,
+} from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useSelectedSucker } from "./SelectedSuckerContext";
@@ -18,7 +23,7 @@ export function TransactionCard() {
   const suckers = useProjectDataStore((state) => state.suckers);
   const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({
-    projectId: project.projectId
+    projectId: project.projectId,
   });
 
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
@@ -58,21 +63,22 @@ export function TransactionCard() {
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
-
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
   }
 
   return (
     <>
-      {(!hasStarted && startDate) && (
-        <div className="flex rounded-t-xl bg-orange-900 pb-6 pt-2 px-4">
-          <p className="font-light text-sm">
+      {!hasStarted && startDate && (
+        <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+          <p className="text-sm font-light">
             Token Sale Starts in: {formatSeconds(timeUntilStart)}
           </p>
         </div>
       )}
-      <div className={`flex flex-col rounded-xl bg-grey-450 p-[12px] ${(!hasStarted && startDate) && '-mt-4'}`}>
+      <div
+        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${!hasStarted && startDate && "-mt-4"}`}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Button
@@ -80,7 +86,7 @@ export function TransactionCard() {
               className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
                 activeTab === "buy"
                   ? "border-cerulean text-white"
-                  : "border-transparent text-muted-foreground"
+                  : "text-muted-foreground border-transparent"
               }`}
             >
               Buy
@@ -91,7 +97,7 @@ export function TransactionCard() {
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
                   activeTab === "withdraw"
                     ? "border-cerulean text-white"
-                    : "border-transparent text-muted-foreground"
+                    : "text-muted-foreground border-transparent"
                 }`}
               >
                 Withdraw
@@ -113,7 +119,11 @@ export function TransactionCard() {
 
         <div className="my-4">
           {activeTab === "buy" ? (
-            <PayTab tokens={tokens} selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
+            <PayTab
+              tokens={tokens}
+              selectedToken={selectedToken}
+              setSelectedToken={setSelectedToken}
+            />
           ) : (
             <WithdrawTab />
           )}

@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { CreateResponseType, CreateUserResponseZ } from "@/lib/types/AdminArticleTypes";
+import {
+  CreateResponseType,
+  CreateUserResponseZ,
+} from "@/lib/types/AdminArticleTypes";
 import { useArticleAuth, useAuthToken, useUser } from "@/store/AdminAuthStore";
 
 export function CreateUserDialogue({
@@ -24,13 +27,12 @@ export function CreateUserDialogue({
 
   const [data, setData] = useState<CreateResponseType | null>(null);
 
-
   const createUser = async () => {
     try {
       if (!authToken) {
         await revalidateUser();
         return;
-      };
+      }
 
       if (!user?.user.isTopLevelAdmin) throw new Error();
 
@@ -102,24 +104,30 @@ export function CreateUserDialogue({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg">
+        <Dialog.Content className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg">
           <Dialog.Title className="text-lg font-semibold">
             Create User
           </Dialog.Title>
 
           {data ? (
-            <div className="flex flex-col gap-2 mt-2">
+            <div className="mt-2 flex flex-col gap-2">
               <div className="flex flex-col gap-1">
                 <h4>User ID</h4>
-                <p className="w-full background-color rounded p-2">{data.userId}</p>
+                <p className="background-color w-full rounded p-2">
+                  {data.userId}
+                </p>
               </div>
               <div className="flex flex-col gap-1">
                 <h4>Password</h4>
-                <p className="w-full background-color rounded p-2">{data.password}</p>
+                <p className="background-color w-full rounded p-2">
+                  {data.password}
+                </p>
               </div>
               <div className="flex flex-col gap-1">
                 <h4>TOTP Key</h4>
-                <p className="w-full background-color rounded text-sm p-2">{data.mfaKey}</p>
+                <p className="background-color w-full rounded p-2 text-sm">
+                  {data.mfaKey}
+                </p>
               </div>
             </div>
           ) : (
@@ -131,14 +139,14 @@ export function CreateUserDialogue({
                 {isTopLevelAdmin ? (
                   <span className="flex flex-col">
                     Revoke Site Admin
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       (Currently Admin)
                     </span>
                   </span>
                 ) : (
                   <span className="flex flex-col">
                     Grant Site Admin
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       (Currently Not Admin)
                     </span>
                   </span>

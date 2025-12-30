@@ -1,16 +1,12 @@
-
-export function PayInput(
-  {
-    value,
-    disabled,
-    onChangeFunction
-  }: 
-  { 
-    value: string;
-    disabled?: boolean;
-    onChangeFunction?: (arg: string) => void;
-  }) {
-
+export function PayInput({
+  value,
+  disabled,
+  onChangeFunction,
+}: {
+  value: string;
+  disabled?: boolean;
+  onChangeFunction?: (arg: string) => void;
+}) {
   const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
     const key = e.key;
@@ -56,12 +52,14 @@ export function PayInput(
   return (
     <input
       type="number"
-      className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-80"
+      className="focus:placeholder:text-muted-foreground w-full border-none bg-transparent p-0 text-2xl shadow-none ring-0 outline-hidden placeholder:text-white focus:ring-0 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-80"
       placeholder="0.00"
       value={value}
-      onChange={(e) => onChangeFunction ? onChangeFunction(e.target.value) : undefined}
+      onChange={(e) =>
+        onChangeFunction ? onChangeFunction(e.target.value) : undefined
+      }
       onKeyDown={preventMinusKey}
       disabled={disabled}
     />
-  )
+  );
 }

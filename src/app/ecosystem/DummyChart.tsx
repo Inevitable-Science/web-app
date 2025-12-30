@@ -144,7 +144,7 @@ export default function ActivityGraph({
 
   return (
     <div className="h-[calc(100%-12px)]">
-      <div className="activityGraphHeader mb-4 flex select-none items-baseline justify-between">
+      <div className="activityGraphHeader mb-4 flex items-baseline justify-between select-none">
         <div className="flex gap-3">
           {["volume", "trendingScore"].map((v) => (
             <div
@@ -153,7 +153,7 @@ export default function ActivityGraph({
                 "cursor-pointer border-b px-2 pb-2 text-sm",
                 v === view
                   ? "border-primary font-medium"
-                  : "border-transparent font-light text-muted-foreground"
+                  : "text-muted-foreground border-transparent font-light"
               )}
               onClick={() => setView(v as ProjectTimelineView)}
             >
@@ -170,7 +170,7 @@ export default function ActivityGraph({
           }}
         >
           <SelectTrigger
-            className="background-color h-fit w-[5.6rem] rounded rounded-full border-none px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
+            className="background-color text-muted-foreground hover:text-foreground h-fit w-[5.6rem] rounded rounded-full border-none px-2 text-xs uppercase"
             aria-label="Select Time Range"
           >
             <SelectValue placeholder="Select range" />

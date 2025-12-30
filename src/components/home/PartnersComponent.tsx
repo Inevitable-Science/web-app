@@ -5,7 +5,7 @@ export default function PartnersComponent() {
     <div className="ctWrapper mt-32 hidden">
       <div className="flex flex-col items-center gap-2">
         <p className="font-optima text-xl uppercase">Inevitable</p>
-        <h3 className="mb-12 text-4xl font-light text-primary sm:text-6xl">
+        <h3 className="text-primary mb-12 text-4xl font-light sm:text-6xl">
           Partners
         </h3>
 

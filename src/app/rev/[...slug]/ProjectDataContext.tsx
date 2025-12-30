@@ -1,19 +1,18 @@
-
 //  Weird but useful pattern - READ MORE: https://tkdodo.eu/blog/zustand-and-react-context
 //  Zustand + React Context allows for many benifits such as initialization using props
 //  This pattern reduces the caveats usually found with replacing context w/zustand stores.
 
 "use client";
-import { createContext, useContext, ReactNode, useMemo, useState, useEffect } from "react";
 import {
-  useJBRulesetContext,
-  useSuckers,
-} from "juice-sdk-react";
-import {
-  SuckerPair,
-  JBRulesetData,
-  JBRulesetMetadata,
-} from "juice-sdk-core";
+  createContext,
+  useContext,
+  ReactNode,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
+import { useJBRulesetContext, useSuckers } from "juice-sdk-react";
+import { SuckerPair, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
 import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import {
@@ -21,10 +20,15 @@ import {
   DaoResponse,
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
-import { createStore, StoreApi, useStore } from 'zustand'
+import { createStore, StoreApi, useStore } from "zustand";
 
-
-export type SelectedTabType = "about" | "tokens" | "activity" | "cycles" | "analytics" | "treasury";
+export type SelectedTabType =
+  | "about"
+  | "tokens"
+  | "activity"
+  | "cycles"
+  | "analytics"
+  | "treasury";
 
 interface ProjectDataStore {
   // Interactive State
@@ -51,8 +55,9 @@ interface ProjectDataStore {
   setDailyTotals: (totals: DailyVolume[]) => void;
 }
 
-const NetworkDataContext = createContext<StoreApi<ProjectDataStore> | undefined>(undefined);
-
+const NetworkDataContext = createContext<
+  StoreApi<ProjectDataStore> | undefined
+>(undefined);
 
 interface ContextPropType {
   children: ReactNode;
@@ -60,14 +65,14 @@ interface ContextPropType {
   daoData: DaoResponse | null;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
-};
+}
 
 export const ProjectDataProvider = ({
   children,
   projectData,
   daoData,
   treasuryAnalytics,
-  tokenAnalytics
+  tokenAnalytics,
 }: ContextPropType) => {
   // Foundational Hooks
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
@@ -85,7 +90,6 @@ export const ProjectDataProvider = ({
     endTimestamp: loadTimestamp,
   });
 
-
   const [store] = useState(() =>
     createStore<ProjectDataStore>((set) => ({
       selectedTab: "about",
@@ -101,23 +105,17 @@ export const ProjectDataProvider = ({
       treasuryAnalytics,
       tokenAnalytics,
 
-      setRuleset: (newRuleset) =>
-        set({ ruleset: newRuleset }),
+      setRuleset: (newRuleset) => set({ ruleset: newRuleset }),
 
-      setRulesetMetadata: (metadata) =>
-        set({ rulesetMetadata: metadata }),
+      setRulesetMetadata: (metadata) => set({ rulesetMetadata: metadata }),
 
-      setProject: (newProject) =>
-        set({ project: newProject }),
+      setProject: (newProject) => set({ project: newProject }),
 
-      setSuckers: (newSuckers) =>
-        set({ suckers: newSuckers }),
+      setSuckers: (newSuckers) => set({ suckers: newSuckers }),
 
-      setDailyTotals: (totals) =>
-        set({ dailyTotals: totals }),
-        
+      setDailyTotals: (totals) => set({ dailyTotals: totals }),
     }))
-  )
+  );
 
   // Keep store in sync when data changes
   useEffect(() => {
@@ -129,7 +127,8 @@ export const ProjectDataProvider = ({
   }, [ruleset.data, store]);
 
   useEffect(() => {
-    if (rulesetMetadata.data) store.getState().setRulesetMetadata(rulesetMetadata.data);
+    if (rulesetMetadata.data)
+      store.getState().setRulesetMetadata(rulesetMetadata.data);
   }, [rulesetMetadata.data, store]);
 
   useEffect(() => {
@@ -154,12 +153,13 @@ export const useProjectContext = () => {
   return context;
 };
 
-
-export function useProjectDataStore<T>(selector: (state: ProjectDataStore) => T) {
+export function useProjectDataStore<T>(
+  selector: (state: ProjectDataStore) => T
+) {
   const context = useContext(NetworkDataContext);
 
   if (!context) {
-    throw new Error('NetworkDataContext Provider is missing');
+    throw new Error("NetworkDataContext Provider is missing");
   }
 
   return useStore(context, selector);

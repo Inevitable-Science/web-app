@@ -52,8 +52,8 @@ function PayActivityItem(
   return (
     <div className="border-color border-b pb-2">
       <div className="my-1 flex items-center justify-between">
-        <h3 className="font-light text-muted-foreground">IN</h3>
-        <div className="text-md font-light text-muted-foreground">
+        <h3 className="text-muted-foreground font-light">IN</h3>
+        <div className="text-md text-muted-foreground font-light">
           <EtherscanLink type="tx" value={payEvent.txHash} chain={chain}>
             {formattedDate}
           </EtherscanLink>
@@ -65,7 +65,7 @@ function PayActivityItem(
           Ξ{activityItemData.amount.format(6)}
         </div>
 
-        <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
+        <div className="text-md text-grey-100 flex flex-wrap items-center gap-1 font-light">
           <EthereumAddress
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
@@ -109,9 +109,9 @@ function RedeemActivityItem(
     <div className="border-color mb-1 border-b pb-2">
       <div className="flex items-center justify-between">
         <div className="text-md mb-2 text-zinc-500">
-          <h3 className="font-light text-muted-foreground">WITHDREW</h3>
+          <h3 className="text-muted-foreground font-light">WITHDREW</h3>
         </div>
-        <div className="text-md mb-2 flex items-center gap-1 font-light text-muted-foreground">
+        <div className="text-md text-muted-foreground mb-2 flex items-center gap-1 font-light">
           <EtherscanLink
             className="hover:underline"
             type="tx"
@@ -129,7 +129,7 @@ function RedeemActivityItem(
           )}
         </div>
 
-        <div className="text-md font-light text-grey-100">
+        <div className="text-md text-grey-100 font-light">
           <EthereumAddress
             className="hover:underline"
             address={activityItemData.beneficiary as Address}
@@ -159,7 +159,7 @@ export function TransactionTable() {
           }
         : undefined,
       limit: 100, // only most recent 100 events
-      offset: 0
+      offset: 0,
     },
     {
       pollInterval: 5000,
@@ -168,8 +168,8 @@ export function TransactionTable() {
   );
 
   return (
-    <div className="relative flex h-full flex-col rounded-2xl bg-grey-450 p-[12px]">
-      <p className="py-1 text-sm uppercase text-muted-foreground">
+    <div className="bg-grey-450 relative flex h-full flex-col rounded-2xl p-[12px]">
+      <p className="text-muted-foreground py-1 text-sm uppercase">
         Transactions
       </p>
       <div
@@ -208,7 +208,7 @@ export function TransactionTable() {
             })}
           </div>
         ) : (
-          <span className="text-md my-24 text-center text-muted-foreground">
+          <span className="text-md text-muted-foreground my-24 text-center">
             No activity yet.
           </span>
         )}

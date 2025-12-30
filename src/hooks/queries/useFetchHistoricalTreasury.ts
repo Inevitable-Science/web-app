@@ -1,7 +1,6 @@
 import { fetchHistoricalTreasury } from "@/lib/api/fetchHistoricalTreasury";
 import { HistoricalTreasuryResponse } from "@/lib/types/AnalyticTypes";
-import { useQuery } from "@tanstack/react-query"
-
+import { useQuery } from "@tanstack/react-query";
 
 export const useFetchHistoricalTreasury = (daoName: string) => {
   const enabled = !!daoName;
@@ -14,5 +13,5 @@ export const useFetchHistoricalTreasury = (daoName: string) => {
     retry: false,
     refetchOnWindowFocus: true,
     refetchOnMount: true,
-  })
+  });
 };

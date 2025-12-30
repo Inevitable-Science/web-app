@@ -4,7 +4,7 @@ import {
   IChartApi,
   ISeriesApi,
   LineSeriesOptions,
-  Time
+  Time,
 } from "lightweight-charts";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
@@ -27,17 +27,19 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
 
   const [chartType, setChartType] = useState<ChartType>("volume");
   const [timeRange, setTimeRange] = useState<MarketChartRangeType>("1");
-  const [prices, setPrices] = useState<{ time: Time; value: number; }[] | null>();
+  const [prices, setPrices] = useState<
+    { time: Time; value: number }[] | null
+  >();
 
-  const { 
+  const {
     data: holdersData,
     isFetching: isHoldersDataFetching,
-    isError: isHoldersDataError
+    isError: isHoldersDataError,
   } = useFetchHistoricalHolders(tokenName, chartType === "holders");
   const {
     data: marketData,
     isFetching: isMarketDataFetching,
-    isError: isMarketDataError
+    isError: isMarketDataError,
   } = useFetchMarketChart(tokenName, timeRange);
 
   const isLoading = isMarketDataFetching || isHoldersDataFetching;
@@ -76,7 +78,6 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
 
       prices = seriesData;
     } else {
-
       if (!marketData) return;
 
       const seriesData =
@@ -89,7 +90,7 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
         })) ?? null;
 
       prices = seriesData;
-    };
+    }
 
     if (prices) {
       prices.sort((a, b) => (a.time as number) - (b.time as number));
@@ -165,21 +166,21 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
       <div className="mb-4 flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
+            className="text-muted-foreground disabled:border-primary cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light disabled:cursor-auto disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("volume")}
             disabled={chartType === "volume"}
           >
             VOL
           </button>
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
+            className="text-muted-foreground disabled:border-primary cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light disabled:cursor-auto disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("holders")}
             disabled={chartType === "holders"}
           >
             HOLDERS
           </button>
           <button
-            className="cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light text-muted-foreground disabled:cursor-auto disabled:border-primary disabled:font-normal disabled:text-(--foreground)"
+            className="text-muted-foreground disabled:border-primary cursor-pointer border-b border-transparent px-2 py-2 text-sm font-light disabled:cursor-auto disabled:font-normal disabled:text-(--foreground)"
             onClick={() => setChartType("marketCap")}
             disabled={chartType === "marketCap"}
           >
@@ -194,28 +195,28 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
           >
             24h
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("7")}
             disabled={chartType === "holders" || timeRange === "7"}
           >
             7d
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("30")}
             disabled={chartType === "holders" || timeRange === "30"}
           >
             1m
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("365")}
             disabled={chartType === "holders" || timeRange === "365"}
           >
             1y
           </Button>
-          <Button 
+          <Button
             variant={"graphRounded"}
             className={`${chartType === "holders" && "bg-white! text-black!"}`}
             onClick={() => setTimeRange("max")}
@@ -227,13 +228,11 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
       </div>
 
       {isLoading ? (
-        <div className="activeSkeleton w-full h-[376px] rounded-lg" />
+        <div className="activeSkeleton h-[376px] w-full rounded-lg" />
       ) : (
         <>
-          {(
-            (chartType === "holders" && isHoldersDataError) ||
-            isMarketDataError
-          ) ? (
+          {(chartType === "holders" && isHoldersDataError) ||
+          isMarketDataError ? (
             <div className="hitboxUTFD-chart">
               <h3>Unable to fetch data</h3>
               <h5>We are unable to fetch data for this token right now.</h5>

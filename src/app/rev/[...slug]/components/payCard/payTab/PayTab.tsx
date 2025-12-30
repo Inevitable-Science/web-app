@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBRulesetContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useJBRulesetContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits } from "viem";
 import {
@@ -26,14 +32,16 @@ import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 export function PayTab({
   tokens,
   selectedToken,
-  setSelectedToken
+  setSelectedToken,
 }: {
   tokens: Token[];
   selectedToken: Token;
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const suckers = useProjectDataStore((state) => state.suckers);
-  const rulesetMetadataContext = useProjectDataStore((state) => state.rulesetMetadata);
+  const rulesetMetadataContext = useProjectDataStore(
+    (state) => state.rulesetMetadata
+  );
   const rulesetContext = useProjectDataStore((state) => state.ruleset);
 
   const { token: tokenBContext } = useJBTokenContext();
@@ -43,12 +51,14 @@ export function PayTab({
 
   const baseToken = useProjectBaseToken();
   const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
-  const { balances, isLoading: isBalanceLoading } = useTokenBalances(tokens, selectedSucker.peerChainId);
+  const { balances, isLoading: isBalanceLoading } = useTokenBalances(
+    tokens,
+    selectedSucker.peerChainId
+  );
 
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [memo, setMemo] = useState("");
-
 
   const defaultToken = {
     symbol: "TOKENS",
@@ -99,12 +109,12 @@ export function PayTab({
 
       const numberPayerTokens = Number(payerTokens);
       if (numberPayerTokens < 1) {
-        // Round 3 to sigfigs then remove trailing 0's -> via Number(...).toString() 
+        // Round 3 to sigfigs then remove trailing 0's -> via Number(...).toString()
         // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString()); // KEEP Number(...).toString(); 
+        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString()); // KEEP Number(...).toString();
         return;
       }
-      
+
       setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
       return;
     }
@@ -134,7 +144,7 @@ export function PayTab({
       setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
       return;
     }
-    
+
     setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
     return;
   };
@@ -165,7 +175,6 @@ export function PayTab({
     return;
   };
 
-
   const preparedAmountA = {
     amount: new FixedInt(
       parseUnits(amountA || "0", selectedToken.decimals),
@@ -187,23 +196,24 @@ export function PayTab({
       <div className="flex flex-col gap-2">
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">
-              YOU PAY
-            </p>
-            <PayInput value={amountA} onChangeFunction={handlePayAmountChange} />
+            <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
+            <PayInput
+              value={amountA}
+              onChangeFunction={handlePayAmountChange}
+            />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <div className="flex w-fit items-center justify-end gap-2 rounded-full bg-grey-450">
+            <div className="bg-grey-450 flex w-fit items-center justify-end gap-2 rounded-full">
               <ChainSelector
-                disabled={!suckers/* || suckers.length <= 1*/}
+                disabled={!suckers /* || suckers.length <= 1*/}
                 value={selectedToken}
                 handleChainChange={handleChainChange}
                 handleTokenChange={handleTokenChange}
                 options={tokens}
               />
             </div>
-            
-            <div className="select-none text-nowrap text-right text-sm font-light text-muted-foreground">
+
+            <div className="text-muted-foreground text-right text-sm font-light text-nowrap select-none">
               {isBalanceLoading ? (
                 <div className="flex items-center gap-1">
                   Balance:
@@ -211,11 +221,11 @@ export function PayTab({
                 </div>
               ) : (
                 <p className="w-[130px]">
-                Balance:{" "}
-                {formatTokenAmount(
-                  balances.get(selectedToken.address) ?? 0n,
-                  selectedToken
-                )}
+                  Balance:{" "}
+                  {formatTokenAmount(
+                    balances.get(selectedToken.address) ?? 0n,
+                    selectedToken
+                  )}
                 </p>
               )}
             </div>
@@ -223,12 +233,16 @@ export function PayTab({
         </div>
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="select-none text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
-            <PayInput value={amountB} onChangeFunction={handleReceiveAmountChange} disabled={baseToken.isNative !== selectedTokenIsNative} />
+            <PayInput
+              value={amountB}
+              onChangeFunction={handleReceiveAmountChange}
+              disabled={baseToken.isNative !== selectedTokenIsNative}
+            />
           </div>
-          <div className="flex w-fit min-w-fit items-center gap-1 rounded-full bg-grey-450 px-1.5 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full px-1.5 py-1">
             <div className="flex items-end">
               <Image
                 src={
@@ -247,7 +261,7 @@ export function PayTab({
                 }}
               />
 
-              <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+              <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
                   chainId={Number(selectedSucker.peerChainId) as JBChainId}
                   height={16}
@@ -255,15 +269,13 @@ export function PayTab({
                 />
               </div>
             </div>
-            <p className="text-lg font-light">
-              {tokenB.symbol || "TOKENS"}
-            </p>
+            <p className="text-lg font-light">{tokenB.symbol || "TOKENS"}</p>
           </div>
         </div>
       </div>
       <input
         type="text"
-        className="background-color w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+        className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
         onChange={(e) => setMemo(e.target.value)}
         value={memo}
         placeholder="Add a note... (optional)"

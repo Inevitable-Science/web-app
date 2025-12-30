@@ -2,11 +2,24 @@ import { useState } from "react";
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteArticleDialogue } from "../../../components/admin/DeleteArticleDialogue";
-import { ArticleCreateBodyType, ArticleCreateBodyZ, ArticleResponse } from "@/lib/types/AdminArticleTypes";
+import {
+  ArticleCreateBodyType,
+  ArticleCreateBodyZ,
+  ArticleResponse,
+} from "@/lib/types/AdminArticleTypes";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuthToken } from "@/store/AdminAuthStore";
-import { useArticleIsHidden, useArticleIsShownOnMainSite, useAttachments, useEditorValue, useKeywords, useLandingImage, useOrganisation, useTags, useTitle } from "@/store/ArticleEditorStore";
-
+import {
+  useArticleIsHidden,
+  useArticleIsShownOnMainSite,
+  useAttachments,
+  useEditorValue,
+  useKeywords,
+  useLandingImage,
+  useOrganisation,
+  useTags,
+  useTitle,
+} from "@/store/ArticleEditorStore";
 
 export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
   const { toast } = useToast();
@@ -20,8 +33,8 @@ export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
   const { tags, setTags } = useTags();
   const { attachments, setAttachments } = useAttachments();
   const { articleIsHidden, setArticleIsHidden } = useArticleIsHidden();
-  const { articleIsShownOnMainSite, setArticleShownOnMainSite } = useArticleIsShownOnMainSite();
-
+  const { articleIsShownOnMainSite, setArticleShownOnMainSite } =
+    useArticleIsShownOnMainSite();
 
   const [revertButton, setRevertButton] = useState(false);
 
@@ -125,7 +138,7 @@ export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border-none bg-grey-450 p-2 text-lg font-light">
+    <div className="bg-grey-450 flex w-full flex-col gap-2 rounded-lg border-none p-2 text-lg font-light">
       {article?.organisation.userPerms.isAdmin && ( // is automatically true if user is a top level admin
         <DeleteArticleDialogue
           article={{
@@ -149,13 +162,9 @@ export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
         {revertButton ? "Are You Sure?" : "Revert Changes"}
       </Button>
 
-      <Button
-        onClick={saveArticle}
-        className="w-full"
-        variant={"accent"}
-      >
+      <Button onClick={saveArticle} className="w-full" variant={"accent"}>
         {article ? "Save" : "Create"}
       </Button>
     </div>
-  )
+  );
 }

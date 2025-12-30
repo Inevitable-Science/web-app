@@ -80,11 +80,7 @@ import { cache } from "react";
 import { createPublicClient } from "viem";
 import { arbitrum, base, mainnet, optimism } from "viem/chains";
 import { createConfig, http, fallback } from "wagmi";
-import {
-  coinbaseWallet,
-  safe,
-  walletConnect,
-} from "wagmi/connectors";
+import { coinbaseWallet, safe, walletConnect } from "wagmi/connectors";
 
 const safeConnector = safe({
   allowedDomains: [/^app\.safe\.global$/],
@@ -94,12 +90,7 @@ const safeConnector = safe({
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const chains = [
-  arbitrum,
-  base,
-  mainnet,
-  optimism
-] as const;
+const chains = [arbitrum, base, mainnet, optimism] as const;
 
 const transports = {
   [mainnet.id]: fallback([
@@ -143,7 +134,8 @@ export const wagmiConfig = createConfig({
   connectors: [
     coinbaseWallet({
       appName: "Inevitable Science",
-      appLogoUrl: "https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png", // coinbase wallet defaults to favicon
+      appLogoUrl:
+        "https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png", // coinbase wallet defaults to favicon
     }),
     safeConnector,
     walletConnect({
@@ -155,7 +147,9 @@ export const wagmiConfig = createConfig({
         url: isProduction
           ? "https://inevitable.science"
           : "http://localhost:3000",
-        icons: ["https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png"],
+        icons: [
+          "https://cdn.inevitable.science/static/img/branding/manifest/android-chrome-512x512.png",
+        ],
       },
     }),
   ],
@@ -166,7 +160,8 @@ export type ViemChainIdType = keyof typeof transports;
 
 export const getViemPublicClient = cache((chainId: ViemChainIdType) => {
   const transport = transports[chainId];
-  if (!transport) throw new Error(`Transport not found for chainId: ${chainId}`);
+  if (!transport)
+    throw new Error(`Transport not found for chainId: ${chainId}`);
 
   return createPublicClient({
     batch: { multicall: true },

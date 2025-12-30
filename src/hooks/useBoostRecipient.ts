@@ -17,10 +17,9 @@ export function useBoostRecipient() {
     functionName: "splitsOf",
     chainId,
     address: contractAddress(JBCoreContracts.JBSplits),
-    args:
-      ruleset?.data
-        ? [projectId, BigInt(ruleset.data.id), RESERVED_TOKEN_SPLIT_GROUP_ID]
-        : undefined,
+    args: ruleset?.data
+      ? [projectId, BigInt(ruleset.data.id), RESERVED_TOKEN_SPLIT_GROUP_ID]
+      : undefined,
   });
 
   const boost = reservedTokenSplits?.[0];

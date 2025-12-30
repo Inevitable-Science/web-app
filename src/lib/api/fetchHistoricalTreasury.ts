@@ -8,4 +8,4 @@ export const fetchHistoricalTreasury = async (daoName: string) => {
 
   const data = await response.json();
   return HistoricalTreasuryResponseZ.parse(data);
-}
+};

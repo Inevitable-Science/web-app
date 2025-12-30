@@ -98,14 +98,14 @@ export function TransactionCard() {
         selectedToken
       );
       const numberPayerTokens = Number(payerTokens);
-      
+
       if (numberPayerTokens < 0) {
-        // Round 3 to sigfigs then remove trailing 0's 
+        // Round 3 to sigfigs then remove trailing 0's
         // this prevents strings like 0.0100000 and 0.000111111111
         setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
         return;
       }
-      
+
       setAmountB(Number(numberPayerTokens.toFixed(4)).toString());
       return;
     }
@@ -129,7 +129,7 @@ export function TransactionCard() {
       }
     );
     const numberPayerTokens = Number(quote.format());
-    
+
     if (numberPayerTokens < 0) {
       setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
       return;
@@ -266,16 +266,15 @@ export function TransactionCard() {
     }
   };
 
-
   return (
-    <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
+    <div className="bg-grey-450 flex flex-col rounded-xl p-[10px]">
       <div className="flex flex-col gap-2">
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
+            <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
             <input
               type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
+              className="focus:placeholder:text-muted-foreground w-full border-none bg-transparent p-0 text-2xl shadow-none ring-0 outline-hidden placeholder:text-white focus:ring-0 focus:outline-hidden"
               placeholder="0.00"
               max={7}
               value={amountA}
@@ -291,7 +290,7 @@ export function TransactionCard() {
               handleTokenChange={handleTokenChange}
               options={tokens}
             />
-            <p className="w-[130px] select-none text-nowrap text-right text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
               {formatTokenAmount(
                 balances.get(selectedToken.address) ?? 0n,
@@ -302,12 +301,12 @@ export function TransactionCard() {
         </div>
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="select-none text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
             <input
               type="number"
-              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
+              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none ring-0 outline-hidden placeholder:text-white focus:ring-0 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-80"
               placeholder="0.00"
               max={7}
               value={amountB}
@@ -316,7 +315,7 @@ export function TransactionCard() {
               onKeyDown={preventMinusKey}
             />
           </div>
-          <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 py-1 pl-1.5 pr-3">
+          <div className="bg-grey-450 flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
             <Image
               src={
                 metadata.data?.logoUri

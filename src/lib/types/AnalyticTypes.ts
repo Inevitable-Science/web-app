@@ -43,7 +43,7 @@ export const TreasuryResponseZ = z.object({
   treasury: z.object({
     address: z.string(),
     ens_name: z.string(),
-    chain_id: z.number()
+    chain_id: z.number(),
   }),
   signers: z.object({
     required: z.number(),
@@ -128,59 +128,30 @@ export const TokenResponseZ = z.object({
 
 export type TokenResponse = z.infer<typeof TokenResponseZ>;
 
-
 export const HistoricalTreasuryResponseZ = z.object({
-  historical_treasury: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
-  historical_assets: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
-  total_assets: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
+  historical_treasury: z.array(z.tuple([z.number(), z.number()])),
+  historical_assets: z.array(z.tuple([z.number(), z.number()])),
+  total_assets: z.array(z.tuple([z.number(), z.number()])),
 });
 
-export type HistoricalTreasuryResponse = z.infer<typeof HistoricalTreasuryResponseZ>;
+export type HistoricalTreasuryResponse = z.infer<
+  typeof HistoricalTreasuryResponseZ
+>;
 
 export const OHLCResponseZ = z.array(
-  z.tuple([
-    z.number(),
-    z.number(),
-    z.number(),
-    z.number(),
-    z.number(),
-  ])
+  z.tuple([z.number(), z.number(), z.number(), z.number(), z.number()])
 );
 
 export const MarketChartResponseZ = z.object({
-  prices: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
-  ),
-  market_caps: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
-  ),
-  total_volumes: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
-  ),
+  prices: z.array(z.tuple([z.number(), z.number()])),
+  market_caps: z.array(z.tuple([z.number(), z.number()])),
+  total_volumes: z.array(z.tuple([z.number(), z.number()])),
 });
 
 export type MarketChartResponse = z.infer<typeof MarketChartResponseZ>;
 
-
 export const TokenHoldersResponseZ = z.object({
-  holders: z.array(
-    z.tuple([z.number(), z.number()]),
-  )
+  holders: z.array(z.tuple([z.number(), z.number()])),
 });
 
 export type TokenHoldersType = z.infer<typeof TokenHoldersResponseZ>;
@@ -197,9 +168,9 @@ export const LegacyActivityResponseZ = z.object({
       usd_value: z.string(),
       payer_address: z.string(),
       beneficiary: z.string(),
-      transaction_hash: z.string()
+      transaction_hash: z.string(),
     })
-  )
+  ),
 });
 
 export type ActivityResponse = z.infer<typeof LegacyActivityResponseZ>;

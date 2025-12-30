@@ -17,7 +17,9 @@ export interface TabType {
 export function PageLayout() {
   const daoData = useProjectDataStore((state) => state.daoData);
   const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
-  const treasuryAnalytics = useProjectDataStore((state) => state.treasuryAnalytics);
+  const treasuryAnalytics = useProjectDataStore(
+    (state) => state.treasuryAnalytics
+  );
   const { contracts } = useJBContractContext();
 
   const tabs = [
@@ -28,9 +30,7 @@ export function PageLayout() {
     ...(daoData === null
       ? []
       : [
-          ...(tokenAnalytics
-            ? [{ key: "analytics", label: "Analytics" }]
-            : []),
+          ...(tokenAnalytics ? [{ key: "analytics", label: "Analytics" }] : []),
           ...(treasuryAnalytics
             ? [{ key: "treasury", label: "Treasury" }]
             : []),
@@ -53,7 +53,7 @@ export function PageLayout() {
         {/* Column 1 */}
         <div className="flex-1">
           <div className="block md:hidden">
-            <div className="mb-4 mt-1">
+            <div className="mt-1 mb-4">
               <PayCard />
             </div>
           </div>

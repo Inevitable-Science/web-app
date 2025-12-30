@@ -65,7 +65,9 @@ export function ArticlesClient({
       const filteredArticles = initialArticles.filter(
         (article) =>
           article.title.toLowerCase().includes(lowerQuery) ||
-          article.keywords.some((kw) => kw.toLowerCase().includes(lowerQuery)) ||
+          article.keywords.some((kw) =>
+            kw.toLowerCase().includes(lowerQuery)
+          ) ||
           article.description.toLowerCase().includes(lowerQuery)
       );
 
@@ -95,7 +97,7 @@ export function ArticlesClient({
   return (
     <>
       <div className="mt-28 flex items-center justify-between">
-        <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
+        <h1 className="text-primary text-3xl font-extralight sm:text-5xl">
           Articles
         </h1>
         <div className="block sm:hidden">
@@ -128,9 +130,9 @@ export function ArticlesClient({
         </div>
       </div>
 
-      <section className="mb-8 mt-16 flex flex-col gap-12">
+      <section className="mt-16 mb-8 flex flex-col gap-12">
         {hasNoResults ? (
-          <div className="text-center text-muted-foreground">
+          <div className="text-muted-foreground text-center">
             No results found. Try a different search term.
           </div>
         ) : (

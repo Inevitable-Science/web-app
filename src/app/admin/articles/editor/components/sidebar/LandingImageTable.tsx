@@ -3,10 +3,9 @@ import Image from "next/image";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { useAttachments, useLandingImage } from "@/store/ArticleEditorStore"
+import { useAttachments, useLandingImage } from "@/store/ArticleEditorStore";
 import { uploadImage } from "../../../UploadHelper";
 import { useArticleAuth, useAuthToken } from "@/store/AdminAuthStore";
-
 
 export function LandingImageTable() {
   const { authToken } = useAuthToken();
@@ -40,7 +39,7 @@ export function LandingImageTable() {
       if (!authToken) {
         revalidateUser();
         throw new Error();
-      };
+      }
 
       const url = await uploadImage(file, "profile", authToken);
 
@@ -59,7 +58,7 @@ export function LandingImageTable() {
   };
 
   return (
-    <div className="flex w-full flex-col gap-2 rounded-lg border-none bg-grey-450 p-2 font-light">
+    <div className="bg-grey-450 flex w-full flex-col gap-2 rounded-lg border-none p-2 font-light">
       <h4>{landingImage && "Current "}Landing Image</h4>
 
       {landingImage && (
@@ -73,7 +72,7 @@ export function LandingImageTable() {
 
       <Button
         onClick={handleLandingImgClick}
-        className={`background-color hover:background-color flex items-center gap-2 ${landingImage && 'text-xs'}`}
+        className={`background-color hover:background-color flex items-center gap-2 ${landingImage && "text-xs"}`}
       >
         Upload {landingImage && "New "}Landing Image
         <Upload height={16} width={16} />
@@ -87,5 +86,5 @@ export function LandingImageTable() {
         className="hidden"
       />
     </div>
-  )
+  );
 }

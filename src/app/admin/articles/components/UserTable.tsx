@@ -118,7 +118,7 @@ export function UserTable() {
       if (!authToken) {
         revalidateUser();
         throw new Error();
-      };
+      }
 
       const url = await uploadImage(file, "profile", authToken);
       setProfilePicture(url);
@@ -218,7 +218,7 @@ export function UserTable() {
   };
 
   return (
-    <div className="flex flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+    <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <div className="background-color flex items-center justify-between gap-4 rounded-xl p-[16px]">
         <div className="flex items-center gap-4">
           <div className="group relative h-[48px] w-[48px] overflow-hidden">
@@ -266,13 +266,13 @@ export function UserTable() {
                 <div className="flex items-center gap-1">
                   <input
                     type="text"
-                    className="h-[28px] w-full rounded-lg border-none bg-grey-450 p-2 text-[19px] text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                    className="bg-grey-450 placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[28px] w-full rounded-lg border-none p-2 text-sm text-[19px] font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                     placeholder="@..."
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
 
-                  <div className="flex h-[28px] items-center rounded-lg bg-grey-450 p-1">
+                  <div className="bg-grey-450 flex h-[28px] items-center rounded-lg p-1">
                     <Button
                       className="h-[28px] w-[28px] opacity-70 hover:opacity-100"
                       onClick={() => resetUserState("username")}
@@ -305,7 +305,7 @@ export function UserTable() {
                 </div>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">{user?.userId}</p>
+            <p className="text-muted-foreground text-sm">{user?.userId}</p>
           </div>
         </div>
 
@@ -330,20 +330,20 @@ export function UserTable() {
             width={24}
           />
           <div className="flex flex-col gap-1">
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               X/Twitter Handle
             </p>
             {editingValue === "twitter" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="bg-grey-450 placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[32px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                   placeholder="@..."
                   value={socialX}
                   onChange={(e) => setSocialX(e.target.value)}
                 />
 
-                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
+                <div className="bg-grey-450 flex h-[32px] items-center rounded-lg p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("twitter")}
@@ -367,7 +367,7 @@ export function UserTable() {
               <>
                 {socialX ? (
                   <div className="flex items-center gap-1">
-                    <h4 className="max-w-[155px] overflow-hidden truncate text-ellipsis leading-[32px]">
+                    <h4 className="max-w-[155px] truncate overflow-hidden leading-[32px] text-ellipsis">
                       @{socialX}
                     </h4>
                     <Button
@@ -399,20 +399,20 @@ export function UserTable() {
             width={28}
           />
           <div className="flex flex-col gap-1">
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Linked In Username
             </p>
             {editingValue === "linkedIn" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="bg-grey-450 placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[32px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                   placeholder="@..."
                   value={socialLinkedIn}
                   onChange={(e) => setSocialLinkedIn(e.target.value)}
                 />
 
-                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
+                <div className="bg-grey-450 flex h-[32px] items-center rounded-lg p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("linkedIn")}
@@ -436,7 +436,7 @@ export function UserTable() {
               <>
                 {socialLinkedIn ? (
                   <div className="flex items-center gap-1">
-                    <h4 className="max-w-[155px] overflow-hidden truncate text-ellipsis leading-[32px]">
+                    <h4 className="max-w-[155px] truncate overflow-hidden leading-[32px] text-ellipsis">
                       @{socialLinkedIn}
                     </h4>
                     <Button
@@ -463,20 +463,20 @@ export function UserTable() {
         <div className="background-color flex items-center gap-4 rounded-xl p-[16px]">
           <Link height={28} width={28} />
           <div className="flex flex-col gap-1">
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Personal Website
             </p>
             {editingValue === "website" ? (
               <div className="flex items-center gap-1">
                 <input
                   type="text"
-                  className="h-[32px] w-full rounded-lg border-none bg-grey-450 p-2 text-sm font-light outline-hidden transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-cerulean focus:ring-offset-2 focus:ring-offset-grey-450"
+                  className="bg-grey-450 placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 h-[32px] w-full rounded-lg border-none p-2 text-sm font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
                   placeholder="www.mysite.com"
                   value={socialWebsite}
                   onChange={(e) => setSocialWebsite(e.target.value)}
                 />
 
-                <div className="flex h-[32px] items-center rounded-lg bg-grey-450 p-1">
+                <div className="bg-grey-450 flex h-[32px] items-center rounded-lg p-1">
                   <Button
                     className="h-[32px] w-[32px] opacity-70 hover:opacity-100"
                     onClick={() => resetUserState("website")}
@@ -500,7 +500,7 @@ export function UserTable() {
               <>
                 {socialWebsite ? (
                   <div className="flex items-center gap-1">
-                    <h4 className="max-w-[155px] items-center overflow-hidden truncate text-ellipsis leading-[32px]">
+                    <h4 className="max-w-[155px] items-center truncate overflow-hidden leading-[32px] text-ellipsis">
                       {socialWebsite}
                     </h4>
                     <Button

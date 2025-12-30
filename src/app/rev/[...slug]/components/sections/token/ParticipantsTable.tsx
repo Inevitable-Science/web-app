@@ -30,9 +30,9 @@ export function ParticipantsTable({
       {participants.map((participant) => (
         <div
           key={participant?.address}
-          className="border-color flex flex-col border-b px-2 pb-4 pt-3 text-white"
+          className="border-color flex flex-col border-b px-2 pt-3 pb-4 text-white"
         >
-          <div className="text-md flex items-center justify-between font-light text-grey-50">
+          <div className="text-md text-grey-50 flex items-center justify-between font-light">
             <EthereumAddress
               address={participant?.address as Address}
               short
@@ -57,7 +57,7 @@ export function ParticipantsTable({
             </div>
           </div>
 
-          <div className="text-xs font-light uppercase text-grey-100">
+          <div className="text-grey-100 text-xs font-light uppercase">
             Ξ{formatUnits(participant.volume, 18, { fractionDigits: 3 })}{" "}
             Contributed
           </div>

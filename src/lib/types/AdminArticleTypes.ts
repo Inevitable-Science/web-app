@@ -69,15 +69,13 @@ export type User = z.infer<typeof UserZ>;
 
 export type UserResponseType = z.infer<typeof UserResponseZ>;
 
-
 export const CreateUserResponseZ = z.object({
   userId: z.string(),
   password: z.string(),
-  mfaKey: z.string()
+  mfaKey: z.string(),
 });
 
 export type CreateResponseType = z.infer<typeof CreateUserResponseZ>;
-
 
 // ---- Article Rotues ----
 

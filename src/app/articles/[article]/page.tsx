@@ -8,13 +8,17 @@ import z from "zod";
 interface ParamsProp {
   params: Promise<{
     article: string;
-  }>
+  }>;
 }
 
-const fetchArticle = async (articleId: string): Promise<ArticleResponse | null> => {
+const fetchArticle = async (
+  articleId: string
+): Promise<ArticleResponse | null> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/article/id/${articleId}`);
-    
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/article/id/${articleId}`
+    );
+
     const data = await response.json();
     const parsedData = ArticleResponseZ.parse(data);
 
@@ -32,8 +36,8 @@ export function htmlToText(html: string): string {
     .trim();
 
   // Optional: normalize multiple newlines/spaces
-  text = text.replace(/\n{3,}/g, '\n\n').trim();
-  
+  text = text.replace(/\n{3,}/g, "\n\n").trim();
+
   return text;
 }
 
@@ -82,7 +86,9 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
         title: "Article Not Found | Inevitable Science",
         description: "The requested article could not be found.",
         card: "summary_large_image",
-        images: ["https://cdn.inevitable.science/static/img/branding/seo_banner.png"],
+        images: [
+          "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+        ],
       },
       manifest: "/manifest/manifest.json",
     };
@@ -136,7 +142,7 @@ const ArticleResponseZ = z.object({
     keywords: z.array(z.string()),
     tags: z.array(z.string()),
     landingImage: z.string().nullable(),
-    content: z.string()
+    content: z.string(),
   }),
   author: z.object({
     username: z.string(),
@@ -160,37 +166,38 @@ export default async function ArticlePage(props: ParamsProp) {
 
   if (!article) {
     return notFound();
-  };
+  }
 
   return (
-     <div className="ctWrapper">
+    <div className="ctWrapper">
       <div className="mx-auto max-w-[960px]">
         <div className="mt-28">
-          <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
+          <h1 className="text-primary text-3xl font-extralight sm:text-5xl">
             {article.title}
           </h1>
 
-          <div className="flex font-light my-4 gap-2 items-center">
-              {article.author.profilePicture && (
-                <Image
-                  className="rounded-full"
-                  src={article.author.profilePicture}
-                  alt="Author Profile Picture"
-                  height={24}
-                  width={24}
-                />
-              )}
-            
+          <div className="my-4 flex items-center gap-2 font-light">
+            {article.author.profilePicture && (
+              <Image
+                className="rounded-full"
+                src={article.author.profilePicture}
+                alt="Author Profile Picture"
+                height={24}
+                width={24}
+              />
+            )}
+
             <p>
-              {article.author.username} | {formatDate(article.author.dateWritten, true)}
-             </p>
+              {article.author.username} |{" "}
+              {formatDate(article.author.dateWritten, true)}
+            </p>
           </div>
 
           <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap">
             {article.content.keywords.map((cat) => (
               <span
                 key={cat}
-                className="rounded-full bg-gunmetal px-[12px] py-[6px] text-sm focus:outline-hidden"
+                className="bg-gunmetal rounded-full px-[12px] py-[6px] text-sm focus:outline-hidden"
               >
                 {cat}
               </span>

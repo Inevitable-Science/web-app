@@ -33,7 +33,7 @@ const RichPreview = ({ source }: { source: string }) => {
 
     return (
       <div
-        className="w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
+        className="[&_a]:text-cerulean w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a]:break-all [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -44,7 +44,6 @@ const RichPreview = ({ source }: { source: string }) => {
     return <div className="wrap-break-word">{source}</div>;
   }
 };
-
 
 export function DescriptionSection() {
   const { metadata } = useJBProjectMetadataContext();
