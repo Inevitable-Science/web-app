@@ -67,7 +67,12 @@ export function CreateOrgDialogue({
         return;
       }
 
-      const url = await uploadImage(file, "organisation");
+      if (!authToken) {
+        revalidateUser();
+        throw new Error();
+      };
+
+      const url = await uploadImage(file, "organisation", authToken);
 
       setOrgLogo(url);
       return;

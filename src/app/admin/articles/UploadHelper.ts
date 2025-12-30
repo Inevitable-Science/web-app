@@ -1,13 +1,10 @@
-import { useAuthToken } from "@/store/AdminAuthStore";
 import z from "zod";
 
 export async function uploadImage(
   file: File,
   uploadType: "article" | "profile" | "organisation",
+  authToken: string
 ) {
-  const { authToken } = useAuthToken();
-  if (!authToken) throw new Error("AuthToken Required");
-
   const formData = new FormData();
   formData.append("file", file);
 

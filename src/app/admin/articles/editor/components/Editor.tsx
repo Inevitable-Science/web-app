@@ -10,6 +10,7 @@ import { uploadImage } from "../../UploadHelper";
 import { useToast } from "@/components/ui/use-toast";
 import { useAttachments, useEditorValue } from "@/store/ArticleEditorStore";
 import { useAdminArticleQuery } from "@/hooks/queries/admin/useFetchAdminArticle";
+import { useArticleAuth, useAuthToken } from "@/store/AdminAuthStore";
 
 
 // Improve image blot to support alt text and revoke URLs on remove
@@ -30,6 +31,9 @@ BetterImageBlot.tagName = "img";
 Quill.register(BetterImageBlot, true);
 
 export default function Editor() {
+  const { authToken } = useAuthToken();
+  const { revalidateUser } = useArticleAuth();
+
   const { data: article, isLoading } = useAdminArticleQuery();
   const { editorValue, setEditorValue } = useEditorValue();
   const { attachments, setAttachments } = useAttachments();
@@ -67,7 +71,12 @@ export default function Editor() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const uploadedUrl = await uploadImage(file, "article");
+        if (!authToken) {
+          revalidateUser();
+          throw new Error();
+        };
+
+        const uploadedUrl = await uploadImage(file, "article", authToken);
 
         if (!uploadedUrl) {
           throw new Error("No URL returned from server");

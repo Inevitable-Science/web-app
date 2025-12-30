@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useAttachments, useLandingImage } from "@/store/ArticleEditorStore"
 import { uploadImage } from "../../../UploadHelper";
+import { useArticleAuth, useAuthToken } from "@/store/AdminAuthStore";
 
 
 export function LandingImageTable() {
+  const { authToken } = useAuthToken();
+  const { revalidateUser } = useArticleAuth();
   const { landingImage, setLandingImage } = useLandingImage();
   const { attachments, setAttachments } = useAttachments();
   const { toast } = useToast();
@@ -34,7 +37,12 @@ export function LandingImageTable() {
         return;
       }
 
-      const url = await uploadImage(file, "profile");
+      if (!authToken) {
+        revalidateUser();
+        throw new Error();
+      };
+
+      const url = await uploadImage(file, "profile", authToken);
 
       setLandingImage(url);
       setAttachments([...attachments, url]);
@@ -65,9 +73,9 @@ export function LandingImageTable() {
 
       <Button
         onClick={handleLandingImgClick}
-        className="background-color hover:background-color flex items-center gap-2"
+        className={`background-color hover:background-color flex items-center gap-2 ${landingImage && 'text-xs'}`}
       >
-        Upload Landing Image
+        Upload {landingImage && "New "}Landing Image
         <Upload height={16} width={16} />
       </Button>
 

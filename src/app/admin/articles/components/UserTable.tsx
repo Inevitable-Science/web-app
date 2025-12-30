@@ -115,7 +115,12 @@ export function UserTable() {
         return;
       }
 
-      const url = await uploadImage(file, "profile");
+      if (!authToken) {
+        revalidateUser();
+        throw new Error();
+      };
+
+      const url = await uploadImage(file, "profile", authToken);
       setProfilePicture(url);
       return;
     } catch (err) {

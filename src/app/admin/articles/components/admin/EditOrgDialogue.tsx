@@ -93,8 +93,13 @@ export function EditOrgDialogue({
         return;
       }
 
+      if (!authToken) {
+        revalidateUser();
+        throw new Error();
+      };
+
       console.log("uploading");
-      const url = await uploadImage(file, "organisation");
+      const url = await uploadImage(file, "organisation", authToken);
 
       console.log(url);
       setOrgLogo(url);
