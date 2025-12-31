@@ -3,35 +3,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { metadata } from "@/lib/metadata";
 import { ArticlesClient } from "./ArticlesClient";
-import z from "zod";
+import { AllArticlesResponse, AllArticlesResponseZ } from "@/lib/types/PublicArticleTypes";
 
-const AllArticlesResponseZ = z.array(
-  z.object({
-    title: z.string(),
-    datePublished: z.string(),
-    articleId: z.string(),
-
-    landingImage: z.string(),
-
-    keywords: z.array(z.string()),
-    tags: z.array(z.string()),
-
-    organisation: z.object({
-      organisationName: z.string(),
-      organisationId: z.string(),
-
-      metadata: z.object({
-        logo: z.string(),
-        description: z.string(),
-        website: z.string(),
-        x: z.string(),
-        discord: z.string(),
-      }),
-    }),
-  })
-);
-
-type AllArticlesResponse = z.infer<typeof AllArticlesResponseZ>;
 
 const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
   try {
@@ -106,9 +79,9 @@ export default async function Articles() {
 
   // Get trending slides (latest 3 articles)
   const trendingSlides = sortedArticles.slice(0, 3).map((article) => ({
-    img: article.landingImage,
+    landingImage: article.landingImage,
     title: article.title,
-    description: article.keywords.join(", "), // fallback description
+    overview: article.overview ?? "",
     articleId: article.articleId,
   }));
 
@@ -123,9 +96,9 @@ export default async function Articles() {
     slides: sortedArticles
       .filter((article) => article.keywords.includes(keyword))
       .map((article) => ({
-        img: article.landingImage,
+        landingImage: article.landingImage,
         title: article.title,
-        description: article.keywords.join(", "),
+        overview: article.overview ?? "",
         articleId: article.articleId,
       })),
   }));
@@ -156,7 +129,6 @@ export default async function Articles() {
         initialCategories={uniqueKeywords}
         initialArticles={sortedArticles.map((article) => ({
           ...article,
-          description: article.keywords.join(", "),
           img: article.landingImage,
         }))}
         organisations={organisations}

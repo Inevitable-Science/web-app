@@ -6,9 +6,9 @@ import { SearchBar } from "./SearchComponent";
 import { DynamicArticleCarousel } from "./ArticleCarousel";
 
 interface Slide {
-  img: string;
   title: string;
-  description: string;
+  overview: string;
+  landingImage: string;
   articleId: string;
 }
 
@@ -23,7 +23,7 @@ interface Article {
   articleId: string;
   landingImage: string;
   keywords: string[];
-  description: string; // added for search
+  overview: string | null;
   img: string; // alias for landingImage
   organisation: {
     organisationName: string;
@@ -67,8 +67,7 @@ export function ArticlesClient({
           article.title.toLowerCase().includes(lowerQuery) ||
           article.keywords.some((kw) =>
             kw.toLowerCase().includes(lowerQuery)
-          ) ||
-          article.description.toLowerCase().includes(lowerQuery)
+          )
       );
 
       updatedCarousels = updatedCarousels

@@ -7,11 +7,12 @@ import {
   usePrevNextButtons,
 } from "@/components/home/ArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 
-interface SlideType {
-  img: string;
+export interface SlideType {
+  landingImage: string;
   title: string;
-  description: string;
+  overview: string;
   articleId: string;
 }
 
@@ -56,15 +57,17 @@ export function DynamicArticleCarousel({
               className="flex max-w-[520px] min-w-[280px] pl-4 sm:min-w-[440px]"
             >
               <div className="border-grey-500 bg-background flex h-full flex-col items-start rounded-2xl border p-4 select-none">
-                <img
-                  src={slide.img || "/placeholder.png"}
+                <Image
+                  src={slide.landingImage || "/placeholder.png"}
                   alt={slide.title}
+                  height={270}
+                  width={470}
                   className="h-auto w-full rounded-lg object-cover"
                 />
                 <div className="mt-4">
-                  <h4 className="font-optima text-xl">{slide.title}</h4>
+                  <h4 className="font-optima text-xl line-clamp-1">{slide.title}</h4>
                   <p className="text-muted-foreground line-clamp-2 text-sm font-light">
-                    {slide.description}
+                    {slide.overview}
                   </p>
                 </div>
               </div>

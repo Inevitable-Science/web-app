@@ -3,7 +3,8 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import z from "zod";
+import { DynamicArticleCarousel } from "../ArticleCarousel";
+import { LatestArticlesResponse, LatestArticlesResponseZ, SingleArticleResponse, SingleArticleResponseZ } from "@/lib/types/PublicArticleTypes";
 
 interface ParamsProp {
   params: Promise<{
@@ -13,14 +14,14 @@ interface ParamsProp {
 
 const fetchArticle = async (
   articleId: string
-): Promise<ArticleResponse | null> => {
+): Promise<SingleArticleResponse | null> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/article/id/${articleId}`
     );
 
     const data = await response.json();
-    const parsedData = ArticleResponseZ.parse(data);
+    const parsedData = SingleArticleResponseZ.parse(data);
 
     return parsedData;
   } catch (err) {
@@ -29,26 +30,25 @@ const fetchArticle = async (
   }
 };
 
-export function htmlToText(html: string): string {
-  let text = html
-    .replace(/<[^>]*>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+const fetchLatestArticles = async (
+  articleId: string
+): Promise<LatestArticlesResponse | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles/latest`
+    );
 
-  // Optional: normalize multiple newlines/spaces
-  text = text.replace(/\n{3,}/g, "\n\n").trim();
+    const data = await response.json();
+    const parsedData = LatestArticlesResponseZ.parse(data);
+    const filteredArticles = parsedData.filter(a => a.articleId.toLowerCase() !== articleId.toLowerCase());
 
-  return text;
-}
+    return filteredArticles;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
 
-function sliceToWord(text: string, maxLength: number) {
-  if (text.length <= maxLength) return text;
-
-  return text
-    .slice(0, maxLength)
-    .replace(/\s+\S*$/, "") // remove partial word at the end
-    .trim();
-}
 
 // Generate dynamic metadata based on the article
 export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
@@ -102,18 +102,13 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
     ? article.content.landingImage
     : "https://cdn.inevitable.science/static/img/branding/seo_banner.png";
 
-  const overview = `${sliceToWord(
-    htmlToText(article.content.content),
-    130
-  )}...`;
-
   return {
     title: `${article.title} | Inevitable Science`,
-    description: overview,
+    description: article.overview,
     alternates: { canonical: url },
     openGraph: {
       title: `${article.title} | Inevitable Science`,
-      description: overview,
+      description: article.overview,
       siteName: "Inevitable Science",
       images: [
         {
@@ -128,7 +123,7 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
     },
     twitter: {
       title: `${article.title} | Inevitable Science`,
-      description: overview,
+      description: article.overview,
       card: "summary_large_image",
       images: [imgUrl],
     },
@@ -136,37 +131,22 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
   };
 }
 
-const ArticleResponseZ = z.object({
-  title: z.string(),
-  content: z.object({
-    keywords: z.array(z.string()),
-    tags: z.array(z.string()),
-    landingImage: z.string().nullable(),
-    content: z.string(),
-  }),
-  author: z.object({
-    username: z.string(),
-    profilePicture: z.string(),
-    dateWritten: z.string(),
-  }),
-  organisation: z.object({
-    name: z.string(),
-    organisationId: z.string(),
-    logo: z.string().nullable(),
-  }),
-});
-
-type ArticleResponse = z.infer<typeof ArticleResponseZ>;
-
 export default async function ArticlePage(props: ParamsProp) {
   const params = await props.params;
   const articleId = params.article;
 
-  const article = await fetchArticle(articleId);
+  const [article, latestArticles] = await Promise.all([
+    await fetchArticle(articleId),
+    await fetchLatestArticles(articleId)
+  ]);
 
   if (!article) {
     return notFound();
   }
+
+  const keywords = article.content.keywords
+    .map(k => k.trim())
+    .filter(k => k.length > 0);
 
   return (
     <div className="ctWrapper">
@@ -176,7 +156,7 @@ export default async function ArticlePage(props: ParamsProp) {
             {article.title}
           </h1>
 
-          <div className="my-4 flex items-center gap-2 font-light">
+          <div className="mt-4 flex items-center gap-2 font-light">
             {article.author.profilePicture && (
               <Image
                 className="rounded-full"
@@ -193,16 +173,18 @@ export default async function ArticlePage(props: ParamsProp) {
             </p>
           </div>
 
-          <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap">
-            {article.content.keywords.map((cat) => (
-              <span
-                key={cat}
-                className="bg-gunmetal rounded-full px-[12px] py-[6px] text-sm focus:outline-hidden"
-              >
-                {cat}
-              </span>
-            ))}
-          </div>
+          {keywords.length > 0 && (
+            <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap mt-4">
+              {keywords.map((keyword) => (
+                <span
+                  key={keyword}
+                  className="bg-gunmetal rounded-full px-[12px] py-[6px] text-sm focus:outline-hidden"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <section>
@@ -225,12 +207,14 @@ export default async function ArticlePage(props: ParamsProp) {
         </section>
       </div>
 
-      <div className="mt-16 sm:mt-24 md:pt-12">
-        {/*<DynamicArticleCarousel
-          category="More articles"
-          slides={relatedArticles}
-        />*/}
-      </div>
+      {latestArticles && (
+        <div className="mt-16 sm:mt-24 md:pt-12">
+          <DynamicArticleCarousel
+            category="More articles"
+            slides={latestArticles}
+          />
+        </div>
+      )}
 
       <style>{`
         .articleParent p {
