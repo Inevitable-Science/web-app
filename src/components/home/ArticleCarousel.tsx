@@ -55,6 +55,28 @@ export default function ArticleCarousel() {
                 </div>
               </div>
 
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
             </div>
           </div>
         )}

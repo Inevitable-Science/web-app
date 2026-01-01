@@ -20,8 +20,10 @@ import {
   useTags,
   useTitle,
 } from "@/store/ArticleEditorStore";
+import { useRouter } from 'next/navigation';
 
 export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
+  const router = useRouter();
   const { toast } = useToast();
   const { authToken } = useAuthToken();
 
@@ -120,6 +122,12 @@ export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
 
       const data = await response.json();
       console.log(data);
+
+      if (article) {
+        router.push("/admin/articles");
+      } else {
+        router.push(`/admin/articles/editor/${data.articleId}`);
+      }
 
       toast({
         title: "Success",
