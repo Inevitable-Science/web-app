@@ -315,7 +315,7 @@ export function TransactionCard() {
               onKeyDown={preventMinusKey}
             />
           </div>
-          <div className="bg-grey-450 flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
+          <div className="bg-grey-450 min-w-fit max-w-fit flex flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
             <Image
               src={
                 metadata.data?.logoUri
