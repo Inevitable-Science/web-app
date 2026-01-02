@@ -141,7 +141,6 @@ export function TokenSection() {
       <div className="bg-grey-450 my-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
         <div className="background-color rounded-xl p-[16px]">
           <div className="flex items-end gap-2">
-            {/* This h3 is already correctly handling a potential lack of token.tokenAnalytics */}
             <h3 className="text-xl leading-[24px]">
               {tokenAnalytics?.selectedToken.name}
             </h3>

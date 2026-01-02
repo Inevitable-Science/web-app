@@ -224,7 +224,7 @@ export function TokenChart({ daoName }: { daoName: string }) {
       </div>
 
       {isLoading ? (
-        <div className="activeSkeleton aspect-11/10 h-[400px] w-full rounded-lg" />
+        <div className="activeSkeleton h-[400px] w-full rounded-lg" />
       ) : (
         <>
           {priceData ? (

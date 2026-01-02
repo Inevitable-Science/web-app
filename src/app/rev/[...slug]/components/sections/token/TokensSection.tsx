@@ -140,7 +140,6 @@ export function HoldersSection() {
         <div className="bg-grey-450 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
           <div className="background-color rounded-xl p-[16px]">
             <div className="flex items-end gap-2">
-              {/* This h3 is already correctly handling a potential lack of token.data */}
               <h3 className="text-xl leading-[24px]">
                 {token.data?.name ? token.data.name : metadata.data?.name}
               </h3>
@@ -162,7 +161,7 @@ export function HoldersSection() {
                 variant="link"
                 className="flex h-6 w-fit items-center gap-1.5 px-0 text-sm font-normal text-nowrap uppercase"
                 onClick={handleAddToken}
-                disabled={isPending} // Disable the button while processing
+                disabled={isPending}
               >
                 {isPending
                   ? "Adding..."
