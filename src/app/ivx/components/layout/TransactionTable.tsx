@@ -12,9 +12,8 @@ import {
   useJBTokenContext,
   useBendystrawQuery,
 } from "juice-sdk-react";
-import { Address, Chain } from "viem";
+import { Address } from "viem";
 
-import { Loader2 } from "lucide-react";
 import { useIVXContext } from "../../DataProvider";
 import { EthereumAddress } from "@/components/EthereumAddress";
 
@@ -87,6 +86,7 @@ function RedeemActivityItem(
 ) {
   const { token } = useJBTokenContext();
   const { metadata } = useIVXContext();
+  const chain = JB_CHAINS[cashOutEvent.chainId].chain;
 
   if (!cashOutEvent) return null;
 
@@ -116,6 +116,7 @@ function RedeemActivityItem(
             className="hover:underline"
             type="tx"
             value={cashOutEvent.txHash}
+            chain={chain}
           >
             {formattedDate}
           </EtherscanLink>

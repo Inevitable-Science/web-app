@@ -149,7 +149,7 @@ export function HoldersSection() {
                   className="text-muted-foreground text-sm"
                   type={"token"}
                   truncateTo={4}
-                  chain={JB_CHAINS[chainId ?? 1].chain}
+                  chain={chainId ? JB_CHAINS[chainId].chain : undefined}
                 />
               )}
             </div>

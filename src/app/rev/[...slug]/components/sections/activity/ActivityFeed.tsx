@@ -118,6 +118,7 @@ function RedeemActivityItem(
             className="hover:underline"
             type="tx"
             value={cashOutEvent.txHash}
+            chain={JB_CHAINS[cashOutEvent.chainId].chain}
           >
             {formattedDate}
           </EtherscanLink>

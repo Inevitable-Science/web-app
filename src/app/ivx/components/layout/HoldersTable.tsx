@@ -2,7 +2,7 @@
 
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { formatNumber } from "@/lib/utils";
-import { formatUnits } from "juice-sdk-core";
+import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery } from "juice-sdk-react";
 import { Address } from "viem";
@@ -72,6 +72,7 @@ export function HoldersTable() {
             <div className="text-md text-muted-foreground flex items-center justify-between font-light">
               <EthereumAddress
                 address={participant?.address as Address}
+                chain={JB_CHAINS[participant.chains[0] as JBChainId].chain}
                 short
                 withEnsAvatar={false}
                 withEnsName
