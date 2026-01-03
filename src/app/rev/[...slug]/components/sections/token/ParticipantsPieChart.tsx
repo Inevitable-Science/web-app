@@ -206,27 +206,27 @@ export function ParticipantsPieChart() {
         };
       })
       .filter((item) => item.balanceFormatted > 0)
-      //.sort((a, b) => b.balanceFormatted - a.balanceFormatted);
-      .sort((a, b) => {
-      // 1️⃣ Always move "extra holders" to the end
+      .sort((a, b) => b.balanceFormatted - a.balanceFormatted);
+      /*.sort((a, b) => {
+      // Always move "extra holders" to the end
       if (a.denotesExtraHolders && !b.denotesExtraHolders) return 1;
       if (!a.denotesExtraHolders && b.denotesExtraHolders) return -1;
 
-      // 2️⃣ Otherwise sort by balance (descending)
+      // Otherwise sort by balance
       return b.balanceFormatted - a.balanceFormatted;
-    });
+    });*/
   }, [participants, totalSupply]);
 
-  const adjustRadius = () => {
-    const width = window.innerWidth;
-    if (width < 410) {
-      setRadius({ innerRadius: 100, outerRadius: 120 });
-    } else {
-      setRadius({ innerRadius: 120, outerRadius: 150 });
-    }
-  };
-
   useEffect(() => {
+    const adjustRadius = () => {
+      const width = window.innerWidth;
+      if (width < 410) {
+        setRadius({ innerRadius: 100, outerRadius: 120 });
+      } else {
+        setRadius({ innerRadius: 120, outerRadius: 150 });
+      }
+    };
+
     adjustRadius();
     window.addEventListener("resize", adjustRadius);
     return () => {

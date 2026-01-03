@@ -178,24 +178,20 @@ export function TreasuryPieChart({
           })
       : [];
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [filteredData]); // TODO: review if this is needed
-
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
 
-  const adjustRadius = () => {
-    const width = window.innerWidth;
-    if (width < 410) {
-      setRadius({ innerRadius: 100, outerRadius: 120 });
-    } else {
-      setRadius({ innerRadius: 120, outerRadius: 150 });
-    }
-  };
-
   useEffect(() => {
+    const adjustRadius = () => {
+      const width = window.innerWidth;
+      if (width < 410) {
+        setRadius({ innerRadius: 100, outerRadius: 120 });
+      } else {
+        setRadius({ innerRadius: 120, outerRadius: 150 });
+      }
+    };
+
     adjustRadius();
     window.addEventListener("resize", adjustRadius);
     return () => {

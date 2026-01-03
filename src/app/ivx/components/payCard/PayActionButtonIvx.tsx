@@ -140,7 +140,7 @@ export function PayActionButton({
         description: "Transaction unsuccessful.",
       });
     }
-  }, [isSuccess, isTxError, isWriteError]);
+  }, [isSuccess, isTxError, isWriteError, toast]);
 
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useLegacyProjectStore } from "./DataProvider";
 
@@ -9,18 +9,29 @@ export function useSwitchToCorrectChain() {
   const { isConnected } = useAccount();
   const chainId = useChainId();
   const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
+  const hasSwitchedRef = useRef(false);
+
 
   useEffect(() => {
     if (
+      hasSwitchedRef.current ||
       !nativeTokenChainId ||
       !isConnected ||
-      !chainId ||
-      chainId === nativeTokenChainId
-    )
+      !chainId
+    ) return;
+
+    if (chainId === nativeTokenChainId) {
+      hasSwitchedRef.current = true;
       return;
+    }
 
     handleSwitchChain();
-  }, [nativeTokenChainId]);
+  }, [
+    nativeTokenChainId,
+    isConnected,
+    chainId,
+    switchChain,
+  ]);
 
   const handleSwitchChain = () => {
     if (!nativeTokenChainId) return;

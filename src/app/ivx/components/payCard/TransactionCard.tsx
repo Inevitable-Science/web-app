@@ -142,7 +142,7 @@ export function TransactionCard() {
   useEffect(() => {
     if (!selectedToken || !amountA) return;
     handlePayAmountChange(amountA);
-  }, [selectedToken]);
+  }, [selectedToken, handlePayAmountChange]);
 
   // 6. Effect to initialize the context with a default chain
   useEffect(() => {
