@@ -41,7 +41,7 @@ export function TabContent() {
   }
 
   return (
-    <div className="pb-10">
+    <div className="pb-10 sm:min-h-[700px]">
       {selectedTab === "about" && <DescriptionSection />}
       {selectedTab === "tokens" && <HoldersSection />}
       {selectedTab === "activity" && <ActivityFeed />}

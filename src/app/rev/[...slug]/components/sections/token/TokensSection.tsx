@@ -220,18 +220,10 @@ export function HoldersSection() {
         </div>
 
         <div className="bg-grey-450 flex h-[400px] items-center rounded-2xl p-[12px]">
-          <ParticipantsPieChart
-            participants={Object.values(participantsDataAggregate)}
-            totalSupply={totalOutstandingTokens}
-            token={token?.data}
-          />
+          <ParticipantsPieChart />
         </div>
 
-        <ParticipantsTable
-          participants={Object.values(participantsDataAggregate)}
-          token={token?.data}
-          totalSupply={totalOutstandingTokens}
-        />
+        <ParticipantsTable />
       </div>
     </section>
   );

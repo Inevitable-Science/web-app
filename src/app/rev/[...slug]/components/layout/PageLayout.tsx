@@ -62,9 +62,7 @@ export function PageLayout() {
             <section className="mb-10">
               <TabSelectorSM tabs={tabs} />
 
-              <div className="sm:min-h-[700px]">
-                <TabContent />
-              </div>
+              <TabContent />
             </section>
           </div>
         </div>

@@ -1,15 +1,17 @@
 "use client";
 
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { Participant } from "@/generated/graphql";
+import { ParticipantsDocument } from "@/generated/graphql";
 import { formatPortion } from "@/lib/utils";
-import { JBChainId, JBProjectToken } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId, JBProjectToken } from "juice-sdk-core";
 import { useMemo, useState, useEffect, type JSX } from "react";
 import { Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import { Address } from "viem";
-import { UseTokenReturnType } from "wagmi";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useBendystrawQuery } from "juice-sdk-react";
+import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 
 const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
 
@@ -19,6 +21,7 @@ interface PieChartData {
   address: Address;
   balanceFormatted: number;
   balance: JBProjectToken;
+  chainId: JBChainId;
   fill: string;
   percent: string;
   visualValue: number;
@@ -68,10 +71,16 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
         y={cy}
         dy={-8}
         textAnchor="middle"
-        fill={"var(--foreground)"}
+        fill={"#ffffff"}
       >
-        <tspan x={cx} dy="-0.5em" className="text-2xl">
-          <EthereumAddress address={payload.address} short />
+        <tspan x={cx} fill={"#ffffff"} dy="-0.5em" className="text-2xl">
+          {payload.address.endsWith("Others") ? (
+            <tspan className="fill-white">
+              {payload.address}
+            </tspan>
+          ) : (
+            <EthereumAddress className="fill-white" address={payload.address} chain={JB_CHAINS[payload.chainId].chain} short />
+          )}
         </tspan>
         <tspan x={cx} dy="1.8em" className="text-sm">
           {/*{payload.balance.format()} tokens*/}
@@ -104,15 +113,10 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   );
 };
 
-export function ParticipantsPieChart({
-  token,
-  totalSupply,
-  participants,
-}: {
-  token: UseTokenReturnType["data"] | null;
-  totalSupply: bigint;
-  participants: (Participant & { chains: JBChainId[] })[];
-}) {
+
+export function ParticipantsPieChart() {
+  const project = useProjectDataStore((state) => state.project);
+  const totalSupply = useTotalOutstandingTokens();
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [radius, setRadius] = useState<{
     innerRadius: number;
@@ -122,12 +126,67 @@ export function ParticipantsPieChart({
     outerRadius: 150,
   });
 
-  const pieChartData = useMemo(() => {
-    const totalBalance = participants?.reduce(
-      (acc, participant) => acc + BigInt(participant?.balance),
-      BigInt(0)
-    );
+  const { data: participantsQuery, isLoading } = useBendystrawQuery(ParticipantsDocument, {
+    orderBy: "balance",
+    orderDirection: "desc",
+    where: {
+      suckerGroupId: project.suckerGroupId,
+      balance_gt: 0,
+    },
+    // limit: 15
+  });
 
+  
+  const participantsDataAggregate =
+    participantsQuery?.participants.items?.reduce(
+      (acc, participant) => {
+        if (!participant) return acc;
+        const existingParticipant = acc[participant.address];
+        return {
+          ...acc,
+          [participant.address]: {
+            address: participant.address,
+            balance:
+              BigInt(existingParticipant?.balance ?? 0) +
+              BigInt(participant.balance ?? 0),
+            volume:
+              BigInt(existingParticipant?.volume ?? 0) +
+              BigInt(participant.volume ?? 0),
+            chains: [
+              ...(acc[participant.address]?.chains ?? []),
+              participant.chainId,
+            ],
+          },
+        };
+      },
+      {} as Record<string, any>
+    ) ?? {};
+
+  const participants = Object.values(participantsDataAggregate);
+
+  /*const totalBalanceFromQuery = participants?.reduce(
+    (acc, participant) => acc + BigInt(participant?.balance),
+    BigInt(0)
+  );
+
+  const totalHolders = participantsQuery?.participants.totalCount ?? 0;
+  const extraHolders = totalHolders - 15;
+  const otherHoldersSupply = totalSupply - totalBalanceFromQuery;
+  
+  const constructedObj = {
+    address: `${extraHolders} Others`,
+    balance: otherHoldersSupply,
+    volume: 0n,
+    chains: [1],
+    denotesExtraHolders: true,
+  }
+
+  if (extraHolders > 0) {
+    participants.push(constructedObj);
+  };*/
+
+
+  const pieChartData = useMemo(() => {
     return participants
       ?.map((participant, idx) => {
         const balance = new JBProjectToken(BigInt(participant?.balance));
@@ -139,18 +198,24 @@ export function ParticipantsPieChart({
           address: participant?.address,
           balanceFormatted: balance.toFloat(),
           balance,
+          chainId: participant.chains[0],
           fill: segmentColors[idx % segmentColors.length],
           percent,
           visualValue,
+          denotesExtraHolders: participant.denotesExtraHolders ?? undefined,
         };
       })
       .filter((item) => item.balanceFormatted > 0)
-      .sort((a, b) => b.balanceFormatted - a.balanceFormatted);
-  }, [participants, totalSupply]);
+      //.sort((a, b) => b.balanceFormatted - a.balanceFormatted);
+      .sort((a, b) => {
+      // 1️⃣ Always move "extra holders" to the end
+      if (a.denotesExtraHolders && !b.denotesExtraHolders) return 1;
+      if (!a.denotesExtraHolders && b.denotesExtraHolders) return -1;
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [participants]);
+      // 2️⃣ Otherwise sort by balance (descending)
+      return b.balanceFormatted - a.balanceFormatted;
+    });
+  }, [participants, totalSupply]);
 
   const adjustRadius = () => {
     const width = window.innerWidth;
@@ -173,12 +238,13 @@ export function ParticipantsPieChart({
     (acc, participant) => acc + BigInt(participant?.balance),
     BigInt(0)
   );
-  if (totalBalance === 0n || !pieChartData?.length) {
+
+  if (totalBalance === 0n || !pieChartData?.length || isLoading) {
     return (
-      <div className="tcpPieContainer">
+      <div className="participantsPieContainer">
         <Loader2 className="animate-spin" size={32} />
         <style>{`
-          .tcpPieContainer {
+          .participantsPieContainer {
             width: 100%;
             height: 350px;
             display: flex;
@@ -191,7 +257,7 @@ export function ParticipantsPieChart({
   }
 
   return (
-    <div className="tcpPieContainer">
+    <div className="participantsPieContainer">
       <ResponsiveContainer width="100%" height={320}>
         <PieChart>
           <Pie
@@ -212,7 +278,7 @@ export function ParticipantsPieChart({
       </ResponsiveContainer>
 
       <style>{`
-        .tcpPieContainer {
+        .participantsPieContainer {
           width: 100%;
           height: fit-content;
         }
