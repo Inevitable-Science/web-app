@@ -18,7 +18,7 @@ import {
   getUnitValue,
 } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
-import { PayInput } from "../PayInput";
+import { PayInput } from "../../../../../../components/PayInput";
 
 export interface Surplus {
   projectId: number;

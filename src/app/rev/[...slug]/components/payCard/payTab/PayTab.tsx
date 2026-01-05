@@ -5,7 +5,6 @@ import {
   JBChainId,
   useJBContractContext,
   useJBProjectMetadataContext,
-  useJBRulesetContext,
   useJBTokenContext,
 } from "juice-sdk-react";
 import { FixedInt } from "fpnum";
@@ -26,7 +25,7 @@ import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
-import { PayInput } from "../PayInput";
+import { PayInput } from "../../../../../../components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
 export function PayTab({
@@ -39,10 +38,10 @@ export function PayTab({
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const suckers = useProjectDataStore((state) => state.suckers);
-  const rulesetMetadataContext = useProjectDataStore(
+  const rulesetMetadata = useProjectDataStore(
     (state) => state.rulesetMetadata
   );
-  const rulesetContext = useProjectDataStore((state) => state.ruleset);
+  const ruleset = useProjectDataStore((state) => state.ruleset);
 
   const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
@@ -66,10 +65,6 @@ export function PayTab({
   };
 
   const tokenB = tokenBContext.data || defaultToken;
-  const ruleset = rulesetContext;
-  const rulesetMetadata = rulesetMetadataContext;
-  const selectedTokenIsNative =
-    selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase();
 
   useEffect(() => {
     if (!selectedToken || !amountA) return;
@@ -154,8 +149,8 @@ export function PayTab({
     const newChainTokens = getTokensForChain(chainId, version);
 
     let token;
-    if (selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase()) {
-      token = newChainTokens.find((t) => t.address === NATIVE_TOKEN);
+    if (selectedToken.isNative) {
+      token = newChainTokens.find((t) => t.isNative);
     } else {
       token = newChainTokens.find((t) => t.address === USDC_ADDRESSES[chainId]);
     }
@@ -239,7 +234,7 @@ export function PayTab({
             <PayInput
               value={amountB}
               onChangeFunction={handleReceiveAmountChange}
-              disabled={baseToken.isNative !== selectedTokenIsNative}
+              disabled={baseToken.isNative !== selectedToken.isNative}
             />
           </div>
           <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full px-1.5 py-1">

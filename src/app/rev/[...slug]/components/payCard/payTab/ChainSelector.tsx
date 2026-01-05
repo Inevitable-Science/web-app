@@ -121,7 +121,7 @@ export const ChainSelector = ({
             <SelectItem
               key={`${token.address}-${index}`}
               value={`${token.address}`}
-              className="[&>*:last-child]:flex [&>*:last-child]:w-full"
+              className="[&>*:last-child]:flex [&>*:last-child]:w-full [&>*:last-child]:items-center"
             >
               {token.address.toLowerCase() === NATIVE_TOKEN.toLowerCase() ? (
                 <ChainLogo chainId={1} />
