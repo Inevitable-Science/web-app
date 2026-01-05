@@ -1,17 +1,17 @@
-import { useIVXContext } from "../../DataProvider";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 
 export function PortfolioPeformance() {
-  const { analyticsData } = useIVXContext();
+  const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);
 
   return (
     <>
-      {analyticsData?.treasury?.historicalReturns && (
+      {treasuryData?.historicalReturns && (
         <div className="bg-grey-450 h-full rounded-2xl p-[12px]">
           <h3 className="text-muted-foreground py-1 text-sm uppercase">
             Portfolio Peformance
           </h3>
           <div className="flex flex-col text-sm font-light">
-            {analyticsData?.treasury?.historicalReturns.map((value) => {
+            {treasuryData.historicalReturns.map((value) => {
               const isPositive = !value.percentReturn.startsWith("-");
               const textColor = isPositive ? "text-green-500" : "text-red-500";
 

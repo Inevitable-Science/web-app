@@ -7,7 +7,7 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBContractContext } from "juice-sdk-react";
+import { useJBContractContext, useJBProjectMetadataContext } from "juice-sdk-react";
 
 import {
   useAccount,
@@ -25,7 +25,6 @@ import { Token } from "@/lib/token";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 
-import { useIVXContext } from "../../DataProvider";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
 
 import * as Dialog from "@radix-ui/react-dialog";
@@ -65,7 +64,7 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const { metadata } = useIVXContext();
+  const { metadata } = useJBProjectMetadataContext();
   const { selectedSucker } = useSelectedSucker();
   const {
     version,

@@ -4,12 +4,13 @@ import { EthereumAddress } from "@/components/EthereumAddress";
 import { formatNumber } from "@/lib/utils";
 import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
-import { JBChainId, useBendystrawQuery } from "juice-sdk-react";
+import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
 import { Address } from "viem";
-import { useIVXContext } from "../../DataProvider";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 
 export function HoldersTable() {
-  const { project, token } = useIVXContext();
+  const project = useProjectDataStore((state) => state.project);
+  const { token } = useJBTokenContext();
 
   const participantsQuery = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",

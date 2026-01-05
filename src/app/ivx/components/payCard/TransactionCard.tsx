@@ -6,7 +6,7 @@ import {
   NATIVE_TOKEN,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import Image from "next/image";
 import { Address, formatUnits, parseUnits } from "viem";
 import { useChainId } from "wagmi";
@@ -14,7 +14,6 @@ import { FixedInt } from "fpnum";
 
 import { PayActionButton } from "./PayActionButtonIvx";
 import { useSelectedSucker } from "../../SelectedSuckerContext";
-import { useIVXContext } from "../../DataProvider";
 
 import { PayCardSkeleton } from "./PayCardSkeleton";
 import { ChainSelector } from "./ChainSelect";
@@ -26,6 +25,8 @@ import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useTokenA } from "@/hooks/useTokenA";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+
 
 export function TransactionCard() {
   const tokenA = useTokenA();
@@ -34,13 +35,15 @@ export function TransactionCard() {
 
   const { data: accountingContext } = useProjectAccountingContext();
   const { version } = useJBContractContext();
-  const {
-    metadata,
-    suckers,
-    token: tokenBContext,
-    ruleset: rulesetContext,
-    rulesetMetadata: rulesetMetadataContext,
-  } = useIVXContext();
+  const { metadata } = useJBProjectMetadataContext();
+  const { token: tokenBContext } = useJBTokenContext();
+
+  const suckers = useProjectDataStore((state) => state.suckers);
+  const rulesetContext = useProjectDataStore((state) => state.ruleset);
+  const rulesetMetadataContext = useProjectDataStore((state) => state.rulesetMetadata);
+
+  
+
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
@@ -78,6 +81,8 @@ export function TransactionCard() {
       setAmountB("");
       return;
     }
+
+    if (!ruleset || !rulesetMetadata) return;
 
     if (version === 4) {
       const quote = getTokenAToBQuote(
@@ -120,6 +125,9 @@ export function TransactionCard() {
       setAmountA("");
       return;
     }
+
+    if (!ruleset || !rulesetMetadata) return;
+
     const quote = getTokenBtoAQuote(
       new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
       tokenB.decimals,

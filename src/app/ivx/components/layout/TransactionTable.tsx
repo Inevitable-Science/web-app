@@ -11,11 +11,12 @@ import {
   JBChainId,
   useJBTokenContext,
   useBendystrawQuery,
+  useJBProjectMetadataContext,
 } from "juice-sdk-react";
 import { Address } from "viem";
 
-import { useIVXContext } from "../../DataProvider";
 import { EthereumAddress } from "@/components/EthereumAddress";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 
 // todo cleanup
 
@@ -85,7 +86,7 @@ function RedeemActivityItem(
   > & { chainId: JBChainId; identity?: any }
 ) {
   const { token } = useJBTokenContext();
-  const { metadata } = useIVXContext();
+  const { metadata } = useJBProjectMetadataContext();
   const chain = JB_CHAINS[cashOutEvent.chainId].chain;
 
   if (!cashOutEvent) return null;
@@ -145,7 +146,8 @@ function RedeemActivityItem(
 }
 
 export function TransactionTable() {
-  const { project } = useIVXContext();
+  // const { project } = useIVXContext();
+  const project = useProjectDataStore((state) => state.project);
   const suckerGroupId = project?.suckerGroupId;
 
   const { data: activityEvents, isLoading } = useBendystrawQuery(

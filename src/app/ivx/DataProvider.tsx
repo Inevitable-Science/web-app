@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import { createContext, useContext, ReactNode, useMemo, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 import {
@@ -192,3 +192,4 @@ export const useIVXContext = () => {
   }
   return context;
 };
+*/

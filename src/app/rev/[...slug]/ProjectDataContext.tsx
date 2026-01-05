@@ -1,5 +1,5 @@
 //  Weird but useful pattern - READ MORE: https://tkdodo.eu/blog/zustand-and-react-context
-//  Zustand + React Context allows for many benifits such as initialization using props
+//  Zustand + React Context allows for many benefits such as initialization  w/props
 //  This pattern reduces the caveats usually found with replacing context w/zustand stores.
 
 "use client";

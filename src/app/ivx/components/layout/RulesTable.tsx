@@ -16,16 +16,17 @@ import {
   useJBTokenContext,
 } from "juice-sdk-react";
 import { useReadContract } from "wagmi";
-import { useIVXContext } from "../../DataProvider";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { formatNumber, formatTokenSymbol, rulesetStartDate } from "@/lib/utils";
 import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { differenceInDays, formatDate } from "date-fns";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+
 
 export function RulesTable() {
-  const { ruleset: primaryRuleset, rulesetMetadata: primaryRulesetMetadata } =
-    useIVXContext();
+  const primaryRuleset = useProjectDataStore((state) => state.ruleset);
+  const primaryRulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
 
   const { projectId, contractAddress } = useJBContractContext();
 

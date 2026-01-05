@@ -1,6 +1,5 @@
 import { TokenResponseZ, TreasuryResponseZ } from "@/lib/types/AnalyticTypes";
 import { Providers } from "./Providers";
-import { IvxPageDataProvider } from "./DataProvider";
 import { JBChainId } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import MainIvxLayout from "./components/Main";
@@ -8,6 +7,8 @@ import MainIvxLayout from "./components/Main";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
+import { ProjectDataProvider } from "../rev/[...slug]/ProjectDataContext";
+import { fetchProjectData } from "../rev/[...slug]/ProjectHelpers";
 
 export const revalidate = 900; // Revalidate every 15 minutes
 
@@ -83,19 +84,29 @@ async function fetchIvxData() {
 }
 
 export default async function IvxTokenPage() {
-  const pageData = await fetchIvxData();
-  if (!pageData) return notFound();
+  const [pageData, projectData] = await Promise.all([
+    await fetchIvxData(),
+    await fetchProjectData({
+      projectId: 17n,
+      chainId: 1,
+      version: 5
+    })
+  ]);
+
+  if (!pageData || !projectData) return notFound();
 
   return (
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
       <Providers chainId={1 as JBChainId} projectId={17n as bigint} version={5}>
-        <IvxPageDataProvider
-          tokenData={pageData.tokenData}
-          treasuryData={pageData.treasuryData}
+        <ProjectDataProvider
+          projectData={projectData}
+          daoData={null}
+          treasuryAnalytics={pageData.treasuryData}
+          tokenAnalytics={pageData.tokenData}
         >
           <MainIvxLayout />
-        </IvxPageDataProvider>
+        </ProjectDataProvider>
       </Providers>
     </>
   );

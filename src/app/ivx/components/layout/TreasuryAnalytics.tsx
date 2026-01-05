@@ -1,10 +1,10 @@
 import { truncateAddress } from "@/lib/utils";
-import { useIVXContext } from "../../DataProvider";
 import { Address } from "viem";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
+import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
 
 export function IvxTreasuryAnalytics() {
-  const { analyticsData } = useIVXContext();
+  const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);
 
   return (
     <div className="flex flex-col-reverse gap-[12px] lg:grid lg:h-[420px] lg:grid-cols-2">
@@ -21,7 +21,7 @@ export function IvxTreasuryAnalytics() {
               "linear-gradient(180deg, #000, rgba(0, 0, 0, 0.8) 90%, transparent)",
           }}
         >
-          {analyticsData?.treasury?.treasuryTokens
+          {treasuryData?.treasuryTokens
             ?.slice()
             .sort((a, b) => b.totalValue - a.totalValue)
             .map((token, index) => {
@@ -29,7 +29,7 @@ export function IvxTreasuryAnalytics() {
                 token.totalValue > 0
                   ? (
                       (token.totalValue /
-                        (analyticsData?.treasury?.treasuryValue ?? 1)) *
+                        (treasuryData?.treasuryValue ?? 1)) *
                       100
                     ).toFixed(2)
                   : "0.00";
@@ -55,14 +55,14 @@ export function IvxTreasuryAnalytics() {
         </div>
       </div>
 
-      {analyticsData?.treasury?.treasuryTokens && (
+      {treasuryData?.treasuryTokens && (
         <div className="bg-grey-450 h-full rounded-2xl p-[16px]">
           <p className="text-muted-foreground text-sm uppercase">
             Treasury Holdings
           </p>
           <div className="my-[24px] flex h-[calc(100%-20px)] items-center justify-center lg:my-0">
             <TreasuryPieChart
-              filteredData={analyticsData?.treasury?.treasuryTokens}
+              filteredData={treasuryData?.treasuryTokens}
             />
           </div>
         </div>
