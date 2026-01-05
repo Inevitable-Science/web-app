@@ -21,7 +21,7 @@ import { formatNumber, formatTokenSymbol, rulesetStartDate } from "@/lib/utils";
 import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { differenceInDays, formatDate } from "date-fns";
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 
 export function RulesTable() {

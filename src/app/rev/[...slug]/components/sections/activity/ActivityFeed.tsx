@@ -21,7 +21,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import StaticVolumeChart from "../../ActivityGraph";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Button } from "@/components/ui/button";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 
 function PayActivityItem(
   payEvent: Pick<

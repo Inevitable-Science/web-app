@@ -7,7 +7,7 @@ import { HoldersSection } from "../sections/token/TokensSection";
 
 import { TreasurySection } from "../sections/treasuryAnalytics/TreasurySection";
 import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
-import { useProjectDataStore } from "../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../store/ProjectDataContext";
 import { useJBTokenContext } from "juice-sdk-react";
 
 interface TabContentProps {

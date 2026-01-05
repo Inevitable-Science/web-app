@@ -1,4 +1,4 @@
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 export function PortfolioPeformance() {
   const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);

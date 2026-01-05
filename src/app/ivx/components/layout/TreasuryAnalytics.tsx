@@ -1,7 +1,7 @@
 import { truncateAddress } from "@/lib/utils";
 import { Address } from "viem";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 export function IvxTreasuryAnalytics() {
   const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);

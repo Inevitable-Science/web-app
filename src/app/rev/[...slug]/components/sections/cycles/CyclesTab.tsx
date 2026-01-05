@@ -11,7 +11,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 
 import { formatEther } from "viem";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";

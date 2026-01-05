@@ -10,7 +10,7 @@ import { Address } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useBendystrawQuery } from "juice-sdk-react";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 
 const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];

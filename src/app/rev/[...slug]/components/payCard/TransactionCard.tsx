@@ -10,7 +10,7 @@ import {
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useProjectDataStore } from "../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../store/ProjectDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";

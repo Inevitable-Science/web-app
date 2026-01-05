@@ -6,7 +6,7 @@ import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
-import { SelectedTabType, useProjectDataStore } from "../../ProjectDataContext";
+import { SelectedTabType, useProjectDataStore } from "../../../../../store/ProjectDataContext";
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 
 export interface TabType {

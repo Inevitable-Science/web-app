@@ -6,7 +6,7 @@ import {
   useJBTokenContext,
 } from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {

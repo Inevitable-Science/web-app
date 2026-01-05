@@ -1,6 +1,6 @@
 import { formatDate, formatNumber } from "@/lib/utils";
 import { PayCard } from "../payCard/PayCard";
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 export function IvxPageHeader() {
   const tokenData = useProjectDataStore((state) => state.tokenAnalytics);

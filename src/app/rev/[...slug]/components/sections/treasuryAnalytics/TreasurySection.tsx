@@ -6,7 +6,7 @@ import { Link, Loader2, RotateCw } from "lucide-react";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 
 export function TreasurySection() {
   const treasuryAnalytics = useProjectDataStore(

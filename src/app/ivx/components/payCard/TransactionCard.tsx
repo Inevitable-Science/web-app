@@ -25,7 +25,7 @@ import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useTokenA } from "@/hooks/useTokenA";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 
 export function TransactionCard() {

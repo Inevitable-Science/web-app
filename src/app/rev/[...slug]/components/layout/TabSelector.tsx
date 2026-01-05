@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { useProjectDataStore } from "../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../store/ProjectDataContext";
 import { TabType } from "./PageLayout";
 
 export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {

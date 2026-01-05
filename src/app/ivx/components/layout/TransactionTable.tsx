@@ -16,7 +16,7 @@ import {
 import { Address } from "viem";
 
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useProjectDataStore } from "@/app/rev/[...slug]/ProjectDataContext";
+import { useProjectDataStore } from "@/store/ProjectDataContext";
 
 // todo cleanup
 

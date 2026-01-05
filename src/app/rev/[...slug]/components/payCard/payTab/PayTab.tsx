@@ -20,7 +20,7 @@ import { formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { ChainSelector } from "./ChainSelector";
 import { useSelectedSucker } from "../SelectedSuckerContext";
-import { useProjectDataStore } from "../../../ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";

@@ -7,7 +7,7 @@ import MainIvxLayout from "./components/Main";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
-import { ProjectDataProvider } from "../rev/[...slug]/ProjectDataContext";
+import { ProjectDataProvider } from "../../store/ProjectDataContext";
 import { fetchProjectData } from "../rev/[...slug]/ProjectHelpers";
 
 export const revalidate = 900; // Revalidate every 15 minutes
