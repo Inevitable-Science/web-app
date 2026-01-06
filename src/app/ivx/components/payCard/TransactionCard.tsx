@@ -36,7 +36,7 @@ export function TransactionCard() {
   const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
-  const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
   const tokens = useMemo(
     () => getTokensForChain(selectedSucker?.peerChainId, version),
     [selectedSucker?.peerChainId]
@@ -58,6 +58,12 @@ export function TransactionCard() {
     if (!selectedToken || !amountA) return;
     handlePayAmountChange(amountA);
   }, [selectedToken]);
+
+  useEffect(() => {
+      if (!isQuoteLoading && amountA && selectedToken) {
+        handlePayAmountChange(amountA);
+      }
+    }, [isQuoteLoading]);
 
 
   const handlePayAmountChange = (value: string) => {
@@ -88,6 +94,7 @@ export function TransactionCard() {
       setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
       return;
     } else {
+      if (isQuoteLoading) return;
       const { payerTokens, reservedTokens } = tokenAToBQuote(
         value,
         selectedToken
@@ -241,7 +248,7 @@ export function TransactionCard() {
           amountB={preparedAmountB}
           paymentToken={selectedToken}
           walletBalance={balances}
-          disabled={!amountA || parseFloat(amountA) === 0}
+          disabled={!amountA || parseFloat(amountA) === 0 || isQuoteLoading}
         />
       </div>
     </div>

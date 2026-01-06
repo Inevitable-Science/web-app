@@ -27,7 +27,7 @@ export function usePaymentQuote(chainId: JBChainId) {
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
   const { toast } = useToast();
 
-  const { price: usdToEthPrice } = useCurrencyPrice(
+  const { price: usdToEthPrice, isLoading } = useCurrencyPrice(
     USD_CURRENCY_ID(version),
     ETH_CURRENCY_ID,
     chainId
@@ -36,7 +36,7 @@ export function usePaymentQuote(chainId: JBChainId) {
   function tokenAToBQuote(valueRaw: string, token: Token) {
     try {
       if (!ruleset?.data || !rulesetMetadata?.data || !tokenB) {
-        throw new Error("Missing data. Please try again");
+        throw new Error("Missing data. Please refresh the page and try again");
       }
 
       const amountInProjectCurrency = toProjectCurrencyAmount(
@@ -113,6 +113,7 @@ export function usePaymentQuote(chainId: JBChainId) {
   return {
     tokenAToBQuote,
     tokenBtoAQuote,
+    isLoading
   };
 }
 

@@ -12,7 +12,6 @@ import { Address, formatUnits, parseUnits } from "viem";
 import {
   getTokenAToBQuote,
   getTokenBtoAQuote,
-  NATIVE_TOKEN,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
@@ -49,7 +48,7 @@ export function PayTab({
   const { version } = useJBContractContext();
 
   const baseToken = useProjectBaseToken();
-  const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
   const { balances, isLoading: isBalanceLoading } = useTokenBalances(
     tokens,
     selectedSucker.peerChainId
@@ -70,6 +69,12 @@ export function PayTab({
     if (!selectedToken || !amountA) return;
     handlePayAmountChange(amountA);
   }, [selectedToken]);
+
+  useEffect(() => {
+    if (!isQuoteLoading && amountA && selectedToken) {
+      handlePayAmountChange(amountA);
+    }
+  }, [isQuoteLoading]);
 
   const handlePayAmountChange = (value: string) => {
     if (value.startsWith("-")) {
@@ -97,10 +102,11 @@ export function PayTab({
       setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
       return;
     } else {
+      if (isQuoteLoading) return;
       const { payerTokens, reservedTokens } = tokenAToBQuote(
         value,
         selectedToken
-      );
+      );      
 
       const numberPayerTokens = Number(payerTokens);
       if (numberPayerTokens < 1) {
@@ -281,7 +287,7 @@ export function PayTab({
         paymentToken={selectedToken}
         walletBalance={balances}
         memo={memo}
-        disabled={!amountA || parseFloat(amountA) === 0}
+        disabled={!amountA || parseFloat(amountA) === 0 || isQuoteLoading}
       />
     </div>
   );
