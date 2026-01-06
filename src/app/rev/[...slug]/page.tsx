@@ -7,11 +7,13 @@ import { headers } from "next/headers";
 import { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
 import {
-  fetchProjectAnalytics,
-  fetchProjectData,
   parseSlug,
   resolveIpfsLogo,
 } from "./ProjectHelpers";
+import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
+import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
+import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
+import { fetchProjectData } from "@/lib/helpers/getProjectBendystraw";
 
 interface Props {
   params: Promise<{ slug?: string }>;
@@ -77,28 +79,42 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function Page(props: Props) {
   const params = await props.params;
 
-  let config;
-  let project: ProjectQuery["project"] | null;
+  let config: ReturnType<typeof parseSlug>;
   try {
     config = parseSlug(params.slug);
-    project = await fetchProjectData(config);
-  } catch (err) {
+  } catch {
     return notFound();
   }
 
-  if (!config || !project || !project.name) {
+  const project = await fetchProjectData(config);
+  if (!project || !project?.name) {
     return notFound();
   }
 
-  const analytics = await fetchProjectAnalytics(project?.name);
+  const daoData = await fetchDaoData(project.name);
+  const tokenName = daoData?.nativeToken.name;
+  
+  const treasuryPromise = daoData
+    ? fetchTreasuryData(project.name)
+    : Promise.resolve(null);
+
+  const tokenPromise = tokenName
+    ? fetchTokenData(tokenName)
+    : Promise.resolve(null);
+
+  const [treasuryData, tokenData] = await Promise.all([
+    treasuryPromise,
+    tokenPromise,
+  ]);
+    
 
   return (
     <Providers {...config}>
       <ProjectDataProvider
         projectData={project}
-        daoData={analytics?.daoData ?? null}
-        treasuryAnalytics={analytics?.treasuryData ?? null}
-        tokenAnalytics={analytics?.tokenData ?? null}
+        daoData={daoData}
+        treasuryAnalytics={treasuryData}
+        tokenAnalytics={tokenData}
       >
         <PageLayout />
       </ProjectDataProvider>

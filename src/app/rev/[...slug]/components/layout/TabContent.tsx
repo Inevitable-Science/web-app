@@ -10,11 +10,6 @@ import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
 import { useProjectDataStore } from "../../../../../store/ProjectDataContext";
 import { useJBTokenContext } from "juice-sdk-react";
 
-interface TabContentProps {
-  selectedTab: string;
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
 // Mapping of tab names to their corresponding components
 const tabComponents: Record<string, FC<any>> = {
   activity: ActivityFeed,
@@ -47,9 +42,7 @@ export function TabContent() {
       {selectedTab === "activity" && <ActivityFeed />}
       {selectedTab === "cycles" && <NetworkDetailsTable />}
 
-      {token?.data && tokenAnalytics && selectedTab === "analytics" && (
-        <TokenSection />
-      )}
+      {tokenAnalytics && selectedTab === "analytics" && <TokenSection />}
       {treasuryAnalytics && selectedTab === "treasury" && <TreasurySection />}
     </div>
   );
