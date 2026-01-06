@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
-import { useLegacyProjectStore } from "../../../../store/LegacyProjectContext";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { TabTypeArray } from "./DaoPage";
 
 export function TabSelectorSM({ tabs }: { tabs: TabTypeArray[] }) {

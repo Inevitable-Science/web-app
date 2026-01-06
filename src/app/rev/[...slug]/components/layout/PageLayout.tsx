@@ -15,7 +15,7 @@ export interface TabType {
 }
 
 export function PageLayout() {
-  const daoData = useRevnetDataStore((state) => state.daoData);
+  //const daoData = useRevnetDataStore((state) => state.daoData);
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
   const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
@@ -27,14 +27,14 @@ export function PageLayout() {
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    ...(daoData === null
+    /*...(daoData === null
       ? []
-      : [
+      : */[
           ...(tokenAnalytics ? [{ key: "analytics", label: "Analytics" }] : []),
           ...(treasuryAnalytics
             ? [{ key: "treasury", label: "Treasury" }]
             : []),
-        ]),
+        ]//),
   ] as TabType[];
 
   if (contracts.controller.data === zeroAddress) {

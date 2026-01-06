@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
-import { useLegacyProjectStore } from "../../../../../../store/LegacyProjectContext";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 
 export function AnalyticsPreview() {
   const treasuryAnalytics = useLegacyProjectStore(

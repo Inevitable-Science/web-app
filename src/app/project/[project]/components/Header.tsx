@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
-import { useLegacyProjectStore } from "../../../../store/LegacyProjectContext";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 export function Header() {

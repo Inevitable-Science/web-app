@@ -43,7 +43,7 @@ interface RevnetDataStore {
   dailyTotals: DailyVolume[];
 
   // Analytics State
-  daoData: DaoResponse | null;
+  //daoData: DaoResponse | null;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
 
@@ -101,7 +101,7 @@ export const RevnetDataProvider = ({
       project: projectData,
       dailyTotals,
 
-      daoData,
+      //daoData,
       treasuryAnalytics,
       tokenAnalytics,
 

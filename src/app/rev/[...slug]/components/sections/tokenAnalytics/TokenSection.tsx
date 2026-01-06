@@ -58,16 +58,14 @@ function getValuationLabel(
 }
 
 export function TokenSection() {
-  const daoData = useRevnetDataStore((state) => state.daoData);
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
   const suckers = useRevnetDataStore((state) => state.suckers);
 
   return (
     <section>
-      {daoData?.name && (
+      {tokenAnalytics?.selectedToken.ticker && (
         <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-          <TokenChart daoName={daoData.name} />{" "}
-          {/* TODO: review if this required daoName or tokenTicker */}
+          <TokenChart daoName={tokenAnalytics.selectedToken.ticker} />{" "}
         </div>
       )}
 
