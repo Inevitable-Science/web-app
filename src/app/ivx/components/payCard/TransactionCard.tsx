@@ -20,7 +20,7 @@ import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
-import { useProjectDataStore } from "@/store/ProjectDataContext";
+import { useProjectDataStore } from "@/store/RevnetDataContext";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 

@@ -1,4 +1,4 @@
-import { LegacyProjectProvider } from "./DataProvider";
+import { LegacyProjectProvider } from "../../../store/LegacyProjectContext";
 import { DaoPage } from "./components/DaoPage";
 
 import { headers } from "next/headers";

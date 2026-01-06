@@ -9,7 +9,7 @@ import {
   useBendystrawQuery,
 } from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
-import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
 
 export function ChartSection() {
   const { projectId, version } = useJBContractContext();

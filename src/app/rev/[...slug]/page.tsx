@@ -2,7 +2,7 @@ import { Providers } from "./Providers";
 import { PageLayout } from "./components/layout/PageLayout";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
-import { ProjectDataProvider } from "../../../store/ProjectDataContext";
+import { ProjectDataProvider } from "../../../store/RevnetDataContext";
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import { metadata } from "@/lib/metadata";

@@ -2,7 +2,7 @@
 import { JBChainId } from "juice-sdk-react";
 import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
-import { useProjectDataStore } from "../../../../../../store/ProjectDataContext";
+import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";

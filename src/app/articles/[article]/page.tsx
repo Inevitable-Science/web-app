@@ -136,8 +136,8 @@ export default async function ArticlePage(props: ParamsProp) {
   const articleId = params.article;
 
   const [article, latestArticles] = await Promise.all([
-    await fetchArticle(articleId),
-    await fetchLatestArticles(articleId)
+    fetchArticle(articleId),
+    fetchLatestArticles(articleId)
   ]);
 
   if (!article) {

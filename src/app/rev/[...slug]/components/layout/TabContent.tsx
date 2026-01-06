@@ -7,7 +7,7 @@ import { HoldersSection } from "../sections/token/TokensSection";
 
 import { TreasurySection } from "../sections/treasuryAnalytics/TreasurySection";
 import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
-import { useProjectDataStore } from "../../../../../store/ProjectDataContext";
+import { useProjectDataStore } from "../../../../../store/RevnetDataContext";
 import { useJBTokenContext } from "juice-sdk-react";
 
 // Mapping of tab names to their corresponding components

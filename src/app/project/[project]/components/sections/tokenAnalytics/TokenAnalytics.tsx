@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 import { TokenChart } from "@/components/analytics/TokenChart";
 import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
-import { useLegacyProjectStore } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../../../../store/LegacyProjectContext";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
-import { useLegacyProjectStore } from "./DataProvider";
+import { useLegacyProjectStore } from "../../../store/LegacyProjectContext";
 
 export function useSwitchToCorrectChain() {
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);

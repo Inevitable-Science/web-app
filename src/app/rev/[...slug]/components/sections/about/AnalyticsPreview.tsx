@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
-import { useProjectDataStore } from "@/store/ProjectDataContext";
+import { useProjectDataStore } from "@/store/RevnetDataContext";
 import { ArrowRight } from "lucide-react";
 
 export function DaoData() {

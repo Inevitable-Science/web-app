@@ -28,7 +28,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
-import { useProjectDataStore } from "@/store/ProjectDataContext";
+import { useProjectDataStore } from "@/store/RevnetDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";

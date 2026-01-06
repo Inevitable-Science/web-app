@@ -1,6 +1,6 @@
 "use client";
 import { Header } from "./Header";
-import { TabType, useLegacyProjectStore } from "../DataProvider";
+import { TabType, useLegacyProjectStore } from "../../../../store/LegacyProjectContext";
 import { TabContent } from "./TabsContent";
 import { OtherDaosCarousel } from "@/app/rev/[...slug]/components/layout/OtherDaosCarousel";
 

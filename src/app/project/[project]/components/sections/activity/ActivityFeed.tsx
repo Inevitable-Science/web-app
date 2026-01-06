@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useLegacyProjectStore } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../../../../store/LegacyProjectContext";
 import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Address } from "viem";

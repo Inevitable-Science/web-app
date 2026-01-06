@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import DOMPurify from "dompurify";
 import Image from "next/image";
-import { useLegacyProjectStore } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../../../../store/LegacyProjectContext";
 import { Globe } from "lucide-react";
 import { AnalyticsPreview } from "./AnalyticsPreview";
 

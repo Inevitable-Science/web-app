@@ -7,7 +7,7 @@ import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
-import { useLegacyProjectStore } from "../../../DataProvider";
+import { useLegacyProjectStore } from "../../../../../../store/LegacyProjectContext";
 import EtherscanLink from "@/components/EtherscanLink";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 

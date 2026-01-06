@@ -6,7 +6,7 @@ import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
 import { Address } from "viem";
-import { useProjectDataStore } from "@/store/ProjectDataContext";
+import { useProjectDataStore } from "@/store/RevnetDataContext";
 
 export function HoldersTable() {
   const project = useProjectDataStore((state) => state.project);

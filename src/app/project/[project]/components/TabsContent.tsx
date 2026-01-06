@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { useLegacyProjectStore } from "../DataProvider";
+import { useLegacyProjectStore } from "../../../../store/LegacyProjectContext";
 import { DescriptionSection } from "./sections/about/AboutSection";
 import { ActivityFeed } from "./sections/activity/ActivityFeed";
 import { TreasurySection } from "./sections/treasury/TreasurySection";
