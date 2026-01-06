@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <div className="relative z-[-1] -mt-[240px] flex h-[600px] w-full items-end bg-[url('https://cdn.inevitable.science/static/img/layout/ivx/ivx_footer_image.webp')] mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)] bg-cover bg-center px-12 pt-8 pb-[144px] font-light">
       <div className="mb-8 flex w-full flex-col-reverse items-center justify-between gap-4 text-center text-sm md:mb-2 md:flex-row md:gap-0">
-        <p>All rights reserved Inevitable 2025</p>
+        <p>All rights reserved Inevitable 2026</p>
         <div className="flex items-center gap-4">
           <a
             href="https://x.com/inevitablesci"

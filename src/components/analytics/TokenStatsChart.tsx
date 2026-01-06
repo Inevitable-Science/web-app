@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { useFetchHistoricalHolders } from "@/hooks/queries/useFetchHistoricalHolders";
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
-import { MarketChartRangeType } from "@/lib/api/fetchMarketChart";
+import { MarketChartRangeType } from "@/lib/queryFns/fetchMarketChart";
 
 interface TokenStatsProps {
   daoName: string;

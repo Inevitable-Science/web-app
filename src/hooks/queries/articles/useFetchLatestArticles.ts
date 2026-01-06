@@ -1,4 +1,4 @@
-import { fetchLatestArticles } from "@/lib/api/articles/fetchLatestArticles"
+import { fetchLatestArticles } from "@/lib/queryFns/articles/fetchLatestArticles"
 import { useQuery } from "@tanstack/react-query"
 
 

@@ -2,7 +2,7 @@ import {
   fetchMarketChartData,
   PriceData,
   MarketChartRangeType,
-} from "@/lib/api/fetchMarketChart";
+} from "@/lib/queryFns/fetchMarketChart";
 import { MarketChartResponse } from "@/lib/types/AnalyticTypes";
 import { useQuery } from "@tanstack/react-query";
 

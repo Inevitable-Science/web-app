@@ -1,4 +1,4 @@
-import { fetchLegacyActivity } from "@/lib/api/fetchLegacyActivity";
+import { fetchLegacyActivity } from "@/lib/queryFns/fetchLegacyActivity";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export const useFetchLegacyActivity = (daoName?: string, page?: number) => {

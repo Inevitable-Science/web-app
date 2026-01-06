@@ -1,4 +1,4 @@
-import { fetchHistoricalHolders } from "@/lib/api/fetchHistoricalHolders";
+import { fetchHistoricalHolders } from "@/lib/queryFns/fetchHistoricalHolders";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 export const useFetchHistoricalHolders = (

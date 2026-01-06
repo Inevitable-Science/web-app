@@ -1,4 +1,4 @@
-import { fetchHistoricalTreasury } from "@/lib/api/fetchHistoricalTreasury";
+import { fetchHistoricalTreasury } from "@/lib/queryFns/fetchHistoricalTreasury";
 import { HistoricalTreasuryResponse } from "@/lib/types/AnalyticTypes";
 import { useQuery } from "@tanstack/react-query";
 

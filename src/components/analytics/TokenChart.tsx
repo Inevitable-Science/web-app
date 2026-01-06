@@ -12,7 +12,7 @@ import {
 } from "lightweight-charts";
 import { Button } from "../ui/button";
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
-import { MarketChartRangeType, PriceData } from "@/lib/api/fetchMarketChart";
+import { MarketChartRangeType, PriceData } from "@/lib/queryFns/fetchMarketChart";
 
 export function TokenChart({ daoName }: { daoName: string }) {
   const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);

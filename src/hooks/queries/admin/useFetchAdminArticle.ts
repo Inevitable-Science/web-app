@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useAuthToken } from "@/store/AdminAuthStore";
-import { fetchArticle } from "@/lib/api/admin/fetchArticle";
+import { fetchArticle } from "@/lib/queryFns/admin/fetchArticle";
 import { ArticleResponse } from "@/lib/types/AdminArticleTypes";
 
 export const useAdminArticleQuery = () => {

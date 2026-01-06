@@ -1,4 +1,4 @@
-import { fetchAllUsers } from "@/lib/api/admin/fetchUsers";
+import { fetchAllUsers } from "@/lib/queryFns/admin/fetchUsers";
 import { AllUsersResponse } from "@/lib/types/AdminArticleTypes";
 import { useAuthToken, useUser } from "@/store/AdminAuthStore";
 import { useQuery } from "@tanstack/react-query";
