@@ -2,7 +2,7 @@
 import { Header } from "./Header";
 import { TabType, useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { TabContent } from "./TabsContent";
-import { OtherDaosCarousel } from "@/app/rev/[...slug]/components/layout/OtherDaosCarousel";
+import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 import { useEffect, useMemo, useState } from "react";

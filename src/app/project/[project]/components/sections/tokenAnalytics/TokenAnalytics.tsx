@@ -132,9 +132,9 @@ export function TokenSection() {
 
   return (
     <section>
-      {tokenAnalytics?.name && (
+      {tokenAnalytics?.selectedToken.ticker && (
         <div className="bg-grey-450 h-auto max-h-[550px] rounded-2xl p-[12px]">
-          <TokenChart daoName={tokenAnalytics?.name} />
+          <TokenChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
         </div>
       )}
 
@@ -315,15 +315,13 @@ export function TokenSection() {
             </div>
           )}
 
-          {tokenAnalytics.selectedToken.ticker &&
-            tokenAnalytics.selectedToken.name && (
-              <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-                <TokenStatsChart
-                  daoName={tokenAnalytics.selectedToken.ticker}
-                  tokenName={tokenAnalytics.selectedToken.name}
-                />
-              </div>
-            )}
+          {tokenAnalytics.selectedToken.ticker && (
+            <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
+              <TokenStatsChart
+                tokenTicker={tokenAnalytics.selectedToken.ticker}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className="my-[15vh] flex w-full justify-center">

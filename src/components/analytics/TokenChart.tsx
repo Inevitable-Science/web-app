@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
 import { MarketChartRangeType, PriceData } from "@/lib/queryFns/fetchMarketChart";
 
-export function TokenChart({ daoName }: { daoName: string }) {
+export function TokenChart({ tokenTicker }: { tokenTicker: string }) {
   const [latest24hPrice, setLatest24hPrice] = useState<number | null>(null);
   const [returns, setReturns] = useState<number | null>(null);
   const [timeRange, setTimeRange] = useState<MarketChartRangeType>("1");
@@ -25,7 +25,7 @@ export function TokenChart({ daoName }: { daoName: string }) {
   const isMountedRef = useRef<boolean>(true);
 
   const { data: priceDataResponse, isLoading } = useFetchMarketChart(
-    daoName,
+    tokenTicker,
     timeRange
   );
 
@@ -50,7 +50,7 @@ export function TokenChart({ daoName }: { daoName: string }) {
       const latestPrice = prices[prices.length - 1].value;
       setLatest24hPrice(latestPrice);
     }
-  }, [daoName, timeRange, isLoading]);
+  }, [tokenTicker, timeRange, isLoading]);
 
   // set and alter price returns on timeRange change and onSuccess
   useEffect(() => {
@@ -117,7 +117,7 @@ export function TokenChart({ daoName }: { daoName: string }) {
       isMountedRef.current = false;
       chart.remove();
     };
-  }, [daoName, timeRange, isLoading]);
+  }, [tokenTicker, timeRange, isLoading]);
 
   // helper functions
   const formatClippedPrice = (value: number | null): string => {

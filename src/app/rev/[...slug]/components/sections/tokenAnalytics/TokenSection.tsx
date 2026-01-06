@@ -65,7 +65,7 @@ export function TokenSection() {
     <section>
       {tokenAnalytics?.selectedToken.ticker && (
         <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-          <TokenChart daoName={tokenAnalytics.selectedToken.ticker} />{" "}
+          <TokenChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
         </div>
       )}
 
@@ -190,10 +190,11 @@ export function TokenSection() {
             </div>
           )}
 
-          <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-            <TokenStatsChart daoName="cryodao" tokenName="cryo" />{" "}
-            {/* TODO: change */}
-          </div>
+          {tokenAnalytics.selectedToken.ticker && (
+            <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
+              <TokenStatsChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
+            </div>
+          )}
         </div>
       ) : (
         <div className="my-[15vh] flex w-full justify-center">

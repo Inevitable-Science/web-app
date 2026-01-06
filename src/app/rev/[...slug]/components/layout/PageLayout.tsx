@@ -5,7 +5,7 @@ import { zeroAddress } from "viem";
 import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
-import { OtherDaosCarousel } from "./OtherDaosCarousel";
+import { OtherDaosCarousel } from "../../../../../components/OtherDaosCarousel";
 import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 

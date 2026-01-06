@@ -12,14 +12,9 @@ import { useFetchHistoricalHolders } from "@/hooks/queries/useFetchHistoricalHol
 import { useFetchMarketChart } from "@/hooks/queries/useFetchMarketChart";
 import { MarketChartRangeType } from "@/lib/queryFns/fetchMarketChart";
 
-interface TokenStatsProps {
-  daoName: string;
-  tokenName: string;
-}
-
 type ChartType = "volume" | "holders" | "marketCap";
 
-export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
+export function TokenStatsChart({ tokenTicker }: { tokenTicker: string }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const lineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
@@ -35,12 +30,12 @@ export function TokenStatsChart({ daoName, tokenName }: TokenStatsProps) {
     data: holdersData,
     isFetching: isHoldersDataFetching,
     isError: isHoldersDataError,
-  } = useFetchHistoricalHolders(tokenName, chartType === "holders");
+  } = useFetchHistoricalHolders(tokenTicker, chartType === "holders");
   const {
     data: marketData,
     isFetching: isMarketDataFetching,
     isError: isMarketDataError,
-  } = useFetchMarketChart(tokenName, timeRange);
+  } = useFetchMarketChart(tokenTicker, timeRange);
 
   const isLoading = isMarketDataFetching || isHoldersDataFetching;
 
