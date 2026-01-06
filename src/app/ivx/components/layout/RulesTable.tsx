@@ -21,12 +21,12 @@ import { formatNumber, formatTokenSymbol, rulesetStartDate } from "@/lib/utils";
 import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { commaNumber } from "@/lib/number";
 import { differenceInDays, formatDate } from "date-fns";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 
 export function RulesTable() {
-  const primaryRuleset = useProjectDataStore((state) => state.ruleset);
-  const primaryRulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
+  const primaryRuleset = useRevnetDataStore((state) => state.ruleset);
+  const primaryRulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
 
   const { projectId, contractAddress } = useJBContractContext();
 

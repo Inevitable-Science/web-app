@@ -30,7 +30,7 @@ export type SelectedTabType =
   | "analytics"
   | "treasury";
 
-interface ProjectDataStore {
+interface RevnetDataStore {
   // Interactive State
   selectedTab: SelectedTabType;
   setSelectedTab: (tab: SelectedTabType) => void;
@@ -55,8 +55,8 @@ interface ProjectDataStore {
   setDailyTotals: (totals: DailyVolume[]) => void;
 }
 
-const NetworkDataContext = createContext<
-  StoreApi<ProjectDataStore> | undefined
+const RevnetDataContext = createContext<
+  StoreApi<RevnetDataStore> | undefined
 >(undefined);
 
 interface ContextPropType {
@@ -67,7 +67,7 @@ interface ContextPropType {
   tokenAnalytics: TokenResponse | null;
 }
 
-export const ProjectDataProvider = ({
+export const RevnetDataProvider = ({
   children,
   projectData,
   daoData,
@@ -91,7 +91,7 @@ export const ProjectDataProvider = ({
   });
 
   const [store] = useState(() =>
-    createStore<ProjectDataStore>((set) => ({
+    createStore<RevnetDataStore>((set) => ({
       selectedTab: "about",
       setSelectedTab: (tab) => set({ selectedTab: tab }),
 
@@ -136,27 +136,16 @@ export const ProjectDataProvider = ({
   }, [dailyTotals, store]);
 
   return (
-    <NetworkDataContext.Provider value={store}>
+    <RevnetDataContext.Provider value={store}>
       {children}
-    </NetworkDataContext.Provider>
+    </RevnetDataContext.Provider>
   );
 };
 
-// The consumer hook remains the same.
-export const useProjectContext = () => {
-  const context = useContext(NetworkDataContext);
-  if (!context) {
-    throw new Error(
-      "useProjectContext must be used within a NetworkDataProvider"
-    );
-  }
-  return context;
-};
-
-export function useProjectDataStore<T>(
-  selector: (state: ProjectDataStore) => T
+export function useRevnetDataStore<T>(
+  selector: (state: RevnetDataStore) => T
 ) {
-  const context = useContext(NetworkDataContext);
+  const context = useContext(RevnetDataContext);
 
   if (!context) {
     throw new Error("NetworkDataContext Provider is missing");

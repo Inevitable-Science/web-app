@@ -1,10 +1,10 @@
 import { formatDate, formatNumber } from "@/lib/utils";
 import { PayCard } from "../payCard/PayCard";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 export function IvxPageHeader() {
-  const tokenData = useProjectDataStore((state) => state.tokenAnalytics);
-  const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);
+  const tokenData = useRevnetDataStore((state) => state.tokenAnalytics);
+  const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);
 
   return (
     <div className="mb-[12px] flex flex-col-reverse gap-[12px] lg:grid lg:grid-cols-3">

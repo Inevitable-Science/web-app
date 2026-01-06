@@ -16,7 +16,7 @@ import {
 import { Address } from "viem";
 
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 // todo cleanup
 
@@ -146,8 +146,7 @@ function RedeemActivityItem(
 }
 
 export function TransactionTable() {
-  // const { project } = useIVXContext();
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const suckerGroupId = project?.suckerGroupId;
 
   const { data: activityEvents, isLoading } = useBendystrawQuery(

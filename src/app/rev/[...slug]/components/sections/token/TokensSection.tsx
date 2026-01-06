@@ -6,7 +6,7 @@ import { ParticipantsTable } from "./ParticipantsTable";
 import { formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
@@ -25,9 +25,9 @@ type TableView = "you" | "all" | "splits";
 export function HoldersSection() {
   const { connector } = useAccount();
 
-  const project = useProjectDataStore((state) => state.project);
-  const ruleset = useProjectDataStore((state) => state.ruleset);
-  const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
+  const project = useRevnetDataStore((state) => state.project);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
 

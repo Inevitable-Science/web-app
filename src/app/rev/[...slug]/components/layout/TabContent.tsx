@@ -7,7 +7,7 @@ import { HoldersSection } from "../sections/token/TokensSection";
 
 import { TreasurySection } from "../sections/treasuryAnalytics/TreasurySection";
 import { TokenSection } from "../sections/tokenAnalytics/TokenSection";
-import { useProjectDataStore } from "../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useJBTokenContext } from "juice-sdk-react";
 
 // Mapping of tab names to their corresponding components
@@ -21,13 +21,13 @@ const tabComponents: Record<string, FC<any>> = {
 };
 
 export function TabContent() {
-  const treasuryAnalytics = useProjectDataStore(
+  const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
   );
-  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
+  const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
   const { token } = useJBTokenContext();
 
-  const selectedTab = useProjectDataStore((state) => state.selectedTab);
+  const selectedTab = useRevnetDataStore((state) => state.selectedTab);
   const SelectedComponent = tabComponents[selectedTab];
 
   // If no matching component is found, render nothing or a fallback

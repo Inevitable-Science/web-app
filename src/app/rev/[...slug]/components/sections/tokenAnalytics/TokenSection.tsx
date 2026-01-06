@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 import { TokenChart } from "@/components/analytics/TokenChart";
 import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -58,9 +58,9 @@ function getValuationLabel(
 }
 
 export function TokenSection() {
-  const daoData = useProjectDataStore((state) => state.daoData);
-  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
-  const suckers = useProjectDataStore((state) => state.suckers);
+  const daoData = useRevnetDataStore((state) => state.daoData);
+  const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
+  const suckers = useRevnetDataStore((state) => state.suckers);
 
   return (
     <section>

@@ -13,7 +13,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 interface ChainSelectorProps {
   value: Token;
@@ -34,7 +34,7 @@ export const ChainSelector = ({
   disabled,
   options,
 }: ChainSelectorProps) => {
-  const suckers = useProjectDataStore((state) => state.suckers);
+  const suckers = useRevnetDataStore((state) => state.suckers);
   const { selectedSucker } = useSelectedSucker();
 
   return (

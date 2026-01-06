@@ -7,7 +7,7 @@ import {
 } from "juice-sdk-react";
 import { formatNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -18,7 +18,7 @@ import {
   getUnitValue,
 } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
-import { PayInput } from "../../../../../../components/PayInput";
+import { PayInput } from "@/components/PayInput";
 
 export interface Surplus {
   projectId: number;
@@ -31,7 +31,7 @@ export interface Surplus {
 }
 
 export function WithdrawTab() {
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const { token } = useJBTokenContext();
   const { selectedSucker } = useSelectedSucker();
 

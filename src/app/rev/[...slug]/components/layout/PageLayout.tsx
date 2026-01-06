@@ -6,7 +6,7 @@ import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "./OtherDaosCarousel";
-import { SelectedTabType, useProjectDataStore } from "../../../../../store/RevnetDataContext";
+import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 
 export interface TabType {
@@ -15,9 +15,9 @@ export interface TabType {
 }
 
 export function PageLayout() {
-  const daoData = useProjectDataStore((state) => state.daoData);
-  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
-  const treasuryAnalytics = useProjectDataStore(
+  const daoData = useRevnetDataStore((state) => state.daoData);
+  const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
+  const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
   );
   const { contracts } = useJBContractContext();

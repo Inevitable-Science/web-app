@@ -1,7 +1,7 @@
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 export function PortfolioPeformance() {
-  const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);
+  const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);
 
   return (
     <>

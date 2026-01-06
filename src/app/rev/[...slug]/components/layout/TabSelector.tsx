@@ -1,10 +1,10 @@
 import { ArrowRight } from "lucide-react";
-import { useProjectDataStore } from "../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { TabType } from "./PageLayout";
 
 export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
-  const selectedTab = useProjectDataStore((state) => state.selectedTab);
-  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+  const selectedTab = useRevnetDataStore((state) => state.selectedTab);
+  const setSelectedTab = useRevnetDataStore((state) => state.setSelectedTab);
 
   return (
     <aside className="block lg:hidden">
@@ -28,8 +28,8 @@ export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
 }
 
 export function TabSelectorLG({ tabs }: { tabs: TabType[] }) {
-  const selectedTab = useProjectDataStore((state) => state.selectedTab);
-  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+  const selectedTab = useRevnetDataStore((state) => state.selectedTab);
+  const setSelectedTab = useRevnetDataStore((state) => state.setSelectedTab);
 
   return (
     <aside className="hidden max-w-54 lg:block">

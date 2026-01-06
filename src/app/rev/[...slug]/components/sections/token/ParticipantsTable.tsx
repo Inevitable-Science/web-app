@@ -7,13 +7,13 @@ import { ParticipantsDocument, ParticipantsQuery } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
 import { Address } from "viem";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useEffect, useMemo, useState } from "react";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { Button } from "@/components/ui/button";
 
 export function ParticipantsTable() {
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const { token } = useJBTokenContext();
   const totalSupply = useTotalOutstandingTokens();
 

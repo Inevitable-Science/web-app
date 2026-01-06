@@ -10,7 +10,7 @@ import {
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useProjectDataStore } from "../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "../../../../../store/RevnetDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
@@ -19,9 +19,9 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 import { formatSeconds } from "@/lib/utils";
 
 export function TransactionCard() {
-  const project = useProjectDataStore((state) => state.project);
-  const suckers = useProjectDataStore((state) => state.suckers);
-  const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
+  const project = useRevnetDataStore((state) => state.project);
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });

@@ -6,10 +6,10 @@ import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
 import { Address } from "viem";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 export function HoldersTable() {
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const { token } = useJBTokenContext();
 
   const participantsQuery = useBendystrawQuery(ParticipantsDocument, {

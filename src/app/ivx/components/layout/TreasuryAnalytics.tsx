@@ -1,10 +1,10 @@
 import { truncateAddress } from "@/lib/utils";
 import { Address } from "viem";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 export function IvxTreasuryAnalytics() {
-  const treasuryData = useProjectDataStore((state) => state.treasuryAnalytics);
+  const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);
 
   return (
     <div className="flex flex-col-reverse gap-[12px] lg:grid lg:h-[420px] lg:grid-cols-2">

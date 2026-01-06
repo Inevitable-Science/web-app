@@ -17,12 +17,12 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatEther } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { useProjectDataStore } from "../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { JB_CHAINS } from "juice-sdk-core";
 
 export function Header() {
-  const project = useProjectDataStore((state) => state.project);
-  const dailyTotals = useProjectDataStore((state) => state.dailyTotals);
+  const project = useRevnetDataStore((state) => state.project);
+  const dailyTotals = useRevnetDataStore((state) => state.dailyTotals);
   const { metadata } = useJBProjectMetadataContext();
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();

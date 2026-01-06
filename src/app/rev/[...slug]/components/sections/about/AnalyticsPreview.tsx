@@ -1,15 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ArrowRight } from "lucide-react";
 
 export function DaoData() {
-  const treasuryAnalytics = useProjectDataStore(
+  const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
   );
-  const tokenAnalytics = useProjectDataStore((state) => state.tokenAnalytics);
-  const setSelectedTab = useProjectDataStore((state) => state.setSelectedTab);
+  const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
+  const setSelectedTab = useRevnetDataStore((state) => state.setSelectedTab);
 
   if (!treasuryAnalytics && !tokenAnalytics) return;
 

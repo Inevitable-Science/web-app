@@ -28,7 +28,7 @@ import * as Checkbox from "@radix-ui/react-checkbox";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
@@ -69,7 +69,7 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,

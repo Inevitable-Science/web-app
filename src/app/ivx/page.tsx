@@ -6,7 +6,7 @@ import MainIvxLayout from "./components/Main";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
-import { ProjectDataProvider } from "../../store/RevnetDataContext";
+import { RevnetDataProvider } from "@/store/RevnetDataContext";
 import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
 import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
 import { fetchProjectData } from "@/lib/helpers/getProjectBendystraw";
@@ -73,14 +73,14 @@ export default async function IvxTokenPage() {
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
       <Providers chainId={1 as JBChainId} projectId={17n as bigint} version={5}>
-        <ProjectDataProvider
+        <RevnetDataProvider
           projectData={projectData}
           daoData={null}
           treasuryAnalytics={treasuryData}
           tokenAnalytics={tokenData}
         >
           <MainIvxLayout />
-        </ProjectDataProvider>
+        </RevnetDataProvider>
       </Providers>
     </>
   );

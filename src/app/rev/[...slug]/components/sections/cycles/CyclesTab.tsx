@@ -11,7 +11,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 import { formatEther } from "viem";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
@@ -29,8 +29,8 @@ export function NetworkDetailsTable() {
 
   // Get raw data from the context
   //const { ruleset: currentRuleset, project } = useProjectContext();
-  const project = useProjectDataStore((state) => state.project);
-  const currentRuleset = useProjectDataStore((state) => state.ruleset);
+  const project = useRevnetDataStore((state) => state.project);
+  const currentRuleset = useRevnetDataStore((state) => state.ruleset);
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
   const currentIssuance = useFormattedTokenIssuance({
     reservedPercent: new ReservedPercent(0),

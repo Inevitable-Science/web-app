@@ -20,7 +20,7 @@ import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
-import { useProjectDataStore } from "@/store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
@@ -31,9 +31,9 @@ export function TransactionCard() {
   const { metadata } = useJBProjectMetadataContext();
   const { token: tokenBContext } = useJBTokenContext();
 
-  const suckers = useProjectDataStore((state) => state.suckers);
-  const ruleset = useProjectDataStore((state) => state.ruleset);
-  const rulesetMetadata = useProjectDataStore((state) => state.rulesetMetadata);
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);

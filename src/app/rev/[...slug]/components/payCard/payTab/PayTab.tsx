@@ -18,13 +18,13 @@ import { formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { ChainSelector } from "./ChainSelector";
 import { useSelectedSucker } from "../SelectedSuckerContext";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
-import { PayInput } from "../../../../../../components/PayInput";
+import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
 export function PayTab({
@@ -36,11 +36,11 @@ export function PayTab({
   selectedToken: Token;
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
-  const suckers = useProjectDataStore((state) => state.suckers);
-  const rulesetMetadata = useProjectDataStore(
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const rulesetMetadata = useRevnetDataStore(
     (state) => state.rulesetMetadata
   );
-  const ruleset = useProjectDataStore((state) => state.ruleset);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
 
   const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();

@@ -21,7 +21,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import StaticVolumeChart from "../../ActivityGraph";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Button } from "@/components/ui/button";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 function PayActivityItem(
   payEvent: Pick<
@@ -147,7 +147,7 @@ function RedeemActivityItem(
 }
 
 export function ActivityFeed() {
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const suckerGroupId = project.suckerGroupId;
 
   const [indexNum, setIndexNum] = useState(0);

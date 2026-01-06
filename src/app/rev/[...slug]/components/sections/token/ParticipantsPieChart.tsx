@@ -10,7 +10,7 @@ import { Address } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useBendystrawQuery } from "juice-sdk-react";
-import { useProjectDataStore } from "../../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 
 const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
@@ -115,7 +115,7 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
 
 export function ParticipantsPieChart() {
-  const project = useProjectDataStore((state) => state.project);
+  const project = useRevnetDataStore((state) => state.project);
   const totalSupply = useTotalOutstandingTokens();
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [radius, setRadius] = useState<{
