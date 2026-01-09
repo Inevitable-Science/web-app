@@ -9,9 +9,9 @@ export function TabSelectorSM({ tabs }: { tabs: TabType[] }) {
   return (
     <aside className="block lg:hidden">
       <div className="mb-6 flex flex-wrap gap-2">
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <button
-            key={tab.key}
+            key={`${tab.key}-${index}`}
             onClick={() => setSelectedTab(tab.key)}
             className={`-mb-px flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key
@@ -34,9 +34,9 @@ export function TabSelectorLG({ tabs }: { tabs: TabType[] }) {
   return (
     <aside className="hidden max-w-54 lg:block">
       <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <button
-            key={tab.key}
+            key={`${tab.key}-${index}`}
             onClick={() => setSelectedTab(tab.key)}
             className={`-mb-px flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[8px] transition-colors duration-150 focus:outline-hidden ${
               selectedTab === tab.key

@@ -6634,6 +6634,7 @@ export type SuckerGroupMoment = {
   redeemCount: Scalars['Int']['output'];
   redeemVolume: Scalars['BigInt']['output'];
   redeemVolumeUsd: Scalars['BigInt']['output'];
+  reservedTokenSupply: Scalars['BigInt']['output'];
   suckerGroupId: Scalars['String']['output'];
   timestamp: Scalars['Int']['output'];
   tokenSupply: Scalars['BigInt']['output'];
@@ -6704,6 +6705,14 @@ export type SuckerGroupMomentFilter = {
   redeemVolume_lte?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not?: InputMaybe<Scalars['BigInt']['input']>;
   redeemVolume_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
+  reservedTokenSupply_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not?: InputMaybe<Scalars['BigInt']['input']>;
+  reservedTokenSupply_not_in?: InputMaybe<Array<InputMaybe<Scalars['BigInt']['input']>>>;
   suckerGroupId?: InputMaybe<Scalars['String']['input']>;
   suckerGroupId_contains?: InputMaybe<Scalars['String']['input']>;
   suckerGroupId_ends_with?: InputMaybe<Scalars['String']['input']>;

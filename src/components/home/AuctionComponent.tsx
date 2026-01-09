@@ -1,48 +1,17 @@
-"use client";
-import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
-import { getBendystrawClient } from "@/graphql/bendystrawClient";
-import {
-  SuckerGroupDocument,
-  SuckerGroupQuery,
-  SuckerGroupQueryVariables,
-} from "@/generated/graphql";
+import { fetchSuckerGroupVol } from "@/lib/helpers/getSuckerGroupVol";
 
-export default function AuctionComponent() {
-  const [projectVolume, setProjectVolume] = useState<bigint | null | undefined>(
-    undefined
-  );
+export const revalidate = 900;
+
+export default async function AuctionComponent() {
 
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
-  const client = getBendystrawClient(1);
-
-  useEffect(() => {
-    async function fetchSuckerGroup() {
-      try {
-        const result = await client.request<
-          SuckerGroupQuery,
-          SuckerGroupQueryVariables
-        >(SuckerGroupDocument, { id: suckerGroupId });
-
-        const volume: bigint | undefined = result.suckerGroup?.volume;
-        if (!volume) {
-          setProjectVolume(null);
-        }
-
-        setProjectVolume(result.suckerGroup?.volume);
-      } catch (error) {
-        console.error("Failed to fetch SuckerGroup:", error);
-        setProjectVolume(null);
-        return;
-      }
-    }
-
-    fetchSuckerGroup();
-  }, []);
+  const chainId = 1;
+  const projectVolume = await fetchSuckerGroupVol(suckerGroupId, chainId);
 
   return (
     <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
@@ -103,20 +72,14 @@ export default function AuctionComponent() {
             <div className="flex flex-col items-center gap-1 text-center">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
                 Ξ
-                {projectVolume === undefined ? (
-                  <div className="activeSkeleton h-8 w-14 rounded-md opacity-60" />
-                ) : (
-                  <>
-                    {projectVolume
-                      ? Number(
-                          formatNumber(
-                            Number(formatUnits(projectVolume, 18)),
-                            true
-                          )
-                        ).toFixed(2)
-                      : "—"}
-                  </>
-                )}
+                {projectVolume
+                  ? Number(
+                      formatNumber(
+                        Number(formatUnits(projectVolume, 18)),
+                        true
+                      )
+                    ).toFixed(2)
+                  : "—"}
               </h4>
               <h5>RAISED</h5>
             </div>
