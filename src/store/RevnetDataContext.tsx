@@ -62,7 +62,6 @@ const RevnetDataContext = createContext<
 interface ContextPropType {
   children: ReactNode;
   projectData: NonNullable<ProjectQuery["project"]>;
-  daoData: DaoResponse | null;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
 }
@@ -70,7 +69,6 @@ interface ContextPropType {
 export const RevnetDataProvider = ({
   children,
   projectData,
-  daoData,
   treasuryAnalytics,
   tokenAnalytics,
 }: ContextPropType) => {

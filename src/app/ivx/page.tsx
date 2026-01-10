@@ -75,7 +75,6 @@ export default async function IvxTokenPage() {
       <Providers chainId={1 as JBChainId} projectId={17n as bigint} version={5}>
         <RevnetDataProvider
           projectData={projectData}
-          daoData={null}
           treasuryAnalytics={treasuryData}
           tokenAnalytics={tokenData}
         >

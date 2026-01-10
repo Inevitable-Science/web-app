@@ -112,7 +112,6 @@ export default async function Page(props: Props) {
     <Providers {...config}>
       <RevnetDataProvider
         projectData={project}
-        daoData={daoData}
         treasuryAnalytics={treasuryData}
         tokenAnalytics={tokenData}
       >
