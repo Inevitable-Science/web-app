@@ -6,7 +6,12 @@ export const fetchTreasuryData = async (daoName: string): Promise<TreasuryRespon
       `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${daoName}`,
       { next: { revalidate: 900 } }
     );
-    if (!response.ok) throw new Error("Couldn't fetch treasury data");
+
+    if (response.status === 404) {
+      console.log("No treasury data found");
+      return null;
+    }
+    if (!response.ok) throw new Error("Failed to fetch treasury data");
 
     const data = await response.json();
     return TreasuryResponseZ.parse(data);
