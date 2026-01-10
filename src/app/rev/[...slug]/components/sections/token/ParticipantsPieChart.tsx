@@ -13,7 +13,7 @@ import { useBendystrawQuery } from "juice-sdk-react";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 
-const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
+const segmentColors = ["#315659", "#C6E0FF", "#253031", "#FBE8BD"];
 
 const MIN_PERCENT = 0.5;
 
@@ -126,6 +126,8 @@ export function ParticipantsPieChart() {
     outerRadius: 150,
   });
 
+  const holdersLimit = 10;
+
   const { data: participantsQuery, isLoading } = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",
     orderDirection: "desc",
@@ -133,7 +135,7 @@ export function ParticipantsPieChart() {
       suckerGroupId: project.suckerGroupId,
       balance_gt: 0,
     },
-    // limit: 15
+    limit: holdersLimit
   });
 
   
@@ -164,13 +166,13 @@ export function ParticipantsPieChart() {
 
   const participants = Object.values(participantsDataAggregate);
 
-  /*const totalBalanceFromQuery = participants?.reduce(
+  const totalBalanceFromQuery = participants?.reduce(
     (acc, participant) => acc + BigInt(participant?.balance),
     BigInt(0)
   );
 
   const totalHolders = participantsQuery?.participants.totalCount ?? 0;
-  const extraHolders = totalHolders - 15;
+  const extraHolders = totalHolders - holdersLimit;
   const otherHoldersSupply = totalSupply - totalBalanceFromQuery;
   
   const constructedObj = {
@@ -183,7 +185,7 @@ export function ParticipantsPieChart() {
 
   if (extraHolders > 0) {
     participants.push(constructedObj);
-  };*/
+  };
 
 
   const pieChartData = useMemo(() => {
@@ -206,15 +208,15 @@ export function ParticipantsPieChart() {
         };
       })
       .filter((item) => item.balanceFormatted > 0)
-      .sort((a, b) => b.balanceFormatted - a.balanceFormatted);
-      /*.sort((a, b) => {
+      //.sort((a, b) => b.balanceFormatted - a.balanceFormatted);
+      .sort((a, b) => {
       // Always move "extra holders" to the end
       if (a.denotesExtraHolders && !b.denotesExtraHolders) return 1;
       if (!a.denotesExtraHolders && b.denotesExtraHolders) return -1;
 
       // Otherwise sort by balance
       return b.balanceFormatted - a.balanceFormatted;
-    });*/
+    });
   }, [participants, totalSupply]);
 
   useEffect(() => {

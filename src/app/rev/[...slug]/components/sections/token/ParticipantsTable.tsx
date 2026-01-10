@@ -1,7 +1,7 @@
 "use client"
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { prettyNumber } from "@/lib/number";
-import { formatPortion, formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, formatPortion, formatTokenSymbol } from "@/lib/utils";
 import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument, ParticipantsQuery } from "@/generated/graphql";
 import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
@@ -11,11 +11,14 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useEffect, useMemo, useState } from "react";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { Button } from "@/components/ui/button";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import Image from "next/image";
 
 export function ParticipantsTable() {
   const project = useRevnetDataStore((state) => state.project);
   const { token } = useJBTokenContext();
   const totalSupply = useTotalOutstandingTokens();
+  const baseToken = useProjectBaseToken();
 
   const [offsetInt, setOffsetInt] = useState(0);
   const [currentData, setCurrentData] = useState<ParticipantsQuery["participants"] | null>(null);
@@ -60,7 +63,7 @@ export function ParticipantsTable() {
     <div className="mt-2 flex flex-col">
       <h3 className="text-xl">{formatTokenSymbol(token?.data?.symbol)} Holders</h3>
       {currentData.items.map((participant, index) => {
-        const contributionAmount = parseFloat(formatUnits(participant.volume, 18));
+        const contributionAmount = parseFloat(formatUnits(participant.volume, baseToken.decimals));
 
         return (
         <div
@@ -90,12 +93,23 @@ export function ParticipantsTable() {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="text-grey-100 text-xs font-light uppercase">
-              Ξ{contributionAmount === 0
+            <div className="text-grey-100 text-xs font-light uppercase flex items-center">
+              {baseToken.isNative ? "Ξ" : (
+                <Image
+                  src={
+                    "https://cdn.inevitable.science/static/img/logo/usdc.svg"
+                  }
+                  className="mr-1"
+                  alt={`USDC Logo`}
+                  width={12}
+                  height={12}
+                />
+              )}
+              {contributionAmount === 0
                 ? "0"
                 : contributionAmount < 0.001
                   ? "<0.001"
-                  : formatUnits(participant.volume, 18, { fractionDigits: 3 })
+                  : formatNumber(contributionAmount)
               }
               {" "}Contributed
             </div>
