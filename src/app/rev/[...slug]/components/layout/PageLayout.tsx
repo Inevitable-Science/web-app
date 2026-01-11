@@ -2,12 +2,12 @@
 import { useJBContractContext } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import { zeroAddress } from "viem";
-import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
 import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
+import { TransactionCard } from "../payCard/TransactionCard";
 
 export interface TabType {
   key: SelectedTabType;
@@ -47,7 +47,7 @@ export function PageLayout() {
         <div className="flex-1">
           <div className="block md:hidden">
             <div className="mt-1 mb-4">
-              <PayCard />
+              <TransactionCard />
             </div>
           </div>
 
@@ -62,7 +62,7 @@ export function PageLayout() {
 
         <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
           <div className="mb-4">
-            <PayCard />
+            <TransactionCard />
           </div>
         </div>
       </div>

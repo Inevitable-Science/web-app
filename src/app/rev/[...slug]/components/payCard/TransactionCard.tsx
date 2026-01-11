@@ -70,7 +70,7 @@ export function TransactionCard() {
   }
 
   return (
-    <>
+    <div className="flex w-full flex-col rounded-xl">
       {!hasStarted && startDate && (
         <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
           <p className="text-sm font-light">
@@ -131,6 +131,6 @@ export function TransactionCard() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

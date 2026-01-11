@@ -1,6 +1,7 @@
 import { formatDate, formatNumber } from "@/lib/utils";
-import { PayCard } from "../payCard/PayCard";
+//import { PayCard } from "../payCard/PayCard";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { TransactionCard } from "../payCard/TransactionCard";
 
 export function IvxPageHeader() {
   const tokenData = useRevnetDataStore((state) => state.tokenAnalytics);
@@ -79,7 +80,7 @@ export function IvxPageHeader() {
         </div>
       </div>
 
-      <PayCard />
+      <TransactionCard />
     </div>
   );
 }

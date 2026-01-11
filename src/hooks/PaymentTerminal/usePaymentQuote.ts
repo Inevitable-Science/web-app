@@ -23,9 +23,10 @@ import { useProjectBaseToken } from "../useProjectBaseToken";
 export function usePaymentQuote(chainId: JBChainId) {
   const { version } = useJBContractContext();
   const baseToken = useProjectBaseToken();
-  const tokenB = useJBTokenContext().token.data;
+  const { token } = useJBTokenContext();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
   const { toast } = useToast();
+  const tokenB = token.data;
 
   const { price: usdToEthPrice, isLoading } = useCurrencyPrice(
     USD_CURRENCY_ID(version),

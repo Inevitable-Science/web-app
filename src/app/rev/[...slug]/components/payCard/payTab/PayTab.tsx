@@ -25,6 +25,7 @@ import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { useRulesetData } from "@/hooks/useRulesetData";
 
 export function PayTab({
   tokens,
@@ -36,6 +37,7 @@ export function PayTab({
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const suckers = useRevnetDataStore((state) => state.suckers);
+  const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
   
@@ -54,6 +56,14 @@ export function PayTab({
     tokens,
     selectedSucker.peerChainId
   );
+  const { allRulesets } = useRulesetData({
+    projectId: project.projectId,
+  });
+
+  const now = new Date().getTime() / 1000;
+  const startDate = allRulesets?.[0]?.start;
+  const timeUntilStart = startDate ? startDate - now : 0;
+  const hasStarted = timeUntilStart <= 0;
 
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
@@ -202,6 +212,7 @@ export function PayTab({
             <PayInput
               value={amountA}
               onChangeFunction={handlePayAmountChange}
+              disabled={!hasStarted}
             />
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -241,7 +252,7 @@ export function PayTab({
             <PayInput
               value={amountB}
               onChangeFunction={handleReceiveAmountChange}
-              disabled={baseToken.isNative !== selectedToken.isNative}
+              disabled={baseToken.isNative !== selectedToken.isNative || !hasStarted}
             />
           </div>
           <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full px-1.5 py-1">
