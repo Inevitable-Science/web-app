@@ -1,15 +1,16 @@
-"use client";
+// Initializes JB Contexts within project pages - crucial for data & stores.
 
+"use client";
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs";
 import { JBProjectProvider, JBChainId, JBVersion } from "juice-sdk-react";
 import { BendystrawConfig } from "juice-sdk-react/dist/lib/bendystraw/getBendystrawUrl";
 import { notFound } from "next/navigation";
 
-export function Providers({
+export function JBProjectProviderRoot({
   children,
   projectId,
-  chainId,
   version,
+  chainId,
 }: {
   projectId: bigint;
   chainId: JBChainId;
@@ -39,4 +40,4 @@ export function Providers({
       {children}
     </JBProjectProvider>
   );
-}
+};

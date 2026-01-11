@@ -1,4 +1,4 @@
-import { Providers } from "./Providers";
+import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { PageLayout } from "./components/layout/PageLayout";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
@@ -109,7 +109,7 @@ export default async function Page(props: Props) {
     
 
   return (
-    <Providers {...config}>
+    <JBProjectProviderRoot {...config}>
       <RevnetDataProvider
         projectData={project}
         treasuryAnalytics={treasuryData}
@@ -117,6 +117,6 @@ export default async function Page(props: Props) {
       >
         <PageLayout />
       </RevnetDataProvider>
-    </Providers>
+    </JBProjectProviderRoot>
   );
 }
