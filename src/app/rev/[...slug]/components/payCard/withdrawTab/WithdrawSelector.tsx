@@ -1,9 +1,12 @@
 "use client";
 import Image from "next/image";
-import { JBChainId } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
-import { useProjectContext } from "../../../ProjectDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {
   Select,
@@ -19,7 +22,7 @@ export interface SuckersBalance {
   balance: JBProjectToken;
   chainId: JBChainId;
   projectId: bigint;
-};
+}
 
 interface ChainSelectorProps {
   suckersBalance: SuckersBalance[] | undefined;
@@ -30,14 +33,20 @@ export const WithdrawSelector = ({
   suckersBalance,
   disabled,
 }: ChainSelectorProps) => {
-  const { suckers, metadata, token } = useProjectContext();
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
 
-  function handleChainChange( chainId: JBChainId ) {
-    const foundSucker = suckers.find(sucker => sucker.peerChainId === chainId);
+  const { token } = useJBTokenContext();
+  const { metadata } = useJBProjectMetadataContext();
+
+  function handleChainChange(chainId: JBChainId) {
+    const foundSucker = suckers?.find(
+      (sucker) => sucker.peerChainId === chainId
+    );
     if (!foundSucker) return;
     setSelectedSucker(foundSucker);
-  };
+  }
 
   return (
     <Select
@@ -48,26 +57,26 @@ export const WithdrawSelector = ({
       defaultValue={String(selectedSucker.peerChainId)}
     >
       <SelectTrigger
-        className="text-color h-fit w-fit rounded-full border-none bg-grey-450 px-1.5 pb-0 pt-1.5 text-xs"
+        className="text-color bg-grey-450 h-fit w-fit rounded-full border-none px-1.5 pt-1.5 pb-0 text-xs"
         aria-label="Select Chain"
         hideChevron
       >
         {selectedSucker ? (
-          <div className="flex select-none items-center pb-1.5 font-light">
+          <div className="flex items-center pb-1.5 font-light select-none">
             <div className="mr-1 flex items-end">
               <Image
-                className="rounded-full min-w-[24px] min-h-[24px]"
+                className="min-h-[24px] min-w-[24px] rounded-full"
                 src={
-                metadata.data?.logoUri
-                  ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                  : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
+                  metadata.data?.logoUri
+                    ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                    : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
                 }
                 alt={`Project Token Logo`}
                 width={24}
                 height={24}
               />
 
-              <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+              <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
                   chainId={Number(selectedSucker.peerChainId) as JBChainId}
                   height={16}
@@ -84,11 +93,11 @@ export const WithdrawSelector = ({
       </SelectTrigger>
       <SelectContent align="end">
         <div className="flex flex-col gap-1">
-          {suckers.map((sucker) => {
-
-            const formattedBalance = suckersBalance
-              ?.find(s => s.chainId === sucker.peerChainId)
-              ?.balance?.format?.() ?? null;
+          {suckers?.map((sucker) => {
+            const formattedBalance =
+              suckersBalance
+                ?.find((s) => s.chainId === sucker.peerChainId)
+                ?.balance?.format?.() ?? null;
 
             return (
               <SelectItem
@@ -96,14 +105,14 @@ export const WithdrawSelector = ({
                 value={sucker.peerChainId.toString()}
                 className="[&>*:last-child]:flex [&>*:last-child]:w-full"
               >
-                <div className="flex items-center justify-between gap-2 pb-[0.5px] min-w-[160px]">
+                <div className="flex min-w-[160px] items-center justify-between gap-2 pb-[0.5px]">
                   <div className="flex items-end">
                     <Image
-                      className="rounded-full min-w-[24px] min-h-[24px]"
+                      className="min-h-[24px] min-w-[24px] rounded-full"
                       src={
-                      metadata.data?.logoUri
-                        ? ipfsUriToGatewayUrl(metadata.data.logoUri)
-                        : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
+                        metadata.data?.logoUri
+                          ? ipfsUriToGatewayUrl(metadata.data.logoUri)
+                          : "https://cdn.inevitable.science/static/img/logo/mainnet.svg"
                       }
                       alt={`Project Token Logo`}
                       width={24}
@@ -115,7 +124,7 @@ export const WithdrawSelector = ({
                       }}
                     />
 
-                    <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+                    <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                       <ChainLogo
                         chainId={Number(sucker.peerChainId) as JBChainId}
                         height={16}
@@ -127,7 +136,9 @@ export const WithdrawSelector = ({
                     {JB_CHAINS[sucker.peerChainId].name}
                   </span>
 
-                  <span className="text-xs text-muted-foreground">{formatNumber(Number(formattedBalance))}</span>
+                  <span className="text-muted-foreground text-xs">
+                    {formatNumber(Number(formattedBalance))}
+                  </span>
                 </div>
               </SelectItem>
             );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   createChart,
   IChartApi,
@@ -9,41 +9,15 @@ import {
   Time,
   LineData,
 } from "lightweight-charts";
-import { HistoricalTreasuryResponse, HistoricalTreasuryType } from "@/lib/types/AnalyticTypes";
+import { useFetchHistoricalTreasury } from "@/hooks/queries/useFetchHistoricalTreasury";
 
+export function TreasuryChart({ daoName }: { daoName: string }) {
+  const { data, isLoading, isError } = useFetchHistoricalTreasury(daoName);
 
-export function TreasuryChart({ organisation }: { organisation: string }) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const treasuryLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
   const assetLineSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
-  const [data, setData] = useState<HistoricalTreasuryType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/historical/${organisation}`
-        );
-        if (!response.ok) throw new Error();
-
-        const data = await response.json();
-        const parsedData = HistoricalTreasuryResponse.parse(data);
-        
-        setData(parsedData);
-      } catch (error) {
-        setError(true);
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [organisation]);
 
   useEffect(() => {
     if (!chartContainerRef.current || !data) return;
@@ -118,9 +92,9 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     return () => {
       chart.remove();
     };
-  }, [data]);
+  }, [data, isLoading]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="chart4532LoadingSkeleton-dao">
         <style>{`
@@ -149,7 +123,7 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <div className="chartNF-token-dao chartNF-token2-dao">
         <h4>Chart data unavailable</h4>
@@ -173,7 +147,6 @@ export function TreasuryChart({ organisation }: { organisation: string }) {
     <>
       <div
         ref={chartContainerRef}
-        //className={data ? "opacity-1" : "opacity-1"}
         style={{
           width: "100%",
           height: "400px",

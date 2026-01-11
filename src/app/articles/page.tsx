@@ -1,9 +1,26 @@
-import articleSchema, { Article } from "./Articles";
-import { ArticlesClient } from "./ArticlesClient";
-
 import { headers } from "next/headers";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { metadata } from "@/lib/metadata";
+import { ArticlesClient } from "./ArticlesClient";
+import { AllArticlesResponse, AllArticlesResponseZ } from "@/lib/types/PublicArticleTypes";
+
+
+const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles`
+    );
+
+    const data = await response.json();
+    const parsedData = AllArticlesResponseZ.parse(data);
+
+    return parsedData;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -14,21 +31,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Articles | Inevitable Protocol",
+    title: "Articles | Inevitable Science",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Articles | Inevitable Protocol",
+      title: "Articles | Inevitable Science",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -38,55 +53,85 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Articles | Inevitable Protocol",
+      title: "Articles | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
 }
 
-export default function Articles() {
-  // Sort articles by date (latest first) on server
-  const sortedArticles = [...articleSchema.articles].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+export default async function Articles() {
+  const articles = await fetchArticles();
+
+  if (!articles) {
+    return notFound();
+  }
+
+  // Sort articles by datePublished (latest first)
+  const sortedArticles = [...articles].sort(
+    (a, b) =>
+      new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime()
   );
 
   // Get trending slides (latest 3 articles)
-  const trendingSlides = sortedArticles.slice(0, 3).map((article: Article) => ({
-    img: article.image,
+  const trendingSlides = sortedArticles.slice(0, 3).map((article) => ({
+    landingImage: article.landingImage,
     title: article.title,
-    description: article.overview,
+    overview: article.overview ?? "",
+    articleId: article.articleId,
   }));
 
-  const uniqueCategories = Array.from(
-    new Set(sortedArticles.flatMap((article) => article.category))
-  ).slice(0, 14); // Limit to 14 categories
+  // Get unique keywords (as categories), limit to 14
+  const uniqueKeywords = Array.from(
+    new Set(sortedArticles.flatMap((article) => article.keywords))
+  ).slice(0, 14);
 
-  const categorySlides = uniqueCategories.map((category) => ({
-    category,
+  // Create carousels for each keyword
+  const keywordCarousels = uniqueKeywords.map((keyword) => ({
+    category: keyword,
     slides: sortedArticles
-      .filter((article) => article.category.includes(category))
-      .map((article: Article) => ({
-        img: article.image,
+      .filter((article) => article.keywords.includes(keyword))
+      .map((article) => ({
+        landingImage: article.landingImage,
         title: article.title,
-        description: article.overview,
+        overview: article.overview ?? "",
+        articleId: article.articleId,
       })),
   }));
 
-  // Combine Trending and Category carousels (max 15)
+  // Combine Trending + Keyword carousels (max 15 total)
   const carousels = [
     { category: "Trending", slides: trendingSlides },
-    ...categorySlides,
-  ].slice(0, 15); // Limit to 15 carousels
+    ...keywordCarousels,
+  ].slice(0, 15);
+
+  // Extract unique organisations (you already had this logic)
+  const organisations =
+    articles
+      ?.map((article) => ({
+        organisationId: article.organisation.organisationId,
+        organisationName: article.organisation.organisationName,
+      }))
+      .filter(
+        (org, index, self) =>
+          index ===
+          self.findIndex((o) => o.organisationId === org.organisationId)
+      ) ?? [];
 
   return (
     <div className="ctWrapper">
       <ArticlesClient
         initialCarousels={carousels}
-        initialCategories={uniqueCategories}
-        initialArticles={sortedArticles}
+        initialCategories={uniqueKeywords}
+        initialArticles={sortedArticles.map((article) => ({
+          ...article,
+          img: article.landingImage,
+        }))}
+        organisations={organisations}
       />
     </div>
   );

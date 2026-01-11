@@ -3,12 +3,14 @@ query Participants(
   $orderBy: String
   $orderDirection: String
   $limit: Int
+  $offset: Int
 ) {
   participants(
     where: $where
     orderBy: $orderBy
     orderDirection: $orderDirection
     limit: $limit
+    offset: $offset
   ) {
     totalCount
     items {

@@ -1,19 +1,23 @@
 import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
-import { useData } from "../DataProvider";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 export function Header() {
-  const { analyticsData } = useData();
+  const daoData = useLegacyProjectStore((state) => state.daoData);
+  const treasuryAnalytics = useLegacyProjectStore(
+    (state) => state.treasuryAnalytics
+  );
 
   return (
     <header>
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
           <div className="absolute top-0 z-[-1] mt-[90px] h-[238px] w-full overflow-hidden rounded">
-            {analyticsData?.daoData?.logo ? (
+            {daoData?.logo ? (
               <Image
-                src={analyticsData?.daoData?.backdrop}
+                src={daoData?.backdrop}
                 alt={"Project Logo"}
                 className="inset-0 h-full w-full rounded object-cover"
                 width={600}
@@ -35,12 +39,12 @@ export function Header() {
       </div>
       <div className="ctWrapper mb-4 flex flex-col items-start gap-2 sm:mb-6">
         <div className="mx-4">
-          {analyticsData?.daoData?.logo ? (
+          {daoData?.logo ? (
             <>
               <div className="sm:hidden">
                 <Image
-                  src={analyticsData?.daoData?.logo}
-                  className="block overflow-hidden rounded-xl border-[3px] border-background bg-(--card)"
+                  src={daoData?.logo}
+                  className="border-background block overflow-hidden rounded-xl border-[3px] bg-(--card)"
                   alt={"Project Logo"}
                   width={120}
                   height={10}
@@ -48,8 +52,8 @@ export function Header() {
               </div>
               <div className="hidden sm:block">
                 <Image
-                  src={analyticsData?.daoData?.logo}
-                  className="block overflow-hidden rounded-2xl border-4 border-background bg-(--card)"
+                  src={daoData?.logo}
+                  className="border-background block overflow-hidden rounded-2xl border-4 bg-(--card)"
                   alt={"Project Logo"}
                   width={144}
                   height={144}
@@ -73,15 +77,15 @@ export function Header() {
             <div className="mb-2 flex flex-col items-baseline sm:flex-row sm:gap-2">
               <div className="flex flex-wrap items-baseline gap-x-2 text-sm">
                 <h1 className="text-2xl font-light sm:text-3xl">
-                  {analyticsData?.daoData?.name}
+                  {daoData?.name}
                 </h1>
-                <h5 className="text-base text-cerulean">
+                <h5 className="text-cerulean text-base">
                   <a
-                    href={`https://x.com/@${analyticsData?.daoData?.socials.x}`}
+                    href={`https://x.com/@${daoData?.socials.x}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    @{analyticsData?.daoData?.socials.x}
+                    @{daoData?.socials.x}
                   </a>
                 </h5>
               </div>
@@ -89,37 +93,35 @@ export function Header() {
           </div>
           <div className="items-leading flex flex-col items-start sm:flex-row sm:items-center sm:gap-4">
             <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
-                    Ξ{analyticsData?.daoData?.eth_raised}
+                    Ξ{daoData?.eth_raised}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Raised
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full text-2xl font-semibold tracking-wider">
-                    {analyticsData?.daoData?.payments}
+                    {daoData?.payments}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Payments
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="w-full">
-                    {analyticsData?.treasuryData?.treasury.address ? (
+                    {treasuryAnalytics?.treasury.address ? (
                       <EthereumAddress
-                        address={
-                          analyticsData?.treasuryData?.treasury
-                            .address as Address
-                        }
+                        address={treasuryAnalytics.treasury.address as Address}
+                        chain={JB_CHAINS[treasuryAnalytics.treasury.chain_id as JBChainId].chain}
                         short
                         withEnsAvatar={false}
                         withEnsName
@@ -130,22 +132,22 @@ export function Header() {
                     )}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Owner
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-grey-450 p-[20px]">
+              <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="text-xl font-light">
-                    {analyticsData?.daoData?.description ? (
-                      <>{analyticsData.daoData.date_created}</>
+                    {daoData?.description ? (
+                      <>{daoData.date_created}</>
                     ) : (
                       <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
                     )}
                   </h3>
                 </div>
-                <p className="mt-1.5 text-sm font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
                   Date Created
                 </p>
               </div>
@@ -155,7 +157,7 @@ export function Header() {
       </div>
 
       <div
-        className="max-w-screen absolute -z-10 flex items-center justify-center overflow-hidden"
+        className="absolute -z-10 flex max-w-screen items-center justify-center overflow-hidden"
         style={{ transform: "translateY(-60%)" }}
       >
         {/* Left cloud - shifted slightly right */}

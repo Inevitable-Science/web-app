@@ -11,21 +11,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Privacy Policy | Inevitable Protocol",
+    title: "Privacy Policy | Inevitable Science",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Privacy Policy | Inevitable Protocol",
+      title: "Privacy Policy | Inevitable Science",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -35,10 +33,12 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Privacy Policy | Inevitable Protocol",
+      title: "Privacy Policy | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
@@ -50,8 +50,8 @@ export default function Privacy() {
 
   return (
     <section className="ctWrapper">
-      <div className="mb-[28px] mt-[128px] flex flex-col gap-[18px]">
-        <h1 className="text-3xl font-extralight text-primary sm:text-5xl">
+      <div className="mt-[128px] mb-[28px] flex flex-col gap-[18px]">
+        <h1 className="text-primary text-3xl font-extralight sm:text-5xl">
           Privacy Policy
         </h1>
 

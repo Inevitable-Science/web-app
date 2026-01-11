@@ -3,8 +3,9 @@
 import { useEffect } from "react";
 import DOMPurify from "dompurify";
 import Image from "next/image";
-import { useData } from "../../../DataProvider";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { Globe } from "lucide-react";
+import { AnalyticsPreview } from "./AnalyticsPreview";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -32,7 +33,7 @@ const RichPreview = ({ source }: { source: string }) => {
 
     return (
       <div
-        className="w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a:hover]:underline [&_a]:break-all [&_a]:text-cerulean"
+        className="[&_a]:text-cerulean w-[calc(100vw-48px)] wrap-break-word sm:w-full [&_a]:break-all [&_a:hover]:underline"
         dangerouslySetInnerHTML={{
           __html: purified,
         }}
@@ -45,17 +46,19 @@ const RichPreview = ({ source }: { source: string }) => {
 };
 
 export function DescriptionSection() {
-  const { analyticsData } = useData();
+  const daoData = useLegacyProjectStore((state) => state.daoData);
 
   return (
     <div className="text-sm">
-      <RichPreview source={analyticsData?.daoData?.description || "..."} />
-
-      <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
-        {analyticsData?.daoData?.socials.site && (
+      <RichPreview source={daoData?.description || "..."} />{" "}
+      {/* TODO: change this to have 2 rich previews, ref to figma */}
+      <AnalyticsPreview />
+      <RichPreview source={daoData?.description || "..."} />
+      <div className="bg-grey-450 mt-6 flex flex-col gap-2 rounded-2xl p-[12px]">
+        {daoData?.socials.site && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={analyticsData?.daoData?.socials.site}
+            href={daoData?.socials.site}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -64,10 +67,10 @@ export function DescriptionSection() {
           </a>
         )}
 
-        {analyticsData?.daoData?.socials.discord && (
+        {daoData?.socials.discord && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={analyticsData?.daoData?.socials.discord}
+            href={daoData?.socials.discord}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -81,10 +84,10 @@ export function DescriptionSection() {
           </a>
         )}
 
-        {analyticsData?.daoData?.socials.discord && (
+        {daoData?.socials.discord && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={`https://x.com/${analyticsData?.daoData?.socials.x}`}
+            href={`https://x.com/${daoData?.socials.x}`}
             target="_blank"
             rel="noopener noreferrer"
           >

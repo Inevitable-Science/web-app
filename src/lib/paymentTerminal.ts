@@ -19,8 +19,7 @@ export async function getPaymentTerminal(args: {
   token: Token;
   baseToken: Pick<Token, "isNative">;
 }) {
-  const { client, version, chainId, projectId, token, baseToken } =
-    args;
+  const { client, version, chainId, projectId, token, baseToken } = args;
 
   const directory = getContract({
     address: getJBContractAddress(

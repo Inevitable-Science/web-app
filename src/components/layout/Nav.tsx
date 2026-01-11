@@ -75,7 +75,7 @@ export function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 z-50 flex w-full items-center justify-between gap-6 px-8 pb-4 pt-6 transition-all duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"} ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"} `}
+        className={`fixed top-0 z-50 flex w-full items-center justify-between gap-6 px-8 pt-6 pb-4 transition-all duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"} ${isVisible && isPastViewport ? "bg-background bg-opacity-60" : "bg-transparent"} `}
       >
         <div className="flex items-center gap-6">
           <Link aria-label="Home" href="/">
@@ -89,7 +89,7 @@ export function Nav() {
             <Image
               src="https://cdn.inevitable.science/static/img/branding/logo.svg"
               width={240}
-              height={68}
+              height={46}
               className="logoNavSvg pointer-events-none select-none [html.light_&]:brightness-0"
               alt="Logo Image"
             />
@@ -97,7 +97,7 @@ export function Nav() {
         </div>
 
         {/* Desktop Menu */}
-        <div className="navMinMD select-none items-center gap-12 font-extralight uppercase">
+        <div className="navMinMD items-center gap-12 font-extralight uppercase select-none">
           <Link
             className={`${pathname === "/" && "text-light-gold"} hover:underline`}
             href="/"
@@ -140,7 +140,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="block min-w-[90px] w-fit max-w-[130px] overflow-hidden truncate text-ellipsis px-3 text-center normal-case"
+                  className="block w-fit max-w-[130px] min-w-[90px] truncate overflow-hidden px-3 text-center text-ellipsis normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))
@@ -153,7 +153,7 @@ export function Nav() {
 
         {/* Hamburger/Close Button */}
         <button
-          className="navMaxMD z-50 cursor-pointer text-primary"
+          className="navMaxMD text-primary z-50 cursor-pointer"
           onClick={toggleMenu}
           aria-label="Toggle Menu"
           aria-expanded={isMenuOpen}
@@ -166,7 +166,7 @@ export function Nav() {
       {/* Mobile Menu Overlay */}
       <div
         id="mobile-menu"
-        className={`ctWrapper fixed inset-0 z-40 flex flex-col bg-background bg-opacity-90 pt-[110px] transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "hidden translate-y-full"} navMaxMD`}
+        className={`ctWrapper bg-background bg-opacity-90 fixed inset-0 z-40 flex flex-col pt-[110px] transition-transform duration-500 ease-in-out ${isMenuOpen ? "translate-y-0" : "hidden translate-y-full"} navMaxMD`}
       >
         <div className="flex flex-col gap-2 text-lg font-extralight uppercase">
           <Link
@@ -214,7 +214,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="block min-w-[90px] w-fit max-w-[130px] overflow-hidden truncate text-ellipsis px-4 text-center normal-case"
+                  className="block w-fit max-w-[130px] min-w-[90px] truncate overflow-hidden px-4 text-center text-ellipsis normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))

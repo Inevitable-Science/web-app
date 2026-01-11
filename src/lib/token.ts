@@ -7,7 +7,6 @@ import {
   NATIVE_TOKEN_DECIMALS,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { useSuckers } from "juice-sdk-react";
 import { formatUnits } from "viem";
 
 export interface Token {

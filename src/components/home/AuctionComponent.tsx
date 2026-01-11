@@ -1,60 +1,21 @@
-"use client";
-import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { fetchSuckerGroupVol } from "@/lib/helpers/getSuckerGroupVol";
 
-export default function AuctionComponent() {
-  const [projectVolume, setProjectVolume] = useState<
-    bigint | null | undefined
-  >();
+export const revalidate = 900;
 
-  // TODO: Lean out
+export default async function AuctionComponent() {
 
-  const endpoint = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
-  const query = `
-    query FetchVolume($chainId: Float!, $projectId: Float!, $version: Float!) {
-      project(
-        chainId: $chainId,
-        projectId: $projectId,
-        version: $version
-      ) {
-        volume
-      }
-    }`;
-
-  useEffect(() => {
-    const fetchVolume = async () => {
-      try {
-        if (!endpoint) throw new Error("No Bendystraw endpoint found");
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query,
-            variables: { chainId: 1, projectId: 64, version: 4 },
-          }),
-        });
-        if (!response.ok) throw new Error("Could not fetch project volume");
-
-        const data = await response.json();
-        setProjectVolume(data.data.project.volume);
-        return;
-      } catch (err) {
-        console.log(err);
-        setProjectVolume(null);
-        return;
-      }
-    };
-
-    fetchVolume();
-  }, []);
+  const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
+  const chainId = 1;
+  const projectVolume = await fetchSuckerGroupVol(suckerGroupId, chainId);
 
   return (
-    <section className="bg-[url('/assets/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
-      <div className="flex w-full flex-col justify-between gap-[112px] rounded-2xl bg-background p-[16px] sm:min-h-[650px] sm:p-[32px] md:w-[40%] md:min-w-[490px]">
+    <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
+      <div className="bg-background flex w-full flex-col justify-between gap-[112px] rounded-2xl p-[16px] sm:min-h-[650px] sm:p-[32px] md:w-[40%] md:min-w-[490px]">
         <div className="flex flex-col gap-2">
           <Image
             className="mb-3 block rounded-2xl md:hidden"
@@ -111,20 +72,14 @@ export default function AuctionComponent() {
             <div className="flex flex-col items-center gap-1 text-center">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
                 Ξ
-                {projectVolume === undefined ? (
-                  <div className="activeSkeleton h-8 w-14 rounded-md opacity-60" />
-                ) : (
-                  <>
-                    {projectVolume
-                      ? Number(
-                          formatNumber(
-                            Number(formatUnits(projectVolume, 18)),
-                            true
-                          )
-                        ).toFixed(2)
-                      : "—"}
-                  </>
-                )}
+                {projectVolume
+                  ? Number(
+                      formatNumber(
+                        Number(formatUnits(projectVolume, 18)),
+                        true
+                      )
+                    ).toFixed(2)
+                  : "—"}
               </h4>
               <h5>RAISED</h5>
             </div>

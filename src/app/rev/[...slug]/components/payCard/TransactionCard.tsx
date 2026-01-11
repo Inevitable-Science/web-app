@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBChainId,
+  useJBContractContext,
+  useSuckers,
+} from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
-import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useProjectContext } from "../../ProjectDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
@@ -14,12 +18,17 @@ import { useRulesetData } from "@/hooks/useRulesetData";
 import { formatSeconds } from "@/lib/utils";
 
 export function TransactionCard() {
-  const { project, suckers, rulesetMetadata } = useProjectContext();
+  const project = useRevnetDataStore((state) => state.project);
+  const suckers = useRevnetDataStore((state) => state.suckers);
+
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({
-    projectId: project.projectId
+    projectId: project.projectId,
   });
 
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const activeChain = useJBChainId();
   const chainId = useChainId();
   const { version } = useJBContractContext();
@@ -40,7 +49,7 @@ export function TransactionCard() {
 
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
-    if (!selectedSucker && suckers.length > 0) {
+    if (suckers && !selectedSucker && suckers.length > 0) {
       if (chainId) {
         const defaultSucker = activeChain
           ? suckers.find((s) => s.peerChainId === chainId)
@@ -56,21 +65,22 @@ export function TransactionCard() {
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
-
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
   }
 
   return (
-    <>
-      {(!hasStarted && startDate) && (
-        <div className="flex rounded-t-xl bg-orange-900 pb-6 pt-2 px-4">
-          <p className="font-light text-sm">
+    <div className="flex w-full flex-col rounded-xl">
+      {!hasStarted && startDate && (
+        <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+          <p className="text-sm font-light">
             Token Sale Starts in: {formatSeconds(timeUntilStart)}
           </p>
         </div>
       )}
-      <div className={`flex flex-col rounded-xl bg-grey-450 p-[12px] ${(!hasStarted && startDate) && '-mt-4'}`}>
+      <div
+        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${!hasStarted && startDate && "-mt-4"}`}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Button
@@ -78,7 +88,7 @@ export function TransactionCard() {
               className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
                 activeTab === "buy"
                   ? "border-cerulean text-white"
-                  : "border-transparent text-muted-foreground"
+                  : "text-muted-foreground border-transparent"
               }`}
             >
               Buy
@@ -89,7 +99,7 @@ export function TransactionCard() {
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
                   activeTab === "withdraw"
                     ? "border-cerulean text-white"
-                    : "border-transparent text-muted-foreground"
+                    : "text-muted-foreground border-transparent"
                 }`}
               >
                 Withdraw
@@ -111,12 +121,16 @@ export function TransactionCard() {
 
         <div className="my-4">
           {activeTab === "buy" ? (
-            <PayTab tokens={tokens} selectedToken={selectedToken} setSelectedToken={setSelectedToken} />
+            <PayTab
+              tokens={tokens}
+              selectedToken={selectedToken}
+              setSelectedToken={setSelectedToken}
+            />
           ) : (
             <WithdrawTab />
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

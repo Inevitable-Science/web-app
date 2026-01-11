@@ -1,6 +1,16 @@
 import { ProjectDocument, SuckerGroupDocument } from "@/generated/graphql";
-import { ETH_CURRENCY_ID, JBChainId, NATIVE_TOKEN_DECIMALS, USD_CURRENCY_ID, USDC_ADDRESSES } from "juice-sdk-core";
-import { useBendystrawQuery, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import {
+  ETH_CURRENCY_ID,
+  JBChainId,
+  NATIVE_TOKEN_DECIMALS,
+  USD_CURRENCY_ID,
+  USDC_ADDRESSES,
+} from "juice-sdk-core";
+import {
+  useBendystrawQuery,
+  useJBChainId,
+  useJBContractContext,
+} from "juice-sdk-react";
 
 export interface BaseTokenInfo {
   tokenType: "ETH" | "USDC" | "MIXED";
@@ -9,7 +19,10 @@ export interface BaseTokenInfo {
   currency: number;
   isNative: boolean;
   targetCurrency: string;
-  tokenMap: Record<JBChainId, { token: `0x${string}`; currency: number; decimals: number }>;
+  tokenMap: Record<
+    JBChainId,
+    { token: `0x${string}`; currency: number; decimals: number }
+  >;
 }
 
 export function useProjectBaseToken(): BaseTokenInfo {
@@ -20,7 +33,7 @@ export function useProjectBaseToken(): BaseTokenInfo {
   const { data: projectData } = useBendystrawQuery(
     ProjectDocument,
     { chainId: Number(chainId), projectId: Number(projectId), version },
-    { enabled: !!chainId && !!projectId, pollInterval: 30000 },
+    { enabled: !!chainId && !!projectId, pollInterval: 30000 }
   );
   const suckerGroupId = projectData?.project?.suckerGroupId;
 
@@ -28,7 +41,7 @@ export function useProjectBaseToken(): BaseTokenInfo {
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
     { id: suckerGroupId ?? "" },
-    { enabled: !!suckerGroupId, pollInterval: 30000 },
+    { enabled: !!suckerGroupId, pollInterval: 30000 }
   );
 
   // Transform into the format expected by useSuckersTokenSurplus
@@ -44,8 +57,15 @@ export function useProjectBaseToken(): BaseTokenInfo {
         }
         return acc;
       },
-      {} as Record<JBChainId, { token: `0x${string}`; currency: number; decimals: number }>,
-    ) || ({} as Record<JBChainId, { token: `0x${string}`; currency: number; decimals: number }>);
+      {} as Record<
+        JBChainId,
+        { token: `0x${string}`; currency: number; decimals: number }
+      >
+    ) ||
+    ({} as Record<
+      JBChainId,
+      { token: `0x${string}`; currency: number; decimals: number }
+    >);
 
   // Get all tokens from the map
   const allTokens = Object.values(tokenMap)
@@ -60,11 +80,12 @@ export function useProjectBaseToken(): BaseTokenInfo {
         token &&
         Object.values(USDC_ADDRESSES)
           .map((addr) => addr.toLowerCase())
-          .includes(token.toLowerCase()),
+          .includes(token.toLowerCase())
     );
 
   const isAllEth = Object.values(tokenMap).every(
-    (config: { currency: number }) => config.currency === 1 || config.currency === 61166,
+    (config: { currency: number }) =>
+      config.currency === 1 || config.currency === 61166
   ); // ETH currency ID (handle both old and new)
 
   // Determine token type and configuration

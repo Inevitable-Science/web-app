@@ -1,21 +1,15 @@
-import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import {
   getTokenAToBQuote,
   getTokenBtoAQuote,
-  NATIVE_TOKEN,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
 import Image from "next/image";
 import { Address, formatUnits, parseUnits } from "viem";
-import { useChainId } from "wagmi";
 import { FixedInt } from "fpnum";
 
 import { PayActionButton } from "./PayActionButtonIvx";
-import { useSelectedSucker } from "../../SelectedSuckerContext";
-import { useIVXContext } from "../../DataProvider";
-
 import { PayCardSkeleton } from "./PayCardSkeleton";
 import { ChainSelector } from "./ChainSelect";
 
@@ -24,27 +18,25 @@ import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
-import { useTokenA } from "@/hooks/useTokenA";
-import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { PayInput } from "@/components/PayInput";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+
 
 export function TransactionCard() {
-  const tokenA = useTokenA();
-  const activeChain = useJBChainId();
-  const chainId = useChainId();
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
 
-  const { data: accountingContext } = useProjectAccountingContext();
+  const tokenA = useProjectBaseToken();
   const { version } = useJBContractContext();
-  const {
-    metadata,
-    suckers,
-    token: tokenBContext,
-    ruleset: rulesetContext,
-    rulesetMetadata: rulesetMetadataContext,
-  } = useIVXContext();
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
+  const { metadata } = useJBProjectMetadataContext();
+  const { token: tokenBContext } = useJBTokenContext();
 
-  const { tokenAToBQuote } = usePaymentQuote(selectedSucker.peerChainId);
-
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
   const tokens = useMemo(
     () => getTokensForChain(selectedSucker?.peerChainId, version),
     [selectedSucker?.peerChainId]
@@ -54,18 +46,25 @@ export function TransactionCard() {
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
+  
+  const defaultToken = {
+    symbol: "IVX",
+    decimals: 18,
+  };
 
-  const payTokenAddress = accountingContext?.project?.token;
-  const isTokenANative =
-    payTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
-  const selectedTokenIsNative =
-    selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  const tokenB = tokenBContext.data || defaultToken;
 
   useEffect(() => {
-    setSelectedToken(
-      (s) => tokens.find((t) => t.address === s.address) || tokens[0]
-    );
-  }, [tokens]);
+    if (!selectedToken || !amountA) return;
+    handlePayAmountChange(amountA);
+  }, [selectedToken]);
+
+  useEffect(() => {
+      if (!isQuoteLoading && amountA && selectedToken) {
+        handlePayAmountChange(amountA);
+      }
+    }, [isQuoteLoading]);
+
 
   const handlePayAmountChange = (value: string) => {
     if (value.startsWith("-")) {
@@ -78,6 +77,8 @@ export function TransactionCard() {
       setAmountB("");
       return;
     }
+
+    if (!ruleset || !rulesetMetadata) return;
 
     if (version === 4) {
       const quote = getTokenAToBQuote(
@@ -93,33 +94,34 @@ export function TransactionCard() {
       setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
       return;
     } else {
+      if (isQuoteLoading) return;
       const { payerTokens, reservedTokens } = tokenAToBQuote(
         value,
         selectedToken
       );
       const numberPayerTokens = Number(payerTokens);
-      
+
       if (numberPayerTokens < 0) {
-        // Round 3 to sigfigs then remove trailing 0's 
+        // Round 3 to sigfigs then remove trailing 0's
         // this prevents strings like 0.0100000 and 0.000111111111
         setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
         return;
       }
-      
-      setAmountB(Number(numberPayerTokens.toFixed(4)).toString());
+
+      setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
       return;
     }
   };
 
-  const handleReceiveAmountChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = e.target.value;
+  const handleReceiveAmountChange = (value: string) => {
     setAmountB(value);
     if (!value || value === ".") {
       setAmountA("");
       return;
     }
+
+    if (!ruleset || !rulesetMetadata) return;
+
     const quote = getTokenBtoAQuote(
       new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
       tokenB.decimals,
@@ -128,69 +130,27 @@ export function TransactionCard() {
         reservedPercent: rulesetMetadata.reservedPercent,
       }
     );
+
     const numberPayerTokens = Number(quote.format());
-    
-    if (numberPayerTokens < 0) {
+    if (numberPayerTokens < 1) {
       setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
       return;
     }
 
-    setAmountA(Number(numberPayerTokens.toFixed(4)).toString());
+    setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
     return;
   };
 
-  useEffect(() => {
-    if (!selectedToken || !amountA) return;
-    handlePayAmountChange(amountA);
-  }, [selectedToken]);
-
-  // 6. Effect to initialize the context with a default chain
-  useEffect(() => {
-    // Only set default if context has no value and suckers have loaded
-    if (!selectedSucker && suckers && suckers.length > 0) {
-      if (chainId) {
-        const defaultSucker = activeChain
-          ? suckers.find((s) => s.peerChainId === chainId)
-          : undefined;
-        setSelectedSucker(defaultSucker || suckers[0]);
-        return;
-      }
-
-      const defaultSucker = activeChain
-        ? suckers.find((s) => s.peerChainId === activeChain)
-        : undefined;
-      setSelectedSucker(defaultSucker || suckers[0]);
-    }
-  }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
-
-  // Updated Load Guard
-  if (!balances || !suckers) {
-    return <PayCardSkeleton selectedToken={selectedToken} tokens={tokens} />;
-  }
-
-  const defaultToken = {
-    symbol: "IVX",
-    decimals: 18,
-  };
-
-  const tokenB = tokenBContext.data || defaultToken;
-  const ruleset = rulesetContext;
-  const rulesetMetadata = rulesetMetadataContext;
-
   const handleChainChange = ({ chainId }: { chainId: JBChainId }) => {
     const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
-
     const newChainTokens = getTokensForChain(chainId, version);
 
     let token;
-
-    if (selectedToken.address.toLowerCase() === NATIVE_TOKEN.toLowerCase()) {
-      token = newChainTokens.find((t) => t.address === NATIVE_TOKEN);
+    if (selectedToken.isNative) {
+      token = newChainTokens.find((t) => t.isNative);
     } else {
       token = newChainTokens.find((t) => t.address === USDC_ADDRESSES[chainId]);
     }
-
-    console.log(token);
 
     if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
@@ -215,6 +175,7 @@ export function TransactionCard() {
     ),
     symbol: selectedToken.symbol,
   };
+
   const preparedAmountB = {
     amount: new FixedInt(
       parseUnits(amountB || "0", tokenB.decimals),
@@ -223,64 +184,20 @@ export function TransactionCard() {
     symbol: formatTokenSymbol(tokenB.symbol),
   };
 
-  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
 
-    const key = e.key;
-
-    // Allow all control/navigation keys:
-    const controlKeys = [
-      "Backspace",
-      "Delete",
-      "Tab",
-      "Escape",
-      "Enter",
-      "Home",
-      "End",
-      "ArrowLeft",
-      "ArrowRight",
-    ];
-
-    if (controlKeys.includes(key)) {
-      return; // allow
-    }
-
-    // Block invalid characters
-    if (invalidKeys.includes(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    // Key is a single character. Ensure it's a digit or decimal point.
-    if (!/[\d.]/.test(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    const current = e.currentTarget.value;
-    const next = current + key;
-
-    // Limit total length to 16
-    if (next.length > 16) {
-      e.preventDefault();
-    }
-  };
-
+  if (!balances || !suckers) {
+    return <PayCardSkeleton selectedToken={selectedToken} tokens={tokens} />;
+  }
 
   return (
-    <div className="flex flex-col rounded-xl bg-grey-450 p-[10px]">
+    <div className="bg-grey-450 flex flex-col rounded-xl p-[10px]">
       <div className="flex flex-col gap-2">
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">YOU PAY</p>
-            <input
-              type="number"
-              className="w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 focus:placeholder:text-muted-foreground"
-              placeholder="0.00"
-              max={7}
+            <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
+            <PayInput
               value={amountA}
-              onChange={(e) => handlePayAmountChange(e.target.value)}
-              onKeyDown={preventMinusKey}
+              onChangeFunction={handlePayAmountChange}
             />
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -291,7 +208,7 @@ export function TransactionCard() {
               handleTokenChange={handleTokenChange}
               options={tokens}
             />
-            <p className="w-[130px] select-none text-nowrap text-right text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
               {formatTokenAmount(
                 balances.get(selectedToken.address) ?? 0n,
@@ -302,21 +219,16 @@ export function TransactionCard() {
         </div>
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="select-none text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
-            <input
-              type="number"
-              className="focus:placeholder:text-muted-foregroun w-full border-none bg-transparent p-0 text-2xl shadow-none outline-hidden ring-0 placeholder:text-white focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:opacity-80"
-              placeholder="0.00"
-              max={7}
+            <PayInput
               value={amountB}
-              disabled={isTokenANative !== selectedTokenIsNative}
-              onChange={handleReceiveAmountChange}
-              onKeyDown={preventMinusKey}
+              onChangeFunction={handleReceiveAmountChange}
+              disabled={tokenA.isNative !== selectedToken.isNative}
             />
           </div>
-          <div className="flex w-fit flex-row flex-nowrap items-center gap-1 rounded-full bg-grey-450 py-1 pl-1.5 pr-3">
+          <div className="bg-grey-450 min-w-fit max-w-fit flex flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
             <Image
               src={
                 metadata.data?.logoUri
@@ -336,7 +248,7 @@ export function TransactionCard() {
           amountB={preparedAmountB}
           paymentToken={selectedToken}
           walletBalance={balances}
-          disabled={!amountA || parseFloat(amountA) === 0}
+          disabled={!amountA || parseFloat(amountA) === 0 || isQuoteLoading}
         />
       </div>
     </div>

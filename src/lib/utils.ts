@@ -45,10 +45,7 @@ export function truncateAddress(address: Address) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export function formatNumber(
-  num: number | null,
-  compact = false
-): string {
+export function formatNumber(num: number | null, compact = false): string {
   if (num === null || isNaN(num)) return "--";
 
   if (num === 0) return "0";
@@ -273,8 +270,7 @@ export function decodeRulesetMetadata(packed: bigint): RulesetMetadata {
     useDataHookForCashOut: Boolean((packed >> 81n) & 1n),
 
     // Address
-    dataHook:
-      `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}`,
+    dataHook: `0x${((packed >> 82n) & ((1n << 160n) - 1n)).toString(16).padStart(40, "0")}`,
 
     // Final metadata (14 bits)
     metadata: Number((packed >> 242n) & ((1n << 14n) - 1n)),

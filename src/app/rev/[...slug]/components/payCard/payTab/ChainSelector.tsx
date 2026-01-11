@@ -2,8 +2,7 @@
 import { JBChainId } from "juice-sdk-react";
 import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
-import { useProjectContext } from "../../../ProjectDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -12,9 +11,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectScrollDownButton,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { ChevronDown } from "lucide-react";
 
@@ -37,8 +34,8 @@ export const ChainSelector = ({
   disabled,
   options,
 }: ChainSelectorProps) => {
-  const { suckers } = useProjectContext();
-  const { selectedSucker } = useSelectedSucker();
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
 
   return (
     <Select
@@ -46,20 +43,22 @@ export const ChainSelector = ({
         handleTokenChange ? handleTokenChange({ address: value }) : undefined;
       }}
       disabled={disabled}
-      defaultValue={String(value)}
+      defaultValue={String(value.address)}
     >
       <SelectTrigger
-        className="text-color h-fit w-fit rounded-full border-none bg-grey-450 px-1.5 pb-0 pt-1.5 text-xs"
+        className="text-color bg-grey-450 h-fit w-fit rounded-full border-none px-1.5 pt-1.5 pb-0 text-xs"
         aria-label="Select Chain"
         hideChevron
       >
         {value ? (
-          <div className="flex select-none items-center pb-1.5 font-light">
+          <div className="flex items-center pb-1.5 font-light select-none">
             <div className="mr-1 flex items-end">
               {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
               value.address.toLowerCase() ? (
                 <Image
-                  src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
+                  src={
+                    "https://cdn.inevitable.science/static/img/logo/usdc.svg"
+                  }
                   alt={`USDC Logo`}
                   width={24}
                   height={24}
@@ -73,7 +72,7 @@ export const ChainSelector = ({
                 <ChainLogo chainId={1} height={24} width={24} />
               )}
 
-              <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+              <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
                   chainId={Number(selectedSucker.peerChainId) as JBChainId}
                   height={16}
@@ -101,7 +100,7 @@ export const ChainSelector = ({
                       })
                     : undefined;
                 }}
-                className={`${selectedSucker.peerChainId === sucker.peerChainId && "border-(--grey-100) bg-grey-500!"} rounded-xl`}
+                className={`${selectedSucker.peerChainId === sucker.peerChainId && "bg-grey-500! border-(--grey-100)"} rounded-xl`}
                 variant={"outline"}
                 size="icon"
               >
@@ -121,13 +120,15 @@ export const ChainSelector = ({
             <SelectItem
               key={`${token.address}-${index}`}
               value={`${token.address}`}
-              className="[&>*:last-child]:flex [&>*:last-child]:w-full"
+              className="[&>*:last-child]:flex [&>*:last-child]:w-full [&>*:last-child]:items-center"
             >
               {token.address.toLowerCase() === NATIVE_TOKEN.toLowerCase() ? (
                 <ChainLogo chainId={1} />
               ) : (
                 <Image
-                  src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
+                  src={
+                    "https://cdn.inevitable.science/static/img/logo/usdc.svg"
+                  }
                   alt={`USDC Logo`}
                   width={24}
                   height={24}

@@ -215,10 +215,10 @@ export default function ActivityGraph({
             <div
               key={v}
               className={twMerge(
-                "cursor-pointer select-none border-b px-2 pb-2 text-sm",
+                "cursor-pointer border-b px-2 pb-2 text-sm select-none",
                 v === view
                   ? "border-primary font-medium"
-                  : "border-transparent font-light text-muted-foreground"
+                  : "text-muted-foreground border-transparent font-light"
               )}
               // 5. Connect UI controls to internal state setters
               onClick={() => setView(v as ProjectTimelineView)}
@@ -236,7 +236,7 @@ export default function ActivityGraph({
           }}
         >
           <SelectTrigger
-            className="background-color h-fit w-[5.6rem] rounded rounded-full border-none px-2 text-xs uppercase text-muted-foreground hover:text-foreground"
+            className="background-color text-muted-foreground hover:text-foreground h-fit w-[5.6rem] rounded rounded-full border-none px-2 text-xs uppercase"
             aria-label="Select Time Range"
           >
             <SelectValue placeholder="Select range" />

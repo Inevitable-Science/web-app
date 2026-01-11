@@ -2,19 +2,22 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   useBendystrawQuery,
+  useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "juice-sdk-react";
 import { formatNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
-import { useProjectContext } from "../../../ProjectDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { SuckerGroupDocument } from "@/generated/graphql";
-import { getProjectsReclaimableSurplus, getUnitValue } from "@/lib/reclaimableSurplus";
+import {
+  getProjectsReclaimableSurplus,
+  getUnitValue,
+} from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
-import { PayInput } from "../PayInput";
+import { PayInput } from "@/components/PayInput";
 
 export interface Surplus {
   projectId: number;
@@ -27,11 +30,13 @@ export interface Surplus {
 }
 
 export function WithdrawTab() {
-  const { project, token } = useProjectContext();
-  const { selectedSucker } = useSelectedSucker();
+  const project = useRevnetDataStore((state) => state.project);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const { token } = useJBTokenContext();
 
   const receiveToken = useProjectBaseToken();
-  const receiveTokenAddress = receiveToken.tokenMap[selectedSucker.peerChainId].token;
+  const receiveTokenAddress =
+    receiveToken.tokenMap[selectedSucker.peerChainId].token;
 
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
@@ -39,12 +44,14 @@ export function WithdrawTab() {
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
     { id: project.suckerGroupId ?? "" },
-    { enabled: !!project.suckerGroupId },
+    { enabled: !!project.suckerGroupId }
   );
 
   useEffect(() => {
     const fetchSurpluses = async () => {
-      const surpluses = await getProjectsReclaimableSurplus(suckerGroupData?.suckerGroup?.projects?.items || []);
+      const surpluses = await getProjectsReclaimableSurplus(
+        suckerGroupData?.suckerGroup?.projects?.items || []
+      );
       setSurpluses(surpluses);
     };
 
@@ -61,43 +68,52 @@ export function WithdrawTab() {
     const tokenSupply =
       projects?.find((p) => p.chainId === cashOutChainId)?.tokenSupply ?? "0";
 
-    return getUnitValue(surplus, { value: tokenSupply, decimals: projectTokenDecimals });
+    return getUnitValue(surplus, {
+      value: tokenSupply,
+      decimals: projectTokenDecimals,
+    });
   }, [cashOutChainId, projectTokenDecimals, surpluses, projects]);
 
   // Token Balances
-  const balanceQuery = useSuckersUserTokenBalance()
-  const currentChainBalanceObj = balanceQuery?.data?.find(tkn => tkn.chainId === selectedSucker.peerChainId)?.balance;
+  const balanceQuery = useSuckersUserTokenBalance();
+  const currentChainBalanceObj = balanceQuery?.data?.find(
+    (tkn) => tkn.chainId === selectedSucker.peerChainId
+  )?.balance;
   const currentChainBalNum = Number(currentChainBalanceObj?.format());
 
   const receiveAmount = unitValue * Number(withdrawAmount);
-  const receiveAmountString = receiveAmount < 1 ? Number(receiveAmount).toPrecision(3) : receiveAmount.toFixed(3);
+  const receiveAmountString =
+    receiveAmount < 1
+      ? Number(receiveAmount).toPrecision(3)
+      : receiveAmount.toFixed(3);
 
   const setManualWithdrawAmount = (percentage: number) => {
-    if (percentage === 100) { // no rounding for MAX - rounding is an issue for balances like 0.9999
+    if (percentage === 100) {
+      // no rounding for MAX - rounding is an issue for balances like 0.9999
       const s = currentChainBalNum.toString();
       if (!s.includes(".")) return s;
       const [int, frac] = s.split(".");
-      const val = int === "0"
-        ? `0.${frac.slice(0, 3)}`
-        : `${int}.${frac.slice(0, 3)}`;
+      const val =
+        int === "0" ? `0.${frac.slice(0, 3)}` : `${int}.${frac.slice(0, 3)}`;
 
       setWithdrawAmount(val);
       return;
     }
 
     if (percentage < 0 || percentage > 99) return;
-    const withdrawAmount = currentChainBalNum / 100 * percentage;
-    const withdrawAmountString = withdrawAmount < 1 ?
-      withdrawAmount.toPrecision(3) :
-      withdrawAmount.toFixed(3);
-    
+    const withdrawAmount = (currentChainBalNum / 100) * percentage;
+    const withdrawAmountString =
+      withdrawAmount < 1
+        ? withdrawAmount.toPrecision(3)
+        : withdrawAmount.toFixed(3);
+
     setWithdrawAmount(withdrawAmountString);
     return;
   };
 
   // This prevents scrolling to reduce the value below 0
   const handleWithdrawAmountChange = (value: string) => {
-     if (value.startsWith("-")) {
+    if (value.startsWith("-")) {
       setWithdrawAmount("0");
       return;
     }
@@ -112,7 +128,7 @@ export function WithdrawTab() {
         {/* WITHDRAW INPUT */}
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light">
               YOU WITHDRAW
             </p>
             <PayInput
@@ -123,15 +139,13 @@ export function WithdrawTab() {
           </div>
           <div className="flex flex-col items-end gap-[2px]">
             <WithdrawSelector suckersBalance={balanceQuery.data} />
-            <p className="w-[130px] text-nowrap text-right text-sm font-light text-muted-foreground select-none">
+            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {!currentChainBalNum ? 
-                "0.00" 
-                : (currentChainBalNum < 100 ?
-                  currentChainBalNum.toFixed(4) :
-                  formatNumber(currentChainBalNum)
-                )
-              }
+              {!currentChainBalNum
+                ? "0.00"
+                : currentChainBalNum < 100
+                  ? currentChainBalNum.toFixed(4)
+                  : formatNumber(currentChainBalNum)}
             </p>
           </div>
         </div>
@@ -139,7 +153,7 @@ export function WithdrawTab() {
         {/* RECEIVE INPUT */}
         <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
-            <p className="text-sm font-light text-muted-foreground select-none">
+            <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
             <PayInput
@@ -147,18 +161,16 @@ export function WithdrawTab() {
               disabled
             />
           </div>
-          <div className="flex w-fit min-w-fit items-center justify-end gap-1 rounded-full bg-grey-450 px-1.5 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full px-1.5 py-1">
             <div className="flex items-end">
               {receiveToken.isNative ? (
-                <ChainLogo
-                  chainId={1}
-                  height={24}
-                  width={24}
-                />
+                <ChainLogo chainId={1} height={24} width={24} />
               ) : (
                 <Image
-                  className="rounded-full min-w-[24px] min-h-[24px]"
-                  src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
+                  className="min-h-[24px] min-w-[24px] rounded-full"
+                  src={
+                    "https://cdn.inevitable.science/static/img/logo/usdc.svg"
+                  }
                   alt={`USDC Token Logo`}
                   width={24}
                   height={24}
@@ -169,8 +181,8 @@ export function WithdrawTab() {
                   }}
                 />
               )}
-              
-              <div className="-mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] border-grey-450 bg-grey-450 shadow-md">
+
+              <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
                   chainId={selectedSucker.peerChainId}
                   height={16}
@@ -183,31 +195,39 @@ export function WithdrawTab() {
         </div>
       </div>
 
-      <div className="hidden sm:grid grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 background-color p-1 rounded-xl">
-        <Button 
+      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid">
+        <Button
           className="h-[28px] rounded-l-lg rounded-r-xs"
-          onClick={() => {setManualWithdrawAmount(10)}}
+          onClick={() => {
+            setManualWithdrawAmount(10);
+          }}
           disabled={!unitValue}
         >
           10%
         </Button>
         <Button
           className="h-[28px] rounded-xs"
-          onClick={() => {setManualWithdrawAmount(25)}}
+          onClick={() => {
+            setManualWithdrawAmount(25);
+          }}
           disabled={!unitValue}
         >
           25%
         </Button>
         <Button
           className="h-[28px] rounded-xs"
-          onClick={() => {setManualWithdrawAmount(50)}}
+          onClick={() => {
+            setManualWithdrawAmount(50);
+          }}
           disabled={!unitValue}
         >
           50%
         </Button>
         <Button
           className="h-[28px] rounded-l-xs rounded-r-lg"
-          onClick={() => {setManualWithdrawAmount(100)}}
+          onClick={() => {
+            setManualWithdrawAmount(100);
+          }}
           disabled={!unitValue}
         >
           MAX
@@ -220,5 +240,5 @@ export function WithdrawTab() {
         tokenBalance={currentChainBalNum}
       />
     </div>
-  )
+  );
 }

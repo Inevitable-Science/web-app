@@ -4,6 +4,8 @@ import ClientTable from "./ClientTable";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
+import { formatNumber } from "@/lib/utils";
+import z from "zod";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers();
@@ -14,21 +16,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Ecosystem | Inevitable Protocol",
+    title: "Ecosystem | Inevitable Science",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Ecosystem | Inevitable Protocol",
+      title: "Ecosystem | Inevitable Science",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -38,19 +38,47 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Ecosystem | Inevitable Protocol",
+      title: "Ecosystem | Inevitable Science",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
 }
 
-export default function Ecosystem() {
+const EcosystemResponseZ = z.object({
+  marketCap: z.number().nullable(),
+  projectFunding: z.number(),
+  tokenHolders: z.number(),
+  communitySize: z.number()
+});
+
+type EcosystemResponse = z.infer<typeof EcosystemResponseZ>;
+
+const fetchEcosystemData = async (): Promise<EcosystemResponse | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/web3/ecosystem`);
+    if (!response.ok) throw new Error("Bad response");
+
+    const data = await response.json();
+    const parsed = EcosystemResponseZ.parse(data);
+
+    return parsed;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+export default async function Ecosystem() {
+  const data = await fetchEcosystemData();
+
   return (
     <div className="relative">
-      <div className="absolute inset-0 top-[-140px] z-[-1] w-full bg-[url('/assets/img/ecosystem_backdrop.webp')] bg-cover bg-center" />
+      <div className="absolute inset-0 top-[-140px] z-[-1] w-full bg-[url('https://cdn.inevitable.science/static/img/ecosystem_backdrop.webp')] bg-cover bg-center" />
 
       <section className="ctWrapper mt-[140px]">
         <div className="mb-[52px] flex flex-col gap-4 md:flex-row md:gap-12">
@@ -73,37 +101,53 @@ export default function Ecosystem() {
 
         <div className="flex flex-col gap-[12px]">
           <div className="flex flex-col items-center gap-3 lg:grid lg:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-            <div className="flex w-full flex-col gap-[12px] rounded-2xl bg-grey-450 p-[12px] uppercase">
+            <div className="bg-grey-450 flex w-full flex-col gap-[12px] rounded-2xl p-[12px] uppercase">
               <div className="background-color rounded-xl p-[16px]">
-                <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <h3 className="text-xl">
+                  {data?.marketCap ? 
+                    `$${formatNumber(data.marketCap)}` : "--"
+                  }
+                </h3>
+                <p className="text-muted-foreground font-light">
                   Token Marketcap
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
-                <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <h3 className="text-xl">
+                  {data?.projectFunding ?
+                    `$${formatNumber(data.projectFunding)}` : "--"
+                  }
+                </h3>
+                <p className="text-muted-foreground font-light">
                   Total Project Funding
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
-                <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <h3 className="text-xl">
+                  {data?.tokenHolders ?
+                    formatNumber(data.tokenHolders) : "--"
+                  }
+                </h3>
+                <p className="text-muted-foreground font-light">
                   Ecosystem Token Holders
                 </p>
               </div>
 
               <div className="background-color rounded-xl p-[16px]">
-                <h3 className="text-xl">0</h3>
-                <p className="font-light text-muted-foreground">
+                <h3 className="text-xl">
+                  {data?.communitySize ?
+                    formatNumber(data.communitySize) : "--"
+                  }
+                </h3>
+                <p className="text-muted-foreground font-light">
                   Community Size
                 </p>
               </div>
             </div>
 
-            <div className="flex h-full w-full flex-col justify-center gap-[12px] rounded-2xl bg-grey-450 p-[12px]">
+            <div className="bg-grey-450 flex h-full w-full flex-col justify-center gap-[12px] rounded-2xl p-[12px]">
               <PlaceholderActivityGraph />
             </div>
           </div>

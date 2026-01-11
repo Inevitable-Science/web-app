@@ -40,7 +40,7 @@ export function ipfsUri(cid: string, path?: string) {
 export const cidFromUrl = (url: string) => url.split("/").pop();
 
 export const cidFromIpfsUri = (ipfsUri: string) =>
-  (IPFS_URL_REGEX.exec(ipfsUri))?.[1];
+  IPFS_URL_REGEX.exec(ipfsUri)?.[1];
 
 /**
  * Returns a native IPFS link (`ipfs://`) as a https link.

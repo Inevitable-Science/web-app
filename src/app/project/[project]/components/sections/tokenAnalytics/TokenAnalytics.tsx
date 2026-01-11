@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 import { TokenChart } from "@/components/analytics/TokenChart";
 import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
-import { useData } from "../../../DataProvider";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
@@ -65,25 +65,22 @@ function getValuationLabel(
 }
 
 export function TokenSection() {
-  const { analyticsData } = useData();
+  const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
 
   const { address, isConnected, connector } = useAccount();
   const { watchAsset, isSuccess, isPending } = useWatchAsset();
-  const data = analyticsData?.tokenData;
-  const nativeTokenChainId = (data?.selectedToken.chain_id ?? 1) as JBChainId;
-  const tokenAddress = data?.selectedToken.address as Address;
+  const nativeTokenChainId = (tokenAnalytics?.selectedToken.chain_id ??
+    1) as JBChainId;
+  const tokenAddress = tokenAnalytics?.selectedToken.address as Address;
 
-  const {
-    data: tokenDataResult,
-    isLoading,
-  } = useReadContracts({
-    allowFailure: false, // makes typing easier
+  const { data: tokenDataResult, isLoading } = useReadContracts({
+    allowFailure: false,
     contracts: [
       {
         address: tokenAddress,
         abi: erc20Abi,
         functionName: "balanceOf",
-        args: [address!], // safe because we enable only when connected
+        args: [address!],
         chainId: nativeTokenChainId,
       },
       {
@@ -98,12 +95,11 @@ export function TokenSection() {
     },
   });
 
-
   const handleAddToken = () => {
     // Make sure token.data and necessary properties exist
     if (
-      !data?.selectedToken.address ||
-      !data.selectedToken.name /*|| !data.selectedToken.decimals*/
+      !tokenAnalytics?.selectedToken.address ||
+      !tokenAnalytics.selectedToken.name /*|| !data.selectedToken.decimals*/
     ) {
       console.error("Token information is incomplete.");
       return;
@@ -112,10 +108,10 @@ export function TokenSection() {
     watchAsset({
       type: "ERC20",
       options: {
-        address: data?.selectedToken.address as Address,
-        symbol: data.selectedToken.name,
+        address: tokenAnalytics?.selectedToken.address as Address,
+        symbol: tokenAnalytics.selectedToken.name,
         decimals: 18,
-        image: data.selectedToken.logoUrl || "",
+        image: tokenAnalytics.selectedToken.logoUrl || "",
       },
     });
   };
@@ -125,42 +121,46 @@ export function TokenSection() {
 
   let safeFormattedBalance = "0.00";
 
-  if (isConnected && !isLoading && balance !== undefined && decimals !== undefined) {
-    safeFormattedBalance = formatNumber(
-      Number(formatUnits(balance, decimals))
-    );
+  if (
+    isConnected &&
+    !isLoading &&
+    balance !== undefined &&
+    decimals !== undefined
+  ) {
+    safeFormattedBalance = formatNumber(Number(formatUnits(balance, decimals)));
   }
 
   return (
     <section>
-      {data?.name && (
-        <div className="h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
-          <TokenChart organisation={data?.name} />
+      {tokenAnalytics?.selectedToken.ticker && (
+        <div className="bg-grey-450 h-auto max-h-[550px] rounded-2xl p-[12px]">
+          <TokenChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
         </div>
       )}
 
-      <div className="my-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
+      <div className="bg-grey-450 my-4 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
         <div className="background-color rounded-xl p-[16px]">
           <div className="flex items-end gap-2">
-            {/* This h3 is already correctly handling a potential lack of token.data */}
-            <h3 className="text-xl leading-[24px]">{data?.selectedToken.name}</h3>
-            {(tokenAddress && nativeTokenChainId) && (
+            <h3 className="text-xl leading-[24px]">
+              {tokenAnalytics?.selectedToken.name}
+            </h3>
+            {tokenAddress && nativeTokenChainId && (
               <EtherscanLink
                 value={tokenAddress}
-                className="text-sm text-muted-foreground"
+                className="text-muted-foreground text-sm"
                 type={"token"}
                 truncateTo={4}
                 chain={JB_CHAINS[nativeTokenChainId].chain}
               />
             )}
           </div>
-          <p className="font-light uppercase text-muted-foreground">
+          <p className="text-muted-foreground font-light uppercase">
             Project Token
           </p>
-          {(data?.selectedToken && connector?.name === "MetaMask") && (
+          {tokenAnalytics?.selectedToken && connector?.name === "MetaMask" && (
             <Button
               variant="link"
-              className="flex h-6 w-fit text-sm items-center gap-1.5 px-0 font-normal uppercase"
+              className="flex h-6 w-fit items-center gap-1.5 px-0 text-sm font-normal uppercase"
               onClick={handleAddToken}
               disabled={isPending}
             >
@@ -190,35 +190,35 @@ export function TokenSection() {
               "0.00"
             )}
           </h3>
-          <p className="font-light uppercase text-muted-foreground">
+          <p className="text-muted-foreground font-light uppercase">
             Your Balance
           </p>
         </div>
       </div>
 
-      {data ? (
+      {tokenAnalytics ? (
         <div className="flex w-full flex-col gap-4">
-          <div className="rounded-2xl bg-grey-450 p-[12px]">
-            <h3 className="pb-3 pt-1 text-xl">AUM/MC Ratio</h3>
+          <div className="bg-grey-450 rounded-2xl p-[12px]">
+            <h3 className="pt-1 pb-3 text-xl">AUM/MC Ratio</h3>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
                   {calculateRatio(
-                    data.assetsUnderManagement,
-                    data.selectedToken.marketCap
+                    tokenAnalytics.assetsUnderManagement,
+                    tokenAnalytics.selectedToken.marketCap
                   )}
                 </h3>
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   {getValuationLabel(
-                    data.assetsUnderManagement,
-                    data.selectedToken.marketCap
+                    tokenAnalytics.assetsUnderManagement,
+                    tokenAnalytics.selectedToken.marketCap
                   )}
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px_16px_10px_16px]">
                 <div className="flex h-[24px]">
-                  {data?.selectedToken?.networks?.map((network) => (
+                  {tokenAnalytics?.selectedToken?.networks?.map((network) => (
                     <div className="w-[18px]" key={network}>
                       <ChainLogo
                         key={network}
@@ -229,28 +229,28 @@ export function TokenSection() {
                     </div>
                   ))}
                 </div>
-                <p className="mt-[8px] font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground mt-[8px] font-light uppercase">
                   Networks
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 rounded-2xl bg-grey-450 p-[12px] py-5">
+          <div className="bg-grey-450 flex flex-col gap-3 rounded-2xl p-[12px] py-5">
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {formatNumber(data.selectedToken.totalSupply)}
+                  {formatNumber(tokenAnalytics.selectedToken.totalSupply)}
                 </h3>
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Total Supply
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
-                  ${formatNumber(data.selectedToken.marketCap)}
+                  ${formatNumber(tokenAnalytics.selectedToken.marketCap)}
                 </div>
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Market Cap
                 </p>
               </div>
@@ -259,50 +259,52 @@ export function TokenSection() {
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {formatNumber(data.selectedToken.averageBal)}
+                  {formatNumber(tokenAnalytics.selectedToken.averageBal)}
                 </h3>
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Average Balance
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
-                  {formatNumber(data.selectedToken.medianBal)}
+                  {formatNumber(tokenAnalytics.selectedToken.medianBal)}
                 </div>
-                <p className="font-light uppercase text-muted-foreground">
+                <p className="text-muted-foreground font-light uppercase">
                   Median Balance
                 </p>
               </div>
             </div>
           </div>
 
-          {data.topHolders && (
-            <div className="rounded-2xl bg-grey-450 p-[12px]">
+          {tokenAnalytics.topHolders && (
+            <div className="bg-grey-450 rounded-2xl p-[12px]">
               <div className="background-color mb-2 rounded-xl p-[16px]">
-                <h3 className="text-xl">{data.selectedToken.totalHolders}</h3>
-                <p className="font-light uppercase text-muted-foreground">
+                <h3 className="text-xl">
+                  {tokenAnalytics.selectedToken.totalHolders}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
                   Total Holders
                 </p>
               </div>
 
-              <h3 className="py-1 text-sm uppercase text-grey-50">
+              <h3 className="text-grey-50 py-1 text-sm uppercase">
                 Top Holders
               </h3>
               <div>
-                {data.topHolders.slice(0, 5).map((holder, idx) => {
+                {tokenAnalytics.topHolders.slice(0, 5).map((holder, idx) => {
                   const { address, token_amount } = holder;
 
                   return (
                     <div
                       key={`${address}-${idx}`}
-                      className="flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light text-grey-50"
+                      className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
                     >
                       <span>{truncateAddress(address as Address)}</span>
                       <a
                         href={`https://etherscan.io/address/${address}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="border-b border-transparent hover:border-grey-50"
+                        className="hover:border-grey-50 border-b border-transparent"
                       >
                         {formatNumber(token_amount, true)}
                       </a>
@@ -313,11 +315,10 @@ export function TokenSection() {
             </div>
           )}
 
-          {data.selectedToken.ticker && data.selectedToken.name && (
-            <div className="mb-4 h-auto max-h-[550px] rounded-2xl bg-grey-450 p-[12px]">
+          {tokenAnalytics.selectedToken.ticker && (
+            <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
               <TokenStatsChart
-                organisation={data.selectedToken.ticker}
-                tokenName={data.selectedToken.name}
+                tokenTicker={tokenAnalytics.selectedToken.ticker}
               />
             </div>
           )}

@@ -21,21 +21,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const fullPath = "/";
   const url = new URL(fullPath, origin);
 
-  const imgUrl = `${origin}/assets/img/branding/seo_banner.png`;
-
   return {
-    title: "Inevitable Protocol | Home",
+    title: "Inevitable Science | Home",
     description: metadata.description,
     alternates: {
       canonical: url,
     },
     openGraph: {
-      title: "Inevitable Protocol | Home",
+      title: "Inevitable Science | Home",
       description: metadata.description,
       siteName: metadata.siteName,
       images: [
         {
-          url: imgUrl,
+          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
           width: 700,
           height: 370,
           alt: "Inevitable preview image",
@@ -45,10 +43,12 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      title: "Inevitable Protocol | Home",
+      title: "Inevitable Science | Home",
       description: metadata.description,
       card: "summary_large_image",
-      images: [imgUrl],
+      images: [
+        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+      ],
     },
     manifest: metadata.manifest,
   };
@@ -59,6 +59,13 @@ export default function Page() {
     <div>
       {/*<div className="bg-[url('/assets/img/home_landing.webp')] bg-cover bg-position-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
       <div className="relative h-[500px] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
+        {/* Fallback Image - optimal for slower networks */}
+        <img
+          src="https://cdn.inevitable.science/static/img/layout/home_hero_main.webp"
+          alt=""
+          className="h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
+        />
+        
         {/* Background Video */}
         <video
           className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
@@ -74,9 +81,9 @@ export default function Page() {
           Your browser does not support the video tag.
         </video>
 
-        <div className="gap-38 absolute bottom-[40px] z-10 flex w-full flex-col sm:bottom-[25vh]">
+        <div className="absolute bottom-[40px] z-10 flex w-full flex-col gap-38 sm:bottom-[25vh]">
           <div className="mx-auto flex max-w-full flex-col gap-4 px-[24px] sm:w-[1600px]">
-            <h1 className="text-center font-optima text-6xl sm:text-left">
+            <h1 className="font-optima text-center text-6xl sm:text-left">
               DeSci is Inevitable.
             </h1>
             <h4 className="text-center text-2xl font-extralight sm:text-left sm:text-3xl">
@@ -124,13 +131,13 @@ export default function Page() {
 
         <div className="relative">
           <img
-            className="sm-translate-up absolute left-1/2 top-0 -z-10 w-full max-w-[1500px] select-none overflow-hidden"
+            className="sm-translate-up absolute top-0 left-1/2 -z-10 w-full max-w-[1500px] overflow-hidden select-none"
             src="https://cdn.inevitable.science/static/img/fog_bg.webp"
             alt=""
           />
 
           <div className="relative my-16 text-center sm:my-32">
-            <p className="mb-2 font-optima text-xl uppercase text-primary">
+            <p className="font-optima text-primary mb-2 text-xl uppercase">
               Discover DAO&rsquo;S
             </p>
             <h3 className="text-4xl font-light sm:text-6xl">
@@ -140,14 +147,14 @@ export default function Page() {
 
             <div className="pointer-events-none absolute top-0 hidden w-full items-center justify-between overflow-hidden sm:flex">
               <img
-                className="-z-10 select-none overflow-hidden"
+                className="-z-10 overflow-hidden select-none"
                 src="https://cdn.inevitable.science/static/img/clouds/cloud_left.webp"
                 style={{ transform: "translateX(-40%) translateY(-15%)" }}
                 alt=""
               />
 
               <img
-                className="relative -z-10 select-none overflow-hidden"
+                className="relative -z-10 overflow-hidden select-none"
                 src="https://cdn.inevitable.science/static/img/clouds/cloud_right.webp"
                 style={{ transform: "translateX(40%)" }}
                 alt=""
@@ -158,7 +165,7 @@ export default function Page() {
           <DaosGrid />
         </div>
 
-        <section className="mb-[60px] mt-[40px] flex h-screen min-h-[500px] items-center justify-center rounded-2xl bg-[url('/assets/img/light_future.webp')] bg-cover bg-center mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] sm:items-end">
+        <section className="mt-[40px] mb-[60px] flex h-screen min-h-[500px] items-center justify-center rounded-2xl bg-[url('https://cdn.inevitable.science/static/img/light_future.webp')] mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] bg-cover bg-center sm:items-end">
           <div className="ctWrapper relative top-[15px] flex flex-col items-center">
             <div className="flex flex-col items-center gap-6 text-center">
               <Image

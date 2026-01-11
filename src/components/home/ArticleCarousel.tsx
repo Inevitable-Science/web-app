@@ -1,50 +1,85 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import PartnersComponent from "./PartnersComponent";
-import articleSchema, { Article } from "@/app/articles/Articles";
 import { DynamicArticleCarousel } from "@/app/articles/ArticleCarousel";
+import { useFetchLatestArticles } from "@/hooks/queries/articles/useFetchLatestArticles";
+import { LatestArticlesResponse } from "@/lib/types/PublicArticleTypes";
 
-interface SlideType {
-  img: string;
-  title: string;
-  description: string;
-}
-
-interface PropType {
-  slides?: SlideType[];
-  options?: EmblaOptionsType;
-}
-
-const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
-
-export default function ArticleCarousel({
-  options = DEFAULT_OPTIONS,
-}: PropType) {
-  const [trendingSlides, setTrendingSlides] = useState<SlideType[]>([]);
-
-  useEffect(() => {
-    const sortedArticles = [...articleSchema.articles].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    const slides = sortedArticles.slice(0, 3).map((article: Article) => ({
-      img: article.image,
-      title: article.title,
-      description: article.overview,
-    }));
-
-    setTrendingSlides(slides);
-  }, []);
+export default function ArticleCarousel() {
+  const { data: slides } = useFetchLatestArticles();
 
   return (
     <section className="mx-auto w-full">
       <div className="ctWrapper">
-        <DynamicArticleCarousel
-          category="Trending Articles"
-          slides={trendingSlides}
-        />
+        {slides ? (
+          <DynamicArticleCarousel
+            category="Latest Articles"
+            slides={slides}
+          />
+        ) : (
+          <div className="overflow-hidden">
+            <h3 className="mb-4 text-2xl font-extralight sm:text-4xl">Latest Articles</h3>
+            <div className="flex gap-4 overflow-hidden">
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
+                
+                <div className="mt-4 w-full">
+                  <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
+
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton h-[18px] w-full rounded-lg" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
       </div>
 
       <div

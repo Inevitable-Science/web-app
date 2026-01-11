@@ -23,9 +23,11 @@ export const chainSortOrder = new Map<JBChainId, number>([
 
 export const chainIdToLogo = {
   [sepolia.id]: "https://cdn.inevitable.science/static/img/logo/mainnet.svg",
-  [optimismSepolia.id]: "https://cdn.inevitable.science/static/img/logo/optimism.svg",
+  [optimismSepolia.id]:
+    "https://cdn.inevitable.science/static/img/logo/optimism.svg",
   [baseSepolia.id]: "https://cdn.inevitable.science/static/img/logo/base.svg",
-  [arbitrumSepolia.id]: "https://cdn.inevitable.science/static/img/logo/arbitrum.svg",
+  [arbitrumSepolia.id]:
+    "https://cdn.inevitable.science/static/img/logo/arbitrum.svg",
   [mainnet.id]: "https://cdn.inevitable.science/static/img/logo/mainnet.svg",
   [optimism.id]: "https://cdn.inevitable.science/static/img/logo/optimism.svg",
   [base.id]: "https://cdn.inevitable.science/static/img/logo/base.svg",

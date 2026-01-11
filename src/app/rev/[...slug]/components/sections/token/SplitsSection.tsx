@@ -122,7 +122,7 @@ export function SplitsSection() {
   return (
     <>
       {suckers && suckers.length > 1 && (
-        <div className="mb-4 mt-2">
+        <div className="mt-2 mb-4">
           <div className="text-sm text-zinc-500">See splits on</div>
           <Select
             onValueChange={(v) => setSelectedSucker(suckers[parseInt(v)])}
@@ -180,10 +180,10 @@ export function SplitsSection() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-auto md:w-1/2">Account</TableHead>
-                <TableHead className="text-sm font-light uppercase text-muted-foreground">
+                <TableHead className="text-muted-foreground text-sm font-light uppercase">
                   Percentage
                 </TableHead>
-                <TableHead className="text-sm font-light uppercase text-muted-foreground">
+                <TableHead className="text-muted-foreground text-sm font-light uppercase">
                   Pending Splits
                 </TableHead>
               </TableRow>
@@ -205,9 +205,7 @@ export function SplitsSection() {
                             address={split.beneficiary}
                             chain={
                               selectedSucker
-                                ? JB_CHAINS[
-                                    selectedSucker.peerChainId
-                                  ].chain
+                                ? JB_CHAINS[selectedSucker.peerChainId].chain
                                 : chainId
                                   ? JB_CHAINS[chainId].chain
                                   : undefined
@@ -221,9 +219,7 @@ export function SplitsSection() {
                             address={split.beneficiary}
                             chain={
                               selectedSucker
-                                ? JB_CHAINS[
-                                    selectedSucker.peerChainId
-                                  ].chain
+                                ? JB_CHAINS[selectedSucker.peerChainId].chain
                                 : chainId
                                   ? JB_CHAINS[chainId].chain
                                   : undefined
@@ -269,10 +265,10 @@ export function SplitsSection() {
         </div>
       </div>
       <div className="flex space-y-4 pb-0 sm:pb-2">
-        <p className="uppercasefont-light text-sm font-light italic text-muted-foreground">
+        <p className="uppercasefont-light text-muted-foreground text-sm font-light italic">
           Splits can be adjusted by the Operator at any time, within the
           permanent split limit of a stage.
-          <p className="uppercasefont-light text-sm font-light italic text-muted-foreground">
+          <p className="uppercasefont-light text-muted-foreground text-sm font-light italic">
             Operator is currently{" "}
             <EtherscanLink
               value={boostRecipient}

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DaoResponseSchema = z.object({
+export const DaoResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   backdrop: z.string(),
@@ -27,9 +27,9 @@ export const DaoResponseSchema = z.object({
   }),
 });
 
-export type DaoResponse = z.infer<typeof DaoResponseSchema>;
+export type DaoResponse = z.infer<typeof DaoResponseZ>;
 
-export const TreasuryResponseSchema = z.object({
+export const TreasuryResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   description: z.string(),
@@ -43,7 +43,7 @@ export const TreasuryResponseSchema = z.object({
   treasury: z.object({
     address: z.string(),
     ens_name: z.string(),
-    chain_id: z.number()
+    chain_id: z.number(),
   }),
   signers: z.object({
     required: z.number(),
@@ -85,9 +85,9 @@ export const TreasuryResponseSchema = z.object({
   ),
 });
 
-export type TreasuryResponse = z.infer<typeof TreasuryResponseSchema>;
+export type TreasuryResponse = z.infer<typeof TreasuryResponseZ>;
 
-export const TokenResponseSchema = z.object({
+export const TokenResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   assetsUnderManagement: z.number().nullable(),
@@ -126,61 +126,51 @@ export const TokenResponseSchema = z.object({
     .nullable(),
 });
 
-export type TokenResponse = z.infer<typeof TokenResponseSchema>;
+export type TokenResponse = z.infer<typeof TokenResponseZ>;
 
-
-export const HistoricalTreasuryResponse = z.object({
-  historical_treasury: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
-  historical_assets: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
-  total_assets: z.array(
-    z.tuple([z.number(), z.number()])
-  ),
+export const HistoricalTreasuryResponseZ = z.object({
+  historical_treasury: z.array(z.tuple([z.number(), z.number()])),
+  historical_assets: z.array(z.tuple([z.number(), z.number()])),
+  total_assets: z.array(z.tuple([z.number(), z.number()])),
 });
 
-export type HistoricalTreasuryType = z.infer<typeof HistoricalTreasuryResponse>;
+export type HistoricalTreasuryResponse = z.infer<
+  typeof HistoricalTreasuryResponseZ
+>;
 
 export const OHLCResponseZ = z.array(
-  z.tuple([
-    z.number(),
-    z.number(),
-    z.number(),
-    z.number(),
-    z.number(),
-  ])
+  z.tuple([z.number(), z.number(), z.number(), z.number(), z.number()])
 );
 
-export const MarketChartResponse = z.object({
-  prices: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
-  ),
-  market_caps: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
-  ),
-  total_volumes: z.array(
-    z.tuple([
-      z.number(),
-      z.number(),
-    ])
+export const MarketChartResponseZ = z.object({
+  prices: z.array(z.tuple([z.number(), z.number()])),
+  market_caps: z.array(z.tuple([z.number(), z.number()])),
+  total_volumes: z.array(z.tuple([z.number(), z.number()])),
+});
+
+export type MarketChartResponse = z.infer<typeof MarketChartResponseZ>;
+
+export const TokenHoldersResponseZ = z.object({
+  holders: z.array(z.tuple([z.number(), z.number()])),
+});
+
+export type TokenHoldersType = z.infer<typeof TokenHoldersResponseZ>;
+
+export const LegacyActivityResponseZ = z.object({
+  page: z.number(),
+  limit: z.number(),
+  totalItems: z.number(),
+  totalPages: z.number(),
+  data: z.array(
+    z.object({
+      date: z.string(),
+      eth_paid: z.string(),
+      usd_value: z.string(),
+      payer_address: z.string(),
+      beneficiary: z.string(),
+      transaction_hash: z.string(),
+    })
   ),
 });
 
-export type MarketChartType = z.infer<typeof MarketChartResponse>;
-
-
-export const TokenHoldersResponse = z.object({
-  holders: z.array(
-    z.tuple([z.number(), z.number()]),
-  )
-});
-
-export type TokenHoldersType = z.infer<typeof TokenHoldersResponse>;
+export type ActivityResponse = z.infer<typeof LegacyActivityResponseZ>;

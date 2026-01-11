@@ -1,20 +1,5 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
-import { ProjectDocument } from "@/generated/graphql";
-import {
-  DaoResponse,
-  DaoResponseSchema,
-  TokenResponse,
-  TokenResponseSchema,
-  TreasuryResponse,
-  TreasuryResponseSchema,
-} from "@/lib/types/AnalyticTypes";
-import request from "graphql-request";
 
-interface ProjectAnalyticsResponse {
-  daoData: DaoResponse;
-  treasuryData: TreasuryResponse | null;
-  tokenData: TokenResponse | null;
-}
 
 export function parseSlug(slug?: string) {
   if (!slug) throw new Error("No URN found");
@@ -71,82 +56,5 @@ export async function resolveIpfsLogo(
   } catch (err) {
     console.error("Failed to fetch IPFS metadata:", err);
     return fallbackUrl;
-  }
-}
-
-export async function fetchProjectData(config: {
-  projectId: bigint;
-  chainId: number;
-  version: number;
-}) {
-  const url = `${process.env.NEXT_PUBLIC_BENDYSTRAW_URL}/graphql`;
-
-  try {
-    const project = await request(url, ProjectDocument, {
-      chainId: Number(config.chainId),
-      projectId: Number(config.projectId),
-      version: Number(config.version),
-    });
-
-    return project;
-  } catch (err) {
-    console.error("Failed to fetch project:", err);
-    throw err;
-  }
-}
-
-export async function fetchProjectAnalytics(
-  projectName: string
-): Promise<ProjectAnalyticsResponse | null> {
-  try {
-    const daoResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${projectName}`,
-      { next: { revalidate: 900 } }
-    );
-    if (!daoResponse.ok) return null;
-    const daoData = await daoResponse.json();
-    const validatedDaoData = DaoResponseSchema.parse(daoData);
-
-    // make it fetch token with token name from daoResponse
-    const [treasuryResponse, tokenResponse] = await Promise.all([
-      fetch(`${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${projectName}`, {
-        next: { revalidate: 900 },
-      }),
-      fetch(
-        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/token/${validatedDaoData.nativeToken.name}`,
-        { next: { revalidate: 900 } }
-      ),
-    ]);
-
-    let treasuryData = null;
-    let tokenData = null;
-
-    if (treasuryResponse.ok) {
-      try {
-        const rawTreasury = await treasuryResponse.json();
-        treasuryData = TreasuryResponseSchema.parse(rawTreasury);
-      } catch (err) {
-        console.error("Failed to parse treasury response", err);
-        treasuryData = null;
-      }
-    }
-
-    if (tokenResponse.ok) {
-      try {
-        const rawToken = await tokenResponse.json();
-        tokenData = TokenResponseSchema.parse(rawToken);
-      } catch (err) {
-        console.error("Failed to parse token response", err);
-        tokenData = null;
-      }
-    }
-
-    return {
-      daoData: validatedDaoData,
-      treasuryData,
-      tokenData,
-    };
-  } catch {
-    return null;
   }
 }

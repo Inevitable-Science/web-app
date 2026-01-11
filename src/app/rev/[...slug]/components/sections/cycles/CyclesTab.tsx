@@ -1,22 +1,26 @@
 // src/components/NetworkDetailsTable.tsx
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
-import { JBChainId, JBRulesetData, JBRulesetMetadata, ReservedPercent } from "juice-sdk-core";
-import { useJBChainId, useJBContractContext, useJBProject, useNativeTokenSurplus } from "juice-sdk-react";
+import {
+  JBRulesetData,
+  JBRulesetMetadata,
+  ReservedPercent,
+} from "juice-sdk-core";
+import { useJBContractContext, useNativeTokenSurplus } from "juice-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 import { formatEther } from "viem";
-import { SplitsSection } from "../token/SplitsSection";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
-import { IssuancePriceChart, ProjectionRange } from "./issuanceChart/IssuancePriceChart";
-import { getRulesets } from "./issuanceChart/getRulesets";
+import {
+  IssuancePriceChart,
+  ProjectionRange,
+} from "./issuanceChart/IssuancePriceChart";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
-
 
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
@@ -24,17 +28,19 @@ export function NetworkDetailsTable() {
   const [range, setRange] = useState<ProjectionRange>("1y");
 
   // Get raw data from the context
-  const { ruleset: currentRuleset, project } = useProjectContext();
-  const chainId = useJBChainId();
+  //const { ruleset: currentRuleset, project } = useProjectContext();
+  const project = useRevnetDataStore((state) => state.project);
+  const currentRuleset = useRevnetDataStore((state) => state.ruleset);
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
-  const currentIssuance = useFormattedTokenIssuance({ reservedPercent: new ReservedPercent(0) });
+  const currentIssuance = useFormattedTokenIssuance({
+    reservedPercent: new ReservedPercent(0),
+  });
 
-  const { projectId, version } = useJBContractContext();
-  const { allRulesets, isLoadingAllRulesets } = useRulesetData({
+  const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
   console.log(allRulesets, "all rulesets");
-  
+
   const sortedRulesets = useMemo(() => {
     if (!allRulesets) return undefined;
     return [...allRulesets];
@@ -166,42 +172,44 @@ export function NetworkDetailsTable() {
       <div className="bg-grey-450 rounded-xl py-[16px] pr-[16px]">
         <div className="flex items-center justify-between pl-[16px]">
           <div className="mb-1">
-            <p className="text-sm font-light leading-[16px] uppercase text-muted-foreground">
+            <p className="text-muted-foreground text-sm leading-[16px] font-light uppercase">
               Issuing
             </p>
-            <h1 className="font-light text-lg leading-[24px]">{currentIssuance}</h1>
+            <h1 className="text-lg leading-[24px] font-light">
+              {currentIssuance}
+            </h1>
           </div>
 
           <div className="flex items-center gap-1">
-            <Button 
+            <Button
               variant={"graphRounded"}
               onClick={() => setRange("1y")}
               disabled={range === "1y"}
             >
               1y
             </Button>
-            <Button 
+            <Button
               variant={"graphRounded"}
               onClick={() => setRange("5y")}
               disabled={range === "5y"}
             >
               5y
             </Button>
-            <Button 
+            <Button
               variant={"graphRounded"}
               onClick={() => setRange("10y")}
               disabled={range === "10y"}
             >
               10y
             </Button>
-            <Button 
+            <Button
               variant={"graphRounded"}
               onClick={() => setRange("20y")}
               disabled={range === "20y"}
             >
               20y
             </Button>
-            <Button 
+            <Button
               variant={"graphRounded"}
               onClick={() => setRange("all")}
               disabled={range === "all"}
@@ -210,18 +218,17 @@ export function NetworkDetailsTable() {
             </Button>
           </div>
         </div>
-        
+
         <IssuancePriceChart range={range} />
       </div>
-      
-      
-      <div className="rounded-2xl bg-grey-450 p-[12px]">
+
+      <div className="bg-grey-450 rounded-2xl p-[12px]">
         {/* Top grid with cycle #, status, etc. */}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           {/* NEW: Updated Cycle # display and wired up buttons */}
           <div className="background-color flex items-center justify-between rounded-xl p-[16px]">
             <div className="flex flex-col">
-              <p className="text-sm font-light uppercase text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-light uppercase">
                 Cycle
               </p>
               <h3 className="text-xl">
@@ -247,7 +254,7 @@ export function NetworkDetailsTable() {
                   : "Upcoming"
                 : "-"}
             </h3>
-            <p className="text-sm font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light uppercase">
               Status
             </p>
           </div>
@@ -262,7 +269,7 @@ export function NetworkDetailsTable() {
         <div className="background-color mt-3 rounded-xl p-[16px]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-light uppercase text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-light uppercase">
                 Rules for this cycle
               </p>
               <h3 className="text-xl">Details</h3>
@@ -284,12 +291,12 @@ export function NetworkDetailsTable() {
             <>
               {/* Cycles Section */}
               <div className="mb-6">
-                <h2 className="mt-4 text-grey-50">CYCLES</h2>
+                <h2 className="text-grey-50 mt-4">CYCLES</h2>
                 <div>
                   {Object.entries(cyclesData).map(([key, value]) => (
                     <div
                       key={key}
-                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                      className="border-grey-450 text-grey-50 flex items-center justify-between border-b py-3 text-sm font-light"
                     >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
@@ -300,12 +307,12 @@ export function NetworkDetailsTable() {
 
               {/* Token Section */}
               <div className="mb-6">
-                <h2 className="mt-4 text-grey-50">TOKEN</h2>
+                <h2 className="text-grey-50 mt-4">TOKEN</h2>
                 <div>
                   {Object.entries(tokenData).map(([key, value]) => (
                     <div
                       key={key}
-                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                      className="border-grey-450 text-grey-50 flex items-center justify-between border-b py-3 text-sm font-light"
                     >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
@@ -316,12 +323,12 @@ export function NetworkDetailsTable() {
 
               {/* Other Rules Section */}
               <div>
-                <h2 className="mt-4 text-grey-50">OTHER RULES</h2>
+                <h2 className="text-grey-50 mt-4">OTHER RULES</h2>
                 <div>
                   {Object.entries(otherRulesData).map(([key, value]) => (
                     <div
                       key={key}
-                      className="flex items-center justify-between border-b border-grey-450 py-3 text-sm font-light text-grey-50"
+                      className="border-grey-450 text-grey-50 flex items-center justify-between border-b py-3 text-sm font-light"
                     >
                       <span>{formatLabel(key)}</span>
                       <span>{value}</span>
@@ -336,19 +343,19 @@ export function NetworkDetailsTable() {
 
       {/* --- The rest of the component remains the same --- */}
 
-      <div className="flex flex-col gap-3 rounded-2xl bg-grey-450 p-[12px]">
+      <div className="bg-grey-450 flex flex-col gap-3 rounded-2xl p-[12px]">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
               Ξ{parseFloat(formatEther(project.volume)).toFixed(2)}
             </h3>
-            <p className="text-sm font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light uppercase">
               Total Raised
             </p>
           </div>
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">Ξ{availableToPayout.toFixed(2)}</h3>
-            <p className="text-sm font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground text-sm font-light uppercase">
               Overflow
             </p>
           </div>

@@ -60,17 +60,17 @@ export function TeamComponent() {
         {slides.map((slide, index) => (
           <div
             key={index}
-            className="flex w-full min-w-[180px] max-w-[360px] sm:max-w-[250px] lg:max-w-[500px]"
+            className="flex w-full max-w-[360px] min-w-[180px] sm:max-w-[250px] lg:max-w-[500px]"
           >
-            <div className="flex h-full w-full select-none flex-col items-start rounded-2xl border border-grey-500 bg-background p-3 text-center">
+            <div className="border-grey-500 bg-background flex h-full w-full flex-col items-start rounded-2xl border p-3 text-center select-none">
               <img
                 src={slide.img}
                 alt={slide.name}
                 className="h-auto w-full rounded-lg object-cover"
               />
               <div>
-                <h4 className="mt-2 font-optima text-xl">{slide.name}</h4>
-                <p className="text-sm font-light text-muted-foreground">
+                <h4 className="font-optima mt-2 text-xl">{slide.name}</h4>
+                <p className="text-muted-foreground text-sm font-light">
                   {slide.description}
                 </p>
                 <div className="mt-4 flex items-center justify-center gap-2">

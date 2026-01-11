@@ -56,15 +56,15 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
     fill,
     payload,
   } = props;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-  const ey = my;
-  const textAnchor = cos >= 0 ? "start" : "end";
+  // const sin = Math.sin(-RADIAN * midAngle);
+  // const cos = Math.cos(-RADIAN * midAngle);
+  // const sx = cx + (outerRadius + 10) * cos;
+  // const sy = cy + (outerRadius + 10) * sin;
+  // const mx = cx + (outerRadius + 30) * cos;
+  //  const my = cy + (outerRadius + 30) * sin;
+  //  const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+  // const ey = my;
+  // const textAnchor = cos >= 0 ? "start" : "end";
 
   function formatNumber(value: number | string) {
     if (value === "N/A") return value;
@@ -178,24 +178,20 @@ export function TreasuryPieChart({
           })
       : [];
 
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [filteredData]);
-
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
 
-  const adjustRadius = () => {
-    const width = window.innerWidth;
-    if (width < 410) {
-      setRadius({ innerRadius: 100, outerRadius: 120 });
-    } else {
-      setRadius({ innerRadius: 120, outerRadius: 150 });
-    }
-  };
-
   useEffect(() => {
+    const adjustRadius = () => {
+      const width = window.innerWidth;
+      if (width < 410) {
+        setRadius({ innerRadius: 100, outerRadius: 120 });
+      } else {
+        setRadius({ innerRadius: 120, outerRadius: 150 });
+      }
+    };
+
     adjustRadius();
     window.addEventListener("resize", adjustRadius);
     return () => {

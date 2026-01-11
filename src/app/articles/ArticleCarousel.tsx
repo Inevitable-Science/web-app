@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { EmblaOptionsType } from "embla-carousel";
 import {
   PrevButton,
@@ -8,11 +7,13 @@ import {
   usePrevNextButtons,
 } from "@/components/home/ArrowButtons";
 import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 
-interface SlideType {
-  img: string;
+export interface SlideType {
+  landingImage: string;
   title: string;
-  description: string;
+  overview: string;
+  articleId: string;
 }
 
 interface Props {
@@ -21,44 +22,11 @@ interface Props {
   options?: EmblaOptionsType;
 }
 
-const DEFAULT_SLIDES: SlideType[] = [
-  {
-    img: "https://cdn.inevitable.science/static/img/articles/article_1.png",
-    title: "Article Title 1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "https://cdn.inevitable.science/static/img/articles/article_2.png",
-    title: "Article Title 2",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "https://cdn.inevitable.science/static/img/articles/article_3.png",
-    title: "Article Title 3",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-  {
-    img: "https://cdn.inevitable.science/static/img/articles/article_4.png",
-    title: "Article Title 4",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
-  },
-];
-
 const DEFAULT_OPTIONS: EmblaOptionsType = { align: "start" };
-
-const createSlug = (title: string) =>
-  title
-    .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^a-z0-9-]/g, "");
 
 export function DynamicArticleCarousel({
   category = "Category",
-  slides = DEFAULT_SLIDES,
+  slides = [],
   options = DEFAULT_OPTIONS,
 }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
@@ -68,6 +36,8 @@ export function DynamicArticleCarousel({
     onPrevButtonClick,
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
+
+  if (slides.length === 0) return null;
 
   return (
     <section>
@@ -80,22 +50,24 @@ export function DynamicArticleCarousel({
       </div>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="-ml-4 flex touch-pan-y">
-          {slides.map((slide, index) => (
+          {slides.map((slide) => (
             <a
-              key={index}
-              href={`/articles/${createSlug(slide.title)}`}
-              className="flex min-w-[280px] max-w-[520px] pl-4 sm:min-w-[440px]"
+              key={slide.articleId}
+              href={`/articles/${slide.articleId}`}
+              className="flex max-w-[520px] min-w-[280px] pl-4 sm:min-w-[440px]"
             >
-              <div className="flex h-full select-none flex-col items-start rounded-2xl border border-grey-500 bg-background p-4">
-                <img
-                  src={slide.img}
+              <div className="border-grey-500 bg-background flex h-full flex-col items-start rounded-2xl border p-4 select-none">
+                <Image
+                  src={slide.landingImage || "/placeholder.png"}
                   alt={slide.title}
+                  height={270}
+                  width={470}
                   className="h-auto w-full rounded-lg object-cover"
                 />
-                <div>
-                  <h4 className="mt-2 font-optima text-xl">{slide.title}</h4>
-                  <p className="line-clamp-2 text-sm font-light">
-                    {slide.description}
+                <div className="mt-4">
+                  <h4 className="font-optima text-xl line-clamp-1">{slide.title}</h4>
+                  <p className="text-muted-foreground line-clamp-2 text-sm font-light">
+                    {slide.overview}
                   </p>
                 </div>
               </div>

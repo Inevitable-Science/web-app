@@ -3,23 +3,19 @@ import { ParticipantsDocument } from "@/generated/graphql";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
 import { ParticipantsTable } from "./ParticipantsTable";
-import { Address, formatUnits } from "viem";
+import { formatUnits } from "viem";
 import Image from "next/image";
 import { ParticipantsPieChart } from "./ParticipantsPieChart";
-import { useProjectContext } from "../../../ProjectDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
   useBendystrawQuery,
   useJBChainId,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
 } from "juice-sdk-react";
-import {
-  JBProjectToken,
-  JBRulesetData,
-  JBRulesetMetadata,
-  JB_CHAINS,
-  jbControllerAbi,
-} from "juice-sdk-core";
+import { JBProjectToken, JB_CHAINS, jbControllerAbi } from "juice-sdk-core";
 import { useAccount, useReadContract, useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import EtherscanLink from "@/components/EtherscanLink";
@@ -28,8 +24,13 @@ type TableView = "you" | "all" | "splits";
 
 export function HoldersSection() {
   const { connector } = useAccount();
-  const { project, token, metadata, ruleset, rulesetMetadata } =
-    useProjectContext();
+
+  const project = useRevnetDataStore((state) => state.project);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  const { token } = useJBTokenContext();
+  const { metadata } = useJBProjectMetadataContext();
+
   const { projectId, contracts, contractAddress } = useJBContractContext();
   const { tokenData: rulesetData } = useRulesetData({
     ruleset: ruleset,
@@ -115,7 +116,7 @@ export function HoldersSection() {
     <section>
       <div className="flex w-full flex-col gap-4">
         {token?.data && (
-          <div className="rounded-2xl bg-grey-450 p-[12px]">
+          <div className="bg-grey-450 rounded-2xl p-[12px]">
             <div className="background-color rounded-xl p-[16px]">
               <h3 className="text-xl">
                 {totalBalance &&
@@ -127,7 +128,7 @@ export function HoldersSection() {
                     false
                   )}
               </h3>
-              <p className="font-light uppercase text-muted-foreground">
+              <p className="text-muted-foreground font-light uppercase">
                 {tokenSymbol != "$TOKEN"
                   ? `Your ${tokenSymbol}`
                   : "Your Balance"}
@@ -136,32 +137,31 @@ export function HoldersSection() {
           </div>
         )}
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
           <div className="background-color rounded-xl p-[16px]">
             <div className="flex items-end gap-2">
-              {/* This h3 is already correctly handling a potential lack of token.data */}
               <h3 className="text-xl leading-[24px]">
                 {token.data?.name ? token.data.name : metadata.data?.name}
               </h3>
               {token.data && (
                 <EtherscanLink
                   value={token.data.address}
-                  className="text-sm text-muted-foreground"
+                  className="text-muted-foreground text-sm"
                   type={"token"}
                   truncateTo={4}
-                  chain={JB_CHAINS[chainId ?? 1].chain}
+                  chain={chainId ? JB_CHAINS[chainId].chain : undefined}
                 />
               )}
             </div>
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Project Token
             </p>
-            {(token.data && connector?.name === "MetaMask") && (
+            {token.data && connector?.name === "MetaMask" && (
               <Button
                 variant="link"
-                className="flex h-6 w-fit text-sm items-center gap-1.5 px-0 font-normal uppercase text-nowrap"
+                className="flex h-6 w-fit items-center gap-1.5 px-0 text-sm font-normal text-nowrap uppercase"
                 onClick={handleAddToken}
-                disabled={isPending} // Disable the button while processing
+                disabled={isPending}
               >
                 {isPending
                   ? "Adding..."
@@ -183,13 +183,13 @@ export function HoldersSection() {
                 ? formatNumber(Number(formatUnits(project.tokenSupply, 18)))
                 : "Token Error"}
             </h3>
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Total Supply
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl bg-grey-450 p-[12px]">
+        <div className="bg-grey-450 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
               {pendingReserveTokenBalance && token.data?.decimals
@@ -204,7 +204,7 @@ export function HoldersSection() {
                   )
                 : 0}
             </h3>
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Pending Reserved Tokens
             </p>
           </div>
@@ -213,25 +213,17 @@ export function HoldersSection() {
             <h3 className="text-xl">
               {rulesetData && rulesetData.reservedRate}
             </h3>
-            <p className="font-light uppercase text-muted-foreground">
+            <p className="text-muted-foreground font-light uppercase">
               Reserved Rate
             </p>
           </div>
         </div>
 
-        <div className="flex h-[400px] items-center rounded-2xl bg-grey-450 p-[12px]">
-          <ParticipantsPieChart
-            participants={Object.values(participantsDataAggregate)}
-            totalSupply={totalOutstandingTokens}
-            token={token?.data}
-          />
+        <div className="bg-grey-450 flex h-[400px] items-center rounded-2xl p-[12px]">
+          <ParticipantsPieChart />
         </div>
 
-        <ParticipantsTable
-          participants={Object.values(participantsDataAggregate)}
-          token={token?.data}
-          totalSupply={totalOutstandingTokens}
-        />
+        <ParticipantsTable />
       </div>
     </section>
   );

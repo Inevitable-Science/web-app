@@ -1,17 +1,17 @@
-import { useIVXContext } from "../../DataProvider";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 export function PortfolioPeformance() {
-  const { analyticsData } = useIVXContext();
+  const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);
 
   return (
     <>
-      {analyticsData?.treasury?.historicalReturns && (
-        <div className="h-full rounded-2xl bg-grey-450 p-[12px]">
-          <h3 className="py-1 text-sm uppercase text-muted-foreground">
+      {treasuryData?.historicalReturns && (
+        <div className="bg-grey-450 h-full rounded-2xl p-[12px]">
+          <h3 className="text-muted-foreground py-1 text-sm uppercase">
             Portfolio Peformance
           </h3>
           <div className="flex flex-col text-sm font-light">
-            {analyticsData?.treasury?.historicalReturns.map(value => {
+            {treasuryData.historicalReturns.map((value) => {
               const isPositive = !value.percentReturn.startsWith("-");
               const textColor = isPositive ? "text-green-500" : "text-red-500";
 
@@ -20,7 +20,7 @@ export function PortfolioPeformance() {
                   key={value.dateRange}
                   className="flex items-center justify-between border-b border-[#282828] py-1 py-4"
                 >
-                  <p className="w-8 text-muted-foreground">{value.dateRange}</p>
+                  <p className="text-muted-foreground w-8">{value.dateRange}</p>
                   <p className={`min-w-24 text-center ${textColor}`}>
                     {isPositive === true && "+"}
                     {value.dollarReturn}

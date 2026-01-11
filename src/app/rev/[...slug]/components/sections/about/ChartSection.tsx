@@ -9,14 +9,12 @@ import {
   useBendystrawQuery,
 } from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
-interface ChartSection {
-  setSelectedTab: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export function ChartSection({ setSelectedTab }: ChartSection) {
-  const chainId = useJBChainId();
+export function ChartSection() {
   const { projectId, version } = useJBContractContext();
+  const setSelectedTab = useRevnetDataStore((state) => state.setSelectedTab);
+  const chainId = useJBChainId();
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),
@@ -27,7 +25,7 @@ export function ChartSection({ setSelectedTab }: ChartSection) {
   const suckerGroupId = project?.project?.suckerGroupId;
 
   return (
-    <section className="flex flex-col rounded-2xl bg-grey-450 p-[16px]">
+    <section className="bg-grey-450 flex flex-col rounded-2xl p-[16px]">
       <StaticVolumeChart suckerGroupId={suckerGroupId} />
 
       <Button

@@ -55,7 +55,7 @@ export function AccordionComponent() {
   };
 
   return (
-    <div className="mt-[12px] rounded-2xl bg-grey-450 px-[12px] py-[16px]">
+    <div className="bg-grey-450 mt-[12px] rounded-2xl px-[12px] py-[16px]">
       <h3 className="text-2xl">FAQ</h3>
       <div className="background-color mt-2 w-full rounded-xl">
         {faqQuestions.map((faq, index) => (
@@ -66,13 +66,13 @@ export function AccordionComponent() {
               className="flex w-full items-center justify-between gap-[12px] text-left"
             >
               <span
-                className={`${openIndex === index && "py-8 text-primary"} text-md transition-all md:text-lg`}
+                className={`${openIndex === index && "text-primary py-8"} text-md transition-all md:text-lg`}
               >
                 {faq.question}
               </span>
               <ChevronDown
                 className={`h-6 min-w-10 transition-transform duration-300 md:h-8 ${
-                  openIndex === index ? "rotate-180 text-primary" : ""
+                  openIndex === index ? "text-primary rotate-180" : ""
                 }`}
               />
             </button>

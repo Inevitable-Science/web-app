@@ -1,6 +1,6 @@
-# Inevitable Protocol
+# Inevitable Science
 
-**Inevitable Protocol** is a decentralized web application (dApp) built for the emerging field of DeSci (Decentralized Science). It enables scientific projects and organizations fundraise, transparently and credibly onchain.
+**Inevitable Science** is a decentralized web application (dApp) built for the emerging field of DeSci (Decentralized Science). It enables scientific projects and organizations fundraise, transparently and credibly onchain.
 
 ---
 
@@ -55,12 +55,12 @@ Open [http://localhost:3000](http://localhost:3000) to view the app in your brow
 
 ---
 
-## 🧪 What is Inevitable Protocol?
+## 🧪 What is Inevitable Science?
 
-> Inevitable Protocol is a modular, composable framework for **decentralized science funding** — enabling open, credible, and unstoppable science.
+> Inevitable Science is a modular, composable framework for **decentralized science funding** — enabling open, credible, and unstoppable science.
 
 ---
 
 ## 📄 License
 
-MIT © [Inevitable Protocol](https://inevitable.science)
+MIT © [Inevitable Science](https://inevitable.science)

@@ -22,7 +22,7 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
   if (!websiteUrl && !discordLink && !dataHolder?.twitter) return;
 
   return (
-    <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-grey-450 p-[12px]">
+    <div className="bg-grey-450 mt-6 flex flex-col gap-2 rounded-2xl p-[12px]">
       {websiteUrl && (
         <a
           className="background-color flex items-center gap-2 rounded-2xl p-[16px]"

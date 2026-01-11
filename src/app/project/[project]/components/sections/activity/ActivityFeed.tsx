@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useData } from "../../../DataProvider";
+import { useState } from "react";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import EtherscanLink from "@/components/EtherscanLink";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Address } from "viem";
@@ -9,27 +9,7 @@ import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
-import z from "zod";
-
-const LegacyActivityResponse = z.object({
-  page: z.number(),
-  limit: z.number(),
-  totalItems: z.number(),
-  totalPages: z.number(),
-  data: z.array(
-    z.object({
-      date: z.string(),
-      eth_paid: z.string(),
-      usd_value: z.string(),
-      payer_address: z.string(),
-      beneficiary: z.string(),
-      transaction_hash: z.string()
-    })
-  )
-});
-
-type ActivityResponseType = z.infer<typeof LegacyActivityResponse>;
-
+import { useFetchLegacyActivity } from "@/hooks/queries/useFetchLegacyActivity";
 
 function getRelativeTime(dateString: string): string {
   // Step 1: Parse the date string
@@ -43,44 +23,13 @@ function getRelativeTime(dateString: string): string {
   return relativeTime;
 }
 
-
 export function ActivityFeed() {
-  const { analyticsData } = useData();
-
-  const [data, setData] = useState<ActivityResponseType | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const daoData = useLegacyProjectStore((state) => state.daoData);
+  const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
   const [page, setPage] = useState<number>(1);
-  const [error, setError] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchActivity = async () => {
-      try {
-        if (!analyticsData?.daoData?.name) return null;
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/legacy/activity/${analyticsData?.daoData?.name}?page=${page}&limit=75`
-        );
-
-        if (!response.ok) {
-          setData(null);
-          setError(true);
-        }
-
-        const data = await response.json();
-        const parsedData = LegacyActivityResponse.parse(data);
-        setData(parsedData);
-      } catch (err) {
-        console.log(err);
-        setError(true);
-      } finally {
-        if (isLoading === true) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchActivity();
-  }, [page, analyticsData?.daoData?.name]);
+  const daoName = daoData?.name;
+  const { data, isLoading, isError } = useFetchLegacyActivity(daoName, page);
 
   return (
     <div>
@@ -90,25 +39,25 @@ export function ActivityFeed() {
         </div>
       ) : (
         <>
-          {error || data === null ? (
+          {isError || !data ? (
             <div>
-              <p className="mt-12 text-center text-muted-foreground">
+              <p className="text-muted-foreground mt-12 text-center">
                 Unable To Fetch DAO Activity
               </p>
-              <p className="mt-1 text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-center text-sm">
                 Please Try Again Later
               </p>
             </div>
           ) : (
-            <div>
-              {data.data.map(tx => (
+            <>
+              {data.data.map((tx) => (
                 <div
                   key={tx.transaction_hash}
                   className="border-color mb-1 min-h-[80px] border-b pb-2"
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="font-light text-grey-50">PAID</h3>
-                    <div className="text-md mb-2 font-light text-grey-50">
+                    <h3 className="text-grey-50 font-light">PAID</h3>
+                    <div className="text-md text-grey-50 mb-2 font-light">
                       <EtherscanLink
                         type="tx"
                         value={tx.transaction_hash}
@@ -120,17 +69,15 @@ export function ActivityFeed() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-color font-light">
-                      Ξ{tx.eth_paid}
-                    </div>
+                    <div className="text-color font-light">Ξ{tx.eth_paid}</div>
 
-                    {analyticsData?.tokenData?.selectedToken.chain_id && (
-                      <div className="text-md flex flex-wrap items-center gap-1 font-light text-grey-100">
+                    {tokenAnalytics?.selectedToken.chain_id && (
+                      <div className="text-md text-grey-100 flex flex-wrap items-center gap-1 font-light">
                         <EthereumAddress
                           address={tx.beneficiary as Address}
                           chain={
                             JB_CHAINS[
-                              analyticsData?.tokenData?.selectedToken
+                              tokenAnalytics?.selectedToken
                                 .chain_id as JBChainId
                             ].chain
                           }
@@ -143,57 +90,59 @@ export function ActivityFeed() {
                 </div>
               ))}
 
-              <div className="mt-6 flex flex-col items-center gap-2">
-                <p className="text-sm font-light text-muted-foreground">
-                  Page {data.page} out of {data.totalPages}
-                </p>
+              {data && (
+                <div className="mt-6 flex flex-col items-center gap-2">
+                  <p className="text-muted-foreground text-sm font-light">
+                    Page {page} out of {data?.totalPages}
+                  </p>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                    disabled={page === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                      disabled={page === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
 
-                  {Array.from({ length: 3 }, (_, i) => {
-                    const start = Math.max(
-                      1,
-                      Math.min(page - 1, data.totalPages - 2)
-                    );
-                    const pageNum = start + i;
-                    if (pageNum > data.totalPages) return null;
+                    {Array.from({ length: 3 }, (_, i) => {
+                      const start = Math.max(
+                        1,
+                        Math.min(page - 1, data.totalPages - 2)
+                      );
+                      const pageNum = start + i;
+                      if (pageNum > data.totalPages) return null;
 
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={pageNum === page ? "default" : "outline"}
-                        className={`${pageNum === page ? "border-color border" : ""} font-light`}
-                        onClick={() => setPage(pageNum)}
-                      >
-                        {pageNum}
-                      </Button>
-                    );
-                  })}
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={pageNum === page ? "default" : "outline"}
+                          className={`${pageNum === page ? "border-color border" : ""} font-light`}
+                          onClick={() => setPage(pageNum)}
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
 
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() =>
-                      setPage((prev) => Math.min(data.totalPages, prev + 1))
-                    }
-                    disabled={page === data.totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() =>
+                        setPage((prev) => Math.min(data.totalPages, prev + 1))
+                      }
+                      disabled={page === data?.totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-muted-foreground text-sm font-light">
+                    Showing {data.limit} items out of {data.totalItems}
+                  </p>
                 </div>
-                <p className="text-sm font-light text-muted-foreground">
-                  Showing {data.limit} items out of {data.totalItems}
-                </p>
-              </div>
-            </div>
+              )}
+            </>
           )}
         </>
       )}
