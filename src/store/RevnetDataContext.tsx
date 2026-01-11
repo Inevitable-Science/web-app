@@ -11,7 +11,7 @@ import {
   useState,
   useEffect,
 } from "react";
-import { useJBRulesetContext, useSuckers } from "juice-sdk-react";
+import { useJBChainId, useJBContractContext, useJBRulesetContext, useSuckers } from "juice-sdk-react";
 import { SuckerPair, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
 import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
@@ -34,6 +34,9 @@ interface RevnetDataStore {
   // Interactive State
   selectedTab: SelectedTabType;
   setSelectedTab: (tab: SelectedTabType) => void;
+
+  selectedSucker: SuckerPair;
+  setSelectedSucker: (sucker: SuckerPair) => void;
 
   // State
   suckers: SuckerPair[] | undefined;
@@ -76,6 +79,9 @@ export const RevnetDataProvider = ({
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
 
+  const chainId = useJBChainId();
+  const { projectId } = useJBContractContext();
+
   const [loadTimestamp] = useState(() => Math.floor(Date.now() / 1000));
   const twoWeeksAgo = useMemo(
     () => loadTimestamp - 14 * 24 * 60 * 60,
@@ -92,6 +98,9 @@ export const RevnetDataProvider = ({
     createStore<RevnetDataStore>((set) => ({
       selectedTab: "about",
       setSelectedTab: (tab) => set({ selectedTab: tab }),
+
+      selectedSucker: { peerChainId: chainId!, projectId }, // todo review if this is safe (chainId!)
+      setSelectedSucker: (sucker) => set({ selectedSucker: sucker }),
 
       suckers: suckers,
       ruleset: ruleset.data ?? undefined,

@@ -9,8 +9,7 @@ import {
 } from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
-import { useSelectedSucker } from "./SelectedSuckerContext";
-import { useRevnetDataStore } from "../../../../../store/RevnetDataContext";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
@@ -21,12 +20,15 @@ import { formatSeconds } from "@/lib/utils";
 export function TransactionCard() {
   const project = useRevnetDataStore((state) => state.project);
   const suckers = useRevnetDataStore((state) => state.suckers);
+
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
 
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const activeChain = useJBChainId();
   const chainId = useChainId();
   const { version } = useJBContractContext();

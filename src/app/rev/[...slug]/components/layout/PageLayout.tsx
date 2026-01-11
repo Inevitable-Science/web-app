@@ -5,7 +5,7 @@ import { zeroAddress } from "viem";
 import { PayCard } from "../payCard/PayCardWrapper";
 import { Header } from "./Header";
 import { TabContent } from "./TabContent";
-import { OtherDaosCarousel } from "../../../../../components/OtherDaosCarousel";
+import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { TabSelectorLG, TabSelectorSM } from "./TabSelector";
 
@@ -15,28 +15,21 @@ export interface TabType {
 }
 
 export function PageLayout() {
-  //const daoData = useRevnetDataStore((state) => state.daoData);
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
   const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
   );
-  const { contracts } = useJBContractContext();
 
   const tabs = [
     { key: "about", label: "About" },
     { key: "tokens", label: "Tokens" },
     { key: "activity", label: "Activity" },
     { key: "cycles", label: "Cycles" },
-    /*...(daoData === null
-      ? []
-      : */[
-          ...(tokenAnalytics ? [{ key: "analytics", label: "Analytics" }] : []),
-          ...(treasuryAnalytics
-            ? [{ key: "treasury", label: "Treasury" }]
-            : []),
-        ]//),
+    ...(tokenAnalytics ? [{ key: "analytics", label: "Analytics" }] : []),
+    ...(treasuryAnalytics ? [{ key: "treasury", label: "Treasury" }] : []),
   ] as TabType[];
 
+  const { contracts } = useJBContractContext();
   if (contracts.controller.data === zeroAddress) {
     notFound();
   }

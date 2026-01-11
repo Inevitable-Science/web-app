@@ -8,7 +8,6 @@ import {
 import { formatNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
@@ -32,8 +31,8 @@ export interface Surplus {
 
 export function WithdrawTab() {
   const project = useRevnetDataStore((state) => state.project);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const { token } = useJBTokenContext();
-  const { selectedSucker } = useSelectedSucker();
 
   const receiveToken = useProjectBaseToken();
   const receiveTokenAddress =

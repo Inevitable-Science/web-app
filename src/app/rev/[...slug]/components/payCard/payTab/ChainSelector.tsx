@@ -3,7 +3,6 @@ import { JBChainId } from "juice-sdk-react";
 import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -36,7 +35,7 @@ export const ChainSelector = ({
   options,
 }: ChainSelectorProps) => {
   const suckers = useRevnetDataStore((state) => state.suckers);
-  const { selectedSucker } = useSelectedSucker();
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
 
   return (
     <Select

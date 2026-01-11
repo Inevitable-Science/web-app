@@ -7,7 +7,6 @@ import {
 } from "juice-sdk-react";
 import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {
   Select,
@@ -35,9 +34,11 @@ export const WithdrawSelector = ({
   disabled,
 }: ChainSelectorProps) => {
   const suckers = useRevnetDataStore((state) => state.suckers);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   function handleChainChange(chainId: JBChainId) {
     const foundSucker = suckers?.find(

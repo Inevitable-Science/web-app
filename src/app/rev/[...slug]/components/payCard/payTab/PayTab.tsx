@@ -17,7 +17,6 @@ import {
 import { formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { ChainSelector } from "./ChainSelector";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
@@ -37,6 +36,9 @@ export function PayTab({
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
   const suckers = useRevnetDataStore((state) => state.suckers);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+  
   const rulesetMetadata = useRevnetDataStore(
     (state) => state.rulesetMetadata
   );
@@ -44,7 +46,6 @@ export function PayTab({
 
   const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
   const { version } = useJBContractContext();
 
   const baseToken = useProjectBaseToken();

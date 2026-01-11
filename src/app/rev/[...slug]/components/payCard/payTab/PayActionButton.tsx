@@ -29,7 +29,6 @@ import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { formatUnits } from "viem";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { formatWalletError } from "@/lib/utils";
@@ -70,11 +69,12 @@ export function PayActionButton({
 }) {
   // --- 1. HOOKS ---
   const project = useRevnetDataStore((state) => state.project);
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+
   const { metadata } = useJBProjectMetadataContext();
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
-  const { selectedSucker } = useSelectedSucker();
   const {
     version,
     contracts: { primaryNativeTerminal },

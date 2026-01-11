@@ -11,9 +11,9 @@ import {
   NATIVE_TOKEN_DECIMALS,
 } from "juice-sdk-core";
 import { JBChainId, useJBContractContext } from "juice-sdk-react";
-import { useSelectedSucker } from "../SelectedSuckerContext";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 const shimmerClasses = `
     w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
@@ -34,7 +34,8 @@ export function WithdrawActionButton({
   tokenBalance: number;
   disabled?: boolean;
 }) {
-  const { selectedSucker } = useSelectedSucker();
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  
   const {
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
