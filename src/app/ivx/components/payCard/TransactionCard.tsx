@@ -10,8 +10,6 @@ import { Address, formatUnits, parseUnits } from "viem";
 import { FixedInt } from "fpnum";
 
 import { PayActionButton } from "./PayActionButtonIvx";
-import { useSelectedSucker } from "../../SelectedSuckerContext";
-
 import { PayCardSkeleton } from "./PayCardSkeleton";
 import { ChainSelector } from "./ChainSelect";
 
@@ -26,15 +24,17 @@ import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
 
 export function TransactionCard() {
+  const suckers = useRevnetDataStore((state) => state.suckers);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+
   const tokenA = useProjectBaseToken();
   const { version } = useJBContractContext();
   const { metadata } = useJBProjectMetadataContext();
   const { token: tokenBContext } = useJBTokenContext();
-
-  const suckers = useRevnetDataStore((state) => state.suckers);
-  const ruleset = useRevnetDataStore((state) => state.ruleset);
-  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
-  const { selectedSucker, setSelectedSucker } = useSelectedSucker();
 
   const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
   const tokens = useMemo(

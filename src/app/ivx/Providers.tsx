@@ -2,7 +2,6 @@
 
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs";
 import { JBProjectProvider, JBChainId, JBVersion } from "juice-sdk-react";
-import { SelectedSuckerProvider } from "./SelectedSuckerContext";
 import { BendystrawConfig } from "juice-sdk-react/dist/lib/bendystraw/getBendystrawUrl";
 import { notFound } from "next/navigation";
 
@@ -37,7 +36,7 @@ export function Providers({
         metadata: { ipfsGatewayHostname: OPEN_IPFS_GATEWAY_HOSTNAME },
       }}
     >
-      <SelectedSuckerProvider>{children}</SelectedSuckerProvider>
+      {children}
     </JBProjectProvider>
   );
 }

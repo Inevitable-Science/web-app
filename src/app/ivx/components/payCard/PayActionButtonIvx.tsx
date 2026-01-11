@@ -25,8 +25,6 @@ import { Token } from "@/lib/token";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 
-import { useSelectedSucker } from "../../SelectedSuckerContext";
-
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { twMerge } from "tailwind-merge";
@@ -37,6 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
 const shimmerClasses = `
   relative overflow-hidden
@@ -65,7 +64,8 @@ export function PayActionButton({
 }) {
   // --- 1. HOOKS ---
   const { metadata } = useJBProjectMetadataContext();
-  const { selectedSucker } = useSelectedSucker();
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+
   const {
     version,
     contracts: { primaryNativeTerminal },
