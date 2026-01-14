@@ -12,7 +12,7 @@ export async function fetchSuckerGroupVol(suckerGroupId: string, chainId: JBChai
     >(SuckerGroupDocument, { id: suckerGroupId });
 
     const volume = result.suckerGroup?.volume;
-    if (!volume) throw new Error("Couldn't fetch volume for suckers");
+    if (!volume) throw new Error("Failed to fetch volume for suckers");
     
     return result.suckerGroup?.volume;
   } catch (error) {
