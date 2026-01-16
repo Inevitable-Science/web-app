@@ -71,7 +71,7 @@ export default async function AuctionComponent() {
           <div className="flex h-[110px] w-[110px] items-center justify-center rounded-2xl bg-[#253031] sm:h-[140px] sm:w-[140px]">
             <div className="flex flex-col items-center gap-1 text-center">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
-                Ξ
+                {suckerGroupVol?.decimals === 18 ? "Ξ" : "$"}
                 {suckerGroupVol
                   ? Number(
                       formatNumber(

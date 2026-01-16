@@ -1,7 +1,7 @@
 import { Nav } from "@/components/layout/Nav";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
-import { Providers } from "./providers";
+import { AppSpecificProviders } from "./AppSpecificProviders";
 import { geistSans, optima } from "@/components/fonts/fonts";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
@@ -37,11 +37,11 @@ export default function RootLayout({
           "min-h-screen font-sans tracking-[0.015em]"
         )}
       >
-        <Providers>
+        <AppSpecificProviders>
           <Nav />
           <main className="min-h-screen">{children}</main>
           <Footer />
-        </Providers>
+        </AppSpecificProviders>
 
         <Toaster />
       </body>
