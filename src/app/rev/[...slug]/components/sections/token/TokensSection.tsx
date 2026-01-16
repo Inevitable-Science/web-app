@@ -50,7 +50,7 @@ export function HoldersSection() {
   );
   const tokenSymbol = formatTokenSymbol(token);
 
-  const participantsQuery = useBendystrawQuery(ParticipantsDocument, {
+  /*const { data: participant } = useBendystrawQuery(ParticipantsDocument, {
     orderBy: "balance",
     orderDirection: "desc",
     where: {
@@ -82,7 +82,7 @@ export function HoldersSection() {
         };
       },
       {} as Record<string, any>
-    ) ?? {};
+    ) ?? {};*/
 
   const { watchAsset, isSuccess, isPending } = useWatchAsset();
 
