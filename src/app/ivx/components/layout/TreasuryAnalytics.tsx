@@ -2,6 +2,7 @@ import { truncateAddress } from "@/lib/utils";
 import { Address } from "viem";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { JBChainId } from "juice-sdk-core";
 
 export function IvxTreasuryAnalytics() {
   const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);
@@ -63,6 +64,7 @@ export function IvxTreasuryAnalytics() {
           <div className="my-[24px] flex h-[calc(100%-20px)] items-center justify-center lg:my-0">
             <TreasuryPieChart
               filteredData={treasuryData?.treasuryTokens}
+              chainId={treasuryData.treasury.chain_id as JBChainId}
             />
           </div>
         </div>

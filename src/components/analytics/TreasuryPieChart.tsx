@@ -2,6 +2,9 @@
 
 import { useState, useEffect, type JSX } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
+import { Address } from "viem";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import EtherscanLink from "../EtherscanLink";
 
 interface TreasuryToken {
   metadata: {
@@ -23,6 +26,7 @@ const segmentColors = ["#315659", "#C6E0FF", "#2978A0", "#253031", "#FBE8BD"];
 
 interface PieChartData extends TreasuryToken {
   value: number;
+  treasuryChainId: JBChainId;
   percent: string;
   visualValue: number;
   fill: string;
@@ -91,16 +95,15 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
         fill={"var(--foreground)"}
       >
         {payload.contractAddress ? (
-          <a
-            href={`https://etherscan.io/token/${payload.contractAddress}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-4xl hover:underline"
+          <EtherscanLink
+            type="address"
+            value={payload.contractAddress as Address}
+            chain={JB_CHAINS[payload.treasuryChainId].chain}
           >
-            <tspan x={cx} dy="0">
+            <tspan x={cx} dy="0" className="text-4xl hover:underline">
               {payload.metadata.symbol}
             </tspan>
-          </a>
+          </EtherscanLink>
         ) : (
           <tspan x={cx} dy="0" className="text-4xl">
             {payload.metadata.symbol}
@@ -140,8 +143,10 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
 export function TreasuryPieChart({
   filteredData,
+  chainId,
 }: {
   filteredData: TreasuryToken[];
+  chainId: JBChainId;
 }) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [radius, setRadius] = useState<{
@@ -170,6 +175,7 @@ export function TreasuryPieChart({
             const percent = (token.value / totalValue) * 100;
             return {
               ...token,
+              treasuryChainId: chainId,
               percent: isNaN(percent) ? "0.00" : percent.toFixed(2),
               visualValue:
                 isNaN(percent) || percent < MIN_PERCENT ? MIN_PERCENT : percent,

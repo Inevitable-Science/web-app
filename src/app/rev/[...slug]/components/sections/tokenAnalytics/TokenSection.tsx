@@ -1,6 +1,6 @@
 "use client";
 
-import { formatNumber, truncateAddress } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import { ChainLogo } from "@/components/ChainLogo";
 
 import { Address } from "viem";
@@ -9,6 +9,8 @@ import { Loader2 } from "lucide-react";
 import { TokenChart } from "@/components/analytics/TokenChart";
 import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -174,15 +176,12 @@ export function TokenSection() {
                       key={`${address}-${idx}`}
                       className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
                     >
-                      <span>{truncateAddress(address as Address)}</span>
-                      <a
-                        href={`https://etherscan.io/address/${address}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:border-grey-50 border-b border-transparent"
-                      >
-                        {formatNumber(token_amount, true)}
-                      </a>
+                      <EthereumAddress
+                        address={address as Address}
+                        chain={JB_CHAINS[tokenAnalytics.selectedToken.chain_id as JBChainId].chain}
+                        withEnsName short
+                      />
+                      {formatNumber(token_amount, true)}
                     </div>
                   );
                 })}
