@@ -3,6 +3,10 @@
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/forms";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @custom-variant dark (&:is(.dark *));
 
 @utility container {
@@ -104,6 +108,19 @@
   border-left: 1px solid var(--color-zinc-400);
   border-right: 1px solid var(--color-zinc-400);
   padding: 0 --spacing(7);
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 /* hide scroll wheel for numbers */

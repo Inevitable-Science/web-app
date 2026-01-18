@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { Link, Loader2, RotateCw } from "lucide-react";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import EtherscanLink from "@/components/EtherscanLink";
+import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { EthereumAddress } from "@/components/EthereumAddress";
 
 export function TreasurySection() {
   const treasuryAnalytics = useRevnetDataStore(
@@ -121,8 +124,20 @@ export function TreasurySection() {
                       <div className="text-grey-50 flex items-center justify-between font-light">
                         <p>
                           {token.contractAddress
-                            ? truncateAddress(token.contractAddress as Address)
-                            : "Native Token"}
+                            ? token.contractAddress === zeroAddress ? (
+                              truncateAddress(token.contractAddress)
+                            ) : (
+                              <EtherscanLink
+                                value={token.contractAddress}
+                                type={"token"}
+                                chain={
+                                  JB_CHAINS[
+                                    treasuryAnalytics.treasury.chain_id as JBChainId
+                                  ].chain
+                                }
+                                truncateTo={4}
+                              />
+                            ) : truncateAddress(zeroAddress)}
                         </p>
                         <p>{percentage}%</p>
                       </div>
@@ -141,6 +156,7 @@ export function TreasurySection() {
             {treasuryAnalytics?.treasuryTokens && (
               <TreasuryPieChart
                 filteredData={treasuryAnalytics.treasuryTokens}
+                chainId={treasuryAnalytics.treasury.chain_id as JBChainId}
               />
             )}
           </div>
@@ -187,22 +203,22 @@ export function TreasurySection() {
               </h3>
               <div className="flex flex-col text-sm font-light">
                 {Object.entries(treasuryAnalytics.managed_accounts).map(
-                  ([address, data]) => (
+                  ([address, account]) => (
                     <div
                       key={address}
                       className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
                     >
                       <span>
-                        {data.comment
-                          ? data.comment
+                        {account.comment
+                          ? account.comment
                           : truncateAddress(address as Address)}
                       </span>
 
-                      <span>
-                        {data.ens
-                          ? data.ens
-                          : truncateAddress(address as Address)}
-                      </span>
+                      <EthereumAddress
+                        address={address as Address}
+                        chain={JB_CHAINS[account.chain_id as JBChainId].chain}
+                        withEnsName short
+                      />
                     </div>
                   )
                 )}
@@ -230,14 +246,13 @@ export function TreasurySection() {
                     className="flex items-center justify-between border-b border-[#282828] py-3 font-light"
                   >
                     <span>{truncateAddress(address as Address)}</span>
-                    <a
-                      href={`https://etherscan.io/address/${address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:border-grey-50 border-b border-transparent"
+                    <EtherscanLink
+                      type="address"
+                      value={address as Address}
+                      chain={JB_CHAINS[treasuryAnalytics.treasury.chain_id as JBChainId].chain}
                     >
                       <Link height={18} width={18} />
-                    </a>
+                    </EtherscanLink>
                   </div>
                 );
               })}

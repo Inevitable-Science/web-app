@@ -6,7 +6,7 @@ import {
   SuckerGroupDocument,
 } from "@/generated/graphql";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatNumber } from "@/lib/utils";
 import {
   useJBProjectMetadataContext,
   useBendystrawQuery,
@@ -15,7 +15,7 @@ import {
 } from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { Address, formatEther } from "viem";
+import { Address, formatEther, formatUnits } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { JB_CHAINS } from "juice-sdk-core";
@@ -75,9 +75,11 @@ export function Header() {
     coverImageUri,
   } = metadata?.data ?? {};
 
-  const suckerGroup = useBendystrawQuery(SuckerGroupDocument, {
+  const { data: suckerGroupData, isLoading: suckerGroupIsLoading } = useBendystrawQuery(SuckerGroupDocument, {
     id: project?.suckerGroupId ?? "",
   });
+  const suckerGroup = suckerGroupData?.suckerGroup;
+  const projectBaseTokenDecimals = suckerGroup?.projects?.items[0].decimals ?? 18;
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
     where: {
@@ -173,14 +175,16 @@ export function Header() {
             <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
               <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
-                  <h3 className="text-2xl font-semibold tracking-wider">
-                    Ξ
-                    {suckerGroup.data?.suckerGroup?.volume
-                      ? parseFloat(
-                          formatEther(
-                            BigInt(suckerGroup.data.suckerGroup.volume)
-                          )
-                        ).toFixed(2)
+                  <h3 className="text-2xl font-semibold tracking-wider flex items-center gap-1">
+                    {projectBaseTokenDecimals === 18 ? "Ξ" : "$"}
+                    {suckerGroupIsLoading ? (
+                      <div className="activeSkeleton h-[28px] w-[58px] rounded-sm" />
+                    ) : suckerGroup?.volume
+                      ? formatNumber(
+                          parseFloat(
+                              formatUnits(suckerGroup.volume, projectBaseTokenDecimals)
+                            )
+                        )
                       : "0.00"}
                   </h3>
                 </div>
@@ -193,7 +197,7 @@ export function Header() {
                 <div className="flex h-fit items-center">
                   <h3 className="w-full text-2xl font-semibold tracking-wider">
                     {participants?.participants?.totalCount ?? (
-                      <div className="activeSkeleton h-[32px] w-full max-w-[142px] rounded-md" />
+                      <div className="activeSkeleton h-[32px] w-[58px] rounded-md" />
                     )}
                   </h3>
                 </div>

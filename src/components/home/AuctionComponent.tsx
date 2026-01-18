@@ -11,7 +11,7 @@ export default async function AuctionComponent() {
 
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
   const chainId = 1;
-  const projectVolume = await fetchSuckerGroupVol(suckerGroupId, chainId);
+  const suckerGroupVol = await fetchSuckerGroupVol(suckerGroupId, chainId);
 
   return (
     <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
@@ -71,11 +71,11 @@ export default async function AuctionComponent() {
           <div className="flex h-[110px] w-[110px] items-center justify-center rounded-2xl bg-[#253031] sm:h-[140px] sm:w-[140px]">
             <div className="flex flex-col items-center gap-1 text-center">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
-                Ξ
-                {projectVolume
+                {suckerGroupVol?.decimals === 18 ? "Ξ" : "$"}
+                {suckerGroupVol
                   ? Number(
                       formatNumber(
-                        Number(formatUnits(projectVolume, 18)),
+                        Number(formatUnits(suckerGroupVol.volume, suckerGroupVol.decimals)),
                         true
                       )
                     ).toFixed(2)
