@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
+import Link from "next/link";
 
 export function AnalyticsPreview() {
   const treasuryAnalytics = useLegacyProjectStore(
     (state) => state.treasuryAnalytics
   );
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
-  const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
+  const daoData = useLegacyProjectStore((state) => state.daoData);
 
   if (!treasuryAnalytics && !tokenAnalytics) return;
 
@@ -47,14 +48,15 @@ export function AnalyticsPreview() {
             </div>
           </div>
 
-          <Button
-            onClick={() => setSelectedTab("treasury")}
-            variant="link"
-            className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-          >
-            Treasury Stats
-            <ArrowRight height="20" width="20" />
-          </Button>
+          <Link href={`/project/${daoData.name.toLowerCase()}/treasury`}>
+            <Button
+              variant="link"
+              className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+            >
+              Treasury Stats
+              <ArrowRight height="20" width="20" />
+            </Button>
+          </Link>
         </div>
       )}
 
@@ -126,14 +128,16 @@ export function AnalyticsPreview() {
             </div>
           </div>
 
-          <Button
-            onClick={() => setSelectedTab("analytics")}
-            variant="link"
-            className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-          >
-            Analytics
-            <ArrowRight height="20" width="20" />
-          </Button>
+          
+          <Link href={`/project/${daoData.name.toLowerCase()}/analytics`}>
+            <Button
+              variant="link"
+              className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+            >
+              Analytics
+              <ArrowRight height="20" width="20" />
+            </Button>
+          </Link>
         </div>
       )}
     </section>

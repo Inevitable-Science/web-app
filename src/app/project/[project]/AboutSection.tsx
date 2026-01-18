@@ -45,7 +45,7 @@ const RichPreview = ({ source }: { source: string }) => {
   }
 };
 
-export function DescriptionSection() {
+export function AboutSection() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
 
   return (

@@ -20,8 +20,8 @@ export interface LegacyProjectStore {
   daoData: DaoResponse;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
-  selectedTab: TabType;
-  setSelectedTab: (tab: TabType) => void;
+  //selectedTab: TabType;
+  //setSelectedTab: (tab: TabType) => void;
 }
 
 const LegacyProjectContext = createContext<
@@ -40,8 +40,8 @@ export function LegacyProjectProvider({
       treasuryAnalytics,
       tokenAnalytics,
 
-      selectedTab: "about",
-      setSelectedTab: (selectedTab) => set({ selectedTab }),
+      //selectedTab: "about",
+      //setSelectedTab: (selectedTab) => set({ selectedTab }),
     }))
   );
 

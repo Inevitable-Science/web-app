@@ -1,6 +1,5 @@
 "use client";
-
-import { formatNumber, truncateAddress } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import { useReadContracts, useWatchAsset } from "wagmi";
 
 import { Address, erc20Abi, formatUnits } from "viem";
@@ -65,7 +64,7 @@ function getValuationLabel(
   return "STRETCHED";
 }
 
-export function TokenSection() {
+export function TokenAnalyticsSection() {
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
 
   const { address, isConnected, connector } = useAccount();

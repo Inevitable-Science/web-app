@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
