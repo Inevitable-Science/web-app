@@ -1,10 +1,10 @@
 import { formatEther, getContract } from "viem";
 import { SchedulesSection } from "./SchedulesSection";
-import { vestingContracts } from "./constants";
+import { vestingContracts } from "../../../../lib/vesting/constants";
 import { notFound } from "next/navigation";
-import { abi } from "./vestingAbi";
+import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
-import { ProcessedSchedule, Schedule, ScheduleSchemaZ, ScheduleType } from "./types";
+import { ProcessedSchedule, ScheduleSchemaZ, ScheduleType } from "../../../../lib/vesting/types";
 import { formatNumber } from "@/lib/utils";
 
 export const revalidate = 900; // 15 mins
@@ -20,7 +20,7 @@ export default async function ProjectVestingPage({ params }: { params: Promise<{
   const client = getViemPublicClient(vestingContractObj.vestingContractChainId);
   const vestingContract = getContract({
     address: vestingContractObj.vestingContract,
-    abi: abi,
+    abi: vestingAbi,
     client,
   });
 
@@ -37,7 +37,7 @@ export default async function ProjectVestingPage({ params }: { params: Promise<{
   const batchSchedules = await client.multicall({
     contracts: scheduleIds.map(id => ({
       address: vestingContractObj.vestingContract,
-      abi,
+      abi: vestingAbi,
       functionName: 'getVestingSchedule',
       args: [id],
     })),
@@ -80,7 +80,7 @@ export default async function ProjectVestingPage({ params }: { params: Promise<{
   const batchReleasableAmount = await client.multicall({
     contracts: unrevokedSchedules.map(schedule => ({
       address: vestingContractObj.vestingContract,
-      abi,
+      abi: vestingAbi,
       functionName: 'computeReleasableAmount',
       args: [schedule.id],
     }))

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAccount, useWriteContract } from "wagmi";
-import { abi } from "./vestingAbi";
+import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { useToast } from "@/components/ui/use-toast";
 import { preventMinusKey } from "@/components/PayInput";
@@ -69,7 +69,7 @@ export function CreateScheduleDialogue() {
         const client = getViemPublicClient(vestingChainId as ViemChainIdType); // this is safe as it returns earlier (within page.tsx) if no vesting contract
         const vestingContract = getContract({
           address: vestingContractAddress as Address,
-          abi: abi,
+          abi: vestingAbi,
           client,
         });
 
@@ -135,7 +135,7 @@ export function CreateScheduleDialogue() {
 
       await writeContractAsync({
         functionName: "createVestingSchedule",
-        abi,
+        abi: vestingAbi,
         address: vestingContractAddress,
         chainId: vestingChainId,
         args: [

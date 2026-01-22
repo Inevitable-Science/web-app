@@ -1,11 +1,11 @@
 "use client"
 
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext"
-import { scheduleCreateRole, vestingContracts } from "./vesting/constants";
+import { scheduleCreateRole, vestingContracts } from "../../../lib/vesting/constants";
 import { useEffect } from "react";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
 import { getContract } from "viem";
-import { abi } from "./vesting/vestingAbi";
+import { vestingAbi } from "../../../lib/vesting/vestingAbi";
 import { useAccount } from "wagmi";
 
 export function VestingInitialiser({ children }: { children: React.ReactNode }) {
@@ -34,7 +34,7 @@ export function VestingInitialiser({ children }: { children: React.ReactNode }) 
       const client = getViemPublicClient(vestingContractObj?.vestingContractChainId);
       const vestingContract = getContract({
         address: contractAddress,
-        abi: abi,
+        abi: vestingAbi,
         client,
       });
 

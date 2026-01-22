@@ -3,7 +3,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { TabType, useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { vestingContracts } from "../vesting/constants";
+import { vestingContracts } from "../../../../lib/vesting/constants";
 
 export interface TabTypeArray {
   key: TabType;

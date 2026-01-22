@@ -1,11 +1,11 @@
 "use client"
 import { formatDate, formatNumber } from "@/lib/utils";
-import { ProcessedSchedule, Schedule } from "./types";
+import { ProcessedSchedule, Schedule } from "../../../../lib/vesting/types";
 import { Address, formatEther, getContract } from "viem";
 import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
 import { useEffect, useState } from "react";
 import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
-import { abi } from "./vestingAbi";
+import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS } from "juice-sdk-core";
 import { Button } from "@/components/ui/button";
@@ -55,7 +55,7 @@ export function SchedulesSection({
   const client = getViemPublicClient(chainId as ViemChainIdType); // this is safe as it returns earlier (within page.tsx) if no vesting contract
   const vestingContract = getContract({
     address: contractAddress as Address,
-    abi: abi,
+    abi: vestingAbi,
     client,
   });
 
@@ -65,8 +65,6 @@ export function SchedulesSection({
         if (!address || !contractAddress) return;
 
         const filteredUserSchedules = schedules.filter(s => s.beneficiary === address);
-        console.log(filteredUserSchedules, "filteredUserSchedules");
-        
         if (filteredUserSchedules.length === 0) {
           setHasSchedule(false);
           return;
@@ -75,7 +73,6 @@ export function SchedulesSection({
         const scheduleCount = await vestingContract.read.holdersVestingScheduleCount([
           address,
         ]);
-        console.log(scheduleCount, "scheduleCount");
 
         if (scheduleCount === 0n) {
           setHasSchedule(false);
@@ -137,7 +134,7 @@ export function SchedulesSection({
       };
 
       await writeContractAsync({
-        abi,
+        abi: vestingAbi,
         functionName: "releaseAvailableTokensForHolder",
         chainId: chainId,
         address: contractAddress,

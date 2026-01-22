@@ -3,8 +3,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
-import { abi } from "./vestingAbi";
-import { ProcessedSchedule } from "./types";
+import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
+import { ProcessedSchedule } from "../../../../lib/vesting/types";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address, parseEther, weiUnits } from "viem";
@@ -66,7 +66,7 @@ export function VestingDetailsDialog({ children, schedule }: { children: React.R
 
       await writeContractAsync({
         address: vestingContractAddress,
-        abi: abi,
+        abi: vestingAbi,
         chainId: vestingChainId,
         functionName: "release",
         args: [schedule.id as `0x${string}`, amount],
@@ -99,7 +99,7 @@ export function VestingDetailsDialog({ children, schedule }: { children: React.R
 
       await writeContractAsync({
         address: vestingContractAddress,
-        abi: abi,
+        abi: vestingAbi,
         chainId: vestingChainId,
         functionName: "revoke",
         args: [schedule.id as `0x${string}`],
