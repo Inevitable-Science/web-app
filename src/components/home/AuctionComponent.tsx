@@ -8,7 +8,6 @@ import { fetchSuckerGroupVol } from "@/lib/helpers/getSuckerGroupVol";
 export const revalidate = 900;
 
 export default async function AuctionComponent() {
-
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
   const chainId = 1;
   const suckerGroupVol = await fetchSuckerGroupVol(suckerGroupId, chainId);
@@ -75,7 +74,12 @@ export default async function AuctionComponent() {
                 {suckerGroupVol
                   ? Number(
                       formatNumber(
-                        Number(formatUnits(suckerGroupVol.volume, suckerGroupVol.decimals)),
+                        Number(
+                          formatUnits(
+                            suckerGroupVol.volume,
+                            suckerGroupVol.decimals
+                          )
+                        ),
                         true
                       )
                     ).toFixed(2)

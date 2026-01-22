@@ -4,7 +4,12 @@ import {
   getTokenBtoAQuote,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { JBChainId, useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  JBChainId,
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import Image from "next/image";
 import { Address, formatUnits, parseUnits } from "viem";
 import { FixedInt } from "fpnum";
@@ -22,21 +27,24 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
-
 export function TransactionCard() {
   const suckers = useRevnetDataStore((state) => state.suckers);
   const ruleset = useRevnetDataStore((state) => state.ruleset);
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
-  
+
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+  const setSelectedSucker = useRevnetDataStore(
+    (state) => state.setSelectedSucker
+  );
 
   const tokenA = useProjectBaseToken();
   const { version } = useJBContractContext();
   const { metadata } = useJBProjectMetadataContext();
   const { token: tokenBContext } = useJBTokenContext();
 
-  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
+    selectedSucker.peerChainId
+  );
   const tokens = useMemo(
     () => getTokensForChain(selectedSucker?.peerChainId, version),
     [selectedSucker?.peerChainId]
@@ -46,7 +54,7 @@ export function TransactionCard() {
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
-  
+
   const defaultToken = {
     symbol: "IVX",
     decimals: 18,
@@ -60,11 +68,10 @@ export function TransactionCard() {
   }, [selectedToken]);
 
   useEffect(() => {
-      if (!isQuoteLoading && amountA && selectedToken) {
-        handlePayAmountChange(amountA);
-      }
-    }, [isQuoteLoading]);
-
+    if (!isQuoteLoading && amountA && selectedToken) {
+      handlePayAmountChange(amountA);
+    }
+  }, [isQuoteLoading]);
 
   const handlePayAmountChange = (value: string) => {
     if (value.startsWith("-")) {
@@ -184,7 +191,6 @@ export function TransactionCard() {
     symbol: formatTokenSymbol(tokenB.symbol),
   };
 
-
   if (!balances || !suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} tokens={tokens} />;
   }
@@ -228,7 +234,7 @@ export function TransactionCard() {
               disabled={tokenA.isNative !== selectedToken.isNative}
             />
           </div>
-          <div className="bg-grey-450 min-w-fit max-w-fit flex flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
+          <div className="bg-grey-450 flex max-w-fit min-w-fit flex-row flex-nowrap items-center gap-1 rounded-full py-1 pr-3 pl-1.5">
             <Image
               src={
                 metadata.data?.logoUri

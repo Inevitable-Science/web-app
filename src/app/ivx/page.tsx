@@ -55,7 +55,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-
 export default async function IvxTokenPage() {
   const [treasuryData, tokenData, projectData] = await Promise.all([
     fetchTreasuryData("hydradao"),
@@ -63,8 +62,8 @@ export default async function IvxTokenPage() {
     fetchProjectData({
       projectId: 17n,
       chainId: 1,
-      version: 5
-    })
+      version: 5,
+    }),
   ]);
 
   if (!treasuryData || !tokenData || !projectData) return notFound();
@@ -72,7 +71,11 @@ export default async function IvxTokenPage() {
   return (
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
-      <JBProjectProviderRoot chainId={1 as JBChainId} projectId={17n as bigint} version={5}>
+      <JBProjectProviderRoot
+        chainId={1 as JBChainId}
+        projectId={17n as bigint}
+        version={5}
+      >
         <RevnetDataProvider
           projectData={projectData}
           treasuryAnalytics={treasuryData}

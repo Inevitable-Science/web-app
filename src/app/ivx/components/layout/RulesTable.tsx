@@ -23,10 +23,11 @@ import { commaNumber } from "@/lib/number";
 import { differenceInDays, formatDate } from "date-fns";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
-
 export function RulesTable() {
   const primaryRuleset = useRevnetDataStore((state) => state.ruleset);
-  const primaryRulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  const primaryRulesetMetadata = useRevnetDataStore(
+    (state) => state.rulesetMetadata
+  );
 
   const { projectId, contractAddress } = useJBContractContext();
 

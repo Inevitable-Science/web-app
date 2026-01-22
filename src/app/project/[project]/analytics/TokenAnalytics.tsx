@@ -299,10 +299,15 @@ export function TokenAnalyticsSection() {
                       key={`${address}-${idx}`}
                       className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
                     >
-                      <EthereumAddress 
+                      <EthereumAddress
                         address={address as Address}
-                        chain={JB_CHAINS[tokenAnalytics.selectedToken.chain_id as JBChainId].chain}
-                        withEnsName short
+                        chain={
+                          JB_CHAINS[
+                            tokenAnalytics.selectedToken.chain_id as JBChainId
+                          ].chain
+                        }
+                        withEnsName
+                        short
                       />
                       {formatNumber(token_amount, true)}
                     </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { ArrowRightIcon } from "lucide-react";
 import { TabType, useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import Link from "next/link";
@@ -13,8 +13,12 @@ export interface TabTypeArray {
 function useProjectTabs() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
-  const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
-  const vestingContract = vestingContracts.find(d => d.name === daoData.name.toLowerCase());
+  const treasuryAnalytics = useLegacyProjectStore(
+    (state) => state.treasuryAnalytics
+  );
+  const vestingContract = vestingContracts.find(
+    (d) => d.name === daoData.name.toLowerCase()
+  );
 
   const tabs = [
     { key: "about", label: "About" },
@@ -27,32 +31,32 @@ function useProjectTabs() {
             ? [{ key: "treasury", label: "Treasury" }]
             : []),
         ]),
-    ...(vestingContract ? [
-      { key: "vesting", label: "Vesting" },
-    ] : [])
+    ...(vestingContract ? [{ key: "vesting", label: "Vesting" }] : []),
   ] as TabTypeArray[];
-  
+
   return tabs;
-};
+}
 
 export function TabSelectorSM() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tabs = useProjectTabs();
 
   const pathname = usePathname();
-  const finalSegment = pathname.split('/').pop();
-  const selectedTab = finalSegment?.toLowerCase() === daoData.name.toLowerCase() ?
-    "about" :
-    finalSegment;
+  const finalSegment = pathname.split("/").pop();
+  const selectedTab =
+    finalSegment?.toLowerCase() === daoData.name.toLowerCase()
+      ? "about"
+      : finalSegment;
 
   return (
     <aside className="block lg:hidden">
       <div className="mb-6 flex flex-wrap gap-2">
         {tabs.map((tab) => {
-          const projectSlug = tab.key === "about" ? 
-            `/project/${daoData.name.toLowerCase()}` : 
-            `/project/${daoData.name.toLowerCase()}/${tab.key}`;
-          
+          const projectSlug =
+            tab.key === "about"
+              ? `/project/${daoData.name.toLowerCase()}`
+              : `/project/${daoData.name.toLowerCase()}/${tab.key}`;
+
           return (
             <Link href={projectSlug} key={tab.key}>
               <button
@@ -65,7 +69,7 @@ export function TabSelectorSM() {
                 {tab.label}
               </button>
             </Link>
-          )
+          );
         })}
       </div>
     </aside>
@@ -77,18 +81,20 @@ export function TabSelectorLG() {
   const tabs = useProjectTabs();
 
   const pathname = usePathname();
-  const finalSegment = pathname.split('/').pop();
-  const selectedTab = finalSegment?.toLowerCase() === daoData.name.toLowerCase() ?
-    "about" :
-    finalSegment;
+  const finalSegment = pathname.split("/").pop();
+  const selectedTab =
+    finalSegment?.toLowerCase() === daoData.name.toLowerCase()
+      ? "about"
+      : finalSegment;
 
   return (
     <aside className="hidden max-w-54 lg:block">
       <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
         {tabs.map((tab) => {
-          const projectSlug = tab.key === "about" ? 
-            `/project/${daoData.name.toLowerCase()}` : 
-            `/project/${daoData.name.toLowerCase()}/${tab.key}`;
+          const projectSlug =
+            tab.key === "about"
+              ? `/project/${daoData.name.toLowerCase()}`
+              : `/project/${daoData.name.toLowerCase()}/${tab.key}`;
 
           return (
             <Link href={projectSlug} key={tab.key}>
@@ -105,7 +111,7 @@ export function TabSelectorLG() {
                 </span>
               </button>
             </Link>
-          )
+          );
         })}
       </div>
     </aside>

@@ -75,11 +75,13 @@ export function Header() {
     coverImageUri,
   } = metadata?.data ?? {};
 
-  const { data: suckerGroupData, isLoading: suckerGroupIsLoading } = useBendystrawQuery(SuckerGroupDocument, {
-    id: project?.suckerGroupId ?? "",
-  });
+  const { data: suckerGroupData, isLoading: suckerGroupIsLoading } =
+    useBendystrawQuery(SuckerGroupDocument, {
+      id: project?.suckerGroupId ?? "",
+    });
   const suckerGroup = suckerGroupData?.suckerGroup;
-  const projectBaseTokenDecimals = suckerGroup?.projects?.items[0].decimals ?? 18;
+  const projectBaseTokenDecimals =
+    suckerGroup?.projects?.items[0].decimals ?? 18;
 
   const { data: participants } = useBendystrawQuery(ParticipantsDocument, {
     where: {
@@ -175,17 +177,22 @@ export function Header() {
             <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-3">
               <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
-                  <h3 className="text-2xl font-semibold tracking-wider flex items-center gap-1">
+                  <h3 className="flex items-center gap-1 text-2xl font-semibold tracking-wider">
                     {projectBaseTokenDecimals === 18 ? "Ξ" : "$"}
                     {suckerGroupIsLoading ? (
                       <div className="activeSkeleton h-[28px] w-[58px] rounded-sm" />
-                    ) : suckerGroup?.volume
-                      ? formatNumber(
-                          parseFloat(
-                              formatUnits(suckerGroup.volume, projectBaseTokenDecimals)
-                            )
+                    ) : suckerGroup?.volume ? (
+                      formatNumber(
+                        parseFloat(
+                          formatUnits(
+                            suckerGroup.volume,
+                            projectBaseTokenDecimals
+                          )
                         )
-                      : "0.00"}
+                      )
+                    ) : (
+                      "0.00"
+                    )}
                   </h3>
                 </div>
                 <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">

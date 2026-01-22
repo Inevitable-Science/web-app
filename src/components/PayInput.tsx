@@ -1,4 +1,3 @@
-
 export const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
   const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
   const key = e.key;
@@ -50,7 +49,6 @@ export function PayInput({
   disabled?: boolean;
   onChangeFunction?: (arg: string) => void;
 }) {
-
   return (
     <input
       type="number"

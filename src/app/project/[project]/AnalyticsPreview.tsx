@@ -128,7 +128,6 @@ export function AnalyticsPreview() {
             </div>
           </div>
 
-          
           <Link href={`/project/${daoData.name.toLowerCase()}/analytics`}>
             <Button
               variant="link"

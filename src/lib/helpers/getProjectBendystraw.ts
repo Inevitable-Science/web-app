@@ -1,4 +1,8 @@
-import { ProjectDocument, ProjectQuery, ProjectQueryVariables } from "@/generated/graphql";
+import {
+  ProjectDocument,
+  ProjectQuery,
+  ProjectQueryVariables,
+} from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 
 export async function fetchProjectData(config: {

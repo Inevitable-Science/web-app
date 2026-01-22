@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
@@ -122,7 +122,11 @@ export function Header() {
                     {treasuryAnalytics?.treasury.address ? (
                       <EthereumAddress
                         address={treasuryAnalytics.treasury.address as Address}
-                        chain={JB_CHAINS[treasuryAnalytics.treasury.chain_id as JBChainId].chain}
+                        chain={
+                          JB_CHAINS[
+                            treasuryAnalytics.treasury.chain_id as JBChainId
+                          ].chain
+                        }
                         short
                         withEnsAvatar={false}
                         withEnsName

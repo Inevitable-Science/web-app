@@ -1,4 +1,8 @@
-import { SuckerGroupDocument, SuckerGroupQuery, SuckerGroupQueryVariables } from "@/generated/graphql";
+import {
+  SuckerGroupDocument,
+  SuckerGroupQuery,
+  SuckerGroupQueryVariables,
+} from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 import { JBChainId } from "juice-sdk-core";
 
@@ -7,7 +11,10 @@ interface FetchSuckerGroupVolResponse {
   decimals: number;
 }
 
-export async function fetchSuckerGroupVol(suckerGroupId: string, chainId: JBChainId): Promise<FetchSuckerGroupVolResponse | null> {
+export async function fetchSuckerGroupVol(
+  suckerGroupId: string,
+  chainId: JBChainId
+): Promise<FetchSuckerGroupVolResponse | null> {
   try {
     const client = getBendystrawClient(chainId);
     const result = await client.request<
@@ -18,8 +25,7 @@ export async function fetchSuckerGroupVol(suckerGroupId: string, chainId: JBChai
     const volume = result.suckerGroup?.volume;
     const decimals = result.suckerGroup?.projects?.items[0].decimals ?? 18;
     if (!volume) throw new Error("Failed to fetch volume for suckers");
-    
-    
+
     return {
       volume: volume as bigint,
       decimals: decimals,
@@ -28,4 +34,4 @@ export async function fetchSuckerGroupVol(suckerGroupId: string, chainId: JBChai
     console.error("Failed to fetch SuckerGroup:", error);
     return null;
   }
-};
+}

@@ -1,14 +1,14 @@
-import z from "zod"
+import z from "zod";
 
 export interface Schedule {
-  amountTotal: bigint
-  beneficiary: string
-  cliff: bigint
-  duration: bigint
-  released: bigint
-  revokable: boolean
-  start: bigint
-  status: number
+  amountTotal: bigint;
+  beneficiary: string;
+  cliff: bigint;
+  duration: bigint;
+  released: bigint;
+  revokable: boolean;
+  start: bigint;
+  status: number;
 }
 
 export const ScheduleSchemaZ = z.object({
@@ -20,12 +20,12 @@ export const ScheduleSchemaZ = z.object({
   released: z.bigint(),
   revokable: z.boolean(),
   start: z.bigint(),
-  status: z.number()
+  status: z.number(),
 });
 
 export type ScheduleType = z.infer<typeof ScheduleSchemaZ>;
 
 export interface ProcessedSchedule extends Schedule {
-  id: string
-  releasableAmount: bigint
+  id: string;
+  releasableAmount: bigint;
 }

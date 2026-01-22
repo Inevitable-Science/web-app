@@ -4,7 +4,12 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { DynamicArticleCarousel } from "../ArticleCarousel";
-import { LatestArticlesResponse, LatestArticlesResponseZ, SingleArticleResponse, SingleArticleResponseZ } from "@/lib/types/PublicArticleTypes";
+import {
+  LatestArticlesResponse,
+  LatestArticlesResponseZ,
+  SingleArticleResponse,
+  SingleArticleResponseZ,
+} from "@/lib/types/PublicArticleTypes";
 
 interface ParamsProp {
   params: Promise<{
@@ -40,7 +45,9 @@ const fetchLatestArticles = async (
 
     const data = await response.json();
     const parsedData = LatestArticlesResponseZ.parse(data);
-    const filteredArticles = parsedData.filter(a => a.articleId.toLowerCase() !== articleId.toLowerCase());
+    const filteredArticles = parsedData.filter(
+      (a) => a.articleId.toLowerCase() !== articleId.toLowerCase()
+    );
 
     return filteredArticles;
   } catch (err) {
@@ -48,7 +55,6 @@ const fetchLatestArticles = async (
     return null;
   }
 };
-
 
 // Generate dynamic metadata based on the article
 export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
@@ -137,7 +143,7 @@ export default async function ArticlePage(props: ParamsProp) {
 
   const [article, latestArticles] = await Promise.all([
     fetchArticle(articleId),
-    fetchLatestArticles(articleId)
+    fetchLatestArticles(articleId),
   ]);
 
   if (!article) {
@@ -145,8 +151,8 @@ export default async function ArticlePage(props: ParamsProp) {
   }
 
   const keywords = article.content.keywords
-    .map(k => k.trim())
-    .filter(k => k.length > 0);
+    .map((k) => k.trim())
+    .filter((k) => k.length > 0);
 
   return (
     <div className="ctWrapper">
@@ -174,7 +180,7 @@ export default async function ArticlePage(props: ParamsProp) {
           </div>
 
           {keywords.length > 0 && (
-            <div className="flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap mt-4">
+            <div className="mt-4 flex max-w-full items-center gap-2 overflow-x-auto whitespace-nowrap">
               {keywords.map((keyword) => (
                 <span
                   key={keyword}

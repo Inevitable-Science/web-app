@@ -4,7 +4,11 @@ import { EthereumAddress } from "@/components/EthereumAddress";
 import { formatNumber } from "@/lib/utils";
 import { formatUnits, JB_CHAINS } from "juice-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
-import { JBChainId, useBendystrawQuery, useJBTokenContext } from "juice-sdk-react";
+import {
+  JBChainId,
+  useBendystrawQuery,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import { Address } from "viem";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 

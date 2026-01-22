@@ -65,7 +65,9 @@ export function DynamicArticleCarousel({
                   className="h-auto w-full rounded-lg object-cover"
                 />
                 <div className="mt-4">
-                  <h4 className="font-optima text-xl line-clamp-1">{slide.title}</h4>
+                  <h4 className="font-optima line-clamp-1 text-xl">
+                    {slide.title}
+                  </h4>
                   <p className="text-muted-foreground line-clamp-2 text-sm font-light">
                     {slide.overview}
                   </p>

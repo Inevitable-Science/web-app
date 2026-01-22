@@ -7,9 +7,10 @@ interface VestingContract {
   tokenAddress: Address;
   vestingContract: Address;
   vestingContractChainId: ViemChainIdType;
-};
+}
 
-export const scheduleCreateRole = "0x01d6ebbe244ac14dd8a7a12f932c0ce6e9bb9236c9b55d3756a6b13de75cdc33";
+export const scheduleCreateRole =
+  "0x01d6ebbe244ac14dd8a7a12f932c0ce6e9bb9236c9b55d3756a6b13de75cdc33";
 
 export const vestingContracts: VestingContract[] = [
   {

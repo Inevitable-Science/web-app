@@ -1,6 +1,8 @@
 import { DaoResponse, DaoResponseZ } from "../types/AnalyticTypes";
 
-export const fetchDaoData = async (daoName: string): Promise<DaoResponse | null> => {
+export const fetchDaoData = async (
+  daoName: string
+): Promise<DaoResponse | null> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${daoName}`,

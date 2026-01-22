@@ -77,7 +77,7 @@ export default async function ProjectLayout(props: Props) {
 
   const [treasuryData, tokenData] = await Promise.all([
     fetchTreasuryData(projectName),
-    fetchTokenData(tokenName)
+    fetchTokenData(tokenName),
   ]);
 
   return (
@@ -108,9 +108,7 @@ export default async function ProjectLayout(props: Props) {
 
               <div className="sm:min-h-[700px]">
                 {/* IMPORTANT - Init's vesting page */}
-                <VestingInitialiser>
-                  {props.children}
-                </VestingInitialiser>
+                <VestingInitialiser>{props.children}</VestingInitialiser>
               </div>
             </section>
           </div>

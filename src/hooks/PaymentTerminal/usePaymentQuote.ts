@@ -114,7 +114,7 @@ export function usePaymentQuote(chainId: JBChainId) {
   return {
     tokenAToBQuote,
     tokenBtoAQuote,
-    isLoading
+    isLoading,
   };
 }
 

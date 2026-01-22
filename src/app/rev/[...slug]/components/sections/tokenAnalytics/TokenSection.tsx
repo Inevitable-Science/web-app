@@ -178,8 +178,13 @@ export function TokenSection() {
                     >
                       <EthereumAddress
                         address={address as Address}
-                        chain={JB_CHAINS[tokenAnalytics.selectedToken.chain_id as JBChainId].chain}
-                        withEnsName short
+                        chain={
+                          JB_CHAINS[
+                            tokenAnalytics.selectedToken.chain_id as JBChainId
+                          ].chain
+                        }
+                        withEnsName
+                        short
                       />
                       {formatNumber(token_amount, true)}
                     </div>
@@ -191,7 +196,9 @@ export function TokenSection() {
 
           {tokenAnalytics.selectedToken.ticker && (
             <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-              <TokenStatsChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
+              <TokenStatsChart
+                tokenTicker={tokenAnalytics.selectedToken.ticker}
+              />
             </div>
           )}
         </div>

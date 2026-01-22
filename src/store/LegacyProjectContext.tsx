@@ -9,7 +9,12 @@ import { createStore, StoreApi, useStore } from "zustand";
 import { ViemChainIdType } from "@/lib/wagmiConfig";
 import { Address } from "viem";
 
-export type TabType = "about" | "activity" | "analytics" | "treasury" | "vesting";
+export type TabType =
+  | "about"
+  | "activity"
+  | "analytics"
+  | "treasury"
+  | "vesting";
 
 interface ContextProps {
   children: ReactNode;
@@ -56,7 +61,8 @@ export function LegacyProjectProvider({
       tokenAnalytics,
 
       vestingContractAddress: null,
-      setVestingContractAddress: (vestingContractAddress) => set({ vestingContractAddress }),
+      setVestingContractAddress: (vestingContractAddress) =>
+        set({ vestingContractAddress }),
 
       vestingChainId: null,
       setVestingChainId: (vestingChainId) => set({ vestingChainId }),

@@ -20,7 +20,7 @@ import {
   useTags,
   useTitle,
 } from "@/store/ArticleEditorStore";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export function ActionButtonsTable({ article }: { article?: ArticleResponse }) {
   const router = useRouter();

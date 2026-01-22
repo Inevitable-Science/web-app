@@ -65,9 +65,7 @@ export function ArticlesClient({
       const filteredArticles = initialArticles.filter(
         (article) =>
           article.title.toLowerCase().includes(lowerQuery) ||
-          article.keywords.some((kw) =>
-            kw.toLowerCase().includes(lowerQuery)
-          )
+          article.keywords.some((kw) => kw.toLowerCase().includes(lowerQuery))
       );
 
       updatedCarousels = updatedCarousels

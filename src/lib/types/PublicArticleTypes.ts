@@ -28,7 +28,7 @@ export const LatestArticlesResponseZ = z.array(
     title: z.string(),
     articleId: z.string(),
     landingImage: z.string(),
-    overview: z.string()
+    overview: z.string(),
   })
 );
 

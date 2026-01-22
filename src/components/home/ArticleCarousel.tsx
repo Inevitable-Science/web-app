@@ -13,77 +13,74 @@ export default function ArticleCarousel() {
     <section className="mx-auto w-full">
       <div className="ctWrapper">
         {slides ? (
-          <DynamicArticleCarousel
-            category="Latest Articles"
-            slides={slides}
-          />
+          <DynamicArticleCarousel category="Latest Articles" slides={slides} />
         ) : (
           <div className="overflow-hidden">
-            <h3 className="mb-4 text-2xl font-extralight sm:text-4xl">Latest Articles</h3>
+            <h3 className="mb-4 text-2xl font-extralight sm:text-4xl">
+              Latest Articles
+            </h3>
             <div className="flex gap-4 overflow-hidden">
+              <div className="bg-background border-color flex h-[340px] min-w-[420px] flex-col items-start rounded-2xl border p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover" />
 
-              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
-                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
-                
                 <div className="mt-4 w-full">
                   <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
 
-                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton my-2 h-[18px] w-full rounded-lg" />
                   <div className="activeSkeleton h-[18px] w-full rounded-lg" />
                 </div>
               </div>
 
-              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
-                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
-                
+              <div className="bg-background border-color flex h-[340px] min-w-[420px] flex-col items-start rounded-2xl border p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover" />
+
                 <div className="mt-4 w-full">
                   <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
 
-                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton my-2 h-[18px] w-full rounded-lg" />
                   <div className="activeSkeleton h-[18px] w-full rounded-lg" />
                 </div>
               </div>
 
-              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
-                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
-                
+              <div className="bg-background border-color flex h-[340px] min-w-[420px] flex-col items-start rounded-2xl border p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover" />
+
                 <div className="mt-4 w-full">
                   <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
 
-                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton my-2 h-[18px] w-full rounded-lg" />
                   <div className="activeSkeleton h-[18px] w-full rounded-lg" />
                 </div>
               </div>
 
-              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
-                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
-                
+              <div className="bg-background border-color flex h-[340px] min-w-[420px] flex-col items-start rounded-2xl border p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover" />
+
                 <div className="mt-4 w-full">
                   <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
 
-                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton my-2 h-[18px] w-full rounded-lg" />
                   <div className="activeSkeleton h-[18px] w-full rounded-lg" />
                 </div>
               </div>
 
-              <div className="bg-background flex flex-col items-start h-[340px] min-w-[420px] rounded-2xl border border-color p-4 select-none">
-                <div className="activeSkeleton h-full w-full rounded-lg object-cover"/>
-                
+              <div className="bg-background border-color flex h-[340px] min-w-[420px] flex-col items-start rounded-2xl border p-4 select-none">
+                <div className="activeSkeleton h-full w-full rounded-lg object-cover" />
+
                 <div className="mt-4 w-full">
                   <div className="activeSkeleton h-[28px] w-[60%] rounded-lg" />
 
-                  <div className="activeSkeleton h-[18px] w-full rounded-lg my-2" />
+                  <div className="activeSkeleton my-2 h-[18px] w-full rounded-lg" />
                   <div className="activeSkeleton h-[18px] w-full rounded-lg" />
                 </div>
               </div>
-
             </div>
           </div>
         )}
       </div>
 
       <div
-        className="max-w-screen absolute -z-10 hidden items-center justify-center overflow-hidden md:flex"
+        className="absolute -z-10 hidden max-w-screen items-center justify-center overflow-hidden md:flex"
         style={{ transform: "translateY(-40%)" }}
       >
         {/* Left cloud - shifted slightly right */}

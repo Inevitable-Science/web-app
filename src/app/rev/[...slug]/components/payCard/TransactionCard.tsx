@@ -22,7 +22,9 @@ export function TransactionCard() {
   const suckers = useRevnetDataStore((state) => state.suckers);
 
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+  const setSelectedSucker = useRevnetDataStore(
+    (state) => state.setSelectedSucker
+  );
 
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { allRulesets } = useRulesetData({

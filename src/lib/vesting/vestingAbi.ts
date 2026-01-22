@@ -618,4 +618,4 @@ export const vestingAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
-] as const
+] as const;

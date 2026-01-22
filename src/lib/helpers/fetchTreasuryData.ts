@@ -1,6 +1,8 @@
 import { TreasuryResponse, TreasuryResponseZ } from "../types/AnalyticTypes";
 
-export const fetchTreasuryData = async (daoName: string): Promise<TreasuryResponse | null> => {
+export const fetchTreasuryData = async (
+  daoName: string
+): Promise<TreasuryResponse | null> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${daoName}`,
