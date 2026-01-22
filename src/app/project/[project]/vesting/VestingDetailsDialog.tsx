@@ -1,7 +1,7 @@
 "use client";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
 import { abi } from "./vestingAbi";
 import { ProcessedSchedule } from "./types";
@@ -13,6 +13,7 @@ import { formatDate, formatNumber } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { preventMinusKey } from "@/components/PayInput";
+import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 
 
 export function VestingDetailsDialog({ children, schedule }: { children: React.ReactNode, schedule: ProcessedSchedule }) {
@@ -221,7 +222,7 @@ export function VestingDetailsDialog({ children, schedule }: { children: React.R
               </div>
             </div>
 
-            {canReleaseTokens && (
+            {canReleaseTokens && !!vestingChainId && (
               <div className="flex flex-col rounded background-color p-2">
                 <p className="text-sm font-light text-muted-foreground">Release Specified Amount</p>
                 <div className="flex items-center gap-1 mt-1">
@@ -232,27 +233,29 @@ export function VestingDetailsDialog({ children, schedule }: { children: React.R
                     className="w-full text-sm"
                     placeholder="Amount to release"
                   />
-                  <Button
+                  <ButtonWithWallet
+                    targetChainId={vestingChainId}
                     onClick={releaseTokens}
                     disabled={disableRelease}
                     loading={isReleasing}
-                    className="w-[155px]"
+                    className="w-fit text-nowrap"
                   >
                     Release
-                  </Button>
+                  </ButtonWithWallet>
                 </div>
               </div>
             )}
 
-            {isOwner && (
-              <Button 
+            {isOwner && !!vestingChainId && (
+              <ButtonWithWallet
+                targetChainId={vestingChainId}
                 onClick={revokeSchedule}
                 disabled={schedule.status !== 0}
                 loading={isRevoking}
                 variant={"destructive"}
               >
                 Revoke Schedule
-              </Button>
+              </ButtonWithWallet>
             )}
           </div>
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+{/*import { useEffect, useRef } from "react";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 
@@ -44,3 +44,4 @@ export function useSwitchToCorrectChain() {
 
   return { handleSwitchChain, isSwitchingChain };
 }
+*/}

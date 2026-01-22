@@ -4,7 +4,6 @@ import { ProcessedSchedule, Schedule } from "./types";
 import { Address, formatEther, getContract } from "viem";
 import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
 import { useEffect, useState } from "react";
-import { readContract } from "viem/actions";
 import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
 import { abi } from "./vestingAbi";
 import { EthereumAddress } from "@/components/EthereumAddress";
@@ -14,6 +13,8 @@ import { ArrowRightIcon } from "lucide-react";
 import { VestingDetailsDialog } from "./VestingDetailsDialog";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { useToast } from "@/components/ui/use-toast";
+import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import { CreateScheduleDialogue } from "./CreateScheduleDialog";
 
 type TabType = "allSchedules" | "yourSchedules";
 
@@ -131,7 +132,7 @@ export function SchedulesSection({
       if (!address || !contractAddress || !chainId) return;
       setIsReleasingAll(true);
 
-      if (userChainId != chainId) {
+      if (userChainId !== chainId) {
         await switchChainAsync({ chainId });
       };
 
@@ -151,7 +152,7 @@ export function SchedulesSection({
       console.error(err);
       toast({
         title: "Couldn't Release Tokens",
-        description: "Failed to release all tokens."
+        description: "Failed to release all tokens, refresh the page and try again."
       });
       return;
     } finally {
@@ -192,9 +193,7 @@ export function SchedulesSection({
           
           {/* TEMP */}
           
-          {/*<Button variant={"accent"}>
-            Create Schedule
-          </Button>*/}
+          <CreateScheduleDialogue />
         </div>
 
         {activeTab === "allSchedules" ? (
@@ -286,9 +285,16 @@ export function SchedulesSection({
               </div>
             </div>
 
-            <Button onClick={releaseAllTokens} variant={"accent"} loading={isReleasingAll}>
-              Release All Tokens
-            </Button>
+            {chainId && (
+              <ButtonWithWallet
+                targetChainId={chainId}
+                onClick={releaseAllTokens}
+                variant={"accent"}
+                loading={isReleasingAll}
+              >
+                Release All Tokens
+              </ButtonWithWallet>
+            )}
 
             <div className="grid text-sm mt-5 mb-3 parentTable">
               <p>Beneficiary</p>

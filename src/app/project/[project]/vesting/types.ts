@@ -28,5 +28,4 @@ export type ScheduleType = z.infer<typeof ScheduleSchemaZ>;
 export interface ProcessedSchedule extends Schedule {
   id: string
   releasableAmount: bigint
-  //ensName: string | null
 }
