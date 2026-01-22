@@ -1,0 +1,409 @@
+"use client"
+import { formatDate, formatNumber } from "@/lib/utils";
+import { ProcessedSchedule, Schedule } from "./types";
+import { Address, formatEther, getContract } from "viem";
+import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
+import { useEffect, useState } from "react";
+import { readContract } from "viem/actions";
+import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
+import { abi } from "./vestingAbi";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { JB_CHAINS } from "juice-sdk-core";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon } from "lucide-react";
+import { VestingDetailsDialog } from "./VestingDetailsDialog";
+import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
+import { useToast } from "@/components/ui/use-toast";
+
+type TabType = "allSchedules" | "yourSchedules";
+
+export function SchedulesSection({ 
+  schedules,
+}: {
+  schedules: ProcessedSchedule[];
+}) {
+  const { address, isConnected } = useAccount();
+  const userChainId = useChainId();
+  const { writeContractAsync } = useWriteContract();
+  const { switchChainAsync } = useSwitchChain();
+  const { toast } = useToast();
+
+  const contractAddress = useLegacyProjectStore(state => state.vestingContractAddress);
+  const chainId = useLegacyProjectStore(state => state.vestingChainId);
+
+  // User State
+  const hasSchedule = useLegacyProjectStore(state => state.hasSchedule);
+  const setHasSchedule = useLegacyProjectStore(state => state.setHasSchedule);
+
+  const [activeTab, setActiveTab] = useState<TabType>("allSchedules");
+  const [userSchedules, setUserSchedules] = useState<ProcessedSchedule[]>([]);
+  const [isReleasingAll, setIsReleasingAll] = useState(false);
+
+  const activeSchedules = userSchedules.filter(schedule => schedule.status === 0);
+  const totalVestedTokens = activeSchedules.reduce((acc, schedule) => { 
+    return Number(formatEther(schedule.amountTotal)) + acc;
+  }, 0);
+  const totalReleasableTokens = activeSchedules.reduce((acc, schedule) => { 
+    return Number(formatEther(schedule.releasableAmount)) + acc;
+  }, 0);
+  const totalReleasedTokens = userSchedules.reduce((acc, schedule) => { 
+    return Number(formatEther(schedule.released)) + acc;
+  }, 0);
+
+
+  const client = getViemPublicClient(chainId as ViemChainIdType); // this is safe as it returns earlier (within page.tsx) if no vesting contract
+  const vestingContract = getContract({
+    address: contractAddress as Address,
+    abi: abi,
+    client,
+  });
+
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      try {
+        if (!address || !contractAddress) return;
+
+        const filteredUserSchedules = schedules.filter(s => s.beneficiary === address);
+        console.log(filteredUserSchedules, "filteredUserSchedules");
+        
+        if (filteredUserSchedules.length === 0) {
+          setHasSchedule(false);
+          return;
+        }
+
+        const scheduleCount = await vestingContract.read.holdersVestingScheduleCount([
+          address,
+        ]);
+        console.log(scheduleCount, "scheduleCount");
+
+        if (scheduleCount === 0n) {
+          setHasSchedule(false);
+          return;
+        }
+
+        let userSchedulesArr: ProcessedSchedule[] = [];
+
+        /*for (const schedule of filteredUserSchedules) {
+          userSchedulesArr.push(schedule);
+        }
+
+        setUserSchedules(userSchedulesArr);*/
+
+        for (let i = 0; i < Number(scheduleCount); i++) {
+          const [schedule, scheduleId]: [Schedule, `0x${string}`] = await Promise.all([
+            vestingContract.read.getVestingScheduleByAddressAndIndex([
+              address,
+              BigInt(i),
+            ]),
+            vestingContract.read.computeVestingScheduleIdForAddressAndIndex([
+              address,
+              BigInt(i),
+            ])
+          ]);
+
+          let releasableAmount = BigInt(0);
+          if (schedule.status == 0) {
+            releasableAmount = await vestingContract.read.computeReleasableAmount([
+              scheduleId,
+            ]);
+          };
+
+          userSchedulesArr.push({
+            ...schedule,
+            id: scheduleId, 
+            releasableAmount,
+          });
+        };
+
+        setUserSchedules(userSchedulesArr);
+        setHasSchedule(true);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchSchedules();
+  }, [address, isConnected, setHasSchedule]);
+
+
+  const releaseAllTokens = async () => {
+    try {
+      if (!address || !contractAddress || !chainId) return;
+      setIsReleasingAll(true);
+
+      if (userChainId != chainId) {
+        await switchChainAsync({ chainId });
+      };
+
+      await writeContractAsync({
+        abi,
+        functionName: "releaseAvailableTokensForHolder",
+        chainId: chainId,
+        address: contractAddress,
+        args: [address],
+      });
+
+      toast({
+        title: "Released All Tokens",
+        description: "Successfully release all tokens."
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Couldn't Release Tokens",
+        description: "Failed to release all tokens."
+      });
+      return;
+    } finally {
+      setIsReleasingAll(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="rounded-2xl bg-grey-450 mt-4 p-[12px]">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <Button 
+              onClick={() => setActiveTab("allSchedules")}
+              className={`
+                rounded-none w-[125px] cursor-pointer border-b px-2 pb-2 text-sm select-none hover:bg-transparent
+                ${activeTab === "allSchedules" ?
+                  "border-primary font-medium" :
+                  "text-muted-foreground border-transparent font-light"}
+              `}
+            >
+              All Schedules
+            </Button>
+            {hasSchedule && (
+              <Button 
+                onClick={() => setActiveTab("yourSchedules")}
+                className={`
+                  rounded-none w-[125px] cursor-pointer border-b px-2 pb-2 text-sm select-none hover:bg-transparent
+                  ${activeTab === "yourSchedules" ?
+                      "border-primary font-medium" :
+                      "text-muted-foreground border-transparent font-light"}
+                `}
+              >
+                Your Schedules
+              </Button>
+            )}
+          </div>
+          
+          {/* TEMP */}
+          
+          {/*<Button variant={"accent"}>
+            Create Schedule
+          </Button>*/}
+        </div>
+
+        {activeTab === "allSchedules" ? (
+        <>
+          <div className="grid text-sm mt-5 mb-3 parentTable">
+            <p>Beneficiary</p>
+            <p className="tokenAmountTableElement">Token Amount</p>
+            <p className="startTableElement">Start</p>
+            <p className="endTableElement">End</p>
+            <div />
+          </div>
+
+          <div className="background-color p-3 rounded text-sm">
+            {schedules
+            .sort((a, b) => Number(b.amountTotal) - Number(a.amountTotal))
+            .map(schedule => {
+              const startDateMs = Number(schedule.start) * 1000;
+              const startDate = new Date(startDateMs);
+
+              const durationMs = Number(schedule.duration) * 1000;
+              const endDateMs = startDateMs + durationMs;
+              const endDate = new Date(endDateMs);
+
+              return (
+                <div 
+                  key={schedule.id}
+                  className="items-center py-3 border-b border-color grid parentTable"
+                >
+                  <EthereumAddress 
+                    address={schedule.beneficiary as Address} 
+                    chain={JB_CHAINS[chainId as ViemChainIdType].chain}
+                    short 
+                    withEnsName 
+                  />
+                  <p className="tokenAmountTableElement">{formatNumber(Number(formatEther(schedule.amountTotal)))}</p>
+                  <p className="startTableElement">{formatDate(startDate, true)}</p>
+                  <div className="endTableElement">
+                    {schedule.status === 0 ? 
+                      <p>{formatDate(endDate, true)}</p> : 
+                      <div className="flex">
+                        <p className="bg-red-900 py-1 px-2 rounded-full text-xs">
+                          REVOKED
+                        </p>
+                      </div>
+                    }
+                  </div>
+                  <div className="flex justify-end">
+                    <VestingDetailsDialog schedule={schedule}>
+                      <button className="flex items-center gap-2 bg-gunmetal rounded-full px-[12px] py-[6px] font-normal cursor-pointer focus:outline-hidden">
+                        Details
+                        <ArrowRightIcon height="18" width="18" />
+                      </button>
+                    </VestingDetailsDialog>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
+        ) : (
+        <>
+          <div>
+            <div className="bg-grey-450 rounded-2xl my-4 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-3">
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {formatNumber(totalVestedTokens)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  Locked Tokens
+                </p>
+              </div>
+      
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {formatNumber(totalReleasableTokens)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  Releasable Tokens
+                </p>
+              </div>
+      
+              <div className="background-color p-[16px] rounded-xl">
+                <h3 className="text-xl">
+                  {formatNumber(totalReleasedTokens)}
+                </h3>
+                <p className="text-muted-foreground font-light uppercase">
+                  Released Tokens
+                </p>
+              </div>
+            </div>
+
+            <Button onClick={releaseAllTokens} variant={"accent"} loading={isReleasingAll}>
+              Release All Tokens
+            </Button>
+
+            <div className="grid text-sm mt-5 mb-3 parentTable">
+              <p>Beneficiary</p>
+              <p className="tokenAmountTableElement">Token Amount</p>
+              <p className="startTableElement">Start</p>
+              <p className="endTableElement">End</p>
+              <div />
+            </div>
+
+            <div className="background-color p-3 rounded text-sm">
+              {userSchedules
+              .sort((a, b) => Number(b.amountTotal) - Number(a.amountTotal))
+              .map(schedule => {
+                const startDateMs = Number(schedule.start) * 1000;
+                const startDate = new Date(startDateMs);
+
+                const durationMs = Number(schedule.duration) * 1000;
+                const endDateMs = startDateMs + durationMs;
+                const endDate = new Date(endDateMs);
+
+                return (
+                  <div 
+                    key={schedule.id}
+                    className="items-center py-3 border-b border-color grid parentTable"
+                  >
+                    <EthereumAddress 
+                      address={schedule.beneficiary as Address} 
+                      chain={JB_CHAINS[chainId as ViemChainIdType].chain}
+                      short 
+                      withEnsName 
+                    />
+                    <p className="tokenAmountTableElement">{formatNumber(Number(formatEther(schedule.amountTotal)))}</p>
+                    <p className="startTableElement">{formatDate(startDate, true)}</p>
+                    <div className="endTableElement">
+                      {schedule.status === 0 ? 
+                        <p>{formatDate(endDate, true)}</p> : 
+                        <div className="flex">
+                          <p className="bg-red-900 py-1 px-2 rounded-full text-xs">
+                            REVOKED
+                          </p>
+                        </div>
+                      }
+                    </div>
+                    <div className="flex justify-end">
+                      <VestingDetailsDialog schedule={schedule}>
+                        <button className="flex items-center gap-2 bg-gunmetal rounded-full px-[12px] py-[6px] font-normal cursor-pointer focus:outline-hidden">
+                          Details
+                          <ArrowRightIcon height="18" width="18" />
+                        </button>
+                      </VestingDetailsDialog>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </>
+        )}
+      </div>
+
+      <style>{`
+      .parentTable {
+        grid-template-columns: 3.5fr 3fr 3fr 3fr 96px;
+      }
+      
+      @media (min-width:900px) and (max-width:1230px) {
+        .endTableElement {
+          display: none;
+        }
+
+        .parentTable {
+          grid-template-columns: 3.5fr 3fr 3fr 96px;
+        }
+      }
+
+      @media (min-width: 767px) and (max-width:1150px) {
+        .startTableElement, .endTableElement {
+          display: none;
+        }
+
+        .parentTable {
+          grid-template-columns: 3.5fr 3fr 96px;
+        }
+      }
+
+      @media (max-width:670px) {
+        .endTableElement {
+          display: none;
+        }
+
+        .parentTable {
+          grid-template-columns: 3.5fr 3fr 3fr 96px;
+        }
+      }
+
+      @media (max-width:570px) {
+        .startTableElement, .endTableElement {
+          display: none;
+        }
+
+        .parentTable {
+          grid-template-columns: 3.5fr 3fr 96px;
+        }
+      }
+
+      @media (max-width:420px) {
+        .startTableElement, .endTableElement, .tokenAmountTableElement {
+          display: none;
+        }
+
+        .parentTable {
+          grid-template-columns: 3.5fr 96px;
+        }
+      }
+      `}</style>
+    </>
+  );
+};

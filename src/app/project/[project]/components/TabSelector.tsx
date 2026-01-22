@@ -3,6 +3,7 @@ import { ArrowRightIcon } from "lucide-react";
 import { TabType, useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { vestingContracts } from "../vesting/constants";
 
 export interface TabTypeArray {
   key: TabType;
@@ -13,6 +14,7 @@ function useProjectTabs() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
   const treasuryAnalytics = useLegacyProjectStore((state) => state.treasuryAnalytics);
+  const vestingContract = vestingContracts.find(d => d.name === daoData.name.toLowerCase());
 
   const tabs = [
     { key: "about", label: "About" },
@@ -25,14 +27,15 @@ function useProjectTabs() {
             ? [{ key: "treasury", label: "Treasury" }]
             : []),
         ]),
+    ...(vestingContract ? [
+      { key: "vesting", label: "Vesting" },
+    ] : [])
   ] as TabTypeArray[];
   
   return tabs;
 };
 
 export function TabSelectorSM() {
-  //const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
-  //const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tabs = useProjectTabs();
 
@@ -70,8 +73,6 @@ export function TabSelectorSM() {
 }
 
 export function TabSelectorLG() {
-  //const selectedTab = useLegacyProjectStore((state) => state.selectedTab);
-  //const setSelectedTab = useLegacyProjectStore((state) => state.setSelectedTab);
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tabs = useProjectTabs();
 

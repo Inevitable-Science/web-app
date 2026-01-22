@@ -11,6 +11,7 @@ import { Header } from "./components/Header";
 import { TabSelectorLG, TabSelectorSM } from "./components/TabSelector";
 import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 import { SwapWidgetWrapper } from "./components/swapWidget/SwapWidgetWrapper";
+import { VestingInitialiser } from "./VestingProvider";
 
 interface Props {
   children: React.ReactNode;
@@ -106,7 +107,10 @@ export default async function ProjectLayout(props: Props) {
               <TabSelectorSM />
 
               <div className="sm:min-h-[700px]">
-                {props.children}
+                {/* IMPORTANT - Init's vesting page */}
+                <VestingInitialiser>
+                  {props.children}
+                </VestingInitialiser>
               </div>
             </section>
           </div>
