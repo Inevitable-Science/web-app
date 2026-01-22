@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAccount, useWriteContract } from "wagmi";
-import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
+import { vestingAbi } from "@/lib/vesting/vestingAbi";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { useToast } from "@/components/ui/use-toast";
 import { preventMinusKey } from "@/components/PayInput";

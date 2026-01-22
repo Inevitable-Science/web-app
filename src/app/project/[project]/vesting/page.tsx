@@ -1,14 +1,14 @@
 import { formatEther, getContract } from "viem";
 import { SchedulesSection } from "./SchedulesSection";
-import { vestingContracts } from "../../../../lib/vesting/constants";
+import { vestingContracts } from "@/lib/vesting/constants";
 import { notFound } from "next/navigation";
-import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
+import { vestingAbi } from "@/lib/vesting/vestingAbi";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
 import {
   ProcessedSchedule,
   ScheduleSchemaZ,
   ScheduleType,
-} from "../../../../lib/vesting/types";
+} from "@/lib/vesting/types";
 import { formatNumber } from "@/lib/utils";
 
 export const revalidate = 900; // 15 mins

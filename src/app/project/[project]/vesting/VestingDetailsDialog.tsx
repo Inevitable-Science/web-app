@@ -8,8 +8,8 @@ import {
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
-import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
-import { ProcessedSchedule } from "../../../../lib/vesting/types";
+import { vestingAbi } from "@/lib/vesting/vestingAbi";
+import { ProcessedSchedule } from "@/lib/vesting/types";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address, parseEther, weiUnits } from "viem";
@@ -142,11 +142,11 @@ export function VestingDetailsDialog({
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg duration-200">
-          <Dialog.Title className="flex items-center justify-between text-lg font-semibold">
-            Vesting Schedule Details
+          <Dialog.Title className="flex items-center gap-2 justify-between text-lg font-semibold">
+            Schedule Details
             {schedule.status === 0 ? (
               <div className="flex">
-                <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal uppercase">
+                <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal uppercase text-nowrap">
                   {isCompleted
                     ? " Completed"
                     : schedule.revokable
@@ -165,7 +165,7 @@ export function VestingDetailsDialog({
           {address?.toLowerCase() === schedule.beneficiary.toLowerCase() && (
             <Dialog.Description className="text-muted-foreground mt-2 text-sm">
               This is your vesting schedule, open the "Your Schedules" tab to
-              release your tokens.
+              release all of your tokens, alternatively unlock your tokens below.
             </Dialog.Description>
           )}
 
@@ -182,7 +182,7 @@ export function VestingDetailsDialog({
               />
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-2">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2">
               <div className="background-color flex flex-col rounded p-2">
                 <p className="text-muted-foreground text-sm font-light">
                   Total Tokens
@@ -207,7 +207,7 @@ export function VestingDetailsDialog({
               <p>{formatNumber(Number(formatEther(schedule.released)))}</p>
             </div>
 
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-2">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2">
               <div className="background-color flex flex-col rounded p-2">
                 <p className="text-muted-foreground text-sm font-light">
                   Start Date
@@ -239,7 +239,7 @@ export function VestingDetailsDialog({
                 <p className="text-muted-foreground text-sm font-light">
                   Release Specified Amount
                 </p>
-                <div className="mt-1 flex items-center gap-1">
+                <div className="mt-1 flex flex-col items-center gap-1 sm:flex-row">
                   <Input
                     onChange={(e) => setReleaseAmount(e.target.value)}
                     value={releaseAmount}

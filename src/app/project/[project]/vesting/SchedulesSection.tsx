@@ -1,6 +1,5 @@
 "use client";
-import { formatDate, formatNumber } from "@/lib/utils";
-import { ProcessedSchedule, Schedule } from "../../../../lib/vesting/types";
+import { useEffect, useState } from "react";
 import { Address, formatEther, getContract } from "viem";
 import {
   useAccount,
@@ -8,18 +7,19 @@ import {
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
-import { useEffect, useState } from "react";
-import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
-import { vestingAbi } from "../../../../lib/vesting/vestingAbi";
-import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS } from "juice-sdk-core";
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "lucide-react";
-import { VestingDetailsDialog } from "./VestingDetailsDialog";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
+import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
+import { ProcessedSchedule, Schedule } from "@/lib/vesting/types";
+import { vestingAbi } from "@/lib/vesting/vestingAbi";
+import { EthereumAddress } from "@/components/EthereumAddress";
+import { formatDate, formatNumber } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import { VestingDetailsDialog } from "./VestingDetailsDialog";
 import { CreateScheduleDialogue } from "./CreateScheduleDialog";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon } from "lucide-react";
 
 type TabType = "allSchedules" | "yourSchedules";
 

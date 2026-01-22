@@ -4,11 +4,11 @@ import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import {
   scheduleCreateRole,
   vestingContracts,
-} from "../../../lib/vesting/constants";
+} from "@/lib/vesting/constants";
 import { useEffect } from "react";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
 import { getContract } from "viem";
-import { vestingAbi } from "../../../lib/vesting/vestingAbi";
+import { vestingAbi } from "@/lib/vesting/vestingAbi";
 import { useAccount } from "wagmi";
 
 export function VestingInitialiser({
