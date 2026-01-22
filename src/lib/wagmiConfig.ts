@@ -90,7 +90,7 @@ const safeConnector = safe({
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const chains = [arbitrum, base, mainnet, optimism] as const;
+const chains = [mainnet, base, arbitrum, optimism] as const;
 
 const transports = {
   [mainnet.id]: fallback([
