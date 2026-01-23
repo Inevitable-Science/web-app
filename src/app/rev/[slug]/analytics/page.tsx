@@ -1,4 +1,4 @@
-import { TokenSection } from "../components/sections/tokenAnalytics/TokenSection";
+import { TokenSection } from "./TokenSection";
 
 export default function Page() {
   return (

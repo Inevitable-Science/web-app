@@ -118,10 +118,7 @@ export default async function Page(props: Props) {
 }
 */
 
-import { PageLayout } from "./components/layout/PageLayout";
-import { TabContent } from "./components/layout/TabContent";
-import { DescriptionSection } from "./components/sections/about/DescriptionSection";
-
+import { DescriptionSection } from "./DescriptionSection";
 
 export default function Page() {
   return (

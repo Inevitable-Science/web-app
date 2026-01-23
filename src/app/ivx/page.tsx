@@ -80,6 +80,7 @@ export default async function IvxTokenPage() {
           projectData={projectData}
           treasuryAnalytics={treasuryData}
           tokenAnalytics={tokenData}
+          slug="ivx"
         >
           <MainIvxLayout />
         </RevnetDataProvider>

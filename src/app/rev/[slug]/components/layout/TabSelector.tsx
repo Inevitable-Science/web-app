@@ -1,9 +1,13 @@
 "use client"
 import { ArrowRight } from "lucide-react";
-import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { TabType } from "./PageLayout";
-import Link from "next/link";
+import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+
+export interface TabType {
+  key: SelectedTabType;
+  label: string;
+}
 
 function useProjectTabs() {
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
@@ -23,14 +27,14 @@ function useProjectTabs() {
   return tabs;
 }
 
-export function TabSelectorSM({ slug }: { slug: string; }) {
+export function TabSelectorSM() {
   const tabs = useProjectTabs();
-  const decodedSlug = decodeURIComponent(slug);
+  const slug = useRevnetDataStore(state => state.slug);
   
   const pathname = usePathname();
   const finalSegment = pathname.split("/").pop();
   const selectedTab =
-    finalSegment?.toLowerCase() === decodedSlug.toLowerCase()
+    finalSegment?.toLowerCase() === slug.toLowerCase()
       ? "about"
       : finalSegment;
 
@@ -40,8 +44,8 @@ export function TabSelectorSM({ slug }: { slug: string; }) {
         {tabs.map((tab) => {
           const projectSlug =
             tab.key === "about"
-              ? `/rev/${decodedSlug}`
-              : `/rev/${decodedSlug}/${tab.key}`;
+              ? `/rev/${slug}`
+              : `/rev/${slug}/${tab.key}`;
 
           return (
             <Link href={projectSlug} key={tab.key}>
@@ -62,14 +66,14 @@ export function TabSelectorSM({ slug }: { slug: string; }) {
   );
 }
 
-export function TabSelectorLG({ slug }: { slug: string; }) {
+export function TabSelectorLG() {
   const tabs = useProjectTabs();
-  const decodedSlug = decodeURIComponent(slug);
+  const slug = useRevnetDataStore(state => state.slug);
 
   const pathname = usePathname();
   const finalSegment = pathname.split("/").pop();
   const selectedTab =
-    finalSegment?.toLowerCase() === decodedSlug.toLowerCase()
+    finalSegment?.toLowerCase() === slug.toLowerCase()
       ? "about"
       : finalSegment;
 
@@ -79,8 +83,8 @@ export function TabSelectorLG({ slug }: { slug: string; }) {
         {tabs.map((tab) => {
           const projectSlug =
             tab.key === "about"
-              ? `/rev/${decodedSlug}`
-              : `/rev/${decodedSlug}/${tab.key}`;
+              ? `/rev/${slug}`
+              : `/rev/${slug}/${tab.key}`;
 
           return (
             <Link href={projectSlug} key={tab.key}>

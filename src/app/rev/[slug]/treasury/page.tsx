@@ -1,5 +1,4 @@
-import { TokenSection } from "../components/sections/tokenAnalytics/TokenSection";
-import { TreasurySection } from "../components/sections/treasuryAnalytics/TreasurySection";
+import { TreasurySection } from "./TreasurySection";
 
 export default function Page() {
   return (

@@ -2,7 +2,7 @@
 
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ActivityEventsTable } from "./ActivityEventsTable";
-import StaticVolumeChart from "../../ActivityGraph";
+import StaticVolumeChart from "../components/ActivityGraph";
 
 export function ActivityFeed() {
   const project = useRevnetDataStore((state) => state.project);

@@ -1,4 +1,4 @@
-import { NetworkDetailsTable } from "../components/sections/cycles/CyclesTab"
+import { NetworkDetailsTable } from "./CyclesTab";
 
 export default function Page() {
   return (

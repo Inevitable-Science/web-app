@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export function DaoData() {
   const treasuryAnalytics = useRevnetDataStore(
     (state) => state.treasuryAnalytics
   );
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
-  const setSelectedTab = useRevnetDataStore((state) => state.setSelectedTab);
+  const slug = useRevnetDataStore((state) => state.slug);
 
   if (!treasuryAnalytics && !tokenAnalytics) return;
 
@@ -47,14 +48,15 @@ export function DaoData() {
             </div>
           </div>
 
-          <Button
-            onClick={() => setSelectedTab("activity")}
-            variant="link"
-            className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-          >
-            Treasury Stats
-            <ArrowRight height="20" width="20" />
-          </Button>
+          <Link href={`/rev/${slug}/treasury`}>
+            <Button
+              variant="link"
+              className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+            >
+              Treasury Stats
+              <ArrowRight height="20" width="20" />
+            </Button>
+          </Link>
         </div>
       )}
 
@@ -126,14 +128,15 @@ export function DaoData() {
             </div>
           </div>
 
-          <Button
-            onClick={() => setSelectedTab("analytics")}
-            variant="link"
-            className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
-          >
-            Analytics
-            <ArrowRight height="20" width="20" />
-          </Button>
+          <Link href={`/rev/${slug}/analytics`}>
+            <Button
+              variant="link"
+              className="flex h-6 items-center gap-1.5 pl-2 font-normal uppercase transition-[gap] duration-150 hover:gap-3"
+            >
+              Analytics
+              <ArrowRight height="20" width="20" />
+            </Button>
+          </Link>
         </div>
       )}
     </section>

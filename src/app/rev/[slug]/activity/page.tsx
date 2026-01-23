@@ -1,4 +1,4 @@
-import { ActivityFeed } from "../components/sections/activity/ActivityFeed";
+import { ActivityFeed } from "./ActivityFeed";
 
 export default function Page() {
   return (

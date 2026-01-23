@@ -1,5 +1,4 @@
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
-import { PageLayout } from "./components/layout/PageLayout";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
 import { RevnetDataProvider } from "@/store/RevnetDataContext";
@@ -115,13 +114,14 @@ export default async function RevnetPageLayout({ children, params }: Props) {
         projectData={project}
         treasuryAnalytics={treasuryData}
         tokenAnalytics={tokenData}
+        slug={decodeURIComponent(slug)}
       >
         <div className="relative w-full">
           <div className="absolute inset-0 -z-10 w-full bg-[url('https://cdn.inevitable.science/static/img/dao_landing.webp')] bg-cover bg-center"></div>
           <Header />
         </div>
         <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
-          <TabSelectorLG slug={slug} />
+          <TabSelectorLG />
   
           {/* Column 1 */}
           <div className="flex-1">
@@ -133,7 +133,7 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   
             <div className="mx-auto max-w-4xl">
               <section className="mb-10">
-                <TabSelectorSM slug={slug} />
+                <TabSelectorSM />
   
                 {children}
               </section>

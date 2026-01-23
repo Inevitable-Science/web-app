@@ -1,4 +1,4 @@
-import { HoldersSection } from "../components/sections/token/TokensSection";
+import { HoldersSection } from "./TokensSection";
 
 export default function Page() {
   return (
