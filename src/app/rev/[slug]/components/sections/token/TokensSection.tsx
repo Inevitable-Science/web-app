@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";

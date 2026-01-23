@@ -1,5 +1,4 @@
-// src/components/NetworkDashboard/Components/ActivityGraph.tsx
-
+"use client"
 import { CSSProperties, useMemo, useState } from "react";
 import {
   CartesianGrid,

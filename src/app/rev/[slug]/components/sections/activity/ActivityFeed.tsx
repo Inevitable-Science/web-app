@@ -1,3 +1,5 @@
+"use client"
+
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ActivityEventsTable } from "./ActivityEventsTable";
 import StaticVolumeChart from "../../ActivityGraph";

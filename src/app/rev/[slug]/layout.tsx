@@ -11,25 +11,30 @@ import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
 import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
 import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
 import { fetchProjectData } from "@/lib/helpers/getProjectBendystraw";
+import { Header } from "./components/layout/Header";
+import { TabSelectorLG, TabSelectorSM } from "./components/layout/TabSelector";
+import { TransactionCard } from "./components/payCard/TransactionCard";
+import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 
 interface Props {
+  children: React.ReactNode;
   params: Promise<{ slug?: string }>;
 }
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
   const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
 
-  const fullPath = `/${decodeURIComponent(params.slug || "")}`;
+  const fullPath = `/${decodeURIComponent(slug || "")}`;
   const url = new URL(fullPath, origin);
 
   let config;
   let projectData: ProjectQuery["project"] | null;
   try {
-    config = parseSlug(params.slug);
+    config = parseSlug(slug);
     projectData = await fetchProjectData(config);
   } catch (err) {
     console.error(err);
@@ -73,18 +78,18 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page(props: Props) {
-  const params = await props.params;
+export default async function RevnetPageLayout({ children, params }: Props) {
+  const { slug } = await params;
 
   let config: ReturnType<typeof parseSlug>;
   try {
-    config = parseSlug(params.slug);
+    config = parseSlug(slug);
   } catch {
     return notFound();
   }
 
   const project = await fetchProjectData(config);
-  if (!project || !project?.name) {
+  if (!slug || !project || !project?.name) {
     return notFound();
   }
 
@@ -111,7 +116,38 @@ export default async function Page(props: Props) {
         treasuryAnalytics={treasuryData}
         tokenAnalytics={tokenData}
       >
-        <PageLayout />
+        <div className="relative w-full">
+          <div className="absolute inset-0 -z-10 w-full bg-[url('https://cdn.inevitable.science/static/img/dao_landing.webp')] bg-cover bg-center"></div>
+          <Header />
+        </div>
+        <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
+          <TabSelectorLG slug={slug} />
+  
+          {/* Column 1 */}
+          <div className="flex-1">
+            <div className="block md:hidden">
+              <div className="mt-1 mb-4">
+                <TransactionCard />
+              </div>
+            </div>
+  
+            <div className="mx-auto max-w-4xl">
+              <section className="mb-10">
+                <TabSelectorSM slug={slug} />
+  
+                {children}
+              </section>
+            </div>
+          </div>
+  
+          <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
+            <div className="mb-4">
+              <TransactionCard />
+            </div>
+          </div>
+        </div>
+  
+        <OtherDaosCarousel />
       </RevnetDataProvider>
     </JBProjectProviderRoot>
   );

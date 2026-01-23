@@ -10,6 +10,7 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import EtherscanLink from "@/components/EtherscanLink";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 import { EthereumAddress } from "@/components/EthereumAddress";
+import { notFound } from "next/navigation";
 
 export function TreasurySection() {
   const treasuryAnalytics = useRevnetDataStore(
@@ -40,6 +41,8 @@ export function TreasurySection() {
       setResponseData("Failed to refresh");
     }
   };
+
+  if (!treasuryAnalytics) return notFound();
 
   return (
     <section>

@@ -41,7 +41,7 @@ export function PageLayout() {
         <Header />
       </div>
       <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
-        <TabSelectorLG tabs={tabs} />
+        <TabSelectorLG slug={""} />
 
         {/* Column 1 */}
         <div className="flex-1">
@@ -53,7 +53,7 @@ export function PageLayout() {
 
           <div className="mx-auto max-w-4xl">
             <section className="mb-10">
-              <TabSelectorSM tabs={tabs} />
+              <TabSelectorSM slug={""} />
 
               <TabContent />
             </section>

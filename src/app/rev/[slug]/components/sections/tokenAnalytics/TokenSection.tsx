@@ -11,6 +11,7 @@ import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { notFound } from "next/navigation";
 
 function calculateRatio(
   value1: number | null | undefined,
@@ -63,6 +64,8 @@ export function TokenSection() {
   const tokenAnalytics = useRevnetDataStore((state) => state.tokenAnalytics);
   const suckers = useRevnetDataStore((state) => state.suckers);
 
+  if (!tokenAnalytics) return notFound();
+  
   return (
     <section>
       {tokenAnalytics?.selectedToken.ticker && (
