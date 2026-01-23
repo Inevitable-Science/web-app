@@ -19,7 +19,7 @@ import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { VestingDetailsDialog } from "./VestingDetailsDialog";
 import { CreateScheduleDialogue } from "./CreateScheduleDialog";
 import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from "lucide-react";
+import { AlarmClockOff, ArrowRightIcon } from "lucide-react";
 
 type TabType = "allSchedules" | "yourSchedules";
 
@@ -211,7 +211,14 @@ export function SchedulesSection({
             </div>
 
             <div className="background-color rounded p-3 text-sm">
-              {schedules
+              {schedules.length === 0 ? (
+                <div className="flex flex-col gap-1 items-center my-4">
+                  <AlarmClockOff className="stroke-muted-foreground" height={38} width={38} />
+                  <p className="text-muted-foreground">
+                    No Vesting Schedules
+                  </p>
+                </div>
+              ) : schedules
                 .sort((a, b) => Number(b.amountTotal) - Number(a.amountTotal))
                 .map((schedule) => {
                   const startDateMs = Number(schedule.start) * 1000;
