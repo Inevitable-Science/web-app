@@ -23,10 +23,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.averageBal
-              ? formatNumber(
-                  tokenData.selectedToken.averageBal,
-                  true
-                )
+              ? formatNumber(tokenData.selectedToken.averageBal, true)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">
@@ -51,10 +48,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.totalSupply
-              ? formatNumber(
-                  tokenData.selectedToken.totalSupply,
-                  false
-                )
+              ? formatNumber(tokenData.selectedToken.totalSupply, false)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Total IVX Supply</p>
@@ -63,10 +57,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.medianBal
-              ? formatNumber(
-                  tokenData.selectedToken.medianBal,
-                  false
-                )
+              ? formatNumber(tokenData.selectedToken.medianBal, false)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Median IVX Balance</p>

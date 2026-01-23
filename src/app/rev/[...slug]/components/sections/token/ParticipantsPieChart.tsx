@@ -66,20 +66,17 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
 
   return (
     <g>
-      <text
-        x={cx}
-        y={cy}
-        dy={-8}
-        textAnchor="middle"
-        fill={"#ffffff"}
-      >
+      <text x={cx} y={cy} dy={-8} textAnchor="middle" fill={"#ffffff"}>
         <tspan x={cx} fill={"#ffffff"} dy="-0.5em" className="text-2xl">
           {payload.address.endsWith("Others") ? (
-            <tspan className="fill-white">
-              {payload.address}
-            </tspan>
+            <tspan className="fill-white">{payload.address}</tspan>
           ) : (
-            <EthereumAddress className="fill-white" address={payload.address} chain={JB_CHAINS[payload.chainId].chain} short />
+            <EthereumAddress
+              className="fill-white"
+              address={payload.address}
+              chain={JB_CHAINS[payload.chainId].chain}
+              short
+            />
           )}
         </tspan>
         <tspan x={cx} dy="1.8em" className="text-sm">
@@ -113,7 +110,6 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
   );
 };
 
-
 export function ParticipantsPieChart() {
   const project = useRevnetDataStore((state) => state.project);
   const totalSupply = useTotalOutstandingTokens();
@@ -128,17 +124,19 @@ export function ParticipantsPieChart() {
 
   const holdersLimit = 10;
 
-  const { data: participantsQuery, isLoading } = useBendystrawQuery(ParticipantsDocument, {
-    orderBy: "balance",
-    orderDirection: "desc",
-    where: {
-      suckerGroupId: project.suckerGroupId,
-      balance_gt: 0,
-    },
-    limit: holdersLimit
-  });
+  const { data: participantsQuery, isLoading } = useBendystrawQuery(
+    ParticipantsDocument,
+    {
+      orderBy: "balance",
+      orderDirection: "desc",
+      where: {
+        suckerGroupId: project.suckerGroupId,
+        balance_gt: 0,
+      },
+      limit: holdersLimit,
+    }
+  );
 
-  
   const participantsDataAggregate =
     participantsQuery?.participants.items?.reduce(
       (acc, participant) => {
@@ -174,49 +172,50 @@ export function ParticipantsPieChart() {
   const totalHolders = participantsQuery?.participants.totalCount ?? 0;
   const extraHolders = totalHolders - holdersLimit;
   const otherHoldersSupply = totalSupply - totalBalanceFromQuery;
-  
+
   const constructedObj = {
     address: `${extraHolders} Others`,
     balance: otherHoldersSupply,
     volume: 0n,
     chains: [1],
     denotesExtraHolders: true,
-  }
+  };
 
   if (extraHolders > 0) {
     participants.push(constructedObj);
-  };
-
+  }
 
   const pieChartData = useMemo(() => {
-    return participants
-      ?.map((participant, idx) => {
-        const balance = new JBProjectToken(BigInt(participant?.balance));
-        const percent = formatPortion(balance.value, totalSupply);
-        const visualValue =
-          Number(percent) < MIN_PERCENT ? MIN_PERCENT : Number(percent);
+    return (
+      participants
+        ?.map((participant, idx) => {
+          const balance = new JBProjectToken(BigInt(participant?.balance));
+          const percent = formatPortion(balance.value, totalSupply);
+          const visualValue =
+            Number(percent) < MIN_PERCENT ? MIN_PERCENT : Number(percent);
 
-        return {
-          address: participant?.address,
-          balanceFormatted: balance.toFloat(),
-          balance,
-          chainId: participant.chains[0],
-          fill: segmentColors[idx % segmentColors.length],
-          percent,
-          visualValue,
-          denotesExtraHolders: participant.denotesExtraHolders ?? undefined,
-        };
-      })
-      .filter((item) => item.balanceFormatted > 0)
-      //.sort((a, b) => b.balanceFormatted - a.balanceFormatted);
-      .sort((a, b) => {
-      // Always move "extra holders" to the end
-      if (a.denotesExtraHolders && !b.denotesExtraHolders) return 1;
-      if (!a.denotesExtraHolders && b.denotesExtraHolders) return -1;
+          return {
+            address: participant?.address,
+            balanceFormatted: balance.toFloat(),
+            balance,
+            chainId: participant.chains[0],
+            fill: segmentColors[idx % segmentColors.length],
+            percent,
+            visualValue,
+            denotesExtraHolders: participant.denotesExtraHolders ?? undefined,
+          };
+        })
+        .filter((item) => item.balanceFormatted > 0)
+        //.sort((a, b) => b.balanceFormatted - a.balanceFormatted);
+        .sort((a, b) => {
+          // Always move "extra holders" to the end
+          if (a.denotesExtraHolders && !b.denotesExtraHolders) return 1;
+          if (!a.denotesExtraHolders && b.denotesExtraHolders) return -1;
 
-      // Otherwise sort by balance
-      return b.balanceFormatted - a.balanceFormatted;
-    });
+          // Otherwise sort by balance
+          return b.balanceFormatted - a.balanceFormatted;
+        })
+    );
   }, [participants, totalSupply]);
 
   useEffect(() => {

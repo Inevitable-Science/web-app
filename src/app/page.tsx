@@ -65,7 +65,7 @@ export default function Page() {
           alt=""
           className="h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
         />
-        
+
         {/* Background Video */}
         <video
           className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"

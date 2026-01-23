@@ -65,12 +65,12 @@ function PayActivityItem(
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="text-color font-light flex items-center">
-          {projectBaseToken.isNative ? "Ξ" : (
+        <div className="text-color flex items-center font-light">
+          {projectBaseToken.isNative ? (
+            "Ξ"
+          ) : (
             <Image
-              src={
-                "https://cdn.inevitable.science/static/img/logo/usdc.svg"
-              }
+              src={"https://cdn.inevitable.science/static/img/logo/usdc.svg"}
               className="mr-1"
               alt={`USDC Logo`}
               width={18}

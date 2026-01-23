@@ -43,7 +43,7 @@ const RichPreview = ({ source }: { source: string }) => {
         <div className="wrap-break-word">{source}</div>
       )}
     </>
-  )
+  );
 };
 
 export function DescriptionSection() {

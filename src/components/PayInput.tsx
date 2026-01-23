@@ -1,3 +1,45 @@
+export const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
+  const key = e.key;
+
+  // Allow all control/navigation keys:
+  const controlKeys = [
+    "Backspace",
+    "Delete",
+    "Tab",
+    "Escape",
+    "Enter",
+    "Home",
+    "End",
+    "ArrowLeft",
+    "ArrowRight",
+  ];
+
+  if (controlKeys.includes(key)) {
+    return; // allow
+  }
+
+  // Block invalid characters
+  if (invalidKeys.includes(key)) {
+    e.preventDefault();
+    return;
+  }
+
+  // Key is a single character. Ensure it's a digit or decimal point.
+  if (!/[\d.]/.test(key)) {
+    e.preventDefault();
+    return;
+  }
+
+  const current = e.currentTarget.value;
+  const next = current + key;
+
+  // Limit total length to 16
+  if (next.length > 16) {
+    e.preventDefault();
+  }
+};
+
 export function PayInput({
   value,
   disabled,
@@ -7,48 +49,6 @@ export function PayInput({
   disabled?: boolean;
   onChangeFunction?: (arg: string) => void;
 }) {
-  const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
-    const key = e.key;
-
-    // Allow all control/navigation keys:
-    const controlKeys = [
-      "Backspace",
-      "Delete",
-      "Tab",
-      "Escape",
-      "Enter",
-      "Home",
-      "End",
-      "ArrowLeft",
-      "ArrowRight",
-    ];
-
-    if (controlKeys.includes(key)) {
-      return; // allow
-    }
-
-    // Block invalid characters
-    if (invalidKeys.includes(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    // Key is a single character. Ensure it's a digit or decimal point.
-    if (!/[\d.]/.test(key)) {
-      e.preventDefault();
-      return;
-    }
-
-    const current = e.currentTarget.value;
-    const next = current + key;
-
-    // Limit total length to 16
-    if (next.length > 16) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <input
       type="number"

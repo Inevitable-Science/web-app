@@ -35,7 +35,9 @@ export const WithdrawSelector = ({
 }: ChainSelectorProps) => {
   const suckers = useRevnetDataStore((state) => state.suckers);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
+  const setSelectedSucker = useRevnetDataStore(
+    (state) => state.setSelectedSucker
+  );
 
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();

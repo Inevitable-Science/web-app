@@ -13,7 +13,7 @@ const buttonVariants = cva(
         default: "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
-        destructive: "bg-red-600 hover:bg-red-600/90 rounded-lg",
+        destructive: "bg-red-900 rounded-lg",
         outline:
           "border border-(--grey-500) rounded-lg hover:bg-grey-450 hover:border-(--grey-100)",
         bottomline:

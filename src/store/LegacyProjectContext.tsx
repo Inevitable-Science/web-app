@@ -6,8 +6,15 @@ import {
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
 import { createStore, StoreApi, useStore } from "zustand";
+import { ViemChainIdType } from "@/lib/wagmiConfig";
+import { Address } from "viem";
 
-export type TabType = "about" | "activity" | "analytics" | "treasury";
+export type TabType =
+  | "about"
+  | "activity"
+  | "analytics"
+  | "treasury"
+  | "vesting";
 
 interface ContextProps {
   children: ReactNode;
@@ -20,8 +27,21 @@ export interface LegacyProjectStore {
   daoData: DaoResponse;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
-  selectedTab: TabType;
-  setSelectedTab: (tab: TabType) => void;
+
+  vestingContractAddress: Address | null;
+  setVestingContractAddress: (address: Address) => void;
+
+  vestingChainId: ViemChainIdType | null;
+  setVestingChainId: (chainId: ViemChainIdType) => void;
+
+  isOwner: boolean;
+  setIsOwner: (bool: boolean) => void;
+
+  canCreate: boolean;
+  setCanCreate: (bool: boolean) => void;
+
+  hasSchedule: boolean;
+  setHasSchedule: (bool: boolean) => void;
 }
 
 const LegacyProjectContext = createContext<
@@ -40,8 +60,21 @@ export function LegacyProjectProvider({
       treasuryAnalytics,
       tokenAnalytics,
 
-      selectedTab: "about",
-      setSelectedTab: (selectedTab) => set({ selectedTab }),
+      vestingContractAddress: null,
+      setVestingContractAddress: (vestingContractAddress) =>
+        set({ vestingContractAddress }),
+
+      vestingChainId: null,
+      setVestingChainId: (vestingChainId) => set({ vestingChainId }),
+
+      isOwner: false,
+      setIsOwner: (isOwner) => set({ isOwner }),
+
+      canCreate: false,
+      setCanCreate: (canCreate) => set({ canCreate }),
+
+      hasSchedule: false,
+      setHasSchedule: (hasSchedule) => set({ hasSchedule }),
     }))
   );
 

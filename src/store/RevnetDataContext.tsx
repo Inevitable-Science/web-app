@@ -11,7 +11,12 @@ import {
   useState,
   useEffect,
 } from "react";
-import { useJBChainId, useJBContractContext, useJBRulesetContext, useSuckers } from "juice-sdk-react";
+import {
+  useJBChainId,
+  useJBContractContext,
+  useJBRulesetContext,
+  useSuckers,
+} from "juice-sdk-react";
 import { SuckerPair, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
 import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
@@ -58,9 +63,9 @@ interface RevnetDataStore {
   setDailyTotals: (totals: DailyVolume[]) => void;
 }
 
-const RevnetDataContext = createContext<
-  StoreApi<RevnetDataStore> | undefined
->(undefined);
+const RevnetDataContext = createContext<StoreApi<RevnetDataStore> | undefined>(
+  undefined
+);
 
 interface ContextPropType {
   children: ReactNode;
@@ -149,9 +154,7 @@ export const RevnetDataProvider = ({
   );
 };
 
-export function useRevnetDataStore<T>(
-  selector: (state: RevnetDataStore) => T
-) {
+export function useRevnetDataStore<T>(selector: (state: RevnetDataStore) => T) {
   const context = useContext(RevnetDataContext);
 
   if (!context) {

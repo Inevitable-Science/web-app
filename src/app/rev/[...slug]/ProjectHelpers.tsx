@@ -1,6 +1,5 @@
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 
-
 export function parseSlug(slug?: string) {
   if (!slug) throw new Error("No URN found");
   const decoded = decodeURIComponent(slug);

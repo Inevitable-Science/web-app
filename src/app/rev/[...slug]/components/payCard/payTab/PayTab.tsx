@@ -39,11 +39,11 @@ export function PayTab({
   const suckers = useRevnetDataStore((state) => state.suckers);
   const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const setSelectedSucker = useRevnetDataStore((state) => state.setSelectedSucker);
-  
-  const rulesetMetadata = useRevnetDataStore(
-    (state) => state.rulesetMetadata
+  const setSelectedSucker = useRevnetDataStore(
+    (state) => state.setSelectedSucker
   );
+
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const ruleset = useRevnetDataStore((state) => state.ruleset);
 
   const { token: tokenBContext } = useJBTokenContext();
@@ -51,7 +51,9 @@ export function PayTab({
   const { version } = useJBContractContext();
 
   const baseToken = useProjectBaseToken();
-  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(selectedSucker.peerChainId);
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
+    selectedSucker.peerChainId
+  );
   const { balances, isLoading: isBalanceLoading } = useTokenBalances(
     tokens,
     selectedSucker.peerChainId
@@ -117,7 +119,7 @@ export function PayTab({
       const { payerTokens, reservedTokens } = tokenAToBQuote(
         value,
         selectedToken
-      );      
+      );
 
       const numberPayerTokens = Number(payerTokens);
       if (numberPayerTokens < 1) {
@@ -252,7 +254,9 @@ export function PayTab({
             <PayInput
               value={amountB}
               onChangeFunction={handleReceiveAmountChange}
-              disabled={baseToken.isNative !== selectedToken.isNative || !hasStarted}
+              disabled={
+                baseToken.isNative !== selectedToken.isNative || !hasStarted
+              }
             />
           </div>
           <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full px-1.5 py-1">

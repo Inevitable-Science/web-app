@@ -23,7 +23,7 @@ function getRelativeTime(dateString: string): string {
   return relativeTime;
 }
 
-export function ActivityFeed() {
+export function ActivityFeedSection() {
   const daoData = useLegacyProjectStore((state) => state.daoData);
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
   const [page, setPage] = useState<number>(1);

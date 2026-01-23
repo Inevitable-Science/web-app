@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { metadata } from "@/lib/metadata";
 import { ArticlesClient } from "./ArticlesClient";
-import { AllArticlesResponse, AllArticlesResponseZ } from "@/lib/types/PublicArticleTypes";
-
+import {
+  AllArticlesResponse,
+  AllArticlesResponseZ,
+} from "@/lib/types/PublicArticleTypes";
 
 const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
   try {

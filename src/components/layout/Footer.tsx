@@ -18,7 +18,11 @@ export default function Footer() {
           <Link href="/" aria-label="Auctions" className="hover:underline">
             Projects
           </Link>
-          <Link href="/ecosystem" aria-label="Auctions" className="hover:underline">
+          <Link
+            href="/ecosystem"
+            aria-label="Auctions"
+            className="hover:underline"
+          >
             Ecosystem
           </Link>
           <Link href="/vision" aria-label="Vision" className="hover:underline">
@@ -41,7 +45,7 @@ export default function Footer() {
       {/* BOTTOM SECTION */}
       <div className="mb-8 flex w-full flex-col-reverse items-center justify-between gap-4 text-center text-sm md:mb-2 md:flex-row md:gap-0">
         <p>All rights reserved Inevitable 2025</p>
-        <div className="flex items-center gap-4 flex-col sm:flex-row">
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
           <div className="flex items-center gap-4">
             <a
               href="https://x.com/inevitablesci"
@@ -69,7 +73,7 @@ export default function Footer() {
               />
             </a>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <Link
               href="/legal/privacy"

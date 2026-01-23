@@ -7,7 +7,10 @@ import {
   NATIVE_TOKEN,
   TokenAmountType,
 } from "juice-sdk-core";
-import { useJBContractContext, useJBProjectMetadataContext } from "juice-sdk-react";
+import {
+  useJBContractContext,
+  useJBProjectMetadataContext,
+} from "juice-sdk-react";
 
 import {
   useAccount,

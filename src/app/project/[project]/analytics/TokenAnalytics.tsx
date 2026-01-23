@@ -1,6 +1,5 @@
 "use client";
-
-import { formatNumber, truncateAddress } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import { useReadContracts, useWatchAsset } from "wagmi";
 
 import { Address, erc20Abi, formatUnits } from "viem";
@@ -65,7 +64,7 @@ function getValuationLabel(
   return "STRETCHED";
 }
 
-export function TokenSection() {
+export function TokenAnalyticsSection() {
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
 
   const { address, isConnected, connector } = useAccount();
@@ -300,10 +299,15 @@ export function TokenSection() {
                       key={`${address}-${idx}`}
                       className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
                     >
-                      <EthereumAddress 
+                      <EthereumAddress
                         address={address as Address}
-                        chain={JB_CHAINS[tokenAnalytics.selectedToken.chain_id as JBChainId].chain}
-                        withEnsName short
+                        chain={
+                          JB_CHAINS[
+                            tokenAnalytics.selectedToken.chain_id as JBChainId
+                          ].chain
+                        }
+                        withEnsName
+                        short
                       />
                       {formatNumber(token_amount, true)}
                     </div>

@@ -40,4 +40,4 @@ export function JBProjectProviderRoot({
       {children}
     </JBProjectProvider>
   );
-};
+}

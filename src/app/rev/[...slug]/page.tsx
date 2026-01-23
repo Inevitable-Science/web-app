@@ -6,10 +6,7 @@ import { RevnetDataProvider } from "@/store/RevnetDataContext";
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import { metadata } from "@/lib/metadata";
-import {
-  parseSlug,
-  resolveIpfsLogo,
-} from "./ProjectHelpers";
+import { parseSlug, resolveIpfsLogo } from "./ProjectHelpers";
 import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
 import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
 import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
@@ -93,7 +90,7 @@ export default async function Page(props: Props) {
 
   const daoData = await fetchDaoData(project.name);
   const tokenName = daoData?.nativeToken.name;
-  
+
   const treasuryPromise = daoData
     ? fetchTreasuryData(project.name)
     : Promise.resolve(null);
@@ -106,7 +103,6 @@ export default async function Page(props: Props) {
     treasuryPromise,
     tokenPromise,
   ]);
-    
 
   return (
     <JBProjectProviderRoot {...config}>

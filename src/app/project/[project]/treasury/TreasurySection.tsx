@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Address, zeroAddress } from "viem";
 import { Link, Loader2, RotateCw } from "lucide-react";
@@ -122,26 +121,24 @@ export function TreasurySection() {
                   return (
                     <div key={index} className="border-color border-b py-3">
                       <div className="text-grey-50 flex items-center justify-between font-light">
-                        {token.contractAddress ? 
-                        token.contractAddress === zeroAddress ? (
-                          truncateAddress(
-                            token.contractAddress as Address
+                        {token.contractAddress ? (
+                          token.contractAddress === zeroAddress ? (
+                            truncateAddress(token.contractAddress as Address)
+                          ) : (
+                            <EtherscanLink
+                              value={token.contractAddress}
+                              type={"token"}
+                              chain={
+                                JB_CHAINS[
+                                  treasuryAnalytics.treasury
+                                    .chain_id as JBChainId
+                                ].chain
+                              }
+                              truncateTo={4}
+                            />
                           )
                         ) : (
-                          <EtherscanLink
-                            value={token.contractAddress}
-                            type={"token"}
-                            chain={
-                              JB_CHAINS[
-                                treasuryAnalytics.treasury.chain_id as JBChainId
-                              ].chain
-                            }
-                            truncateTo={4}
-                          />
-                        ) : (
-                          truncateAddress(
-                            token.contractAddress as Address
-                          )
+                          truncateAddress(token.contractAddress as Address)
                         )}
                         <p>{percentage}%</p>
                       </div>
@@ -218,7 +215,8 @@ export function TreasurySection() {
                     <EthereumAddress
                       address={account.address as Address}
                       chain={JB_CHAINS[account.chain_id as JBChainId].chain}
-                      withEnsName short
+                      withEnsName
+                      short
                     />
                   </div>
                 ))}
@@ -249,7 +247,11 @@ export function TreasurySection() {
                     <EtherscanLink
                       type="address"
                       value={address as Address}
-                      chain={JB_CHAINS[treasuryAnalytics.treasury.chain_id as JBChainId].chain}
+                      chain={
+                        JB_CHAINS[
+                          treasuryAnalytics.treasury.chain_id as JBChainId
+                        ].chain
+                      }
                     >
                       <Link height={18} width={18} />
                     </EtherscanLink>

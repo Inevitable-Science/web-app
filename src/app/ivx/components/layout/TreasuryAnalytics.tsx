@@ -29,8 +29,7 @@ export function IvxTreasuryAnalytics() {
               const percentage =
                 token.totalValue > 0
                   ? (
-                      (token.totalValue /
-                        (treasuryData?.treasuryValue ?? 1)) *
+                      (token.totalValue / (treasuryData?.treasuryValue ?? 1)) *
                       100
                     ).toFixed(2)
                   : "0.00";

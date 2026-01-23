@@ -35,7 +35,7 @@ export function WithdrawActionButton({
   disabled?: boolean;
 }) {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  
+
   const {
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();

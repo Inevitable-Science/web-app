@@ -1,6 +1,5 @@
-import { fetchLatestArticles } from "@/lib/queryFns/articles/fetchLatestArticles"
-import { useQuery } from "@tanstack/react-query"
-
+import { fetchLatestArticles } from "@/lib/queryFns/articles/fetchLatestArticles";
+import { useQuery } from "@tanstack/react-query";
 
 export const useFetchLatestArticles = () => {
   return useQuery({
@@ -10,5 +9,5 @@ export const useFetchLatestArticles = () => {
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
-  })
+  });
 };
