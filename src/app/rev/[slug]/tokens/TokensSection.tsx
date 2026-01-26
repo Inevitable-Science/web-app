@@ -1,8 +1,7 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { ParticipantsDocument } from "@/generated/graphql";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
-import { formatNumber, formatTokenSymbol, truncateAddress } from "@/lib/utils";
+import { formatNumber, formatTokenSymbol } from "@/lib/utils";
 import { ParticipantsTable } from "./ParticipantsTable";
 import { formatUnits } from "viem";
 import Image from "next/image";
@@ -11,7 +10,6 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import {
   useSuckersUserTokenBalance,
   useJBContractContext,
-  useBendystrawQuery,
   useJBChainId,
   useJBProjectMetadataContext,
   useJBTokenContext,
@@ -20,6 +18,7 @@ import { JBProjectToken, JB_CHAINS, jbControllerAbi } from "juice-sdk-core";
 import { useAccount, useReadContract, useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import EtherscanLink from "@/components/EtherscanLink";
+import { SplitSection } from "./SplitSection";
 
 type TableView = "you" | "all" | "splits";
 
@@ -116,6 +115,8 @@ export function HoldersSection() {
   return (
     <section>
       <div className="flex w-full flex-col gap-4">
+        <SplitSection />
+
         {token?.data && (
           <div className="bg-grey-450 rounded-2xl p-[12px]">
             <div className="background-color rounded-xl p-[16px]">

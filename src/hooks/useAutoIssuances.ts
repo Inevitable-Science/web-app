@@ -3,7 +3,7 @@ import {
   AutoIssueEventsDocument,
   StoreAutoIssuanceAmountEventsDocument,
 } from "@/generated/graphql";
-import { JBCoreContracts, jbRulesetsAbi } from "juice-sdk-core";
+import { JBChainId, JBCoreContracts, jbRulesetsAbi } from "juice-sdk-core";
 import {
   useBendystrawQuery,
   useJBChainId,
@@ -12,10 +12,11 @@ import {
 import { useMemo } from "react";
 import { useReadContract } from "wagmi";
 
-export function useAutoIssuances() {
+export function useAutoIssuances(passedChainId?: JBChainId) {
   const { projectId, contractAddress, version } = useJBContractContext();
 
-  const chainId = useJBChainId();
+  const chainIdCtx = useJBChainId();
+  const chainId = passedChainId ? passedChainId : chainIdCtx;
 
   const { data: autoIssuancesData } = useBendystrawQuery(
     StoreAutoIssuanceAmountEventsDocument,
@@ -63,7 +64,7 @@ export function useAutoIssuances() {
         return {
           ...autoIssuance,
           startsAt: rulesets?.[rulesetIndex]?.start,
-          stage: (rulesets?.length || 0) - rulesetIndex,
+          stage: (rulesets?.length || 0) - rulesetIndex, // review - https://github.com/rev-net/revnet-app/commit/a8f6262a0af97a38d67f1fd52e0f17de982b51cc
           distributed: distributed !== undefined,
           distributedTxn,
         };

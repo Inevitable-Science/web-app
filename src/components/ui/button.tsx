@@ -12,12 +12,12 @@ const buttonVariants = cva(
       variant: {
         default: "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
-          "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
+          "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase",
         destructive: "bg-red-900 rounded-lg",
         outline:
           "border border-(--grey-500) rounded-lg hover:bg-grey-450 hover:border-(--grey-100)",
         bottomline:
-          "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
+          "border-b border-primary text-sm rounded-none rounded-t",
         tabSelected:
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         secondary: "rounded-lg background-color",
