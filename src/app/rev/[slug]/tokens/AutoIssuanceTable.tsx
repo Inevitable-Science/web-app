@@ -90,7 +90,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
           const canRelease = (new Date().getTime() / 1000) > Number(issuance.startsAt);
 
           return (
-            <div key={issuance.id} className="grid grid-cols-[1fr_3fr_2fr_2fr_2fr] py-3 border-b border-color text-sm">
+            <div key={issuance.id} className="grid grid-cols-[1fr_3fr_2fr_2fr_2fr] items-center py-3 border-b border-color text-sm">
               <p>{issuance.stage}</p>
               <EthereumAddress
                 address={issuance.beneficiary as Address}
@@ -113,12 +113,13 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
                   Distributed
                 </p>
               ) : canRelease ?
-                !userIsBeneficiary ? (
+                userIsBeneficiary ? (
                   <ButtonWithWallet
-                    disabled={!canRelease}
                     loading={isPending}
                     targetChainId={suckerChainId}
                     onClick={() => distributeSplit(issuance.stageId, issuance.beneficiary as Address)}
+                    variant={"accent"}
+                    className="h-[32px]"
                   >
                     Distribute
                   </ButtonWithWallet>
