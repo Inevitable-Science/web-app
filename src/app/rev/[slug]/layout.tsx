@@ -14,6 +14,7 @@ import { Header } from "./components/layout/Header";
 import { TabSelectorLG, TabSelectorSM } from "./components/layout/TabSelector";
 import { TransactionCard } from "./components/payCard/TransactionCard";
 import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
+import { TransportChainIds } from "@/lib/wagmiConfig";
 
 interface Props {
   children: React.ReactNode;
@@ -83,6 +84,9 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   let config: ReturnType<typeof parseSlug>;
   try {
     config = parseSlug(slug);
+
+    // parseSlug.chainId can return a testnet's chainId
+    if (!TransportChainIds.includes(config.chainId)) throw new Error();
   } catch {
     return notFound();
   }

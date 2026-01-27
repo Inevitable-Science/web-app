@@ -3,8 +3,8 @@ import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 import { JBChainId, jbControllerAbi } from "juice-sdk-core";
 import { useJBContractContext } from "juice-sdk-react";
-import { useState } from "react";
-import { useAccount, useChainId, useWriteContract } from "wagmi";
+import { useEffect, useState } from "react";
+import { useAccount, useChainId, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 interface ReservedTokenSplit {
   percent: number;
@@ -25,6 +25,7 @@ export function DistributeReservedTokensButton({
   selectedChain: JBChainId | undefined;
 }) {
   const [isPending, setIsPending] = useState(false);
+  const [hash, setHash] = useState<`0x${string}` | undefined>();
   const {
     projectId,
     contracts: { controller },
@@ -34,33 +35,44 @@ export function DistributeReservedTokensButton({
   const chainId = useChainId();
   
   const { writeContractAsync } = useWriteContract();
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
+
   const { toast } = useToast();
 
   const mappedBeneficiaries = reservedTokenSplits?.map(s => s.beneficiary);
   const userIsBeneficiary = mappedBeneficiaries?.some(s => s.toLowerCase() === address?.toLocaleLowerCase()) ?? false;
 
-  const distributeSplits = async () => {
-    try {
-      if (!controller.data) return;
-      setIsPending(true);
-
-      await writeContractAsync({
-        abi: jbControllerAbi,
-        functionName: "sendReservedTokensToSplitsOf",
-        chainId,
-        address: controller.data,
-        args: [projectId],
-      });
+  useEffect(() => {
+    if (isSuccess) {
       toast({
         title: "Successfully Distributed",
         description: "Successfully distributed reserved tokens."
       });
-    } catch (err) {
-      console.log(err);
+    } else if (isError) {
       toast({
         title: "Failed To Distribute",
         description: "Couldn't distribute reserved tokens."
       });
+    }
+  }, [isLoading, isSuccess]);
+
+  const distributeSplits = async () => {
+    try {
+      if (!controller.data || !selectedChain) return;
+      setIsPending(true);
+
+      const hash = await writeContractAsync({
+        abi: jbControllerAbi,
+        functionName: "sendReservedTokensToSplitsOf",
+        chainId: selectedChain,
+        address: controller.data,
+        args: [projectId],
+      });
+
+      setHash(hash);
+
+    } catch (err) {
+      console.log(err);
     } finally {
       setIsPending(false);
     }
@@ -71,7 +83,7 @@ export function DistributeReservedTokensButton({
       <ButtonWithWallet
         variant={"accent"}
         onClick={distributeSplits}
-        loading={isPending}
+        loading={isPending || isLoading}
         targetChainId={selectedChain}
         disabled={pendingReserveTokenBalance === 0n}
         className="mt-3"

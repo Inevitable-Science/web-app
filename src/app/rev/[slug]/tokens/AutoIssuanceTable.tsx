@@ -6,37 +6,46 @@ import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { formatUnits, JB_CHAINS, JBChainId, revDeployerAbi, RevnetCoreContracts, SuckerPair } from "juice-sdk-core";
 import { useJBChainId, useJBContractContext } from "juice-sdk-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Address } from "viem";
-import { useAccount, useChainId, useSwitchChain, useWriteContract } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPair | undefined }) {
   const [isPending, setIsPending] = useState(false);
+  const [hash, setHash] = useState<`0x${string}` | undefined>();
+
   const suckerChainId = selectedSucker?.peerChainId;
   const autoIssuance = useAutoIssuances(suckerChainId);
   const chainId = useJBChainId();
 
   const { toast } = useToast();
   const { contractAddress } = useJBContractContext();
-  const { switchChainAsync } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
-
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
   const { address: userAddress } = useAccount();
-  const userChainId = useChainId();
 
   const userIsBeneficiary = autoIssuance?.some(i => i.beneficiary.toLowerCase() === userAddress?.toLowerCase()) ?? false;
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Successfully Distributed",
+        description: "Successfully distributed auto issuances."
+      });
+    } else if (isError) {
+      toast({
+        title: "Failed To Distribute",
+        description: "Couldn't distribute auto issuance."
+      });
+    }
+  }, [isLoading, isSuccess]);
 
   const distributeSplit = async (stageId: bigint, beneficiary: Address) => {
     try {
       if (!userAddress || !suckerChainId) return;
       setIsPending(true);
 
-      if (userChainId !== suckerChainId) {
-        await switchChainAsync({ chainId: suckerChainId });
-      };
-
-      await writeContractAsync({
+      const hash = await writeContractAsync({
         abi: revDeployerAbi,
         functionName: "autoIssueFor",
         address: contractAddress(RevnetCoreContracts.REVDeployer),
@@ -47,16 +56,10 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
           beneficiary,
         ],
       });
-      toast({
-        title: "Successfully Distributed",
-        description: "Successfully distributed auto issuances."
-      });
+      
+      setHash(hash);
     } catch (err) {
       console.log(err);
-      toast({
-        title: "Failed To Distribute",
-        description: "Couldn't distribute auto issuance."
-      });
     } finally {
       setIsPending(false);
     }
@@ -117,7 +120,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
                 ) : canRelease ?
                   userIsBeneficiary ? (
                     <ButtonWithWallet
-                      loading={isPending}
+                      loading={isPending || isLoading}
                       targetChainId={suckerChainId}
                       onClick={() => distributeSplit(issuance.stageId, issuance.beneficiary as Address)}
                       variant={"accent"}
