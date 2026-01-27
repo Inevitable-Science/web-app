@@ -90,7 +90,7 @@ export function SplitSection() {
 
   return (
     <div className="bg-grey-450 rounded-2xl p-[12px]">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
         <div className="flex items-center">
           {selectedSuckerRulesets ?
           selectedSuckerRulesets?.map((ruleset, index) => (
@@ -184,7 +184,7 @@ export function SplitSection() {
       </div>
       
       <div className="text-sm">
-        <div className="grid grid-cols-[4fr_3fr_3fr] my-2">
+        <div className="grid grid-cols-[3.5fr_3fr_3fr] my-2">
           <p>Account</p>
           <p>Percentage</p>
           <p>Pending Splits</p>
@@ -193,7 +193,7 @@ export function SplitSection() {
           {reservedTokenSplits ? 
           reservedTokenSplits.length > 0 ?
           reservedTokenSplits.map(split => (
-            <div key={split.beneficiary} className="grid grid-cols-[4fr_3fr_3fr] py-3 border-b border-color text-sm">
+            <div key={split.beneficiary} className="grid grid-cols-[3.5fr_3fr_3fr] py-3 border-b border-color text-sm">
               <EthereumAddress 
                 address={split.beneficiary} 
                 chain={
@@ -214,8 +214,8 @@ export function SplitSection() {
                     ))
                 )}
                 %
-                <span className="ml-2 text-zinc-500">
-                  ({formatUnits(BigInt(split.percent), 7)}% of limit)
+                <span className="text-muted-foreground lg:inline hidden">
+                  {"  "}({formatUnits(BigInt(split.percent), 7)}% of limit)
                 </span>
               </p>
               

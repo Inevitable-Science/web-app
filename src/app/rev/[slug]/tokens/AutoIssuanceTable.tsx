@@ -67,21 +67,21 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
       <h3 className="text-lg mt-4">
         Auto Issuance
       </h3>
-      <div className="grid grid-cols-[1fr_3fr_2fr_2fr_2fr] my-2 text-sm">
+      <div className="gridContainer my-2 text-sm">
         <p>Stage</p>
         <p>Beneficiary</p>
-        <p>Token Amount</p>
+        <p className="tokenAmountItem">Token Amount</p>
         <p>Unlocks</p>
-        <p>Status</p>
+        <p className="statusItem">Status</p>
       </div>
       <div className="background-color rounded p-3">
         {!autoIssuance ? (
-          <div className="grid grid-cols-[1fr_3fr_2fr_2fr_2fr] py-3 border-b border-color text-sm opacity-40">
+          <div className="gridContainer py-3 border-b border-color text-sm opacity-40">
             <div className="activeSkeleton h-[22px] w-[22px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[94px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm tokenAmountItem" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm statusItem" />
           </div>
         ) : autoIssuance.length > 0 ?
         autoIssuance?.map(issuance => {
@@ -90,7 +90,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
           const canRelease = (new Date().getTime() / 1000) > Number(issuance.startsAt);
 
           return (
-            <div key={issuance.id} className="grid grid-cols-[1fr_3fr_2fr_2fr_2fr] items-center py-3 border-b border-color text-sm">
+            <div key={issuance.id} className="gridContainer items-center py-3 border-b border-color text-sm">
               <p>{issuance.stage}</p>
               <EthereumAddress
                 address={issuance.beneficiary as Address}
@@ -98,7 +98,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
                 className="w-fit"
                 withEnsName short
               />
-              <p>
+              <p className="tokenAmountItem">
                 {formatNumber(
                   Number(
                     formatUnits(issuance.count, 18)
@@ -108,30 +108,33 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
               <p>
                 {formatDate(releaseDate, true)}
               </p>
-              {issuance.distributed ? (
-                <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
-                  Distributed
-                </p>
-              ) : canRelease ?
-                userIsBeneficiary ? (
-                  <ButtonWithWallet
-                    loading={isPending}
-                    targetChainId={suckerChainId}
-                    onClick={() => distributeSplit(issuance.stageId, issuance.beneficiary as Address)}
-                    variant={"accent"}
-                    className="h-[32px]"
-                  >
-                    Distribute
-                  </ButtonWithWallet>
-                ) : (
+
+              <div className="statusItem">
+                {issuance.distributed ? (
                   <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
-                    Unlocked
+                    Distributed
                   </p>
-                ) : (
-                  <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
-                    Locked
-                  </p>
-                )}
+                ) : canRelease ?
+                  userIsBeneficiary ? (
+                    <ButtonWithWallet
+                      loading={isPending}
+                      targetChainId={suckerChainId}
+                      onClick={() => distributeSplit(issuance.stageId, issuance.beneficiary as Address)}
+                      variant={"accent"}
+                      className="h-[32px]"
+                    >
+                      Distribute
+                    </ButtonWithWallet>
+                  ) : (
+                    <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
+                      Unlocked
+                    </p>
+                  ) : (
+                    <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
+                      Locked
+                    </p>
+                  )}
+                </div>
               </div>
             )
           }
@@ -143,6 +146,57 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
           </div>
         )}
       </div>
+
+      <style>{`
+      .gridContainer {
+        display: grid;
+        grid-template-columns: 1fr 2.5fr 2fr 2fr 2fr;
+      }
+      
+      @media (min-width:1024px) and (max-width:1140px) {
+        .statusItem {
+          display: none;
+        }
+
+        .gridContainer {
+          display: grid;
+          grid-template-columns: 1fr 2.5fr 2fr 2fr;
+        }
+      }
+
+      @media (min-width:768px) and (max-width:930px) {
+        .statusItem {
+          display: none;
+        }
+
+        .gridContainer {
+          display: grid;
+          grid-template-columns: 1fr 2.5fr 2fr 2fr;
+        }
+      }
+
+      @media (max-width:590px) {
+        .statusItem {
+          display: none;
+        }
+
+        .gridContainer {
+          display: grid;
+          grid-template-columns: 1fr 2.5fr 2fr 2fr;
+        }
+      }
+
+      @media (max-width:470px) {
+        .tokenAmountItem {
+          display: none;
+        }
+
+        .gridContainer {
+          display: grid;
+          grid-template-columns: 1fr 2.5fr 2fr;
+        }
+      }
+      `}</style>
     </>
   )
 }
