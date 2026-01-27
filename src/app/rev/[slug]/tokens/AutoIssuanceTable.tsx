@@ -70,7 +70,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
       <h3 className="text-lg mt-4">
         Auto Issuance
       </h3>
-      <div className="gridContainer my-2 text-sm">
+      <div className="gridContainer my-2 text-sm gap-1 sm:gap-0">
         <p>Stage</p>
         <p>Beneficiary</p>
         <p className="tokenAmountItem">Token Amount</p>
@@ -81,7 +81,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
         {!autoIssuance ? (
           <div className="gridContainer py-3 border-b border-color text-sm opacity-40">
             <div className="activeSkeleton h-[22px] w-[22px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[94px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[64px] sm:w-[94px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm tokenAmountItem" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm statusItem" />

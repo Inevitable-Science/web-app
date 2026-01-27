@@ -108,7 +108,7 @@ export function TransactionCard() {
               </Button>
             )}
           </div>
-          <div className={`background-color flex rounded-full p-1 pr-2`}>
+          <div className="chainIndicator background-color flex rounded-full p-1 pr-2">
             {suckers.map((chain) => (
               <div key={chain.peerChainId} className="w-[16px]">
                 <ChainLogo
@@ -133,6 +133,14 @@ export function TransactionCard() {
           )}
         </div>
       </div>
+
+      <style>{`
+      @media (max-width:400px) {
+        .chainIndicator {
+          display: none;
+        }
+      }
+      `}</style>
     </div>
   );
 }

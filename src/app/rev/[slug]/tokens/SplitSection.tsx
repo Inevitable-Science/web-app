@@ -91,7 +91,7 @@ export function SplitSection() {
   return (
     <div className="bg-grey-450 rounded-2xl p-[12px]">
       <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
-        <div className="flex items-center">
+        <div className="flex items-center flex-wrap">
           {selectedSuckerRulesets ?
           selectedSuckerRulesets?.map((ruleset, index) => (
             <Button 
@@ -106,7 +106,7 @@ export function SplitSection() {
               }
             </Button>
           )) : (
-            <>
+            <div className="flex items-center flex-wrap">
               <Button 
                 variant={"bottomline"}
                 className="w-[84px] flex justify-center items-center"
@@ -128,7 +128,7 @@ export function SplitSection() {
               >
                 <div className="activeSkeleton h-[22px] w-full rounded-sm" />
               </Button>
-            </>
+            </div>
           )}
         </div>
 
@@ -184,7 +184,7 @@ export function SplitSection() {
       </div>
       
       <div className="text-sm">
-        <div className="grid grid-cols-[3.5fr_3fr_3fr] my-2">
+        <div className="grid grid-cols-[3.5fr_3fr_3fr] my-2 gap-1 sm:gap-0">
           <p>Account</p>
           <p>Percentage</p>
           <p>Pending Splits</p>
@@ -193,7 +193,7 @@ export function SplitSection() {
           {reservedTokenSplits ? 
           reservedTokenSplits.length > 0 ?
           reservedTokenSplits.map(split => (
-            <div key={split.beneficiary} className="grid grid-cols-[3.5fr_3fr_3fr] py-3 border-b border-color text-sm">
+            <div key={split.beneficiary} className="grid grid-cols-[3.5fr_3fr_3fr] items-center py-3 border-b border-color text-sm gap-1 sm:gap-0">
               <EthereumAddress 
                 address={split.beneficiary} 
                 chain={
@@ -243,9 +243,9 @@ export function SplitSection() {
             </div>
           ) : (
           <div className="grid grid-cols-[4fr_3fr_3fr] py-3 border-b border-color text-sm opacity-40">
-            <div className="activeSkeleton h-[22px] w-[112px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[44px] sm:w-[112px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[32px] sm:w-[64px] rounded-sm" />
+            <div className="activeSkeleton h-[22px] w-[32px] sm:w-[64px] rounded-sm" />
           </div>
         )}
         </div>
