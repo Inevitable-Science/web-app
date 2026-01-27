@@ -212,11 +212,6 @@ export function PayActionButton({
       }
     } catch (err) {
       console.error("Payment failed:", err);
-      toast({
-        variant: "destructive",
-        title: "Payment Failed",
-        description: formatWalletError(err),
-      });
     }
   };
 

@@ -1,8 +1,7 @@
 "use client";
 import { JBChainId } from "juice-sdk-react";
-import { NATIVE_TOKEN, USDC_ADDRESSES } from "juice-sdk-core";
+import { NATIVE_TOKEN, SuckerPair, USDC_ADDRESSES } from "juice-sdk-core";
 import { Address } from "viem";
-import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { Token } from "@/lib/token";
 import Image from "next/image";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -16,45 +15,48 @@ import {
 import { ChevronDown } from "lucide-react";
 
 interface ChainSelectorProps {
-  value: Token;
-  handleChainChange?: (selected: { chainId: JBChainId }) => void;
-  handleTokenChange?: (selected: { address: Address }) => void;
+  currentToken: Token;
+  tokenOptions: Token[];
+  selectedSucker: SuckerPair;
+  suckers: SuckerPair[] | undefined;
+  handleChainChange: (selected: { chainId: JBChainId }) => void;
+  handleTokenChange: (selected: { address: Address }) => void;
   disabled?: boolean;
-  options: Token[];
 }
 
 export interface TokenWithChain extends Token {
   chainId: JBChainId;
 }
 
-export const ChainSelector = ({
-  value,
+export const TokenAndChainSelector = ({
+  currentToken,
+  tokenOptions,
+  selectedSucker,
+  suckers,
   handleChainChange,
   handleTokenChange,
   disabled,
-  options,
 }: ChainSelectorProps) => {
-  const suckers = useRevnetDataStore((state) => state.suckers);
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  //const suckers = useRevnetDataStore((state) => state.suckers);
+  //const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
 
   return (
     <Select
       onValueChange={(value: Address) => {
-        handleTokenChange ? handleTokenChange({ address: value }) : undefined;
+        handleTokenChange({ address: value });
       }}
       disabled={disabled}
-      defaultValue={String(value.address)}
+      defaultValue={String(currentToken.address)}
     >
       <SelectTrigger
         className="text-color bg-grey-450 h-fit w-fit rounded-full border-none px-1.5 pt-1.5 pb-0 text-xs"
         aria-label="Select Chain"
         hideChevron
       >
-        {value ? (
+        {currentToken ? (
           <div className="flex items-center pb-1.5 font-light select-none">
             <div className="mr-1 flex items-end">
-              {USDC_ADDRESSES[selectedSucker.peerChainId].toLowerCase() ===
-              value.address.toLowerCase() ? (
+              {!currentToken.isNative ? (
                 <Image
                   src={
                     "https://cdn.inevitable.science/static/img/logo/usdc.svg"
@@ -80,7 +82,7 @@ export const ChainSelector = ({
                 />
               </div>
             </div>
-            <p className="mr-1 text-[18px]">{value.symbol}</p>
+            <p className="mr-1 text-[18px]">{currentToken.symbol}</p>
             <ChevronDown className="h-4 w-4 opacity-50" />
           </div>
         ) : (
@@ -94,11 +96,9 @@ export const ChainSelector = ({
               <Button
                 key={sucker.peerChainId}
                 onClick={() => {
-                  handleChainChange
-                    ? handleChainChange({
-                        chainId: sucker.peerChainId,
-                      })
-                    : undefined;
+                  handleChainChange({
+                    chainId: sucker.peerChainId,
+                  });
                 }}
                 className={`${selectedSucker.peerChainId === sucker.peerChainId && "bg-grey-500! border-(--grey-100)"} rounded-xl`}
                 variant={"outline"}
@@ -115,7 +115,7 @@ export const ChainSelector = ({
         </div>
 
         <div className="border-color mb-2 w-full rounded-full border border-b-[0.5px]" />
-        {options.map((token, index) => {
+        {tokenOptions.map((token, index) => {
           return (
             <SelectItem
               key={`${token.address}-${index}`}

@@ -153,7 +153,7 @@ export function PayActionButton({
           return;
         }
 
-        await writeContractAsync?.({
+        await writeContractAsync({
           abi: jbMultiTerminalAbi,
           functionName: "pay",
           chainId: selectedSucker.peerChainId,
@@ -187,7 +187,7 @@ export function PayActionButton({
           ? 0n
           : (amountB.amount.value * 95n) / 100n;
 
-        await writeContractAsync?.({
+        await writeContractAsync({
           abi: terminal.abi,
           functionName: "pay",
           chainId,
@@ -206,11 +206,6 @@ export function PayActionButton({
       }
     } catch (err) {
       console.error("Payment failed:", err);
-      toast({
-        variant: "destructive",
-        title: "Payment Failed",
-        description: formatWalletError(err),
-      });
     }
   };
 

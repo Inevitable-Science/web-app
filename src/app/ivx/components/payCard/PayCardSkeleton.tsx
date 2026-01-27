@@ -1,15 +1,16 @@
-import { ChainSelector } from "./ChainSelect";
+import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 import { Button } from "@/components/ui/button";
 import { Token } from "@/lib/token";
 import Image from "next/image";
+import { useJBChainId } from "juice-sdk-react";
 
 export function PayCardSkeleton({
   selectedToken,
-  tokens,
 }: {
   selectedToken: Token;
-  tokens: Token[];
 }) {
+  const chainId = useJBChainId();
+
   return (
     <div className="bg-grey-450 flex flex-col rounded-xl p-[10px]">
       <div className="flex flex-col gap-2">
@@ -19,10 +20,14 @@ export function PayCardSkeleton({
             <div className="activeSkeleton mt-1 h-[30px] w-[130px] max-w-full rounded-lg opacity-30" />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <ChainSelector
-              value={selectedToken}
-              options={tokens}
-              disabled={true}
+            <TokenAndChainSelector
+              currentToken={selectedToken}
+              tokenOptions={[]}
+              selectedSucker={{ peerChainId: chainId!, projectId: 0n }}
+              suckers={[]}
+              handleChainChange={() => null}
+              handleTokenChange={() => null}
+              disabled
             />
             <div className="flex items-center justify-end gap-1">
               <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap">

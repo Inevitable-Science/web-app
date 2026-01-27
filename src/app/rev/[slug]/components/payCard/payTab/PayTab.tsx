@@ -16,7 +16,6 @@ import {
 } from "juice-sdk-core";
 import { formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
-import { ChainSelector } from "./ChainSelector";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
@@ -26,6 +25,7 @@ import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRulesetData } from "@/hooks/useRulesetData";
+import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 
 export function PayTab({
   tokens,
@@ -219,12 +219,14 @@ export function PayTab({
           </div>
           <div className="flex flex-col items-end gap-1">
             <div className="bg-grey-450 flex w-fit items-center justify-end gap-2 rounded-full">
-              <ChainSelector
-                disabled={!suckers /* || suckers.length <= 1*/}
-                value={selectedToken}
+              <TokenAndChainSelector
+                currentToken={selectedToken}
+                tokenOptions={tokens}
+                selectedSucker={selectedSucker}
+                suckers={suckers}
                 handleChainChange={handleChainChange}
                 handleTokenChange={handleTokenChange}
-                options={tokens}
+                disabled={!suckers}
               />
             </div>
 

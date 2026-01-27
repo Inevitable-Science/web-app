@@ -16,7 +16,6 @@ import { FixedInt } from "fpnum";
 
 import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
-import { ChainSelector } from "./ChainSelect";
 
 import { formatTokenSymbol } from "@/lib/utils";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
@@ -26,6 +25,7 @@ import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 
 export function TransactionCard() {
   const suckers = useRevnetDataStore((state) => state.suckers);
@@ -192,7 +192,7 @@ export function TransactionCard() {
   };
 
   if (!balances || !suckers) {
-    return <PayCardSkeleton selectedToken={selectedToken} tokens={tokens} />;
+    return <PayCardSkeleton selectedToken={selectedToken} />;
   }
 
   return (
@@ -207,12 +207,14 @@ export function TransactionCard() {
             />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <ChainSelector
-              disabled={!suckers || suckers.length <= 1}
-              value={selectedToken}
+            <TokenAndChainSelector
+              currentToken={selectedToken}
+              tokenOptions={tokens}
+              selectedSucker={selectedSucker}
+              suckers={suckers}
               handleChainChange={handleChainChange}
               handleTokenChange={handleTokenChange}
-              options={tokens}
+              disabled={!suckers || suckers.length <= 1}
             />
             <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
