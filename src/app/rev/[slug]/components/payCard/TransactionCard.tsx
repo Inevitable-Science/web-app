@@ -107,6 +107,16 @@ export function TransactionCard() {
                 Withdraw
               </Button>
             )}
+            {/*<Button
+              onClick={() => setActiveTab("loan")}
+              className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
+                activeTab === "loan"
+                  ? "border-cerulean text-white"
+                  : "text-muted-foreground border-transparent"
+              }`}
+            >
+              Loan
+            </Button>*/}
           </div>
           <div className="chainIndicator background-color flex rounded-full p-1 pr-2">
             {suckers.map((chain) => (

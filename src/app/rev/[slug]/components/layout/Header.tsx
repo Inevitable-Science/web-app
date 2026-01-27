@@ -15,7 +15,7 @@ import {
 } from "juice-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { Address, formatEther, formatUnits } from "viem";
+import { Address, formatUnits } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { JB_CHAINS } from "juice-sdk-core";
@@ -80,6 +80,7 @@ export function Header() {
       id: project?.suckerGroupId ?? "",
     });
   const suckerGroup = suckerGroupData?.suckerGroup;
+  const suckerGroupBalance = suckerGroup?.projects?.items.reduce((acc, project) => acc + project.balance, 0n);
   const projectBaseTokenDecimals =
     suckerGroup?.projects?.items[0].decimals ?? 18;
 
@@ -181,11 +182,11 @@ export function Header() {
                     {projectBaseTokenDecimals === 18 ? "Ξ" : "$"}
                     {suckerGroupIsLoading ? (
                       <div className="activeSkeleton h-[28px] w-[58px] rounded-sm" />
-                    ) : suckerGroup?.volume ? (
+                    ) : suckerGroupBalance ? (
                       formatNumber(
                         parseFloat(
                           formatUnits(
-                            suckerGroup.volume,
+                            suckerGroupBalance,
                             projectBaseTokenDecimals
                           )
                         )

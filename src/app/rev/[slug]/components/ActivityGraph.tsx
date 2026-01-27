@@ -21,7 +21,9 @@ import {
 import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
 import { useVolumeData } from "@/hooks/useVolumeData"; // 1. Import the data hook
-import { formatEther } from "viem";
+import { formatUnits } from "viem";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { formatNumber } from "@/lib/utils";
 
 // Export types for clarity and potential external use
 export interface ProjectTimelinePoint {
@@ -47,6 +49,7 @@ export default function ActivityGraph({
   // 2. Internal state management for the chart's UI controls
   const [view, setView] = useState<ProjectTimelineView>("volume");
   const [range, setRange] = useState<ProjectTimelineRange>(30);
+  const baseToken = useProjectBaseToken();
 
   // 3. Internal data fetching logic
   const loadTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [range]); // Recalculate when range changes to force refetch
@@ -69,14 +72,14 @@ export default function ActivityGraph({
     dailyTotals.forEach((day) => {
       // Normalize the date to a string key to avoid timezone issues.
       const dateKey = day.date.toISOString().split("T")[0];
-      volumeMap.set(dateKey, Number(formatEther(day.volume)));
+      volumeMap.set(dateKey, Number(formatUnits(day.volume, baseToken.decimals)));
     });
 
     const fullData: ProjectTimelinePoint[] = [];
 
     let initialCumulativeVolume = dailyTotals
       .filter((day) => day.date.getTime() < startTimestamp)
-      .reduce((sum, day) => sum + Number(formatEther(day.volume)), 0);
+      .reduce((sum, day) => sum + Number(formatUnits(day.volume, baseToken.decimals)), 0);
 
     // 2. Loop through every day in the selected date range.
     for (let i = 0; i <= range; i++) {
@@ -289,7 +292,8 @@ export default function ActivityGraph({
                         fill={color}
                         transform={`translate(${props.x + 4},${props.y + 4})`}
                       >
-                        Ξ{formattedValue}
+                        {baseToken.isNative ? "Ξ" : "$"}
+                        {formattedValue}
                       </text>
                     </g>
                   );
@@ -347,8 +351,8 @@ export default function ActivityGraph({
                       </div>
                       {view !== "trendingScore" && (
                         <div className="font-medium">
-                          Ξ
-                          {amount.toFixed(amount > 10 ? 1 : amount > 1 ? 2 : 4)}
+                          {baseToken.isNative ? "Ξ" : "$"}
+                          {formatNumber(amount)}
                         </div>
                       )}
                     </div>

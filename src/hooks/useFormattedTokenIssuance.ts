@@ -24,6 +24,7 @@ export function useFormattedTokenIssuance(params?: TokenIssuanceParams) {
   const tokenA = useTokenA();
   const { token: tokenB } = useJBTokenContext();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
+  const decimals = tokenB.data?.decimals ?? 18;
 
   if (!ruleset?.data || !rulesetMetadata?.data) {
     return;
@@ -38,7 +39,7 @@ export function useFormattedTokenIssuance(params?: TokenIssuanceParams) {
       reservedPercent,
     }
   );
-  const amount = formatUnits(quote.payerTokens, 18);
+  const amount = formatUnits(quote.payerTokens, decimals);
   const formattedAmount = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 3,
   }).format(Number(amount));

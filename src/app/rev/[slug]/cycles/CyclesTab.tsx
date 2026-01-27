@@ -13,7 +13,7 @@ import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
-import { formatEther } from "viem";
+import { formatEther, formatUnits } from "viem";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
 import { decodeRulesetMetadata } from "@/lib/utils";
 import {
@@ -21,6 +21,7 @@ import {
   ProjectionRange,
 } from "./issuanceChart/IssuancePriceChart";
 import { useFormattedTokenIssuance } from "@/hooks/useFormattedTokenIssuance";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 
 export function NetworkDetailsTable() {
   const [selectedStageIdx, setSelectedStageIdx] = useState<number | null>(null);
@@ -31,10 +32,12 @@ export function NetworkDetailsTable() {
   //const { ruleset: currentRuleset, project } = useProjectContext();
   const project = useRevnetDataStore((state) => state.project);
   const currentRuleset = useRevnetDataStore((state) => state.ruleset);
+  const baseToken = useProjectBaseToken();
   const { data: nativeTokenSurplus } = useNativeTokenSurplus();
   const currentIssuance = useFormattedTokenIssuance({
     reservedPercent: new ReservedPercent(0),
   });
+  console.log(project.volume, "vol");
 
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
@@ -144,7 +147,7 @@ export function NetworkDetailsTable() {
 
   const availableToPayout = useMemo(() => {
     if (!nativeTokenSurplus || !tokenData?.reservedRate) return 0;
-    const surplusInEther = parseFloat(formatEther(nativeTokenSurplus));
+    const surplusInEther = parseFloat(formatUnits(nativeTokenSurplus, baseToken.decimals));
     const reservedRateNumber = parseFloat(
       tokenData.reservedRate.replace("%", "")
     );
@@ -347,7 +350,7 @@ export function NetworkDetailsTable() {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
-              Ξ{parseFloat(formatEther(project.volume)).toFixed(2)}
+              Ξ{parseFloat(formatUnits(project.volume, baseToken.decimals))}
             </h3>
             <p className="text-muted-foreground text-sm font-light uppercase">
               Total Raised
