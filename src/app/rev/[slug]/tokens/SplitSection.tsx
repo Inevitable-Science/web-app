@@ -193,7 +193,7 @@ export function SplitSection() {
           {reservedTokenSplits ? 
           reservedTokenSplits.length > 0 ?
           reservedTokenSplits.map(split => (
-            <div key={split.beneficiary} className="grid grid-cols-[3.5fr_3fr_3fr] items-center py-3 border-b border-color text-sm gap-1 sm:gap-0">
+            <div key={split.beneficiary} className="grid grid-cols-[3.5fr_3fr_3fr] items-center py-3 border-b border-grey-450 text-sm gap-1 sm:gap-0">
               <EthereumAddress 
                 address={split.beneficiary} 
                 chain={
@@ -242,7 +242,7 @@ export function SplitSection() {
               </p>
             </div>
           ) : (
-          <div className="grid grid-cols-[4fr_3fr_3fr] py-3 border-b border-color text-sm opacity-40">
+          <div className="grid grid-cols-[4fr_3fr_3fr] py-3 border-b border-grey-450 text-sm opacity-40">
             <div className="activeSkeleton h-[22px] w-[44px] sm:w-[112px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[32px] sm:w-[64px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[32px] sm:w-[64px] rounded-sm" />

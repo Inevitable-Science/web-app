@@ -231,7 +231,7 @@ export function SchedulesSection({
                   return (
                     <div
                       key={schedule.id}
-                      className="border-color parentTable grid items-center border-b py-3"
+                      className="border-grey-450 parentTable grid items-center border-b py-3"
                     >
                       <EthereumAddress
                         address={schedule.beneficiary as Address}
@@ -334,7 +334,7 @@ export function SchedulesSection({
                     return (
                       <div
                         key={schedule.id}
-                        className="border-color parentTable grid items-center border-b py-3"
+                        className="border-grey-450 parentTable grid items-center border-b py-3"
                       >
                         <EthereumAddress
                           address={schedule.beneficiary as Address}

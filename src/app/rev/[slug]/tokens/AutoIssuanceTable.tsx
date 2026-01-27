@@ -79,7 +79,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
       </div>
       <div className="background-color rounded p-3">
         {!autoIssuance ? (
-          <div className="gridContainer py-3 border-b border-color text-sm opacity-40">
+          <div className="gridContainer py-3 border-b border-grey-450 text-sm opacity-40">
             <div className="activeSkeleton h-[22px] w-[22px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[64px] sm:w-[94px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm tokenAmountItem" />
@@ -93,7 +93,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
           const canRelease = (new Date().getTime() / 1000) > Number(issuance.startsAt);
 
           return (
-            <div key={issuance.id} className="gridContainer items-center py-3 border-b border-color text-sm">
+            <div key={issuance.id} className="gridContainer items-center py-3 border-b border-grey-450 text-sm">
               <p>{issuance.stage}</p>
               <EthereumAddress
                 address={issuance.beneficiary as Address}
