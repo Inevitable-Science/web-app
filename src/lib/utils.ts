@@ -45,10 +45,19 @@ export function truncateAddress(address: Address) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-export function formatNumber(num: number | null, compact = false): string {
+export function formatNumber(passedNum: number | string | null, compact?: undefined | boolean): string {
+  const num = passedNum ? Number(passedNum) : null;
   if (num === null || isNaN(num)) return "--";
 
   if (num === 0) return "0";
+
+  if (compact === false) {
+    if (num < 1) {
+      return Number(num.toPrecision(3)).toString(); // removes trailing 0's
+    }
+
+    return Number(num.toFixed(3)).toString();
+  };
 
   if (compact) {
     const absNum = Math.abs(num);

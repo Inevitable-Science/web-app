@@ -1,4 +1,4 @@
-/*
+
 // Include Testnets
 import { cache } from "react";
 import { createPublicClient } from "viem";
@@ -111,9 +111,9 @@ export const getViemPublicClient = cache((chainId: ViemChainIdType) => {
     chain: chains.find((chain) => chain.id === chainId),
     transport,
   });
-});*/
+});
 
-
+/*
 import { cache } from "react";
 import { createPublicClient } from "viem";
 import { arbitrum, base, mainnet, optimism } from "viem/chains";
@@ -208,3 +208,4 @@ export const getViemPublicClient = cache((chainId: ViemChainIdType) => {
     transport,
   });
 });
+*/

@@ -16,6 +16,7 @@ import { PayCardSkeleton } from "./PayCardSkeleton";
 import { PayTab } from "./payTab/PayTab";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { formatSeconds } from "@/lib/utils";
+import { LoanTab } from "./loanTab/LoanTab";
 
 export function TransactionCard() {
   const project = useRevnetDataStore((state) => state.project);
@@ -46,7 +47,7 @@ export function TransactionCard() {
     [peerChainId, version]
   );
 
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw">("buy");
+  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">("buy");
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
   useEffect(() => {
@@ -95,7 +96,7 @@ export function TransactionCard() {
             >
               Buy
             </Button>
-            {rulesetMetadata?.useTotalSurplusForCashOuts && (
+            {rulesetMetadata?.useTotalSurplusForCashOuts && hasStarted && (
               <Button
                 onClick={() => setActiveTab("withdraw")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
@@ -107,16 +108,18 @@ export function TransactionCard() {
                 Withdraw
               </Button>
             )}
-            {/*<Button
-              onClick={() => setActiveTab("loan")}
-              className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
-                activeTab === "loan"
-                  ? "border-cerulean text-white"
-                  : "text-muted-foreground border-transparent"
-              }`}
-            >
-              Loan
-            </Button>*/}
+            {hasStarted && version === 5 && (
+              <Button
+                onClick={() => setActiveTab("loan")}
+                className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
+                  activeTab === "loan"
+                    ? "border-cerulean text-white"
+                    : "text-muted-foreground border-transparent"
+                }`}
+              >
+                Loan
+              </Button>
+            )}
           </div>
           <div className="chainIndicator background-color flex rounded-full p-1 pr-2">
             {suckers.map((chain) => (
@@ -132,15 +135,17 @@ export function TransactionCard() {
         </div>
 
         <div className="my-4">
-          {activeTab === "buy" ? (
+          {activeTab === "buy" && 
             <PayTab
               tokens={tokens}
               selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}
             />
-          ) : (
-            <WithdrawTab />
-          )}
+          }
+
+          {activeTab === "withdraw" && <WithdrawTab />}
+
+          {activeTab === "loan" && <LoanTab />}
         </div>
       </div>
 
