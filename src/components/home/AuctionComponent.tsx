@@ -74,11 +74,9 @@ export default async function AuctionComponent() {
                 {suckerGroupVol
                   ? Number(
                       formatNumber(
-                        Number(
-                          formatUnits(
-                            suckerGroupVol.volume,
-                            suckerGroupVol.decimals
-                          )
+                        formatUnits(
+                          suckerGroupVol.volume,
+                          suckerGroupVol.decimals
                         ),
                         true
                       )

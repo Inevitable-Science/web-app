@@ -17,7 +17,7 @@ import { FixedInt } from "fpnum";
 import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
 
-import { formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, formatTokenSymbol } from "@/lib/utils";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
@@ -107,15 +107,8 @@ export function TransactionCard() {
         selectedToken
       );
       const numberPayerTokens = Number(payerTokens);
-
-      if (numberPayerTokens < 0) {
-        // Round 3 to sigfigs then remove trailing 0's
-        // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
-        return;
-      }
-
-      setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
+      const formattedAmountB = formatNumber(numberPayerTokens, false);
+      setAmountB(formattedAmountB);
       return;
     }
   };
@@ -139,12 +132,8 @@ export function TransactionCard() {
     );
 
     const numberPayerTokens = Number(quote.format());
-    if (numberPayerTokens < 1) {
-      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
-      return;
-    }
-
-    setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
+    const formattedAmountA = formatNumber(numberPayerTokens, false);
+    setAmountA(formattedAmountA);
     return;
   };
 

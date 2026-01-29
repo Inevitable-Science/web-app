@@ -85,7 +85,7 @@ const renderActiveShape = (props: ActiveShapeProps): JSX.Element => {
         </tspan>
         <tspan x={cx} dy="1.3em" className="text-sm">
           {/*{payload.percent}% of total supply*/}
-          {formatNumber(Number(payload.percent))}% of total supply
+          {formatNumber(payload.percent)}% of total supply
         </tspan>
       </text>
       <Sector

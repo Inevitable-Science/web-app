@@ -124,9 +124,7 @@ export function HoldersSection() {
                 {totalBalance &&
                   token.data &&
                   formatNumber(
-                    Number(
-                      formatUnits(totalBalance.value, token.data?.decimals)
-                    ),
+                    formatUnits(totalBalance.value, token.data?.decimals),
                     false
                   )}
               </h3>
@@ -182,7 +180,7 @@ export function HoldersSection() {
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
               {project.tokenSupply
-                ? formatNumber(Number(formatUnits(project.tokenSupply, 18)))
+                ? formatNumber(formatUnits(project.tokenSupply, 18))
                 : "Token Error"}
             </h3>
             <p className="text-muted-foreground font-light uppercase">
@@ -196,11 +194,9 @@ export function HoldersSection() {
             <h3 className="text-xl">
               {pendingReserveTokenBalance && token.data?.decimals
                 ? formatNumber(
-                    Number(
-                      formatUnits(
-                        pendingReserveTokenBalance,
-                        token.data?.decimals
-                      )
+                    formatUnits(
+                      pendingReserveTokenBalance,
+                      token.data?.decimals
                     ),
                     false
                   )

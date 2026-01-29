@@ -330,9 +330,7 @@ export default function ClientTable() {
                 ) : (
                   <span>
                     {formatNumber(
-                      Number(
-                        formatUnits(v4Balances[project.projectID] as bigint, 18)
-                      )
+                      formatUnits(v4Balances[project.projectID] as bigint, 18)
                     )}
                   </span>
                 )}

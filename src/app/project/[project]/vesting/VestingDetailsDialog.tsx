@@ -187,7 +187,7 @@ export function VestingDetailsDialog({
                 <p className="text-muted-foreground text-sm font-light">
                   Total Tokens
                 </p>
-                <p>{formatNumber(Number(formatEther(schedule.amountTotal)))}</p>
+                <p>{formatNumber(formatEther(schedule.amountTotal))}</p>
               </div>
 
               <div className="background-color flex flex-col rounded p-2">
@@ -195,7 +195,7 @@ export function VestingDetailsDialog({
                   Releasable Tokens
                 </p>
                 <p>
-                  {formatNumber(Number(formatEther(schedule.releasableAmount)))}
+                  {formatNumber(formatEther(schedule.releasableAmount))}
                 </p>
               </div>
             </div>
@@ -204,7 +204,7 @@ export function VestingDetailsDialog({
               <p className="text-muted-foreground text-sm font-light">
                 Released Tokens
               </p>
-              <p>{formatNumber(Number(formatEther(schedule.released)))}</p>
+              <p>{formatNumber(formatEther(schedule.released))}</p>
             </div>
 
             <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2">

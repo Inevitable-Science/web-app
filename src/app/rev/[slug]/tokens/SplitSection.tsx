@@ -207,11 +207,10 @@ export function SplitSection() {
 
               <p>
                 {formatNumber(
-                  Number(
-                    formatUnits(
-                      BigInt((split.percent * Number(splitLimit)) / 100),
-                      7
-                    ))
+                  formatUnits(
+                    BigInt((split.percent * Number(splitLimit)) / 100),
+                    7
+                  )
                 )}
                 %
                 <span className="text-muted-foreground lg:inline hidden">
@@ -224,12 +223,12 @@ export function SplitSection() {
                   pendingReserveTokenBalance === 0n
                     ? `
                     ${formatNumber(
-                      Number(formatUnits(
+                      formatUnits(
                       (pendingReserveTokenBalance *
                         BigInt(split.percent)) /
                         BigInt(10 ** 9),
                       18
-                    )))}
+                    ))}
                     ${formatTokenSymbol(token.data?.symbol)}
                   `
                     : "--"}

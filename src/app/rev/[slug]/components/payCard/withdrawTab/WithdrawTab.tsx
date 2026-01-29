@@ -82,10 +82,7 @@ export function WithdrawTab() {
   const currentChainBalNum = Number(currentChainBalanceObj?.format());
 
   const receiveAmount = unitValue * Number(withdrawAmount);
-  const receiveAmountString =
-    receiveAmount < 1
-      ? Number(receiveAmount).toPrecision(3)
-      : receiveAmount.toFixed(3);
+  const receiveAmountString = formatNumber(receiveAmount, false);
 
   const setManualWithdrawAmount = (percentage: number) => {
     if (percentage === 100) {
@@ -102,10 +99,7 @@ export function WithdrawTab() {
 
     if (percentage < 0 || percentage > 99) return;
     const withdrawAmount = (currentChainBalNum / 100) * percentage;
-    const withdrawAmountString =
-      withdrawAmount < 1
-        ? withdrawAmount.toPrecision(3)
-        : withdrawAmount.toFixed(3);
+    const withdrawAmountString = formatNumber(withdrawAmount, false);
 
     setWithdrawAmount(withdrawAmountString);
     return;

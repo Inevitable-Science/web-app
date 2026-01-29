@@ -99,7 +99,7 @@ export const WithdrawSelector = ({
             const formattedBalance =
               suckersBalance
                 ?.find((s) => s.chainId === sucker.peerChainId)
-                ?.balance?.format?.() ?? null;
+                ?.balance?.format() ?? null;
 
             return (
               <SelectItem
@@ -139,7 +139,7 @@ export const WithdrawSelector = ({
                   </span>
 
                   <span className="text-muted-foreground text-xs">
-                    {formatNumber(Number(formattedBalance))}
+                    {formatNumber(formattedBalance)}
                   </span>
                 </div>
               </SelectItem>

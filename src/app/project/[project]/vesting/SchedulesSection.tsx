@@ -4,6 +4,7 @@ import { Address, formatEther, getContract } from "viem";
 import {
   useAccount,
   useChainId,
+  usePublicClient,
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
@@ -343,9 +344,7 @@ export function SchedulesSection({
                           withEnsName
                         />
                         <p className="tokenAmountTableElement">
-                          {formatNumber(
-                            Number(formatEther(schedule.amountTotal))
-                          )}
+                          {formatNumber(formatEther(schedule.amountTotal))}
                         </p>
                         <p className="startTableElement">
                           {formatDate(startDate, true)}

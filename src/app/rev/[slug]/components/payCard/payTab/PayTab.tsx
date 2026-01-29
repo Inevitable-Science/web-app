@@ -14,7 +14,7 @@ import {
   getTokenBtoAQuote,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, formatTokenSymbol } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
@@ -122,14 +122,8 @@ export function PayTab({
       );
 
       const numberPayerTokens = Number(payerTokens);
-      if (numberPayerTokens < 1) {
-        // Round 3 to sigfigs then remove trailing 0's -> via Number(...).toString()
-        // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString()); // KEEP Number(...).toString();
-        return;
-      }
-
-      setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
+      const formattedAmountB = formatNumber(numberPayerTokens, false);
+      setAmountB(formattedAmountB);
       return;
     }
   };
@@ -154,12 +148,8 @@ export function PayTab({
     );
 
     const numberPayerTokens = Number(quote.format());
-    if (numberPayerTokens < 1) {
-      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
-      return;
-    }
-
-    setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
+    const formattedAmountA = formatNumber(numberPayerTokens, false);
+    setAmountA(formattedAmountA);
     return;
   };
 

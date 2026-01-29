@@ -102,11 +102,7 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
                 withEnsName short
               />
               <p className="tokenAmountItem">
-                {formatNumber(
-                  Number(
-                    formatUnits(issuance.count, 18)
-                  )
-                )} 
+                {formatNumber(formatUnits(issuance.count, 18))} 
               </p>
               <p>
                 {formatDate(releaseDate, true)}

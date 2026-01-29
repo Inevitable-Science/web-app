@@ -127,7 +127,7 @@ export function TokenAnalyticsSection() {
     balance !== undefined &&
     decimals !== undefined
   ) {
-    safeFormattedBalance = formatNumber(Number(formatUnits(balance, decimals)));
+    safeFormattedBalance = formatNumber(formatUnits(balance, decimals));
   }
 
   return (

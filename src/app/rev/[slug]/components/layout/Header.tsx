@@ -184,11 +184,9 @@ export function Header() {
                       <div className="activeSkeleton h-[28px] w-[58px] rounded-sm" />
                     ) : suckerGroupBalance ? (
                       formatNumber(
-                        parseFloat(
-                          formatUnits(
-                            suckerGroupBalance,
-                            projectBaseTokenDecimals
-                          )
+                        formatUnits(
+                          suckerGroupBalance,
+                          projectBaseTokenDecimals
                         )
                       )
                     ) : (

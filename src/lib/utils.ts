@@ -46,7 +46,7 @@ export function truncateAddress(address: Address) {
 }
 
 export function formatNumber(passedNum: number | string | null, compact?: undefined | boolean): string {
-  const num = passedNum ? Number(passedNum) : null;
+  const num = passedNum != null ? Number(passedNum) : null;
   if (num === null || isNaN(num)) return "--";
 
   if (num === 0) return "0";

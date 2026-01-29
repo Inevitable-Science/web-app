@@ -51,7 +51,7 @@ export function TreasurySection() {
           <div className="bg-grey-450 grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 rounded-2xl p-[12px]">
             <div className="background-color rounded-2xl p-[16px]">
               <h4 className="mb-0.5 text-xl tracking-wider">
-                ${formatNumber(Number(treasuryAnalytics.assetsUnderManagement))}
+                ${formatNumber(treasuryAnalytics.assetsUnderManagement)}
               </h4>
               <p className="text-muted-foreground font-light uppercase">
                 Assets Manged
@@ -92,7 +92,7 @@ export function TreasurySection() {
 
               <div className="background-color rounded-2xl p-[16px]">
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  ${formatNumber(Number(treasuryAnalytics.treasuryValue))}
+                  ${formatNumber(treasuryAnalytics.treasuryValue)}
                 </h4>
                 <p className="text-muted-foreground font-light uppercase">
                   Total Holdings

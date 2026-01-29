@@ -139,7 +139,7 @@ export const LoanChainSelector = ({
                   </span>
 
                   <span className="text-muted-foreground text-xs">
-                    {formatNumber(Number(formattedBalance))}
+                    {formatNumber(formattedBalance)}
                   </span>
                 </div>
               </SelectItem>
