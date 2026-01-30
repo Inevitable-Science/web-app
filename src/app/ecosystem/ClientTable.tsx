@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  useAccount,
-  useChainId,
-  useSwitchChain,
-  useWaitForTransactionReceipt,
-} from "wagmi";
+import { useAccount } from "wagmi";
 import { getBalance } from "@wagmi/core";
 import { Address, formatUnits } from "viem";
 import { wagmiConfig } from "@/lib/wagmiConfig";
@@ -84,9 +79,6 @@ export default function ClientTable() {
   const { address, isConnected } = useAccount();
   const [balances, setBalances] = useState<Record<string, string>>({});
   const [v4Balances, setV4Balances] = useState<ProjectBalanceMap>({});
-
-  const userChainId = useChainId();
-  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
 
   useEffect(() => {
     if (!address || !isConnected) {
@@ -189,10 +181,6 @@ export default function ClientTable() {
 
     const fetchBalances = async () => {
       try {
-        if (userChainId !== 1) {
-          switchChain({ chainId: 1 });
-        }
-
         const contracts: Address[] = projectVars.flatMap((project) => {
           const list: Address[] = [project.tokenAddress];
           if (project.vestingContract) list.push(project.vestingContract);
@@ -204,6 +192,7 @@ export default function ClientTable() {
             getBalance(wagmiConfig, {
               address,
               token,
+              chainId: 1, // infer mainnet, change this when expanding
             })
           )
         );
@@ -230,10 +219,8 @@ export default function ClientTable() {
       }
     };
 
-    if (isSwitchingChain === false) {
-      fetchBalances();
-    }
-  }, [address, isConnected, isSwitchingChain]);
+    fetchBalances();
+  }, [address, isConnected]);
 
   return (
     <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">

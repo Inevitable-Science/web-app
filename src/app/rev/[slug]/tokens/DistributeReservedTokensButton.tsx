@@ -1,10 +1,10 @@
 "use client"
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
-import { JBChainId, jbControllerAbi } from "juice-sdk-core";
+import { jbControllerAbi, SuckerPair } from "juice-sdk-core";
 import { useJBContractContext } from "juice-sdk-react";
 import { useEffect, useState } from "react";
-import { useAccount, useChainId, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 interface ReservedTokenSplit {
   percent: number;
@@ -18,26 +18,23 @@ interface ReservedTokenSplit {
 export function DistributeReservedTokensButton({ 
   reservedTokenSplits,
   pendingReserveTokenBalance,
-  selectedChain
+  selectedSucker
 }: { 
   reservedTokenSplits: readonly ReservedTokenSplit[] | undefined;
   pendingReserveTokenBalance: bigint | undefined;
-  selectedChain: JBChainId | undefined;
+  selectedSucker: SuckerPair | undefined;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [hash, setHash] = useState<`0x${string}` | undefined>();
-  const {
-    projectId,
-    contracts: { controller },
-  } = useJBContractContext();
+  const { contracts: { controller } } = useJBContractContext();
 
-  const { address } = useAccount();
-  const chainId = useChainId();
-  
+  const { address } = useAccount();  
   const { writeContractAsync } = useWriteContract();
   const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
-
   const { toast } = useToast();
+
+  const selectedChain = selectedSucker?.peerChainId;
+  const selectedProjectId = selectedSucker?.projectId;
 
   const mappedBeneficiaries = reservedTokenSplits?.map(s => s.beneficiary);
   const userIsBeneficiary = mappedBeneficiaries?.some(s => s.toLowerCase() === address?.toLocaleLowerCase()) ?? false;
@@ -58,7 +55,7 @@ export function DistributeReservedTokensButton({
 
   const distributeSplits = async () => {
     try {
-      if (!controller.data || !selectedChain) return;
+      if (!controller.data || !selectedChain || !selectedProjectId) return;
       setIsPending(true);
 
       const hash = await writeContractAsync({
@@ -66,7 +63,7 @@ export function DistributeReservedTokensButton({
         functionName: "sendReservedTokensToSplitsOf",
         chainId: selectedChain,
         address: controller.data,
-        args: [projectId],
+        args: [selectedProjectId],
       });
 
       setHash(hash);

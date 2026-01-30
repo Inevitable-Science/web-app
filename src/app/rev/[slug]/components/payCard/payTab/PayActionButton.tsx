@@ -35,6 +35,7 @@ import { formatWalletError } from "@/lib/utils";
 import { Token } from "@/lib/token";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRulesetData } from "@/hooks/useRulesetData";
+import { PayStepper } from "./PayStepper";
 
 const shimmerClasses = `
     relative overflow-hidden 
@@ -51,6 +52,13 @@ const primaryButtonClasses =
  * A self-contained button that handles wallet connection, chain switching,
  * and then opens a Radix UI confirmation dialog before the transaction.
  */
+
+export type PaymentStatusType = "" |
+    "signing-approval" |
+    "rejected-approval" |
+    "signing-pay" |
+    "rejected-pay" |
+    "success";
 
 export function PayActionButton({
   amountA,
@@ -117,6 +125,11 @@ export function PayActionButton({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
+  const [pending, setPending] = useState(false);
+  const [currentStep, setCurrentStep] = useState<PaymentStatusType>("");
+  const [userHasApproved, setUserHasApproved] = useState(false);
+  const [dialogStage, setDialogStage] = useState<"terms" | "tx">("terms");
+
   const loading = isWriteLoading || isTxLoading;
 
   // --- 3. DERIVED STATE & MEMOS ---
@@ -150,16 +163,24 @@ export function PayActionButton({
     }
   }, [isSuccess, isTxError]);
 
+  useEffect(() => {
+    if (isApproving) {
+      setCurrentStep("signing-approval");
+    };
+  }, [isApproving]);
+
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
 
     try {
+      setPending(true);
+
       if (version === 4) {
         if (!primaryNativeTerminal?.data || !address || !selectedSucker) {
           return;
         }
 
-        await writeContractAsync?.({
+        await writeContractAsync({
           abi: jbMultiTerminalAbi,
           functionName: "pay",
           chainId: selectedSucker.peerChainId,
@@ -187,13 +208,17 @@ export function PayActionButton({
 
         if (!paymentToken.isNative) {
           await ensureAllowance(paymentToken.address, terminal.address, value);
+          setUserHasApproved(true);
+          setCurrentStep("");
         }
 
         const minTokens = paymentToken.isNative
           ? 0n
           : (amountB.amount.value * 95n) / 100n;
 
-        await writeContractAsync?.({
+        setCurrentStep("signing-pay");
+
+        await writeContractAsync({
           abi: terminal.abi,
           functionName: "pay",
           chainId,
@@ -209,9 +234,14 @@ export function PayActionButton({
           ],
           value: paymentToken.isNative ? value : 0n,
         });
+
+        setCurrentStep("success");
       }
     } catch (err) {
       console.error("Payment failed:", err);
+      setCurrentStep("rejected-pay");
+    } finally {
+      setPending(false);
     }
   };
 
@@ -293,57 +323,114 @@ export function PayActionButton({
           //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
           className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg"
         >
-          <Dialog.Title className="text-lg font-semibold">
-            Before you continue...
-          </Dialog.Title>
-          <Dialog.Description className="text-muted-foreground mt-2 text-sm">
-            Please review and agree to the project's terms before proceeding.
-          </Dialog.Description>
+          {dialogStage === "terms" ? (
+            <>
+              <Dialog.Title className="text-lg font-semibold">
+                Before you continue...
+              </Dialog.Title>
+              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+                {metadata.data?.payDisclosure ? 
+                  "Please review and agree to the project's terms before proceeding." :
+                  "Please review the following."
+                }
+              </Dialog.Description>
 
-          <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
-            {metadata.data?.payDisclosure ? (
-              <>
-                <p className="font-semibold whitespace-pre-wrap">
-                  {metadata.data.payDisclosure}
-                </p>
-              </>
-            ) : null}
-          </div>
-          <div className="mt-4 flex items-center space-x-3">
-            <Checkbox.Root
-              id="terms"
-              checked={agreedToTerms}
-              onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
-              className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
-            >
-              <Checkbox.Indicator className="flex items-center justify-center text-current">
-                <Check className="h-4 w-4" />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <label
-              htmlFor="terms"
-              className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I have read and agree to the terms.
-            </label>
-          </div>
+              {metadata.data?.payDisclosure ? (
+                <>
+                  <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
+                    <p className="font-semibold whitespace-pre-wrap">
+                      {metadata.data.payDisclosure}
+                    </p>
+                  </div>
 
-          <div className="mt-6 flex justify-end space-x-2">
-            <Dialog.Close asChild>
-              <Button className="background-color hover:background-color rounded-md">
-                Cancel
-              </Button>
-            </Dialog.Close>
-            <ButtonWithWallet
-              targetChainId={targetChainId}
-              disabled={!agreedToTerms || loading}
-              loading={loading}
-              onClick={handlePay}
-              className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            >
-              {actionButtonContent}
-            </ButtonWithWallet>
-          </div>
+                  <div className="mt-4 flex items-center space-x-3">
+                    <Checkbox.Root
+                      id="terms"
+                      checked={agreedToTerms}
+                      onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
+                      className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
+                    >
+                      <Checkbox.Indicator className="flex items-center justify-center text-current">
+                        <Check className="h-4 w-4" />
+                      </Checkbox.Indicator>
+                    </Checkbox.Root>
+                    <label
+                      htmlFor="terms"
+                      className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      I have read and agree to the terms.
+                    </label>
+                  </div>
+                </>
+              ) : (
+                <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
+                  <p>Paying: {amountA.amount.format()} {baseToken.symbol}</p>
+                  <p>Receive: ~{amountB.amount.format()} {amountB.symbol}</p>
+                </div>
+              )}
+
+              <div className="mt-6 flex justify-end space-x-2">
+                <Dialog.Close asChild>
+                  <Button className="background-color hover:background-color rounded-md">
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                
+                {paymentToken.isNative ? (
+                  <ButtonWithWallet
+                    targetChainId={targetChainId}
+                    disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
+                    loading={loading || pending}
+                    onClick={handlePay}
+                    className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                  >
+                    {actionButtonContent}
+                  </ButtonWithWallet>
+                ) : (
+                  <Button
+                    onClick={() => setDialogStage("tx")}
+                    className="bg-cerulean"
+                  >
+                    Confirm
+                  </Button>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <Dialog.Title className="text-lg font-semibold">
+                Confirm Payment
+              </Dialog.Title>
+              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+                Sign the following transactions to open a new loan.
+              </Dialog.Description>
+
+              <div>
+                <PayStepper
+                  currentStep={currentStep}
+                  userHasApproved={userHasApproved}
+                  baseTokenIsNative={paymentToken.isNative}
+                />
+              </div>
+
+              <div className="mt-6 flex justify-end space-x-2">
+                <Dialog.Close asChild>
+                  <Button className="background-color hover:background-color rounded-md">
+                    Cancel
+                  </Button>
+                </Dialog.Close>
+                <ButtonWithWallet
+                  targetChainId={targetChainId}
+                  disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
+                  loading={loading || pending}
+                  onClick={handlePay}
+                  className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                >
+                  {actionButtonContent}
+                </ButtonWithWallet>
+              </div>
+            </>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

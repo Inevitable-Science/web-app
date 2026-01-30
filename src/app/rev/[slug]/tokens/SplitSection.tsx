@@ -250,7 +250,7 @@ export function SplitSection() {
         </div>
       </div>
 
-      <DistributeReservedTokensButton reservedTokenSplits={reservedTokenSplits} pendingReserveTokenBalance={pendingReserveTokenBalance} selectedChain={selectedSucker?.peerChainId} />
+      <DistributeReservedTokensButton reservedTokenSplits={reservedTokenSplits} pendingReserveTokenBalance={pendingReserveTokenBalance} selectedSucker={selectedSucker} />
 
       <AutoIssuanceTable selectedSucker={selectedSucker} />
     </div>
