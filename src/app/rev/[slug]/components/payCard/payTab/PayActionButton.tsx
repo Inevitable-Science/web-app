@@ -196,7 +196,7 @@ export function PayActionButton({
             NATIVE_TOKEN,
             value,
             address,
-            0n,
+            amountB.amount.value,
             memo || "",
             "0x0",
           ],
@@ -219,7 +219,7 @@ export function PayActionButton({
         }
 
         const minTokens = paymentToken.isNative
-          ? 0n
+          ? amountB.amount.value
           : (amountB.amount.value * 95n) / 100n;
 
         setCurrentStep("signing-pay");
@@ -295,13 +295,13 @@ export function PayActionButton({
   // State 3: User is connected however has inputted an amount greater than their balance
   if (
     walletBalance &&
-    amountA.amount._value &&
+    amountA.amount.value &&
     Number(
       formatUnits(
         walletBalance.get(paymentToken.address) ?? 0n,
         paymentToken.decimals
       )
-    ) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+    ) < Number(formatUnits(amountA.amount.value, amountA.amount.decimals))
   ) {
     return (
       <Button className={twMerge(primaryButtonClasses)} disabled={true}>

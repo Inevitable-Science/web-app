@@ -12,7 +12,7 @@ import {
 } from "juice-sdk-core";
 import { getContract, parseUnits } from "viem";
 import { applyNanaFee, applyRevFee } from "./feeHelpers";
-import { getViemPublicClient } from "./wagmiConfig";
+import { getViemPublicClient, ViemChainIdType } from "./wagmiConfig";
 
 export function toBaseCurrencyId(
   currency: number | string,
@@ -24,7 +24,7 @@ export function toBaseCurrencyId(
 }
 
 export async function getReclaimableSurplus(
-  chainId: Exclude<JBChainId, 11155111 | 11155420 | 421614 | 84532>,
+  chainId: ViemChainIdType,
   projectId: number,
   tokenAmountWei: bigint,
   version: JBVersion,
@@ -81,7 +81,7 @@ export async function getProjectsReclaimableSurplus(
       const tokenDecimals = JB_TOKEN_DECIMALS;
 
       const value = await getReclaimableSurplus(
-        chainId as Exclude<JBChainId, 11155111 | 11155420 | 421614 | 84532>,
+        chainId as ViemChainIdType,
         projectId,
         BigInt(tokenSupply),
         version as JBVersion,

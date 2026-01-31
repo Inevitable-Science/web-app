@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   useBendystrawQuery,
+  useJBContractContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "juice-sdk-react";
@@ -18,6 +19,9 @@ import {
 } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
+import { useReclaimableSurplus } from "@/hooks/useReclaimableSurplus";
+import { formatUnits, parseUnits } from "viem";
+import { JB_TOKEN_DECIMALS } from "juice-sdk-core";
 
 export interface Surplus {
   projectId: number;
@@ -32,14 +36,17 @@ export interface Surplus {
 export function WithdrawTab() {
   const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const { version } = useJBContractContext();
   const { token } = useJBTokenContext();
 
   const receiveToken = useProjectBaseToken();
-  const receiveTokenAddress =
-    receiveToken.tokenMap[selectedSucker.peerChainId].token;
+  const receiveTokenAddress = receiveToken.tokenMap[selectedSucker.peerChainId].token;
 
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
+
+  const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
+  const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals);
 
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
@@ -58,13 +65,22 @@ export function WithdrawTab() {
     fetchSurpluses();
   }, []);
 
-  const projectTokenDecimals = token.data?.decimals;
+  const surplus = surpluses?.find((s) => s.chainId === selectedSucker.peerChainId) || null;
+
+  const { data: reclaimableAmount } = useReclaimableSurplus({
+    chainId: selectedSucker.peerChainId,
+    projectId: selectedSucker.projectId,
+    tokenAmount: withdrawAmountBigInt || undefined,
+    version,
+    decimals: receiveToken.decimals,
+    currencyId: surplus?.currencyId ?? 1
+  });
+
   const cashOutChainId = selectedSucker.peerChainId;
   const projects = suckerGroupData?.suckerGroup?.projects?.items;
 
   const unitValue = useMemo(() => {
     if (!surpluses || !cashOutChainId || !projectTokenDecimals) return 0;
-    const surplus = surpluses.find((s) => s.chainId === cashOutChainId) || null;
     const tokenSupply =
       projects?.find((p) => p.chainId === cashOutChainId)?.tokenSupply ?? "0";
 
@@ -81,7 +97,9 @@ export function WithdrawTab() {
   )?.balance;
   const currentChainBalNum = Number(currentChainBalanceObj?.format());
 
-  const receiveAmount = unitValue * Number(withdrawAmount);
+  //const receiveAmount = unitValue * Number(withdrawAmount);
+  //const receiveAmountString = formatNumber(receiveAmount, false);
+  const receiveAmount = formatUnits(reclaimableAmount ?? 0n, receiveToken.decimals);
   const receiveAmountString = formatNumber(receiveAmount, false);
 
   const setManualWithdrawAmount = (percentage: number) => {
@@ -151,7 +169,7 @@ export function WithdrawTab() {
               YOU RECEIVE
             </p>
             <PayInput
-              value={Number(receiveAmountString).toString()} // KEEP - this removes trailing 0's
+              value={receiveAmountString}
               disabled
             />
           </div>

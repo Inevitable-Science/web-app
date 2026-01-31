@@ -73,10 +73,7 @@ export function LoanActionButton({
   const activeProjectId = selectedSucker.projectId;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  const baseTokenAddress = (baseToken.isNative 
-    ? NATIVE_TOKEN.toLowerCase() 
-    : USDC_ADDRESSES[activeChainId]
-  ) as Address;
+  const baseTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
 
   // Contract Calls
   const { data: revDeployerFee } = useReadContract({
