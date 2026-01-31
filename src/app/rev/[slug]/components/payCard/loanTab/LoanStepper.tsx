@@ -31,28 +31,8 @@ export function LoanStepper({
             </div>
           )}
           <h3 className="font-medium leading-tight">Grant Permissions</h3>
-          <p className="text-sm text-muted-foreground">Gain permission from the revnet to open a loan</p>
+          <p className="text-sm text-muted-foreground">Gain permission from the smart contract to open a loan</p>
         </li>
-
-        {/*{!baseTokenIsNative && (
-          <li className="mb-10 ms-7">
-            {currentStep === "signing-approval" ? (
-              <LoadingBubble />
-            ) : currentStep === "rejected-approval" ? (
-              <FailureBubble />
-            ) : userHasApproved ? (
-              <SuccessBubble />
-            ) : (
-              <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-                <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer ring-grey-450 bg-(--muted)/20">
-                  <Receipt height={18} width={18} />
-                </span>
-              </div>
-            )}
-            <h3 className="font-medium leading-tight">Approve Allowance</h3>
-            <p className="text-sm text-muted-foreground">Allow the revnet to spend USDC allowing it to send tokens.</p>
-          </li>
-        )}*/}
 
         <li className="ms-7">
           {currentStep === "signing-borrow" ? (

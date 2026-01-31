@@ -6,6 +6,7 @@ import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
+import { LoansTable } from "./LoansTable";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -52,6 +53,8 @@ export function DescriptionSection() {
 
   return (
     <div className="text-sm">
+      <LoansTable />
+
       <ChartSection />
 
       <DaoData />

@@ -30,7 +30,7 @@ export function ParticipantsTable() {
   >(null);
 
   const page = offsetInt + 1;
-  const pageLimit = 45;
+  const pageLimit = 25;
 
   const { data: participantsQuery, isFetching } = useBendystrawQuery(
     ParticipantsDocument,

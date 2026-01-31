@@ -169,6 +169,12 @@ export function PayActionButton({
     };
   }, [isApproving]);
 
+  useEffect(() => {
+    if (!isModalOpen) {
+      setCurrentStep("");
+    }
+  }, [isModalOpen]);
+
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
 
@@ -323,7 +329,7 @@ export function PayActionButton({
           //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
           className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg"
         >
-          {dialogStage === "terms" ? (
+          {dialogStage === "terms" || paymentToken.isNative ? (
             <>
               <Dialog.Title className="text-lg font-semibold">
                 Before you continue...
@@ -364,7 +370,7 @@ export function PayActionButton({
                 </>
               ) : (
                 <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
-                  <p>Paying: {amountA.amount.format()} {baseToken.symbol}</p>
+                  <p>Paying: {amountA.amount.format()} {paymentToken.symbol}</p>
                   <p>Receive: ~{amountB.amount.format()} {amountB.symbol}</p>
                 </div>
               )}
@@ -375,7 +381,7 @@ export function PayActionButton({
                     Cancel
                   </Button>
                 </Dialog.Close>
-                
+
                 {paymentToken.isNative ? (
                   <ButtonWithWallet
                     targetChainId={targetChainId}
@@ -389,7 +395,7 @@ export function PayActionButton({
                 ) : (
                   <Button
                     onClick={() => setDialogStage("tx")}
-                    className="bg-cerulean"
+                    className="bg-cerulean!"
                   >
                     Confirm
                   </Button>
@@ -409,7 +415,7 @@ export function PayActionButton({
                 <PayStepper
                   currentStep={currentStep}
                   userHasApproved={userHasApproved}
-                  baseTokenIsNative={paymentToken.isNative}
+                  paymentTokenIsNative={paymentToken.isNative}
                 />
               </div>
 
