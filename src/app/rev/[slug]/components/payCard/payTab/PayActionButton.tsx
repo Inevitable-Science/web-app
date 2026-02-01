@@ -151,7 +151,7 @@ export function PayActionButton({
         title: "Success",
         description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
       });
-      setIsModalOpen(false);
+      setCurrentStep("success");
       setAgreedToTerms(false);
     }
     if (isTxError) {
@@ -170,10 +170,11 @@ export function PayActionButton({
   }, [isApproving]);
 
   useEffect(() => {
-    if (!isModalOpen) {
+    if (!paymentToken.isNative) {
       setCurrentStep("");
+      setUserHasApproved(false);
     }
-  }, [isModalOpen]);
+  }, [paymentToken]);
 
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
@@ -213,9 +214,15 @@ export function PayActionButton({
         });
 
         if (!paymentToken.isNative) {
-          await ensureAllowance(paymentToken.address, terminal.address, value);
-          setUserHasApproved(true);
-          setCurrentStep("");
+          try {
+            await ensureAllowance(paymentToken.address, terminal.address, value);
+            setUserHasApproved(true);
+            setCurrentStep("");
+          } catch (err) {
+            console.error(err);
+            setCurrentStep("rejected-approval");
+            return;
+          }
         }
 
         const minTokens = paymentToken.isNative
@@ -224,7 +231,7 @@ export function PayActionButton({
 
         setCurrentStep("signing-pay");
 
-        await writeContractAsync({
+        const txHash = await writeContractAsync({
           abi: terminal.abi,
           functionName: "pay",
           chainId,
@@ -241,11 +248,12 @@ export function PayActionButton({
           value: paymentToken.isNative ? value : 0n,
         });
 
-        setCurrentStep("success");
+        await publicClient.waitForTransactionReceipt({ hash: txHash });
       }
     } catch (err) {
       console.error("Payment failed:", err);
       setCurrentStep("rejected-pay");
+      return;
     } finally {
       setPending(false);
     }

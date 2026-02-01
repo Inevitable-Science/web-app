@@ -6,7 +6,7 @@ import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
-import { LoansTable } from "./LoansTable";
+import { LoansTable } from "./components/loanActions/LoansTable";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {

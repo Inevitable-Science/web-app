@@ -7,14 +7,12 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { DEFAULT_NATIVE_TOKEN_SYMBOL, JB_TOKEN_DECIMALS, NATIVE_TOKEN, NATIVE_TOKEN_DECIMALS } from "juice-sdk-core";
 import { JBChainId, useBendystrawQuery, useJBContractContext, useJBTokenContext, useSuckers } from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
-import { formatUnits } from "viem";
+import { Address, formatUnits } from "viem";
 import { useAccount } from "wagmi";
-import { RepayDialog } from "./RepayDialog";
+import { LoanDialog, LoanType } from "./LoanDialog";
 
 export function LoansTable() {
-  const project = useRevnetDataStore(state => state.project);
   const suckers = useRevnetDataStore(state => state.suckers);
-  const suckerGroupId = project.suckerGroupId;
   const { token } = useJBTokenContext();
   const { version } = useJBContractContext();
   const { address } = useAccount();
@@ -73,6 +71,15 @@ export function LoansTable() {
           const loanTokenDecimals = loanTokenIsNative ? NATIVE_TOKEN_DECIMALS : USDC_DECIMALS;
           const loanTokenSymbol = loanTokenIsNative ? DEFAULT_NATIVE_TOKEN_SYMBOL : "USDC";
 
+          const prepedLoan: LoanType = {
+            ...loan,
+            borrowAmount: BigInt(loan.borrowAmount),
+            collateral: BigInt(loan.collateral),
+            terminal: loan.terminal as Address,
+            token: loan.token as Address,
+            chainId: loan.chainId as JBChainId,
+          };
+
           return (
             <div key={loan.id} className="grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center py-2 border-b border-grey-450">
               <ChainLogo 
@@ -95,7 +102,7 @@ export function LoansTable() {
                 {formatSeconds(loan.prepaidDuration)}
               </p>
               <div className="flex justify-end">
-                <RepayDialog />
+                <LoanDialog loan={prepedLoan} />
               </div>
             </div>
           )
