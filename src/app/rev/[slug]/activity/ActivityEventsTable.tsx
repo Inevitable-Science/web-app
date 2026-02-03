@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import EtherscanLink from "@/components/EtherscanLink";
 import {
   ActivityEventsDocument,

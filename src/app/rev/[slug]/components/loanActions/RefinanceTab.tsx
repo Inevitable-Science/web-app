@@ -3,8 +3,20 @@ import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
-import { getRevnetLoanContract, JB_TOKEN_DECIMALS, JBChainId, revDeployerAbi, revLoansAbi, RevnetCoreContracts } from "juice-sdk-core";
-import { useJBContractContext, useJBProjectMetadataContext, useJBTokenContext, useSuckersUserTokenBalance } from "juice-sdk-react";
+import {
+  getRevnetLoanContract,
+  JB_TOKEN_DECIMALS,
+  JBChainId,
+  revDeployerAbi,
+  revLoansAbi,
+  RevnetCoreContracts,
+} from "juice-sdk-core";
+import {
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
+  useSuckersUserTokenBalance,
+} from "juice-sdk-react";
 import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";
@@ -12,12 +24,16 @@ import { formatUnits, parseUnits } from "viem";
 import { formatNumber, formatWalletError } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
-import { useAccount, usePublicClient, useReadContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import { generateFeeData } from "@/lib/feeHelpers";
 import { useToast } from "@/components/ui/use-toast";
 import { LoanFeeChart } from "../payCard/loanTab/LoanFeeChart";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-
 
 export function RefinanceTab({ loan }: { loan: LoanType }) {
   const [additionalCollateral, setAdditionalCollateral] = useState("");
@@ -26,12 +42,16 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   const [isBorrowing, setIsBorrowing] = useState(false);
 
   const [dialogStage, setDialogStage] = useState<
-      "setCollateral" | "feeStructure" | "transactions"
-    >("setCollateral");
+    "setCollateral" | "feeStructure" | "transactions"
+  >("setCollateral");
 
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
-  const { contractAddress, contracts: { primaryNativeTerminal }, version } = useJBContractContext();
+  const {
+    contractAddress,
+    contracts: { primaryNativeTerminal },
+    version,
+  } = useJBContractContext();
   const baseToken = useProjectBaseToken();
   const baseTokenAddress = baseToken.tokenMap[loan.chainId].token;
 
@@ -43,7 +63,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   const balances = useSuckersUserTokenBalance();
   const loanChainId = loan.chainId;
 
-  const chainBalanceObj = balances.data?.find(t => t.chainId === loanChainId);
+  const chainBalanceObj = balances.data?.find((t) => t.chainId === loanChainId);
   const chainBalanceBigInt = chainBalanceObj?.balance.value;
   const chainBalance = chainBalanceObj?.balance.format();
 
@@ -51,20 +71,23 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const revLoansContractAddress = getRevnetLoanContract(version, loanChainId);
 
-  const { data: currentBorrowableOnSelectedCollateral, isLoading: isCurrentBorrowableLoading } = useReadContract({
+  const {
+    data: currentBorrowableOnSelectedCollateral,
+    isLoading: isCurrentBorrowableLoading,
+  } = useReadContract({
     abi: revLoansAbi,
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
     chainId: loanChainId,
-    args:
-    additionalCollateral ?
-      [
-        // Use the same project ID as the loan table for consistency
-        BigInt(loan.projectId),
-        BigInt(loan.collateral),
-        BigInt(baseToken.decimals),
-        BigInt(baseToken.currency),
-      ] : undefined,
+    args: additionalCollateral
+      ? [
+          // Use the same project ID as the loan table for consistency
+          BigInt(loan.projectId),
+          BigInt(loan.collateral),
+          BigInt(baseToken.decimals),
+          BigInt(baseToken.currency),
+        ]
+      : undefined,
   });
 
   const collateralHeadroom =
@@ -75,11 +98,14 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   // Calculate borrowable amount for just the new loan (headroom + additional collateral)
   const newLoanCollateral =
     collateralHeadroom +
-    (additionalCollateral ? parseUnits(additionalCollateral, projectTokenDecimals) : 0n);
+    (additionalCollateral
+      ? parseUnits(additionalCollateral, projectTokenDecimals)
+      : 0n);
 
   const totalReallocationCollateral =
     loan && additionalCollateral
-      ? BigInt(loan.collateral) + parseUnits(additionalCollateral, projectTokenDecimals)
+      ? BigInt(loan.collateral) +
+        parseUnits(additionalCollateral, projectTokenDecimals)
       : undefined;
 
   const { data: selectedLoanReallocAmount } = useReadContract({
@@ -87,49 +113,54 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
     chainId: loanChainId,
-    args:
-      totalReallocationCollateral
-        ? [
-            // Use the same project ID as the loan table for consistency
-            BigInt(loan.projectId),
-            totalReallocationCollateral,
-            BigInt(baseToken.decimals),
-            BigInt(baseToken.currency),
-          ]
-        : undefined,
+    args: totalReallocationCollateral
+      ? [
+          // Use the same project ID as the loan table for consistency
+          BigInt(loan.projectId),
+          totalReallocationCollateral,
+          BigInt(baseToken.decimals),
+          BigInt(baseToken.currency),
+        ]
+      : undefined,
   });
 
-  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } = useReadContract({
-    abi: revLoansAbi,
-    functionName: "borrowableAmountFrom",
-    address: revLoansContractAddress,
-    chainId: loanChainId,
-    args:
-      additionalCollateral && newLoanCollateral > 0n
-        ? [
-            // Use the same project ID as the loan table for consistency
-            BigInt(loan.projectId),
-            newLoanCollateral,
-            BigInt(baseToken.decimals),
-            BigInt(baseToken.currency),
-          ]
-        : undefined,
-  });
+  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } =
+    useReadContract({
+      abi: revLoansAbi,
+      functionName: "borrowableAmountFrom",
+      address: revLoansContractAddress,
+      chainId: loanChainId,
+      args:
+        additionalCollateral && newLoanCollateral > 0n
+          ? [
+              // Use the same project ID as the loan table for consistency
+              BigInt(loan.projectId),
+              newLoanCollateral,
+              BigInt(baseToken.decimals),
+              BigInt(baseToken.currency),
+            ]
+          : undefined,
+    });
 
-  console.log(currentBorrowableOnSelectedCollateral, "currentBorrowableOnSelectedCollateral");
+  console.log(
+    currentBorrowableOnSelectedCollateral,
+    "currentBorrowableOnSelectedCollateral"
+  );
 
   const collateralCountToTransfer =
-  loan && currentBorrowableOnSelectedCollateral
-    ? BigInt(
-        Math.floor(
-          Number(collateralHeadroom) /
-            (Number(currentBorrowableOnSelectedCollateral) /
-              Number(loan.collateral)),
-        ),
-      )
-    : BigInt(0);
+    loan && currentBorrowableOnSelectedCollateral
+      ? BigInt(
+          Math.floor(
+            Number(collateralHeadroom) /
+              (Number(currentBorrowableOnSelectedCollateral) /
+                Number(loan.collateral))
+          )
+        )
+      : BigInt(0);
 
-  const collateralToTransfer = Number(formatUnits(collateralCountToTransfer, projectTokenDecimals));
+  const collateralToTransfer = Number(
+    formatUnits(collateralCountToTransfer, projectTokenDecimals)
+  );
   const noCollateralToTransfer = collateralToTransfer <= 0;
 
   /*const borrowAmountForFeeCalculation =
@@ -162,37 +193,39 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   });
 
   const newLoanFeeData = generateFeeData({
-        grossBorrowedEth: newLoanBorrowableAmount ? Number(
-          formatUnits(
-            newLoanBorrowableAmount,
-            baseToken.decimals,
-          ),
-        ) : 0,
-        prepaidPercent,
-      });
+    grossBorrowedEth: newLoanBorrowableAmount
+      ? Number(formatUnits(newLoanBorrowableAmount, baseToken.decimals))
+      : 0,
+    prepaidPercent,
+  });
 
   // Calculate total fixed fees from contract values (in basis points)
-  const amountBorrowed = newLoanBorrowableAmount ? Number(formatUnits(newLoanBorrowableAmount, projectTokenDecimals)) : 0;
+  const amountBorrowed = newLoanBorrowableAmount
+    ? Number(formatUnits(newLoanBorrowableAmount, projectTokenDecimals))
+    : 0;
   const totalFixedFees =
     (revDeployerFee ? Number(revDeployerFee) : 0) +
     (revPrepaidFeePercent ? Number(revPrepaidFeePercent) : 0);
   const protocolFees = Number(amountBorrowed) * (totalFixedFees / 1000);
   const protocolFeesPercentage = (totalFixedFees / 1000) * 100;
   const prepaidAmount = (Number(prepaidPercent) / 100) * amountBorrowed;
-  const amountToWallet = amountBorrowed ? amountBorrowed - protocolFees - prepaidAmount : 0;
+  const amountToWallet = amountBorrowed
+    ? amountBorrowed - protocolFees - prepaidAmount
+    : 0;
 
   const { data: borrowableAmountRaw } = useReadContract({
     abi: revLoansAbi,
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
     chainId: loanChainId,
-    args: chainBalanceBigInt ?
-      [
-        BigInt(loan.projectId),
-        chainBalanceBigInt,
-        BigInt(baseToken.decimals),
-        BigInt(baseToken.currency),
-      ] : undefined
+    args: chainBalanceBigInt
+      ? [
+          BigInt(loan.projectId),
+          chainBalanceBigInt,
+          BigInt(baseToken.decimals),
+          BigInt(baseToken.currency),
+        ]
+      : undefined,
   });
 
   // Chart Logic
@@ -201,21 +234,21 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   const displayYears = Math.floor(prepaidMonths / 12);
   const displayMonths = Math.round(prepaidMonths % 12);
 
-  const percent = chainBalanceBigInt ?
-      Number(
-        formatUnits(parseUnits(additionalCollateral, projectTokenDecimals), projectTokenDecimals),
+  const percent = chainBalanceBigInt
+    ? Number(
+        formatUnits(
+          parseUnits(additionalCollateral, projectTokenDecimals),
+          projectTokenDecimals
+        )
       ) / Number(formatUnits(chainBalanceBigInt, projectTokenDecimals))
     : 0;
-    const estimatedRaw = borrowableAmountRaw
-      ? Number(formatUnits(borrowableAmountRaw, baseToken.decimals))
-      : 0;
-    const adjusted = estimatedRaw * percent;
-
+  const estimatedRaw = borrowableAmountRaw
+    ? Number(formatUnits(borrowableAmountRaw, baseToken.decimals))
+    : 0;
+  const adjusted = estimatedRaw * percent;
 
   const handleBorrow = async () => {
-    if (
-      !isNaN(Number(additionalCollateral))
-    ) {
+    if (!isNaN(Number(additionalCollateral))) {
       // Reallocation path - allow 0 additional capital
       if (
         !loan ||
@@ -240,7 +273,10 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
       // collateralCountToAdd: The amount of collateral to add to the new loan (can be 0)
       // Should be in project token decimals, not base token decimals
-      const collateralCountToAdd = parseUnits(additionalCollateral || "0", projectTokenDecimals);
+      const collateralCountToAdd = parseUnits(
+        additionalCollateral || "0",
+        projectTokenDecimals
+      );
 
       // feePercent: The fee percent for the new loan
       const feePercent = BigInt(Math.round(prepaidPercent * 10));
@@ -291,7 +327,6 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
           title: "Loan Refinanced",
           description: "Successfully refinanced loan",
         });
-
       } catch (err) {
         setBorrowStatus("error");
         toast({
@@ -305,7 +340,6 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     }
   };
 
-
   return (
     <div className="flex flex-col gap-2">
       <DialogTitle className="text-lg font-semibold">
@@ -314,16 +348,17 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
       {dialogStage === "setCollateral" && (
         <>
-          <p className="text-muted-foreground text-sm mb-2">
-            Carve out your token's upside: maintain your original loan terms & generate a second loan that pays you based on your original collateral's gain.
+          <p className="text-muted-foreground mb-2 text-sm">
+            Carve out your token's upside: maintain your original loan terms &
+            generate a second loan that pays you based on your original
+            collateral's gain.
           </p>
           <div className="bg-grey-450 rounded-lg p-3">
-            <h3 className="mb-1">
-              Current Loan Details
-            </h3>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] text-sm text-muted-foreground">
+            <h3 className="mb-1">Current Loan Details</h3>
+            <div className="text-muted-foreground grid grid-cols-[repeat(auto-fit,minmax(100px,1fr))] text-sm">
               <p>
-                Collateral:<br/>
+                Collateral:
+                <br />
                 <span className="text-foreground text-md">
                   {formatNumber(
                     formatUnits(loan.collateral, projectTokenDecimals)
@@ -332,7 +367,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 </span>
               </p>
               <p>
-                Borrowed:<br/>
+                Borrowed:
+                <br />
                 <span className="text-foreground text-md">
                   {formatNumber(
                     formatUnits(loan.borrowAmount, baseToken.decimals)
@@ -343,9 +379,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </div>
           </div>
 
-          <div className="bg-grey-450 grid items-center grid-cols-[1fr_auto] gap-2 rounded-xl p-[16px]">
+          <div className="bg-grey-450 grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
             <div className="flex flex-col gap-[2px]">
-              <p className="text-muted-foreground text-sm font-light select-none uppercase">
+              <p className="text-muted-foreground text-sm font-light uppercase select-none">
                 Additional Collateral
               </p>
               <PayInput
@@ -355,7 +391,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               />
             </div>
             <div className="flex flex-col items-end gap-1">
-              <div className="background-color flex w-fit min-w-fit items-center gap-1 rounded-full pl-1.5 pr-2 py-1">
+              <div className="background-color flex w-fit min-w-fit items-center gap-1 rounded-full py-1 pr-2 pl-1.5">
                 <div className="flex items-end">
                   <Image
                     src={
@@ -375,48 +411,51 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                   />
 
                   <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
-                    <ChainLogo
-                      chainId={loan.chainId}
-                      height={16}
-                      width={16}
-                    />
+                    <ChainLogo chainId={loan.chainId} height={16} width={16} />
                   </div>
                 </div>
-                <p className="text-lg font-light">{token.data?.symbol ?? "TOKENS"}</p>
+                <p className="text-lg font-light">
+                  {token.data?.symbol ?? "TOKENS"}
+                </p>
               </div>
 
-              <div className="flex items-center gap-1 text-sm text-muted-foreground font-light">
-                Balance:{" "} 
-                {balances.isLoading ? 
+              <div className="text-muted-foreground flex items-center gap-1 text-sm font-light">
+                Balance:{" "}
+                {balances.isLoading ? (
                   <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-                : chainBalance ? 
-                  formatNumber(
-                    chainBalance, false
-                  ) : "0.00"
-                }
+                ) : chainBalance ? (
+                  formatNumber(chainBalance, false)
+                ) : (
+                  "0.00"
+                )}
               </div>
             </div>
           </div>
 
           <div className="bg-grey-450 hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg">
-            {[10, 25, 50, 100].map(percent =>
+            {[10, 25, 50, 100].map((percent) => (
               <Button
                 key={percent}
                 className="h-[28px] rounded-xs"
                 variant={"secondary"}
                 onClick={() => {
-                  const amount = chainBalanceBigInt ? chainBalanceBigInt / 100n * BigInt(percent) : 0n;
-                  const formattedAmount = formatUnits(amount, projectTokenDecimals);
+                  const amount = chainBalanceBigInt
+                    ? (chainBalanceBigInt / 100n) * BigInt(percent)
+                    : 0n;
+                  const formattedAmount = formatUnits(
+                    amount,
+                    projectTokenDecimals
+                  );
                   setAdditionalCollateral(formattedAmount);
                 }}
                 disabled={noCollateralToTransfer}
               >
                 {percent === 100 ? "MAX" : `${percent}%`}
               </Button>
-            )}
+            ))}
           </div>
 
-          <div className="bg-grey-450 grid grid-cols-[60%_40%] text-sm rounded-lg p-3 [&>*:nth-child(odd)]:text-muted-foreground [&>*:nth-child(even)]:text-right">
+          <div className="bg-grey-450 [&>*:nth-child(odd)]:text-muted-foreground grid grid-cols-[60%_40%] rounded-lg p-3 text-sm [&>*:nth-child(even)]:text-right">
             {/*<p>
               Head Room To Reallocate: // what is this..?
             </p>
@@ -425,41 +464,36 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </p>*/}
             <p>Borrowing:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ?
+              {additionalCollateral && isBorrowableAmtLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              : newLoanBorrowableAmount ? 
+              ) : newLoanBorrowableAmount ? (
                 formatNumber(
                   formatUnits(newLoanBorrowableAmount, baseToken.decimals),
                   false
-                ) :
+                )
+              ) : (
                 "0.00"
-              }{" "}
+              )}{" "}
               {baseToken.symbol}
             </div>
-            <p>
-              Receive After Fees:
-            </p>
+            <p>Receive After Fees:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ? 
+              {additionalCollateral && isBorrowableAmtLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              : amountToWallet ? 
-                formatNumber(
-                  amountToWallet,
-                  false
-                ) :
+              ) : amountToWallet ? (
+                formatNumber(amountToWallet, false)
+              ) : (
                 "0.00"
-              }{" "}
+              )}{" "}
               {baseToken.symbol}
             </div>
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
             <DialogClose asChild>
-              <Button>
-                Cancel
-              </Button>
+              <Button>Cancel</Button>
             </DialogClose>
-            <Button 
+            <Button
               className="bg-cerulean!"
               onClick={() => setDialogStage("feeStructure")}
               disabled={!additionalCollateral}
@@ -472,7 +506,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
       {dialogStage === "feeStructure" && (
         <>
-          <p className="text-muted-foreground text-sm mb-2">
+          <p className="text-muted-foreground mb-2 text-sm">
             Please confirm the fee structure of the loan.
           </p>
           <div className="bg-grey-450 rounded-lg p-2">
@@ -481,7 +515,10 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               setPrepaidPercent={setPrepaidPercent}
               feeData={newLoanFeeData}
               grossBorrowedNative={adjusted}
-              collateralAmount={formatUnits(newLoanCollateral, projectTokenDecimals)}
+              collateralAmount={formatUnits(
+                newLoanCollateral,
+                projectTokenDecimals
+              )}
               tokenSymbol={baseToken.symbol}
               collateralTokenSymbol={token.data?.symbol ?? "TOKENS"}
               displayYears={displayYears}
@@ -489,7 +526,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             />
           </div>
 
-          <div className="bg-grey-450 grid grid-cols-[60%_40%] text-sm rounded-lg p-3 [&>*:nth-child(odd)]:text-muted-foreground [&>*:nth-child(even)]:text-right">
+          <div className="bg-grey-450 [&>*:nth-child(odd)]:text-muted-foreground grid grid-cols-[60%_40%] rounded-lg p-3 text-sm [&>*:nth-child(even)]:text-right">
             {/*<p>
               Head Room To Reallocate: // what is this..?
             </p>
@@ -498,30 +535,27 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </p>*/}
             <p>Borrowing:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ?
+              {additionalCollateral && isBorrowableAmtLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              : newLoanBorrowableAmount ? 
+              ) : newLoanBorrowableAmount ? (
                 formatNumber(
                   formatUnits(newLoanBorrowableAmount, baseToken.decimals),
                   false
-                ) :
+                )
+              ) : (
                 "0.00"
-              }{" "}
+              )}{" "}
               {baseToken.symbol}
             </div>
-            <p>
-              Receive After Fees:
-            </p>
+            <p>Receive After Fees:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ? 
+              {additionalCollateral && isBorrowableAmtLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              : amountToWallet ? 
-                formatNumber(
-                  amountToWallet,
-                  false
-                ) :
+              ) : amountToWallet ? (
+                formatNumber(amountToWallet, false)
+              ) : (
                 "0.00"
-              }{" "}
+              )}{" "}
               {baseToken.symbol}
             </div>
           </div>
@@ -542,5 +576,5 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
         </>
       )}
     </div>
-  )
+  );
 }

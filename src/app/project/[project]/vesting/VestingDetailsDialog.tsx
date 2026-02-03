@@ -142,11 +142,11 @@ export function VestingDetailsDialog({
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg duration-200">
-          <Dialog.Title className="flex items-center gap-2 justify-between text-lg font-semibold">
+          <Dialog.Title className="flex items-center justify-between gap-2 text-lg font-semibold">
             Schedule Details
             {schedule.status === 0 ? (
               <div className="flex">
-                <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal uppercase text-nowrap">
+                <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal text-nowrap uppercase">
                   {isCompleted
                     ? " Completed"
                     : schedule.revokable
@@ -165,7 +165,8 @@ export function VestingDetailsDialog({
           {address?.toLowerCase() === schedule.beneficiary.toLowerCase() && (
             <Dialog.Description className="text-muted-foreground mt-2 text-sm">
               This is your vesting schedule, open the "Your Schedules" tab to
-              release all of your tokens, alternatively unlock your tokens below.
+              release all of your tokens, alternatively unlock your tokens
+              below.
             </Dialog.Description>
           )}
 
@@ -194,9 +195,7 @@ export function VestingDetailsDialog({
                 <p className="text-muted-foreground text-sm font-light">
                   Releasable Tokens
                 </p>
-                <p>
-                  {formatNumber(formatEther(schedule.releasableAmount))}
-                </p>
+                <p>{formatNumber(formatEther(schedule.releasableAmount))}</p>
               </div>
             </div>
 

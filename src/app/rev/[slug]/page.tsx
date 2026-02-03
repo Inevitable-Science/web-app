@@ -121,7 +121,5 @@ export default async function Page(props: Props) {
 import { DescriptionSection } from "./DescriptionSection";
 
 export default function Page() {
-  return (
-    <DescriptionSection />
-  )
+  return <DescriptionSection />;
 }

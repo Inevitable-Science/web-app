@@ -147,7 +147,9 @@ export function NetworkDetailsTable() {
 
   const availableToPayout = useMemo(() => {
     if (!nativeTokenSurplus || !tokenData?.reservedRate) return 0;
-    const surplusInEther = parseFloat(formatUnits(nativeTokenSurplus, baseToken.decimals));
+    const surplusInEther = parseFloat(
+      formatUnits(nativeTokenSurplus, baseToken.decimals)
+    );
     const reservedRateNumber = parseFloat(
       tokenData.reservedRate.replace("%", "")
     );

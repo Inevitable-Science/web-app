@@ -78,7 +78,7 @@ export const RevnetDataProvider = ({
   projectData,
   treasuryAnalytics,
   tokenAnalytics,
-  slug
+  slug,
 }: ContextPropType) => {
   // Foundational Hooks
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();

@@ -53,12 +53,13 @@ const primaryButtonClasses =
  * and then opens a Radix UI confirmation dialog before the transaction.
  */
 
-export type PaymentStatusType = "" |
-    "signing-approval" |
-    "rejected-approval" |
-    "signing-pay" |
-    "rejected-pay" |
-    "success";
+export type PaymentStatusType =
+  | ""
+  | "signing-approval"
+  | "rejected-approval"
+  | "signing-pay"
+  | "rejected-pay"
+  | "success";
 
 export function PayActionButton({
   amountA,
@@ -166,7 +167,7 @@ export function PayActionButton({
   useEffect(() => {
     if (isApproving) {
       setCurrentStep("signing-approval");
-    };
+    }
   }, [isApproving]);
 
   useEffect(() => {
@@ -215,7 +216,11 @@ export function PayActionButton({
 
         if (!paymentToken.isNative) {
           try {
-            await ensureAllowance(paymentToken.address, terminal.address, value);
+            await ensureAllowance(
+              paymentToken.address,
+              terminal.address,
+              value
+            );
             setUserHasApproved(true);
             setCurrentStep("");
           } catch (err) {
@@ -343,10 +348,9 @@ export function PayActionButton({
                 Before you continue...
               </Dialog.Title>
               <Dialog.Description className="text-muted-foreground mt-2 text-sm">
-                {metadata.data?.payDisclosure ? 
-                  "Please review and agree to the project's terms before proceeding." :
-                  "Please review the following."
-                }
+                {metadata.data?.payDisclosure
+                  ? "Please review and agree to the project's terms before proceeding."
+                  : "Please review the following."}
               </Dialog.Description>
 
               {metadata.data?.payDisclosure ? (
@@ -361,7 +365,9 @@ export function PayActionButton({
                     <Checkbox.Root
                       id="terms"
                       checked={agreedToTerms}
-                      onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
+                      onCheckedChange={(checked) =>
+                        setAgreedToTerms(Boolean(checked))
+                      }
                       className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
                     >
                       <Checkbox.Indicator className="flex items-center justify-center text-current">
@@ -378,8 +384,12 @@ export function PayActionButton({
                 </>
               ) : (
                 <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
-                  <p>Paying: {amountA.amount.format()} {paymentToken.symbol}</p>
-                  <p>Receive: ~{amountB.amount.format()} {amountB.symbol}</p>
+                  <p>
+                    Paying: {amountA.amount.format()} {paymentToken.symbol}
+                  </p>
+                  <p>
+                    Receive: ~{amountB.amount.format()} {amountB.symbol}
+                  </p>
                 </div>
               )}
 

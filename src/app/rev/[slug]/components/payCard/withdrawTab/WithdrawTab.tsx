@@ -40,7 +40,8 @@ export function WithdrawTab() {
   const { token } = useJBTokenContext();
 
   const receiveToken = useProjectBaseToken();
-  const receiveTokenAddress = receiveToken.tokenMap[selectedSucker.peerChainId].token;
+  const receiveTokenAddress =
+    receiveToken.tokenMap[selectedSucker.peerChainId].token;
 
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
@@ -65,7 +66,8 @@ export function WithdrawTab() {
     fetchSurpluses();
   }, []);
 
-  const surplus = surpluses?.find((s) => s.chainId === selectedSucker.peerChainId) || null;
+  const surplus =
+    surpluses?.find((s) => s.chainId === selectedSucker.peerChainId) || null;
 
   const { data: reclaimableAmount } = useReclaimableSurplus({
     chainId: selectedSucker.peerChainId,
@@ -73,7 +75,7 @@ export function WithdrawTab() {
     tokenAmount: withdrawAmountBigInt || undefined,
     version,
     decimals: receiveToken.decimals,
-    currencyId: surplus?.currencyId ?? 1
+    currencyId: surplus?.currencyId ?? 1,
   });
 
   const cashOutChainId = selectedSucker.peerChainId;
@@ -99,7 +101,10 @@ export function WithdrawTab() {
 
   //const receiveAmount = unitValue * Number(withdrawAmount);
   //const receiveAmountString = formatNumber(receiveAmount, false);
-  const receiveAmount = formatUnits(reclaimableAmount ?? 0n, receiveToken.decimals);
+  const receiveAmount = formatUnits(
+    reclaimableAmount ?? 0n,
+    receiveToken.decimals
+  );
   const receiveAmountString = formatNumber(receiveAmount, false);
 
   const setManualWithdrawAmount = (percentage: number) => {
@@ -151,14 +156,15 @@ export function WithdrawTab() {
           </div>
           <div className="flex flex-col items-end gap-[2px]">
             <WithdrawSelector suckersBalance={balanceQuery.data} />
-            <p className="text-muted-foreground flex items-center justify-end gap-1 w-[130px] text-right text-sm font-light text-nowrap select-none">
+            <p className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {balanceQuery.isLoading ? 
-                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" /> :
-                !currentChainBalNum ?
-                "0.00" :
+              {balanceQuery.isLoading ? (
+                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
+              ) : !currentChainBalNum ? (
+                "0.00"
+              ) : (
                 formatNumber(currentChainBalNum, false)
-              }
+              )}
             </p>
           </div>
         </div>
@@ -169,10 +175,7 @@ export function WithdrawTab() {
             <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
-            <PayInput
-              value={receiveAmountString}
-              disabled
-            />
+            <PayInput value={receiveAmountString} disabled />
           </div>
           <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full px-1.5 py-1">
             <div className="flex items-end">
@@ -208,18 +211,15 @@ export function WithdrawTab() {
         </div>
       </div>
 
-      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg sm:grid">
-        {[10, 25, 50, 100].map(percent => (
+      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg">
+        {[10, 25, 50, 100].map((percent) => (
           <Button
             key={percent}
             className="h-[28px] rounded-xs"
             onClick={() => setManualWithdrawAmount(percent)}
             disabled={!unitValue}
           >
-            {percent === 100 ?
-              "MAX" :
-              `${percent}%`
-            }
+            {percent === 100 ? "MAX" : `${percent}%`}
           </Button>
         ))}
       </div>

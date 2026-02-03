@@ -4,11 +4,7 @@ import { Token } from "@/lib/token";
 import Image from "next/image";
 import { useJBChainId } from "juice-sdk-react";
 
-export function PayCardSkeleton({
-  selectedToken,
-}: {
-  selectedToken: Token;
-}) {
+export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
   const chainId = useJBChainId();
 
   return (

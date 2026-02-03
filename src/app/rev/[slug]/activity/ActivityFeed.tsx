@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ActivityEventsTable } from "./ActivityEventsTable";

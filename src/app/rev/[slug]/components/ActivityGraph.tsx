@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { CSSProperties, useMemo, useState } from "react";
 import {
   CartesianGrid,
@@ -72,14 +72,20 @@ export default function ActivityGraph({
     dailyTotals.forEach((day) => {
       // Normalize the date to a string key to avoid timezone issues.
       const dateKey = day.date.toISOString().split("T")[0];
-      volumeMap.set(dateKey, Number(formatUnits(day.volume, baseToken.decimals)));
+      volumeMap.set(
+        dateKey,
+        Number(formatUnits(day.volume, baseToken.decimals))
+      );
     });
 
     const fullData: ProjectTimelinePoint[] = [];
 
     let initialCumulativeVolume = dailyTotals
       .filter((day) => day.date.getTime() < startTimestamp)
-      .reduce((sum, day) => sum + Number(formatUnits(day.volume, baseToken.decimals)), 0);
+      .reduce(
+        (sum, day) => sum + Number(formatUnits(day.volume, baseToken.decimals)),
+        0
+      );
 
     // 2. Loop through every day in the selected date range.
     for (let i = 0; i <= range; i++) {

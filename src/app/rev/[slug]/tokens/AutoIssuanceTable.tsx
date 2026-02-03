@@ -1,16 +1,31 @@
-"use client"
+"use client";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useToast } from "@/components/ui/use-toast";
 import { useAutoIssuances } from "@/hooks/useAutoIssuances";
 import { formatDate, formatNumber } from "@/lib/utils";
-import { formatUnits, JB_CHAINS, JBChainId, revDeployerAbi, RevnetCoreContracts, SuckerPair } from "juice-sdk-core";
+import {
+  formatUnits,
+  JB_CHAINS,
+  JBChainId,
+  revDeployerAbi,
+  RevnetCoreContracts,
+  SuckerPair,
+} from "juice-sdk-core";
 import { useJBChainId, useJBContractContext } from "juice-sdk-react";
 import { useEffect, useState } from "react";
 import { Address } from "viem";
-import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
-export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPair | undefined }) {
+export function AutoIssuanceTable({
+  selectedSucker,
+}: {
+  selectedSucker: SuckerPair | undefined;
+}) {
   const [isPending, setIsPending] = useState(false);
   const [hash, setHash] = useState<`0x${string}` | undefined>();
 
@@ -21,21 +36,26 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
   const { toast } = useToast();
   const { contractAddress } = useJBContractContext();
   const { writeContractAsync } = useWriteContract();
-  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
+    hash,
+  });
   const { address: userAddress } = useAccount();
 
-  const userIsBeneficiary = autoIssuance?.some(i => i.beneficiary.toLowerCase() === userAddress?.toLowerCase()) ?? false;
+  const userIsBeneficiary =
+    autoIssuance?.some(
+      (i) => i.beneficiary.toLowerCase() === userAddress?.toLowerCase()
+    ) ?? false;
 
   useEffect(() => {
     if (isSuccess) {
       toast({
         title: "Successfully Distributed",
-        description: "Successfully distributed auto issuances."
+        description: "Successfully distributed auto issuances.",
       });
     } else if (isError) {
       toast({
         title: "Failed To Distribute",
-        description: "Couldn't distribute auto issuance."
+        description: "Couldn't distribute auto issuance.",
       });
     }
   }, [isLoading, isSuccess]);
@@ -50,13 +70,9 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
         functionName: "autoIssueFor",
         address: contractAddress(RevnetCoreContracts.REVDeployer),
         chainId: suckerChainId,
-        args: [
-          BigInt(selectedSucker.projectId),
-          stageId,
-          beneficiary,
-        ],
+        args: [BigInt(selectedSucker.projectId), stageId, beneficiary],
       });
-      
+
       setHash(hash);
     } catch (err) {
       console.log(err);
@@ -67,10 +83,8 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
 
   return (
     <>
-      <h3 className="text-lg mt-4">
-        Auto Issuance
-      </h3>
-      <div className="gridContainer my-2 text-sm gap-1 sm:gap-0">
+      <h3 className="mt-4 text-lg">Auto Issuance</h3>
+      <div className="gridContainer my-2 gap-1 text-sm sm:gap-0">
         <p>Stage</p>
         <p>Beneficiary</p>
         <p className="tokenAmountItem">Token Amount</p>
@@ -79,66 +93,75 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
       </div>
       <div className="background-color rounded p-3">
         {!autoIssuance ? (
-          <div className="gridContainer py-3 border-b border-grey-450 text-sm opacity-40">
+          <div className="gridContainer border-grey-450 border-b py-3 text-sm opacity-40">
             <div className="activeSkeleton h-[22px] w-[22px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] sm:w-[94px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm tokenAmountItem" />
+            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm sm:w-[94px]" />
+            <div className="activeSkeleton tokenAmountItem h-[22px] w-[64px] rounded-sm" />
             <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
-            <div className="activeSkeleton h-[22px] w-[64px] rounded-sm statusItem" />
+            <div className="activeSkeleton statusItem h-[22px] w-[64px] rounded-sm" />
           </div>
-        ) : autoIssuance.length > 0 ?
-        autoIssuance?.map(issuance => {
-          const releaseDateMs = (issuance.startsAt ?? 0) * 1000;
-          const releaseDate = new Date(releaseDateMs);
-          const canRelease = (new Date().getTime() / 1000) > Number(issuance.startsAt);
+        ) : autoIssuance.length > 0 ? (
+          autoIssuance?.map((issuance) => {
+            const releaseDateMs = (issuance.startsAt ?? 0) * 1000;
+            const releaseDate = new Date(releaseDateMs);
+            const canRelease =
+              new Date().getTime() / 1000 > Number(issuance.startsAt);
 
-          return (
-            <div key={issuance.id} className="gridContainer items-center py-3 border-b border-grey-450 text-sm">
-              <p>{issuance.stage}</p>
-              <EthereumAddress
-                address={issuance.beneficiary as Address}
-                chain={JB_CHAINS[chainId as JBChainId].chain} 
-                className="w-fit"
-                withEnsName short
-              />
-              <p className="tokenAmountItem">
-                {formatNumber(formatUnits(issuance.count, 18))} 
-              </p>
-              <p>
-                {formatDate(releaseDate, true)}
-              </p>
+            return (
+              <div
+                key={issuance.id}
+                className="gridContainer border-grey-450 items-center border-b py-3 text-sm"
+              >
+                <p>{issuance.stage}</p>
+                <EthereumAddress
+                  address={issuance.beneficiary as Address}
+                  chain={JB_CHAINS[chainId as JBChainId].chain}
+                  className="w-fit"
+                  withEnsName
+                  short
+                />
+                <p className="tokenAmountItem">
+                  {formatNumber(formatUnits(issuance.count, 18))}
+                </p>
+                <p>{formatDate(releaseDate, true)}</p>
 
-              <div className="statusItem">
-                {issuance.distributed ? (
-                  <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
-                    Distributed
-                  </p>
-                ) : canRelease ?
-                  userIsBeneficiary ? (
-                    <ButtonWithWallet
-                      loading={isPending || isLoading}
-                      targetChainId={suckerChainId}
-                      onClick={() => distributeSplit(issuance.stageId, issuance.beneficiary as Address)}
-                      variant={"accent"}
-                      className="h-[32px]"
-                    >
-                      Distribute
-                    </ButtonWithWallet>
-                  ) : (
-                    <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
-                      Unlocked
+                <div className="statusItem">
+                  {issuance.distributed ? (
+                    <p className="bg-gunmetal h-fit w-fit rounded-full px-2 py-1 text-xs uppercase">
+                      Distributed
                     </p>
+                  ) : canRelease ? (
+                    userIsBeneficiary ? (
+                      <ButtonWithWallet
+                        loading={isPending || isLoading}
+                        targetChainId={suckerChainId}
+                        onClick={() =>
+                          distributeSplit(
+                            issuance.stageId,
+                            issuance.beneficiary as Address
+                          )
+                        }
+                        variant={"accent"}
+                        className="h-[32px]"
+                      >
+                        Distribute
+                      </ButtonWithWallet>
+                    ) : (
+                      <p className="bg-gunmetal h-fit w-fit rounded-full px-2 py-1 text-xs uppercase">
+                        Unlocked
+                      </p>
+                    )
                   ) : (
-                    <p className="rounded-full h-fit w-fit bg-gunmetal px-2 py-1 text-xs uppercase">
+                    <p className="bg-gunmetal h-fit w-fit rounded-full px-2 py-1 text-xs uppercase">
                       Locked
                     </p>
                   )}
                 </div>
               </div>
-            )
-          }
+            );
+          })
         ) : (
-          <div className="flex justify-center items-center h-[49px]">
+          <div className="flex h-[49px] items-center justify-center">
             <p className="text-muted-foreground text-sm">
               No Auto Issuances Set
             </p>
@@ -197,5 +220,5 @@ export function AutoIssuanceTable({ selectedSucker }: { selectedSucker: SuckerPa
       }
       `}</style>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { ArrowRight } from "lucide-react";
 import { SelectedTabType, useRevnetDataStore } from "@/store/RevnetDataContext";
 import { usePathname } from "next/navigation";
@@ -29,23 +29,19 @@ function useProjectTabs() {
 
 export function TabSelectorSM() {
   const tabs = useProjectTabs();
-  const slug = useRevnetDataStore(state => state.slug);
-  
+  const slug = useRevnetDataStore((state) => state.slug);
+
   const pathname = usePathname();
   const finalSegment = pathname.split("/").pop();
   const selectedTab =
-    finalSegment?.toLowerCase() === slug.toLowerCase()
-      ? "about"
-      : finalSegment;
+    finalSegment?.toLowerCase() === slug.toLowerCase() ? "about" : finalSegment;
 
   return (
     <aside className="block lg:hidden">
       <div className="mb-6 flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const projectSlug =
-            tab.key === "about"
-              ? `/rev/${slug}`
-              : `/rev/${slug}/${tab.key}`;
+            tab.key === "about" ? `/rev/${slug}` : `/rev/${slug}/${tab.key}`;
 
           return (
             <Link href={projectSlug} key={tab.key}>
@@ -59,8 +55,8 @@ export function TabSelectorSM() {
                 {tab.label}
               </button>
             </Link>
-          )}
-        )}
+          );
+        })}
       </div>
     </aside>
   );
@@ -68,23 +64,19 @@ export function TabSelectorSM() {
 
 export function TabSelectorLG() {
   const tabs = useProjectTabs();
-  const slug = useRevnetDataStore(state => state.slug);
+  const slug = useRevnetDataStore((state) => state.slug);
 
   const pathname = usePathname();
   const finalSegment = pathname.split("/").pop();
   const selectedTab =
-    finalSegment?.toLowerCase() === slug.toLowerCase()
-      ? "about"
-      : finalSegment;
+    finalSegment?.toLowerCase() === slug.toLowerCase() ? "about" : finalSegment;
 
   return (
     <aside className="hidden max-w-54 lg:block">
       <div className="mb-6 flex min-w-[110px] flex-col items-start gap-2">
         {tabs.map((tab) => {
           const projectSlug =
-            tab.key === "about"
-              ? `/rev/${slug}`
-              : `/rev/${slug}/${tab.key}`;
+            tab.key === "about" ? `/rev/${slug}` : `/rev/${slug}/${tab.key}`;
 
           return (
             <Link href={projectSlug} key={tab.key}>
@@ -101,8 +93,8 @@ export function TabSelectorLG() {
                 </span>
               </button>
             </Link>
-          )}
-        )}
+          );
+        })}
       </div>
     </aside>
   );

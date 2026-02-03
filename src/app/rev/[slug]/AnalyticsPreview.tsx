@@ -34,8 +34,7 @@ export function DaoData() {
             <div className="background-color rounded-2xl p-[16px]">
               {treasuryAnalytics ? (
                 <h4 className="mb-0.5 text-xl tracking-wider">
-                  $
-                  {formatNumber(treasuryAnalytics.assetsUnderManagement)}
+                  ${formatNumber(treasuryAnalytics.assetsUnderManagement)}
                 </h4>
               ) : (
                 <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -93,8 +92,7 @@ export function DaoData() {
               <div className="background-color rounded-2xl p-[16px]">
                 {tokenAnalytics ? (
                   <h4 className="mb-0.5 text-xl tracking-wider">
-                    $
-                    {formatNumber(tokenAnalytics.selectedToken.marketCap)}
+                    ${formatNumber(tokenAnalytics.selectedToken.marketCap)}
                   </h4>
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>

@@ -1,22 +1,41 @@
-"use client"
+"use client";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
-import { getRevnetLoanContract, JB_TOKEN_DECIMALS, JBChainId, revLoansAbi } from "juice-sdk-core";
-import { useJBContractContext, useJBProjectMetadataContext, useJBTokenContext } from "juice-sdk-react";
+import {
+  getRevnetLoanContract,
+  JB_TOKEN_DECIMALS,
+  JBChainId,
+  revLoansAbi,
+} from "juice-sdk-core";
+import {
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
+} from "juice-sdk-react";
 import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";
 import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
 import { formatNumber, formatWalletError } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { useAccount, usePublicClient, useReadContract, useSimulateContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useReadContract,
+  useSimulateContract,
+  useWriteContract,
+} from "wagmi";
 import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 
-const calculateCollateralAmount = (input: string, maxCollateral: bigint, projectTokenDecimals: number): bigint => {
+const calculateCollateralAmount = (
+  input: string,
+  maxCollateral: bigint,
+  projectTokenDecimals: number
+): bigint => {
   try {
     const userInputWei = parseUnits(input, projectTokenDecimals);
     return userInputWei >= maxCollateral ? maxCollateral : userInputWei;
@@ -28,16 +47,15 @@ const calculateCollateralAmount = (input: string, maxCollateral: bigint, project
 export function RepayTab({ loan }: { loan: LoanType }) {
   const [collateralToReturn, setCollateralToReturn] = useState("");
   const [repayStatus, setRepayStatus] = useState<
-    "" |
-    "signing-approval" |
-    "rejected-approval" |
-    "signing-repay" |
-    "rejected-repay" |
-    "success"
+    | ""
+    | "signing-approval"
+    | "rejected-approval"
+    | "signing-repay"
+    | "rejected-repay"
+    | "success"
   >("");
   const [hasApproved, setHasApproved] = useState(false);
   const [isPending, setIsPending] = useState(false);
-
 
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
@@ -52,8 +70,13 @@ export function RepayTab({ loan }: { loan: LoanType }) {
   const publicClient = usePublicClient();
   const { toast } = useToast();
 
-  const collateralToReturnBigInt = parseUnits(collateralToReturn, baseToken.decimals);
-  const collateralToReturnPercent = loan.collateral ? (collateralToReturnBigInt * 100n) / loan.collateral : 0n;
+  const collateralToReturnBigInt = parseUnits(
+    collateralToReturn,
+    baseToken.decimals
+  );
+  const collateralToReturnPercent = loan.collateral
+    ? (collateralToReturnBigInt * 100n) / loan.collateral
+    : 0n;
 
   const insufficientCollateral = collateralToReturnBigInt > loan.collateral;
 
@@ -70,7 +93,11 @@ export function RepayTab({ loan }: { loan: LoanType }) {
   const simulationArgs = [
     BigInt(loan.id),
     loan.borrowAmount, // Always use full loan amount - contract will calculate exact amount needed
-    calculateCollateralAmount(collateralToReturn, loan.collateral, baseToken.decimals),
+    calculateCollateralAmount(
+      collateralToReturn,
+      loan.collateral,
+      baseToken.decimals
+    ),
     address as Address,
     {
       sigDeadline: 0n,
@@ -91,19 +118,19 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     functionName: "repayLoan",
     address: getRevnetLoanContract(version, loanChainId),
     chainId: loanChainId,
-    args: (simulationArgs as unknown as readonly [
-            bigint,
-            bigint,
-            bigint,
-            `0x${string}`,
-            {
-              sigDeadline: bigint;
-              amount: bigint;
-              expiration: number;
-              nonce: number;
-              signature: `0x${string}`;
-            },
-          ]),
+    args: simulationArgs as unknown as readonly [
+      bigint,
+      bigint,
+      bigint,
+      `0x${string}`,
+      {
+        sigDeadline: bigint;
+        amount: bigint;
+        expiration: number;
+        nonce: number;
+        signature: `0x${string}`;
+      },
+    ],
     value: baseToken.isNative ? loanData?.amount : 0n, // Only send ETH value for ETH-based projects
   });
 
@@ -112,7 +139,10 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     if (!simulationResult?.result) return undefined;
 
     // Try to extract amount from simulation result
-    if (Array.isArray(simulationResult.result) && simulationResult.result.length >= 2) {
+    if (
+      Array.isArray(simulationResult.result) &&
+      simulationResult.result.length >= 2
+    ) {
       const remainingLoanAmount = simulationResult.result[1]?.amount;
 
       if (remainingLoanAmount !== undefined && loanData) {
@@ -167,7 +197,10 @@ export function RepayTab({ loan }: { loan: LoanType }) {
 
       // Check allowance for USDC-based projects
       if (!baseToken.isNative) {
-        const revLoansContractAddress = getRevnetLoanContract(version, loanChainId);
+        const revLoansContractAddress = getRevnetLoanContract(
+          version,
+          loanChainId
+        );
 
         const allowance = await publicClient.readContract({
           address: baseTokenAddress,
@@ -233,7 +266,6 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         console.error(err);
         setRepayStatus("rejected-repay");
       }
-
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -245,12 +277,9 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     }
   };
 
-
   return (
     <div className="flex flex-col gap-2">
-      <DialogTitle className="text-lg font-semibold">
-        Repay Loan
-      </DialogTitle>
+      <DialogTitle className="text-lg font-semibold">Repay Loan</DialogTitle>
       <p className="text-muted-foreground text-sm">
         Amount of collateral you want to unlock
       </p>
@@ -266,7 +295,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           />
         </div>
         <div className="flex flex-col items-end gap-1">
-          <div className="background-color flex w-fit min-w-fit items-center gap-1 rounded-full pl-1.5 pr-2 py-1">
+          <div className="background-color flex w-fit min-w-fit items-center gap-1 rounded-full py-1 pr-2 pl-1.5">
             <div className="flex items-end">
               <Image
                 src={
@@ -286,86 +315,91 @@ export function RepayTab({ loan }: { loan: LoanType }) {
               />
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
-                <ChainLogo
-                  chainId={loan.chainId}
-                  height={16}
-                  width={16}
-                />
+                <ChainLogo chainId={loan.chainId} height={16} width={16} />
               </div>
             </div>
-            <p className="text-lg font-light">{token.data?.symbol ?? "TOKENS"}</p>
+            <p className="text-lg font-light">
+              {token.data?.symbol ?? "TOKENS"}
+            </p>
           </div>
           <p className="text-muted-foreground text-right text-sm font-light text-nowrap select-none">
             Collateral:{" "}
-            {formatNumber(
-              formatUnits(loan.collateral, projectTokenDecimals)
-            )}
+            {formatNumber(formatUnits(loan.collateral, projectTokenDecimals))}
           </p>
         </div>
       </div>
 
       <div className="bg-grey-450 hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg">
-        {[10, 25, 50, 100].map(percent =>
+        {[10, 25, 50, 100].map((percent) => (
           <Button
             className="h-[28px] rounded-xs"
             variant={"secondary"}
             key={percent}
             onClick={() => {
-              const amount = loan.collateral / 100n * BigInt(percent);
+              const amount = (loan.collateral / 100n) * BigInt(percent);
               const formattedAmount = formatUnits(amount, projectTokenDecimals);
               setCollateralToReturn(formattedAmount);
             }}
           >
             {percent === 100 ? "MAX" : `${percent}%`}
           </Button>
-        )}
+        ))}
       </div>
 
-      <div className="bg-grey-450 grid grid-cols-[60%_40%] text-sm rounded-lg p-3 [&>*:nth-child(odd)]:text-muted-foreground [&>*:nth-child(even)]:text-right">
+      <div className="bg-grey-450 [&>*:nth-child(odd)]:text-muted-foreground grid grid-cols-[60%_40%] rounded-lg p-3 text-sm [&>*:nth-child(even)]:text-right">
         <p>Current Borrow Amount:</p>
         <p>
           {formatNumber(
             formatUnits(loan.borrowAmount, projectTokenDecimals),
             false
-          )} {baseToken.symbol}
+          )}{" "}
+          {baseToken.symbol}
         </p>
-        <p>Collateral To Unlock ({Number(collateralToReturnPercent) > 100 ? ">100" : Number(collateralToReturnPercent)
-          }%):</p>
-        <p>{formatNumber(collateralToReturn, false) || 0} {token.data?.symbol}</p>
+        <p>
+          Collateral To Unlock (
+          {Number(collateralToReturnPercent) > 100
+            ? ">100"
+            : Number(collateralToReturnPercent)}
+          %):
+        </p>
+        <p>
+          {formatNumber(collateralToReturn, false) || 0} {token.data?.symbol}
+        </p>
         <p>Amount To Pay Now:</p>
         <div className="flex justify-end">
-          {collateralToReturn && isSimulating ? 
-            <div className="activeSkeleton rounded-sm h-[16px] w-[48px]" />
-          : exactRepayAmount === undefined ?
+          {collateralToReturn && isSimulating ? (
+            <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
+          ) : exactRepayAmount === undefined ? (
             `0 ${baseToken.symbol}`
-          :
+          ) : (
             `${formatNumber(
               formatUnits(exactRepayAmount, baseToken.decimals),
               false
             )} ${baseToken.symbol}`
-          }
+          )}
         </div>
         <p>Amount Carried Into New Loan:</p>
         <div className="flex justify-end">
-          {collateralToReturn && (isSimulating || isLoadingLoan) ? 
-            <div className="activeSkeleton rounded-sm h-[16px] w-[48px]" />
-          : exactRepayAmount === undefined || !loanData?.amount ?
+          {collateralToReturn && (isSimulating || isLoadingLoan) ? (
+            <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
+          ) : exactRepayAmount === undefined || !loanData?.amount ? (
             `0 ${baseToken.symbol}`
-          : 
+          ) : (
             `${formatNumber(
-              formatUnits(loanData.amount - exactRepayAmount, baseToken.decimals),
+              formatUnits(
+                loanData.amount - exactRepayAmount,
+                baseToken.decimals
+              ),
               false
             )} 
             ${baseToken.symbol}`
-          }
+          )}
         </div>
       </div>
 
       <div className="mt-6 flex justify-end space-x-2">
         <DialogClose asChild>
-          <Button>
-            Cancel
-          </Button>
+          <Button>Cancel</Button>
         </DialogClose>
         <ButtonWithWallet
           targetChainId={loanChainId}
@@ -374,12 +408,9 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           loading={isPending}
           className="bg-cerulean!"
         >
-          {insufficientCollateral ?
-            "Insufficient Collateral" :
-            "Pay"
-          }
+          {insufficientCollateral ? "Insufficient Collateral" : "Pay"}
         </ButtonWithWallet>
       </div>
     </div>
-  )
+  );
 }

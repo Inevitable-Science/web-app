@@ -47,7 +47,9 @@ export function TransactionCard() {
     [peerChainId, version]
   );
 
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">("buy");
+  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">(
+    "buy"
+  );
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
   useEffect(() => {
@@ -135,13 +137,13 @@ export function TransactionCard() {
         </div>
 
         <div className="my-4">
-          {activeTab === "buy" && 
+          {activeTab === "buy" && (
             <PayTab
               tokens={tokens}
               selectedToken={selectedToken}
               setSelectedToken={setSelectedToken}
             />
-          }
+          )}
 
           {activeTab === "withdraw" && <WithdrawTab />}
 

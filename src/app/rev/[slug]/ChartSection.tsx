@@ -15,7 +15,7 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 export function ChartSection() {
   const { projectId, version } = useJBContractContext();
   const chainId = useJBChainId();
-  const slug = useRevnetDataStore(state => state.slug);
+  const slug = useRevnetDataStore((state) => state.slug);
 
   const { data: project } = useBendystrawQuery(ProjectDocument, {
     chainId: Number(chainId),

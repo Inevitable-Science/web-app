@@ -1,10 +1,7 @@
 "use client";
 
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
-import {
-  scheduleCreateRole,
-  vestingContracts,
-} from "@/lib/vesting/constants";
+import { scheduleCreateRole, vestingContracts } from "@/lib/vesting/constants";
 import { useEffect } from "react";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
 import { getContract } from "viem";

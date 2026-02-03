@@ -126,7 +126,7 @@ export default async function RevnetPageLayout({ children, params }: Props) {
         </div>
         <div className="ctWrapper mb-10 flex flex-wrap gap-8 px-4 pb-5 sm:mb-24 md:flex-nowrap">
           <TabSelectorLG />
-  
+
           {/* Column 1 */}
           <div className="flex-1">
             <div className="block md:hidden">
@@ -134,23 +134,23 @@ export default async function RevnetPageLayout({ children, params }: Props) {
                 <TransactionCard />
               </div>
             </div>
-  
+
             <div className="mx-auto max-w-4xl">
               <section className="mb-10">
                 <TabSelectorSM />
-  
+
                 {children}
               </section>
             </div>
           </div>
-  
+
           <div className="hidden w-full md:block md:w-[340px] lg:w-[400px]">
             <div className="mb-4">
               <TransactionCard />
             </div>
           </div>
         </div>
-  
+
         <OtherDaosCarousel />
       </RevnetDataProvider>
     </JBProjectProviderRoot>

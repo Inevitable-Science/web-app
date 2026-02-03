@@ -1,5 +1,10 @@
 import { applyNanaFee, applyRevFee } from "@/lib/feeHelpers";
-import { getProjectTerminalStore, JBChainId, jbTerminalStoreAbi, JBVersion } from "juice-sdk-core";
+import {
+  getProjectTerminalStore,
+  JBChainId,
+  jbTerminalStoreAbi,
+  JBVersion,
+} from "juice-sdk-core";
 import { useReadContract } from "wagmi";
 
 export function useReclaimableSurplus(params: {
@@ -10,16 +15,27 @@ export function useReclaimableSurplus(params: {
   decimals: number;
   currencyId: number;
 }) {
-  const { chainId, projectId, tokenAmount, version, decimals, currencyId } = params;
+  const { chainId, projectId, tokenAmount, version, decimals, currencyId } =
+    params;
 
   const { data: raw, ...rest } = useReadContract({
     abi: jbTerminalStoreAbi,
-    address: chainId && version ? getProjectTerminalStore(chainId, version) : undefined,
+    address:
+      chainId && version
+        ? getProjectTerminalStore(chainId, version)
+        : undefined,
     functionName: "currentReclaimableSurplusOf",
     chainId,
     args:
       projectId && tokenAmount
-        ? [projectId, applyRevFee(tokenAmount), [], [], BigInt(decimals), BigInt(currencyId)]
+        ? [
+            projectId,
+            applyRevFee(tokenAmount),
+            [],
+            [],
+            BigInt(decimals),
+            BigInt(currencyId),
+          ]
         : undefined,
   });
 

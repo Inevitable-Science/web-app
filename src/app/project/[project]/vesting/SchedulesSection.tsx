@@ -213,63 +213,67 @@ export function SchedulesSection({
 
             <div className="background-color rounded p-3 text-sm">
               {schedules.length === 0 ? (
-                <div className="flex flex-col gap-1 items-center my-4">
-                  <AlarmClockOff className="stroke-muted-foreground" height={38} width={38} />
-                  <p className="text-muted-foreground">
-                    No Vesting Schedules
-                  </p>
+                <div className="my-4 flex flex-col items-center gap-1">
+                  <AlarmClockOff
+                    className="stroke-muted-foreground"
+                    height={38}
+                    width={38}
+                  />
+                  <p className="text-muted-foreground">No Vesting Schedules</p>
                 </div>
-              ) : schedules
-                .sort((a, b) => Number(b.amountTotal) - Number(a.amountTotal))
-                .map((schedule) => {
-                  const startDateMs = Number(schedule.start) * 1000;
-                  const startDate = new Date(startDateMs);
+              ) : (
+                schedules
+                  .sort((a, b) => Number(b.amountTotal) - Number(a.amountTotal))
+                  .map((schedule) => {
+                    const startDateMs = Number(schedule.start) * 1000;
+                    const startDate = new Date(startDateMs);
 
-                  const durationMs = Number(schedule.duration) * 1000;
-                  const endDateMs = startDateMs + durationMs;
-                  const endDate = new Date(endDateMs);
+                    const durationMs = Number(schedule.duration) * 1000;
+                    const endDateMs = startDateMs + durationMs;
+                    const endDate = new Date(endDateMs);
 
-                  return (
-                    <div
-                      key={schedule.id}
-                      className="border-grey-450 parentTable grid items-center border-b py-3"
-                    >
-                      <EthereumAddress
-                        address={schedule.beneficiary as Address}
-                        chain={JB_CHAINS[chainId as ViemChainIdType].chain}
-                        short
-                        withEnsName
-                      />
-                      <p className="tokenAmountTableElement">
-                        {formatNumber(
-                          Number(formatEther(schedule.amountTotal))
-                        )}
-                      </p>
-                      <p className="startTableElement">
-                        {formatDate(startDate, true)}
-                      </p>
-                      <div className="endTableElement">
-                        {schedule.status === 0 ? (
-                          <p>{formatDate(endDate, true)}</p>
-                        ) : (
-                          <div className="flex">
-                            <p className="rounded-full bg-red-900 px-2 py-1 text-xs">
-                              REVOKED
-                            </p>
-                          </div>
-                        )}
+                    return (
+                      <div
+                        key={schedule.id}
+                        className="border-grey-450 parentTable grid items-center border-b py-3"
+                      >
+                        <EthereumAddress
+                          address={schedule.beneficiary as Address}
+                          chain={JB_CHAINS[chainId as ViemChainIdType].chain}
+                          short
+                          withEnsName
+                        />
+                        <p className="tokenAmountTableElement">
+                          {formatNumber(
+                            Number(formatEther(schedule.amountTotal))
+                          )}
+                        </p>
+                        <p className="startTableElement">
+                          {formatDate(startDate, true)}
+                        </p>
+                        <div className="endTableElement">
+                          {schedule.status === 0 ? (
+                            <p>{formatDate(endDate, true)}</p>
+                          ) : (
+                            <div className="flex">
+                              <p className="rounded-full bg-red-900 px-2 py-1 text-xs">
+                                REVOKED
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex justify-end">
+                          <VestingDetailsDialog schedule={schedule}>
+                            <button className="bg-gunmetal flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
+                              Details
+                              <ArrowRightIcon height="18" width="18" />
+                            </button>
+                          </VestingDetailsDialog>
+                        </div>
                       </div>
-                      <div className="flex justify-end">
-                        <VestingDetailsDialog schedule={schedule}>
-                          <button className="bg-gunmetal flex cursor-pointer items-center gap-2 rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
-                            Details
-                            <ArrowRightIcon height="18" width="18" />
-                          </button>
-                        </VestingDetailsDialog>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+              )}
             </div>
           </>
         ) : (

@@ -1,10 +1,14 @@
-"use client"
+"use client";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 import { jbControllerAbi, SuckerPair } from "juice-sdk-core";
 import { useJBContractContext } from "juice-sdk-react";
 import { useEffect, useState } from "react";
-import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
 
 interface ReservedTokenSplit {
   percent: number;
@@ -13,42 +17,49 @@ interface ReservedTokenSplit {
   preferAddToBalance: boolean;
   lockedUntil: number;
   hook: `0x${string}`;
-};
+}
 
-export function DistributeReservedTokensButton({ 
+export function DistributeReservedTokensButton({
   reservedTokenSplits,
   pendingReserveTokenBalance,
-  selectedSucker
-}: { 
+  selectedSucker,
+}: {
   reservedTokenSplits: readonly ReservedTokenSplit[] | undefined;
   pendingReserveTokenBalance: bigint | undefined;
   selectedSucker: SuckerPair | undefined;
 }) {
   const [isPending, setIsPending] = useState(false);
   const [hash, setHash] = useState<`0x${string}` | undefined>();
-  const { contracts: { controller } } = useJBContractContext();
+  const {
+    contracts: { controller },
+  } = useJBContractContext();
 
-  const { address } = useAccount();  
+  const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
+  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
+    hash,
+  });
   const { toast } = useToast();
 
   const selectedChain = selectedSucker?.peerChainId;
   const selectedProjectId = selectedSucker?.projectId;
 
-  const mappedBeneficiaries = reservedTokenSplits?.map(s => s.beneficiary);
-  const userIsBeneficiary = mappedBeneficiaries?.some(s => s.toLowerCase() === address?.toLocaleLowerCase()) ?? false;
+  const mappedBeneficiaries = reservedTokenSplits?.map((s) => s.beneficiary);
+  const userIsBeneficiary =
+    mappedBeneficiaries?.some(
+      (s) => s.toLowerCase() === address?.toLocaleLowerCase()
+    ) ?? false;
 
   useEffect(() => {
     if (isSuccess) {
       toast({
         title: "Successfully Distributed",
-        description: "Successfully distributed reserved tokens."
+        description: "Successfully distributed reserved tokens.",
       });
     } else if (isError) {
       toast({
         title: "Failed To Distribute",
-        description: "Couldn't distribute reserved tokens."
+        description: "Couldn't distribute reserved tokens.",
       });
     }
   }, [isLoading, isSuccess]);
@@ -67,7 +78,6 @@ export function DistributeReservedTokensButton({
       });
 
       setHash(hash);
-
     } catch (err) {
       console.log(err);
     } finally {
@@ -87,6 +97,6 @@ export function DistributeReservedTokensButton({
       >
         Distribute Pending Splits
       </ButtonWithWallet>
-    )
+    );
   }
 }

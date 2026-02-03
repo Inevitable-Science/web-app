@@ -65,7 +65,7 @@ export function TokenSection() {
   const suckers = useRevnetDataStore((state) => state.suckers);
 
   if (!tokenAnalytics) return notFound();
-  
+
   return (
     <section>
       {tokenAnalytics?.selectedToken.ticker && (

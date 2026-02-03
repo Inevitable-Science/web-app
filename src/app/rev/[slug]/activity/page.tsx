@@ -1,7 +1,5 @@
 import { ActivityFeed } from "./ActivityFeed";
 
 export default function Page() {
-  return (
-    <ActivityFeed />
-  )
+  return <ActivityFeed />;
 }

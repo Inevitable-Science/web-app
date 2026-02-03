@@ -13,7 +13,11 @@ import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
 import { LoanChainSelector } from "./LoanChainSelector";
 import { useReadContract } from "wagmi";
-import { getRevnetLoanContract, JB_TOKEN_DECIMALS, revLoansAbi } from "juice-sdk-core";
+import {
+  getRevnetLoanContract,
+  JB_TOKEN_DECIMALS,
+  revLoansAbi,
+} from "juice-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { LoanActionButton } from "./LoanActionButton";
 
@@ -29,7 +33,9 @@ export function LoanTab() {
   const [borrowEstimate, setBorrowEstimate] = useState("");
 
   // Token Balances
-  const currentChainBalanceObj = balanceQuery?.data?.find((tkn) => tkn.chainId === selectedSucker.peerChainId)?.balance;
+  const currentChainBalanceObj = balanceQuery?.data?.find(
+    (tkn) => tkn.chainId === selectedSucker.peerChainId
+  )?.balance;
   const currentChainBalNum = Number(currentChainBalanceObj?.format()) || 0;
 
   // Sucker Derived Values
@@ -39,10 +45,13 @@ export function LoanTab() {
 
   const revLoansContractAddress = getRevnetLoanContract(
     version,
-    cashOutChainId,
+    cashOutChainId
   );
 
-  const { data: estimatedBorrowFromInputOnly, isLoading: estimatedBorrowIsLoading } = useReadContract({
+  const {
+    data: estimatedBorrowFromInputOnly,
+    isLoading: estimatedBorrowIsLoading,
+  } = useReadContract({
     abi: revLoansAbi,
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
@@ -136,12 +145,9 @@ export function LoanTab() {
               PRE FEE AMOUNT
             </p>
             {estimatedBorrowIsLoading && collateralAmount ? (
-              <div className="activeSkeleton h-[30px] mt-[2px] w-[130px] opacity-30 rounded-lg"/>
+              <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
-              <PayInput
-                value={borrowEstimate}
-                disabled
-              />
+              <PayInput value={borrowEstimate} disabled />
             )}
           </div>
           <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full px-1.5 py-1">

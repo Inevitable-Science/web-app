@@ -80,7 +80,10 @@ export function Header() {
       id: project?.suckerGroupId ?? "",
     });
   const suckerGroup = suckerGroupData?.suckerGroup;
-  const suckerGroupBalance = suckerGroup?.projects?.items.reduce((acc, project) => acc + BigInt(project.balance), 0n);
+  const suckerGroupBalance = suckerGroup?.projects?.items.reduce(
+    (acc, project) => acc + BigInt(project.balance),
+    0n
+  );
   const projectBaseTokenDecimals =
     suckerGroup?.projects?.items[0].decimals ?? 18;
 

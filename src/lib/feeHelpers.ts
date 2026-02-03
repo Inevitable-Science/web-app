@@ -49,7 +49,8 @@ export function generateFeeData({
       const elapsedAfterPrepaid = year - prepaidDuration;
       const remainingTime = MAX_YEARS - prepaidDuration;
       // Safety check for division by zero
-      const percentElapsed = remainingTime > 0 ? elapsedAfterPrepaid / remainingTime : 0;
+      const percentElapsed =
+        remainingTime > 0 ? elapsedAfterPrepaid / remainingTime : 0;
       variableFee = decayingPortion * percentElapsed;
     } else if (year > MAX_YEARS) {
       variableFee = decayingPortion;

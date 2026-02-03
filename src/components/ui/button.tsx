@@ -14,11 +14,11 @@ const buttonVariants = cva(
         accent:
           "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase",
         destructive: "bg-red-900 rounded-lg",
-        gunmetalArrow: "bg-gunmetal rounded-full px-[12px] py-[6px] focus:outline-hidden",
+        gunmetalArrow:
+          "bg-gunmetal rounded-full px-[12px] py-[6px] focus:outline-hidden",
         outline:
           "border border-(--grey-500) rounded-lg hover:bg-grey-450 hover:border-(--grey-100)",
-        bottomline:
-          "border-b border-primary text-sm rounded-none rounded-t",
+        bottomline: "border-b border-primary text-sm rounded-none rounded-t",
         tabSelected:
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         secondary: "rounded-lg background-color",

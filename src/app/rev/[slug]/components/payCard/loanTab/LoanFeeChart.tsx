@@ -37,11 +37,12 @@ export function LoanFeeChart({
         typeof item.year === "number" &&
         typeof item.totalCost === "number" &&
         item.totalCost >= 0 &&
-        item.totalCost < Number.MAX_SAFE_INTEGER,
+        item.totalCost < Number.MAX_SAFE_INTEGER
     ) || [];
 
   // Calculate max cost from original feeData to ensure proper domain
-  const maxCost = feeData?.length > 0 ? Math.max(...feeData.map((d) => d.totalCost || 0)) : 0;
+  const maxCost =
+    feeData?.length > 0 ? Math.max(...feeData.map((d) => d.totalCost || 0)) : 0;
   const minCost = grossBorrowedNative + grossBorrowedNative * 0.035; // borrowed amount + fixed fee
 
   return (
@@ -57,18 +58,9 @@ export function LoanFeeChart({
           step="2.5"
           value={prepaidPercent}
           onChange={(e) => setPrepaidPercent(Number(e.target.value))}
-          className="
-            w-full
-            h-2
-            my-2
-            bg-(--border)/30
-            rounded-lg
-            appearance-none
-            cursor-pointer
-            focus:outline-none
-          "
+          className="my-2 h-2 w-full cursor-pointer appearance-none rounded-lg bg-(--border)/30 focus:outline-none"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="text-muted-foreground flex justify-between text-xs">
           <span>Lower Upfront Cost</span>
           <span>Higher Upfront Cost</span>
         </div>
@@ -86,7 +78,7 @@ export function LoanFeeChart({
                 style: {
                   fontSize: "12px",
                   fill: "var(--muted-foreground)",
-                }
+                },
               }}
               type="number"
               domain={[0, 10]}
@@ -101,7 +93,7 @@ export function LoanFeeChart({
                 angle: -90,
                 position: "insideLeft",
                 offset: 0,
-                style: { 
+                style: {
                   textAnchor: "middle",
                   fontSize: "12px",
                   fill: "var(--muted-foreground)",
@@ -113,7 +105,7 @@ export function LoanFeeChart({
             <Tooltip
               itemStyle={{
                 color: "var(--muted-foreground)",
-                fontSize: "13px"
+                fontSize: "13px",
               }}
               contentStyle={{
                 color: "var(--foreground)",
@@ -123,7 +115,8 @@ export function LoanFeeChart({
                 borderRadius: "0.5rem",
                 padding: "0.5rem",
                 fontSize: "0.875rem",
-                boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+                boxShadow:
+                  "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
               }}
               formatter={(value: number, _name: string, props) => {
                 if (props?.payload?.year >= 9.99) {
@@ -160,11 +153,11 @@ export function LoanFeeChart({
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <p className="text-xs text-muted-foreground text-center mb-2">
+      <p className="text-muted-foreground mb-2 text-center text-xs">
         Fees increase after{" "}
         {displayYears > 0
-        ? `${displayYears} year${displayYears > 1 ? "s" : ""}${displayMonths > 0 ? ` and ${displayMonths} month${displayMonths > 1 ? "s" : ""}` : ""}`
-        : `${displayMonths} month${displayMonths > 1 ? "s" : ""}`}
+          ? `${displayYears} year${displayYears > 1 ? "s" : ""}${displayMonths > 0 ? ` and ${displayMonths} month${displayMonths > 1 ? "s" : ""}` : ""}`
+          : `${displayMonths} month${displayMonths > 1 ? "s" : ""}`}
       </p>
 
       <style>{`

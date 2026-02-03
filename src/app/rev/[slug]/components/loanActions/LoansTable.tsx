@@ -1,18 +1,32 @@
 import { USDC_DECIMALS } from "@/app/constants";
 import { ChainLogo } from "@/components/ChainLogo";
 import { Button } from "@/components/ui/button";
-import { LoansByAccountDocument, SuckerGroupDocument } from "@/generated/graphql";
+import {
+  LoansByAccountDocument,
+  SuckerGroupDocument,
+} from "@/generated/graphql";
 import { formatDate, formatNumber, formatSeconds } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { DEFAULT_NATIVE_TOKEN_SYMBOL, JB_TOKEN_DECIMALS, NATIVE_TOKEN, NATIVE_TOKEN_DECIMALS } from "juice-sdk-core";
-import { JBChainId, useBendystrawQuery, useJBContractContext, useJBTokenContext, useSuckers } from "juice-sdk-react";
+import {
+  DEFAULT_NATIVE_TOKEN_SYMBOL,
+  JB_TOKEN_DECIMALS,
+  NATIVE_TOKEN,
+  NATIVE_TOKEN_DECIMALS,
+} from "juice-sdk-core";
+import {
+  JBChainId,
+  useBendystrawQuery,
+  useJBContractContext,
+  useJBTokenContext,
+  useSuckers,
+} from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
 import { Address, formatUnits } from "viem";
 import { useAccount } from "wagmi";
 import { LoanDialog, LoanType } from "./LoanDialog";
 
 export function LoansTable() {
-  const suckers = useRevnetDataStore(state => state.suckers);
+  const suckers = useRevnetDataStore((state) => state.suckers);
   const { token } = useJBTokenContext();
   const { version } = useJBContractContext();
   const { address } = useAccount();
@@ -30,15 +44,14 @@ export function LoansTable() {
     {
       enabled: !!address,
       pollInterval: 3000, // Refresh every 3 seconds
-    },
+    }
   );
 
   if (!data?.loans?.items) return null;
 
-
   const filteredLoans = data.loans.items.filter((loan) =>
     suckers?.some(
-      s =>
+      (s) =>
         Number(s.projectId) === Number(loan.projectId) &&
         Number(s.peerChainId) === Number(loan.chainId)
     )
@@ -53,12 +66,10 @@ export function LoansTable() {
   });
 
   return (
-    <div className="bg-grey-450 rounded-2xl p-[12px] mb-4">
-      <h3 className="text-lg">
-        Your Loans
-      </h3>
-      
-      <div className="grid grid-cols-[2fr_4fr_4fr_4fr_3fr] my-2 items-center text-sm">
+    <div className="bg-grey-450 mb-4 rounded-2xl p-[12px]">
+      <h3 className="text-lg">Your Loans</h3>
+
+      <div className="my-2 grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center text-sm">
         <p>Chain</p>
         <p>Borrowed</p>
         <p>Collateral</p>
@@ -66,10 +77,15 @@ export function LoansTable() {
         <div />
       </div>
       <div className="background-color rounded p-3 text-sm">
-        {sortedLoans.map(loan => {
-          const loanTokenIsNative = loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();
-          const loanTokenDecimals = loanTokenIsNative ? NATIVE_TOKEN_DECIMALS : USDC_DECIMALS;
-          const loanTokenSymbol = loanTokenIsNative ? DEFAULT_NATIVE_TOKEN_SYMBOL : "USDC";
+        {sortedLoans.map((loan) => {
+          const loanTokenIsNative =
+            loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+          const loanTokenDecimals = loanTokenIsNative
+            ? NATIVE_TOKEN_DECIMALS
+            : USDC_DECIMALS;
+          const loanTokenSymbol = loanTokenIsNative
+            ? DEFAULT_NATIVE_TOKEN_SYMBOL
+            : "USDC";
           const prepaidUntil = loan.createdAt + loan.prepaidDuration - nowInSec;
 
           const prepedLoan: LoanType = {
@@ -82,10 +98,11 @@ export function LoansTable() {
           };
 
           return (
-            <div key={loan.id} className="grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center py-2 border-b border-grey-450">
-              <ChainLogo 
-                chainId={loan.chainId as JBChainId}
-              />
+            <div
+              key={loan.id}
+              className="border-grey-450 grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center border-b py-2"
+            >
+              <ChainLogo chainId={loan.chainId as JBChainId} />
               <p>
                 {formatNumber(
                   formatUnits(loan.borrowAmount, loanTokenDecimals),
@@ -97,18 +114,17 @@ export function LoansTable() {
                 {formatNumber(
                   formatUnits(loan.collateral, projectTokenDecimals),
                   false
-                )} ${token.data?.symbol}
+                )}{" "}
+                ${token.data?.symbol}
               </p>
-              <p>
-                {formatSeconds(prepaidUntil)}
-              </p>
+              <p>{formatSeconds(prepaidUntil)}</p>
               <div className="flex justify-end">
                 <LoanDialog loan={prepedLoan} />
               </div>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

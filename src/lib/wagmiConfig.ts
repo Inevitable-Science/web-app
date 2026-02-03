@@ -1,4 +1,3 @@
-
 // Include Testnets
 import { cache } from "react";
 import { createPublicClient } from "viem";
@@ -26,19 +25,33 @@ const chains = [mainnet, base, arbitrum, optimism] as const;
 const transports = {
   [sepolia.id]: fallback([
     http(`https://sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-    http("https://eth-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
+    http(
+      "https://eth-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
   ]),
   [optimismSepolia.id]: fallback([
-    http(`https://optimism-sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-    http("https://opt-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
+    http(
+      `https://optimism-sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+    ),
+    http(
+      "https://opt-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
   ]),
   [baseSepolia.id]: fallback([
-    http("https://base-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
-    http(`https://api.developer.coinbase.com/rpc/v1/base-sepolia/${process.env.NEXT_PUBLIC_BASE_ID}`),
+    http(
+      "https://base-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
+    http(
+      `https://api.developer.coinbase.com/rpc/v1/base-sepolia/${process.env.NEXT_PUBLIC_BASE_ID}`
+    ),
   ]),
   [arbitrumSepolia.id]: fallback([
-    http(`https://arbitrum-sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
-    http("https://arb-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"),
+    http(
+      `https://arbitrum-sepolia.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`
+    ),
+    http(
+      "https://arb-sepolia.g.alchemy.com/v2/Y7igjs135LhJTJbYavxq9WlhuAZQVn03"
+    ),
   ]),
   [mainnet.id]: fallback([
     http(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`),
@@ -76,27 +89,35 @@ const transports = {
 };
 
 export const wagmiConfig = createConfig({
-    chains: [mainnet, optimism, arbitrum, base, sepolia, optimismSepolia, baseSepolia, arbitrumSepolia],
-    connectors: [
-      safeConnector,
-      coinbaseWallet({
-        appName: "REVNET",
-        appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
-      }),
-      walletConnect({
-        projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-        showQrModal: false,
-        metadata: {
-          name: "Inevitable Sciences",
-          description: "Fund radical science.",
-          url: "https://app.inevitable.science",
-          icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
-        },
-      }),
-    ],
-    transports,
-  });
-
+  chains: [
+    mainnet,
+    optimism,
+    arbitrum,
+    base,
+    sepolia,
+    optimismSepolia,
+    baseSepolia,
+    arbitrumSepolia,
+  ],
+  connectors: [
+    safeConnector,
+    coinbaseWallet({
+      appName: "REVNET",
+      appLogoUrl: "https://inevitable.science/assets/img/branding/icon.svg",
+    }),
+    walletConnect({
+      projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+      showQrModal: false,
+      metadata: {
+        name: "Inevitable Sciences",
+        description: "Fund radical science.",
+        url: "https://app.inevitable.science",
+        icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
+      },
+    }),
+  ],
+  transports,
+});
 
 export type ViemChainIdType = keyof typeof transports;
 export const TransportChainIds = Object.keys(transports).map(Number);

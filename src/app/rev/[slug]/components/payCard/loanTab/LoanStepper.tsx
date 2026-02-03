@@ -1,13 +1,12 @@
 import { BookCheck, Check, Landmark, Loader2, Receipt, X } from "lucide-react";
 import { BorrowStatus } from "./LoanActionButton";
 
-
 export function LoanStepper({
   currentStep,
   userHasPermission,
   userHasApproved,
   baseTokenIsNative,
-} : {
+}: {
   currentStep: BorrowStatus;
   userHasPermission: boolean;
   userHasApproved: boolean;
@@ -15,8 +14,8 @@ export function LoanStepper({
 }) {
   return (
     <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
-      <ol className="relative text-body border-s-[1.5px] border-color mx-4">                  
-        <li className="mb-10 ms-7">
+      <ol className="text-body border-color relative mx-4 border-s-[1.5px]">
+        <li className="ms-7 mb-10">
           {currentStep === "signing-permission" ? (
             <LoadingBubble />
           ) : currentStep === "rejected-permission" ? (
@@ -24,14 +23,16 @@ export function LoanStepper({
           ) : userHasPermission ? (
             <SuccessBubble />
           ) : (
-            <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-              <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer ring-grey-450 bg-(--muted)/20">
+            <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+              <span className="ring-buffer ring-grey-450 relative flex h-8 w-8 items-center justify-center rounded-full bg-(--muted)/20 ring-2">
                 <BookCheck height={18} width={18} />
               </span>
             </div>
           )}
-          <h3 className="font-medium leading-tight">Grant Permissions</h3>
-          <p className="text-sm text-muted-foreground">Gain permission from the smart contract to open a loan</p>
+          <h3 className="leading-tight font-medium">Grant Permissions</h3>
+          <p className="text-muted-foreground text-sm">
+            Gain permission from the smart contract to open a loan
+          </p>
         </li>
 
         <li className="ms-7">
@@ -42,46 +43,48 @@ export function LoanStepper({
           ) : currentStep === "success" ? (
             <SuccessBubble />
           ) : (
-          <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-            <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer ring-grey-450 bg-(--muted)/20">
-              <Landmark height={18} width={18} />
-            </span>
-          </div>
+            <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+              <span className="ring-buffer ring-grey-450 relative flex h-8 w-8 items-center justify-center rounded-full bg-(--muted)/20 ring-2">
+                <Landmark height={18} width={18} />
+              </span>
+            </div>
           )}
-          <h3 className="font-medium leading-tight">Open Loan</h3>
-          <p className="text-sm leading-[16px] text-muted-foreground">Open a loan using your collateral</p>
+          <h3 className="leading-tight font-medium">Open Loan</h3>
+          <p className="text-muted-foreground text-sm leading-[16px]">
+            Open a loan using your collateral
+          </p>
         </li>
       </ol>
     </div>
-  )
-};
+  );
+}
 
 function LoadingBubble() {
   return (
-    <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-      <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer ring-(--input) bg-(--muted)/20">
+    <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+      <span className="ring-buffer relative flex h-8 w-8 items-center justify-center rounded-full bg-(--muted)/20 ring-2 ring-(--input)">
         <Loader2 className="animate-spin" height={18} width={18} />
       </span>
     </div>
-  )
+  );
 }
 
 function SuccessBubble() {
   return (
-    <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-      <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer text-green-400 ring-green-900 bg-green-900/30">
+    <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+      <span className="ring-buffer relative flex h-8 w-8 items-center justify-center rounded-full bg-green-900/30 text-green-400 ring-2 ring-green-900">
         <Check height={18} width={18} />
       </span>
     </div>
-  )
+  );
 }
 
 function FailureBubble() {
   return (
-    <div className="absolute flex items-center justify-center w-8 h-8 rounded-full -start-4 background-color">
-      <span className="relative flex items-center justify-center w-8 h-8 rounded-full ring-2 ring-buffer text-(--destructive) ring-(--destructive) bg-(--destructive)/20">
+    <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+      <span className="ring-buffer relative flex h-8 w-8 items-center justify-center rounded-full bg-(--destructive)/20 text-(--destructive) ring-2 ring-(--destructive)">
         <X height={18} width={18} />
       </span>
     </div>
-  )
+  );
 }
