@@ -107,7 +107,7 @@ export const WithdrawSelector = ({
                 value={sucker.peerChainId.toString()}
                 className="[&>*:last-child]:flex [&>*:last-child]:w-full"
               >
-                <div className="flex min-w-[160px] items-center justify-between gap-2 pb-[0.5px]">
+                <div className="flex w-full min-w-[160px] items-center justify-between gap-2 pb-[0.5px]">
                   <div className="flex items-end">
                     <Image
                       className="min-h-[24px] min-w-[24px] rounded-full"

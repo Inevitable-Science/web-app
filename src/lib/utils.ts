@@ -45,6 +45,36 @@ export function truncateAddress(address: Address) {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
+function truncate(num: number, decimals: number) {
+  const factor = 10 ** decimals;
+  return Math.trunc(num * factor) / factor;
+}
+
+// use for bal/tx calculations, no rounding
+export function truncateNumber(
+  passedNum: number | string | null
+): string {
+  const num = passedNum != null ? Number(passedNum) : null;
+  if (num === null || isNaN(num)) return "--";
+
+  if (num === 0) return "0";
+
+  // === SAME LOGIC AS formatNumber(num, false) ===
+  if (num < 1) {
+    // emulate toPrecision(3) but truncate
+    const digits = 3;
+    const factor =
+      10 ** (digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+
+    const truncated = Math.trunc(num * factor) / factor;
+    return truncated.toString();
+  }
+
+  // >= 1 → truncate to 3 decimals
+  return truncate(num, 3).toString();
+}
+
+
 export function formatNumber(
   passedNum: number | string | null,
   compact?: undefined | boolean

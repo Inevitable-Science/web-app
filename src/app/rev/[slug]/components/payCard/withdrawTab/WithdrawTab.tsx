@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   useBendystrawQuery,
@@ -6,7 +6,7 @@ import {
   useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "juice-sdk-react";
-import { formatNumber } from "@/lib/utils";
+import { truncateNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { WithdrawSelector } from "./WithdrawSelector";
@@ -14,8 +14,7 @@ import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { SuckerGroupDocument } from "@/generated/graphql";
 import {
-  getProjectsReclaimableSurplus,
-  getUnitValue,
+  getProjectsReclaimableSurplus
 } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
@@ -36,18 +35,30 @@ export interface Surplus {
 export function WithdrawTab() {
   const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const { version } = useJBContractContext();
-  const { token } = useJBTokenContext();
-
-  const receiveToken = useProjectBaseToken();
-  const receiveTokenAddress =
-    receiveToken.tokenMap[selectedSucker.peerChainId].token;
-
+  const { peerChainId: selectedChain, projectId: activeProjectId } = selectedSucker;
+  
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
 
+  const { version } = useJBContractContext();
+  const { token } = useJBTokenContext();
+
+  // Project Base Token
+  const baseToken = useProjectBaseToken();
+  const receiveTokenAddress = baseToken.tokenMap[selectedChain].token;
+
+  // Token Balances
+  const balanceQuery = useSuckersUserTokenBalance();
+  const currentChainBalObj = balanceQuery?.data?.find(
+    (tkn) => tkn.chainId === selectedChain
+  )?.balance;
+  const currentChainBalanceBigInt = currentChainBalObj?.value ?? 0n;
+
   const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
   const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals);
+
+  const surplus = surpluses?.find((s) => s.chainId === selectedChain) || null;
+  const zeroSurplusValue = Number(surplus?.value ?? 0) == 0;
 
   const { data: suckerGroupData } = useBendystrawQuery(
     SuckerGroupDocument,
@@ -65,121 +76,85 @@ export function WithdrawTab() {
 
     fetchSurpluses();
   }, []);
-
-  const surplus =
-    surpluses?.find((s) => s.chainId === selectedSucker.peerChainId) || null;
-
-  const { data: reclaimableAmount } = useReclaimableSurplus({
-    chainId: selectedSucker.peerChainId,
-    projectId: selectedSucker.projectId,
+  
+  const { data: reclaimableAmount, isLoading } = useReclaimableSurplus({
+    chainId: selectedChain,
+    projectId: activeProjectId,
     tokenAmount: withdrawAmountBigInt || undefined,
     version,
-    decimals: receiveToken.decimals,
+    decimals: baseToken.decimals,
     currencyId: surplus?.currencyId ?? 1,
   });
 
-  const cashOutChainId = selectedSucker.peerChainId;
-  const projects = suckerGroupData?.suckerGroup?.projects?.items;
+  const { data: maxWithdrawAmount } = useReclaimableSurplus({
+    chainId: selectedChain,
+    projectId: activeProjectId,
+    tokenAmount: currentChainBalanceBigInt || undefined,
+    version,
+    decimals: baseToken.decimals,
+    currencyId: surplus?.currencyId ?? 1,
+  });
 
-  const unitValue = useMemo(() => {
-    if (!surpluses || !cashOutChainId || !projectTokenDecimals) return 0;
-    const tokenSupply =
-      projects?.find((p) => p.chainId === cashOutChainId)?.tokenSupply ?? "0";
-
-    return getUnitValue(surplus, {
-      value: tokenSupply,
-      decimals: projectTokenDecimals,
-    });
-  }, [cashOutChainId, projectTokenDecimals, surpluses, projects]);
-
-  // Token Balances
-  const balanceQuery = useSuckersUserTokenBalance();
-  const currentChainBalanceObj = balanceQuery?.data?.find(
-    (tkn) => tkn.chainId === selectedSucker.peerChainId
-  )?.balance;
-  const currentChainBalNum = Number(currentChainBalanceObj?.format());
-
-  //const receiveAmount = unitValue * Number(withdrawAmount);
-  //const receiveAmountString = formatNumber(receiveAmount, false);
   const receiveAmount = formatUnits(
     reclaimableAmount ?? 0n,
-    receiveToken.decimals
+    baseToken.decimals
   );
-  const receiveAmountString = formatNumber(receiveAmount, false);
+  const maxReceiveAmount = formatUnits(
+    maxWithdrawAmount ?? 0n,
+    baseToken.decimals
+  );
 
-  const setManualWithdrawAmount = (percentage: number) => {
-    if (percentage === 100) {
-      // no rounding for MAX - rounding is an issue for balances like 0.9999
-      const s = currentChainBalNum.toString();
-      if (!s.includes(".")) return s;
-      const [int, frac] = s.split(".");
-      const val =
-        int === "0" ? `0.${frac.slice(0, 3)}` : `${int}.${frac.slice(0, 3)}`;
-
-      setWithdrawAmount(val);
-      return;
-    }
-
-    if (percentage < 0 || percentage > 99) return;
-    const withdrawAmount = (currentChainBalNum / 100) * percentage;
-    const withdrawAmountString = formatNumber(withdrawAmount, false);
-
-    setWithdrawAmount(withdrawAmountString);
-    return;
-  };
-
-  // This prevents scrolling to reduce the value below 0
-  const handleWithdrawAmountChange = (value: string) => {
-    if (value.startsWith("-")) {
-      setWithdrawAmount("0");
-      return;
-    }
-
-    setWithdrawAmount(value);
-    return;
-  };
+  const receiveAmountString = 
+    withdrawAmountBigInt > currentChainBalanceBigInt ?
+      truncateNumber(maxReceiveAmount) : 
+      truncateNumber(receiveAmount);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         {/* WITHDRAW INPUT */}
-        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+        <div className="background-color grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-muted-foreground text-sm font-light">
               YOU WITHDRAW
             </p>
             <PayInput
               value={withdrawAmount}
-              onChangeFunction={handleWithdrawAmountChange}
-              disabled={!unitValue}
+              onChangeFunction={(value) => setWithdrawAmount(value)}
+              disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
             />
           </div>
           <div className="flex flex-col items-end gap-[2px]">
             <WithdrawSelector suckersBalance={balanceQuery.data} />
-            <p className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
+            <div className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
               {balanceQuery.isLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              ) : !currentChainBalNum ? (
+              ) : currentChainBalanceBigInt === 0n ? (
                 "0.00"
               ) : (
-                formatNumber(currentChainBalNum, false)
+                truncateNumber(currentChainBalObj?.format() ?? 0)
               )}
-            </p>
+            </div>
           </div>
         </div>
 
         {/* RECEIVE INPUT */}
-        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+        <div className="background-color grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-muted-foreground text-sm font-light select-none">
-              YOU RECEIVE
+              YOU RECEIVE {withdrawAmountBigInt > currentChainBalanceBigInt && "MAX"}
             </p>
-            <PayInput value={receiveAmountString} disabled />
+            {isLoading && Number(withdrawAmount) ? (  // dont show skeleton when value is 0
+              <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
+            ) : (
+              // show placeholder "0.00" when no withdraw amount is inputted
+              <PayInput value={withdrawAmount ? receiveAmountString : ""} disabled />
+            )}
           </div>
-          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full px-1.5 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full pl-1.5 pr-2 py-1">
             <div className="flex items-end">
-              {receiveToken.isNative ? (
+              {baseToken.isNative ? (
                 <ChainLogo chainId={1} height={24} width={24} />
               ) : (
                 <Image
@@ -200,13 +175,13 @@ export function WithdrawTab() {
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
-                  chainId={selectedSucker.peerChainId}
+                  chainId={selectedChain}
                   height={16}
                   width={16}
                 />
               </div>
             </div>
-            <p className="text-lg font-light">{receiveToken.symbol}</p>
+            <p className="text-lg font-light">{baseToken.symbol}</p>
           </div>
         </div>
       </div>
@@ -216,8 +191,15 @@ export function WithdrawTab() {
           <Button
             key={percent}
             className="h-[28px] rounded-xs"
-            onClick={() => setManualWithdrawAmount(percent)}
-            disabled={!unitValue}
+            onClick={() => {
+              const withdrawAmount = (currentChainBalanceBigInt / 100n) * BigInt(percent);
+              const withdrawAmountString = truncateNumber(
+                formatUnits(withdrawAmount, projectTokenDecimals)
+              );
+
+              setWithdrawAmount(withdrawAmountString);
+            }}
+            disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
           >
             {percent === 100 ? "MAX" : `${percent}%`}
           </Button>
@@ -225,9 +207,10 @@ export function WithdrawTab() {
       </div>
 
       <WithdrawActionButton
-        withdrawAmount={withdrawAmount}
+        withdrawAmount={withdrawAmountBigInt}
+        tokenBalance={currentChainBalanceBigInt}
+        minTokensReturned={reclaimableAmount}
         receiveTokenAddress={receiveTokenAddress}
-        tokenBalance={currentChainBalNum}
       />
     </div>
   );
