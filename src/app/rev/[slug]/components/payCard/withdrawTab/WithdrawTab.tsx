@@ -151,13 +151,14 @@ export function WithdrawTab() {
           </div>
           <div className="flex flex-col items-end gap-[2px]">
             <WithdrawSelector suckersBalance={balanceQuery.data} />
-            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
+            <p className="text-muted-foreground flex items-center justify-end gap-1 w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {!currentChainBalNum
-                ? "0.00"
-                : currentChainBalNum < 100
-                  ? currentChainBalNum.toFixed(4)
-                  : formatNumber(currentChainBalNum)}
+              {balanceQuery.isLoading ? 
+                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" /> :
+                !currentChainBalNum ?
+                "0.00" :
+                formatNumber(currentChainBalNum, false)
+              }
             </p>
           </div>
         </div>
@@ -207,43 +208,20 @@ export function WithdrawTab() {
         </div>
       </div>
 
-      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid">
-        <Button
-          className="h-[28px] rounded-l-lg rounded-r-xs"
-          onClick={() => {
-            setManualWithdrawAmount(10);
-          }}
-          disabled={!unitValue}
-        >
-          10%
-        </Button>
-        <Button
-          className="h-[28px] rounded-xs"
-          onClick={() => {
-            setManualWithdrawAmount(25);
-          }}
-          disabled={!unitValue}
-        >
-          25%
-        </Button>
-        <Button
-          className="h-[28px] rounded-xs"
-          onClick={() => {
-            setManualWithdrawAmount(50);
-          }}
-          disabled={!unitValue}
-        >
-          50%
-        </Button>
-        <Button
-          className="h-[28px] rounded-l-xs rounded-r-lg"
-          onClick={() => {
-            setManualWithdrawAmount(100);
-          }}
-          disabled={!unitValue}
-        >
-          MAX
-        </Button>
+      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg sm:grid">
+        {[10, 25, 50, 100].map(percent => (
+          <Button
+            key={percent}
+            className="h-[28px] rounded-xs"
+            onClick={() => setManualWithdrawAmount(percent)}
+            disabled={!unitValue}
+          >
+            {percent === 100 ?
+              "MAX" :
+              `${percent}%`
+            }
+          </Button>
+        ))}
       </div>
 
       <WithdrawActionButton

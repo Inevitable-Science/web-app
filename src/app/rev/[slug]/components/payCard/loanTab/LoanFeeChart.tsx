@@ -84,11 +84,13 @@ export function LoanFeeChart({
                 position: "insideBottom",
                 offset: 0,
                 style: {
+                  fontSize: "12px",
                   fill: "var(--muted-foreground)",
                 }
               }}
               type="number"
               domain={[0, 10]}
+              tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
               ticks={[...Array(11).keys()]}
               tickFormatter={(year) => `${year}`}
             />
@@ -101,6 +103,7 @@ export function LoanFeeChart({
                 offset: 0,
                 style: { 
                   textAnchor: "middle",
+                  fontSize: "12px",
                   fill: "var(--muted-foreground)",
                 },
               }}
@@ -118,7 +121,7 @@ export function LoanFeeChart({
                 borderColor: "var(--border)",
                 minWidth: 230,
                 borderRadius: "0.5rem",
-                padding: "0.75rem",
+                padding: "0.5rem",
                 fontSize: "0.875rem",
                 boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
               }}

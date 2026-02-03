@@ -14,7 +14,6 @@ import { formatNumber, formatWalletError } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useAccount, usePublicClient, useReadContract, useSimulateContract, useWriteContract } from "wagmi";
 import { useToast } from "@/components/ui/use-toast";
-import { ViemChainIdType } from "@/lib/wagmiConfig";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 
 const calculateCollateralAmount = (input: string, maxCollateral: bigint, projectTokenDecimals: number): bigint => {
@@ -256,7 +255,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         Amount of collateral you want to unlock
       </p>
 
-      <div className="bg-grey-450 flex items-center justify-between gap-2 rounded-xl p-[16px]">
+      <div className="bg-grey-450 grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
         <div className="flex flex-col gap-[2px]">
           <p className="text-muted-foreground text-sm font-light select-none">
             YOU RECEIVE
@@ -288,7 +287,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
-                  chainId={Number(1) as JBChainId}
+                  chainId={loan.chainId}
                   height={16}
                   width={16}
                 />
@@ -330,8 +329,9 @@ export function RepayTab({ loan }: { loan: LoanType }) {
             false
           )} {baseToken.symbol}
         </p>
-        <p>Collateral To Unlock ({Number(collateralToReturnPercent)}%):</p>
-        <p>{collateralToReturn || 0} {token.data?.symbol}</p>
+        <p>Collateral To Unlock ({Number(collateralToReturnPercent) > 100 ? ">100" : Number(collateralToReturnPercent)
+          }%):</p>
+        <p>{formatNumber(collateralToReturn, false) || 0} {token.data?.symbol}</p>
         <p>Amount To Pay Now:</p>
         <div className="flex justify-end">
           {collateralToReturn && isSimulating ? 

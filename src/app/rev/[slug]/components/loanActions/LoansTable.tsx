@@ -18,6 +18,7 @@ export function LoansTable() {
   const { address } = useAccount();
 
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
+  const nowInSec = Math.floor(Date.now() / 1000);
 
   // Get all loans for the user
   const { data } = useBendystrawQuery(
@@ -34,7 +35,6 @@ export function LoansTable() {
 
   if (!data?.loans?.items) return null;
 
-  const nowInSec = Math.floor(Date.now() / 1000);
 
   const filteredLoans = data.loans.items.filter((loan) =>
     suckers?.some(
@@ -70,6 +70,7 @@ export function LoansTable() {
           const loanTokenIsNative = loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();
           const loanTokenDecimals = loanTokenIsNative ? NATIVE_TOKEN_DECIMALS : USDC_DECIMALS;
           const loanTokenSymbol = loanTokenIsNative ? DEFAULT_NATIVE_TOKEN_SYMBOL : "USDC";
+          const prepaidUntil = loan.createdAt + loan.prepaidDuration - nowInSec;
 
           const prepedLoan: LoanType = {
             ...loan,
@@ -99,7 +100,7 @@ export function LoansTable() {
                 )} ${token.data?.symbol}
               </p>
               <p>
-                {formatSeconds(loan.prepaidDuration)}
+                {formatSeconds(prepaidUntil)}
               </p>
               <div className="flex justify-end">
                 <LoanDialog loan={prepedLoan} />
