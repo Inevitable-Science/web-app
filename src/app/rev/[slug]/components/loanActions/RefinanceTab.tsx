@@ -30,9 +30,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { LoanFeeChart } from "../payCard/loanTab/LoanFeeChart";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
+import { useDebounce } from "use-debounce";
 
 export function RefinanceTab({ loan }: { loan: LoanType }) {
   const [additionalCollateral, setAdditionalCollateral] = useState("");
+  const [debounceAdditionalCollateral] = useDebounce(additionalCollateral, 600);
+
   const [prepaidPercent, setPrepaidPercent] = useState(2.5);
   const [borrowStatus, setBorrowStatus] = useState("");
   const [isBorrowing, setIsBorrowing] = useState(false);
@@ -47,9 +50,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   const baseToken = useProjectBaseToken();
   const baseTokenAddress = baseToken.tokenMap[loan.chainId].token;
 
+  const publicClient = usePublicClient();
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const publicClient = usePublicClient();
   const { toast } = useToast();
 
   const balances = useSuckersUserTokenBalance();
@@ -75,15 +78,12 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
     chainId: loanChainId,
-    args: additionalCollateral
-      ? [
-          // Use the same project ID as the loan table for consistency
-          BigInt(loan.projectId),
-          BigInt(loan.collateral),
-          BigInt(baseToken.decimals),
-          BigInt(baseToken.currency),
-        ]
-      : undefined,
+    args: [
+      BigInt(loan.projectId),
+      BigInt(loan.collateral),
+      BigInt(baseToken.decimals),
+      BigInt(baseToken.currency),
+    ],
   });
 
   const collateralHeadroom =
@@ -98,11 +98,13 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       ? parseUnits(additionalCollateral, projectTokenDecimals)
       : 0n);
 
+  // using debounced value
   const totalReallocationCollateral =
     loan && additionalCollateral
       ? BigInt(loan.collateral) +
-        parseUnits(additionalCollateral, projectTokenDecimals)
+        parseUnits(debounceAdditionalCollateral, projectTokenDecimals)
       : undefined;
+  const isDebouncing = debounceAdditionalCollateral !== additionalCollateral;
 
   const { data: selectedLoanReallocAmount } = useReadContract({
     abi: revLoansAbi,
@@ -348,7 +350,15 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               </p>
               <PayInput
                 value={additionalCollateral}
-                onChangeFunction={setAdditionalCollateral}
+                onChangeFunction={(value) => {
+                  if (value.startsWith("-")) {
+                    setAdditionalCollateral("0");
+                    return;
+                  }
+
+                  setAdditionalCollateral(value);
+                  return;
+                }}
                 //disabled={noCollateralToTransfer}
               />
             </div>
@@ -428,7 +438,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </p>*/}
             <p>Borrowing:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ? (
+              {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
               ) : newLoanBorrowableAmount ? (
                 formatNumber(
@@ -442,7 +452,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </div>
             <p>Receive After Fees:</p>
             <div className="flex justify-end">
-              {additionalCollateral && isBorrowableAmtLoading ? (
+              {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
               ) : amountToWallet ? (
                 formatNumber(amountToWallet, false)

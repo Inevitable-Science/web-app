@@ -19,12 +19,14 @@ import {
 import { formatUnits, parseUnits } from "viem";
 import { LoanActionButton } from "./LoanActionButton";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
+import { useDebounce } from "use-debounce";
 
 export function LoanTab() {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const { peerChainId: activeChainId, projectId: activeProjectId } = selectedSucker;
   
   const [collateralAmount, setCollateralAmount] = useState("");
+  const [debounceCollateralAmount] = useDebounce(collateralAmount, 600);
 
   const { revLoansContractAddress } = useLoanFeeData(activeChainId);
   const { token } = useJBTokenContext();
@@ -36,7 +38,9 @@ export function LoanTab() {
   const currentChainBalBigInt = currentChainBalanceObj?.value ?? 0n;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  // TODO: debounce
+  const collateralAmountBigIntDB = parseUnits(debounceCollateralAmount, projectTokenDecimals);
+  const isDebouncing = debounceCollateralAmount !== collateralAmount;
+
   const {
     data: estimatedBorrowFromInputOnly,
     isLoading: estimatedBorrowIsLoading,
@@ -46,10 +50,10 @@ export function LoanTab() {
     address: revLoansContractAddress,
     chainId: activeChainId,
     args:
-      collateralAmount && baseToken
+      collateralAmountBigIntDB && baseToken
         ? [
             BigInt(activeProjectId),
-            parseUnits(collateralAmount, projectTokenDecimals),
+            collateralAmountBigIntDB,
             BigInt(baseToken.decimals),
             BigInt(baseToken.currency),
           ]
@@ -102,11 +106,11 @@ export function LoanTab() {
             <p className="text-muted-foreground text-sm font-light select-none">
               PRE FEE AMOUNT
             </p>
-            {estimatedBorrowIsLoading && collateralAmount ? (
+            {(isDebouncing || estimatedBorrowIsLoading) && Number(collateralAmount) ? ( // Prevents skeleton when collateralAmount is falsy (0)
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
               <PayInput
-                value={estimatedBorrowString}
+                value={collateralAmount ? estimatedBorrowString : ""} // shows 0.00 placeholder when no collateralAmount
                 disabled
               />
             )}

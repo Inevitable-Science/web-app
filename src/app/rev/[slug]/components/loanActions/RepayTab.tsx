@@ -29,6 +29,7 @@ import {
 } from "wagmi";
 import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import { useDebounce } from "use-debounce";
 
 const calculateCollateralAmount = (
   input: string,
@@ -45,6 +46,8 @@ const calculateCollateralAmount = (
 
 export function RepayTab({ loan }: { loan: LoanType }) {
   const [collateralToReturn, setCollateralToReturn] = useState("");
+  const [debounceCollateralToReturn] = useDebounce(collateralToReturn, 600);
+
   const [repayStatus, setRepayStatus] = useState<
     | ""
     | "signing-approval"
@@ -88,11 +91,12 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     args: [BigInt(loan.id)],
   });
 
+  const isDebouncing = debounceCollateralToReturn !== collateralToReturn;
   const simulationArgs = [
     BigInt(loan.id),
     loan.borrowAmount, // Always use full loan amount - contract will calculate exact amount needed
     calculateCollateralAmount(
-      collateralToReturn,
+      debounceCollateralToReturn,
       loan.collateral,
       baseToken.decimals
     ),
@@ -372,7 +376,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         </p>
         <p>Amount To Pay Now:</p>
         <div className="flex justify-end">
-          {Number(collateralToReturn) && isSimulating ? (
+          {(isDebouncing || isSimulating) && Number(collateralToReturn) ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
           ) : exactRepayAmount === undefined ? (
             `0 ${baseToken.symbol}`
@@ -385,7 +389,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         </div>
         <p>Amount Carried Into New Loan:</p>
         <div className="flex justify-end">
-          {Number(collateralToReturn) && (isSimulating || isLoadingLoan) ? (
+          {(isDebouncing || isSimulating || isLoadingLoan) && Number(collateralToReturn) ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
           ) : exactRepayAmount === undefined || !loanData?.amount ? (
             `0 ${baseToken.symbol}`

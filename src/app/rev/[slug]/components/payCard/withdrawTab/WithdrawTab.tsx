@@ -21,6 +21,7 @@ import { PayInput } from "@/components/PayInput";
 import { useReclaimableSurplus } from "@/hooks/useReclaimableSurplus";
 import { formatUnits, parseUnits } from "viem";
 import { JB_TOKEN_DECIMALS } from "juice-sdk-core";
+import { useDebounce } from "use-debounce";
 
 export interface Surplus {
   projectId: number;
@@ -38,6 +39,8 @@ export function WithdrawTab() {
   const { peerChainId: selectedChain, projectId: activeProjectId } = selectedSucker;
   
   const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [debouncedWithdrawAmount] = useDebounce(withdrawAmount, 600);
+
   const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
 
   const { version } = useJBContractContext();
@@ -55,7 +58,11 @@ export function WithdrawTab() {
   const currentChainBalanceBigInt = currentChainBalObj?.value ?? 0n;
 
   const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
-  const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals);
+  const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals); // preserve for instant UI changes
+
+  const withdrawAmountBigIntDB = parseUnits(debouncedWithdrawAmount, projectTokenDecimals); // use only for state within hook
+  const isDebouncing = debouncedWithdrawAmount !== withdrawAmount;
+
 
   const surplus = surpluses?.find((s) => s.chainId === selectedChain) || null;
   const zeroSurplusValue = Number(surplus?.value ?? 0) == 0;
@@ -80,7 +87,7 @@ export function WithdrawTab() {
   const { data: reclaimableAmount, isLoading } = useReclaimableSurplus({
     chainId: selectedChain,
     projectId: activeProjectId,
-    tokenAmount: withdrawAmountBigInt || undefined,
+    tokenAmount: withdrawAmountBigIntDB || undefined,
     version,
     decimals: baseToken.decimals,
     currencyId: surplus?.currencyId ?? 1,
@@ -151,7 +158,7 @@ export function WithdrawTab() {
             <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE {withdrawAmountBigInt > currentChainBalanceBigInt && "MAX"}
             </p>
-            {isLoading && Number(withdrawAmount) ? (  // dont show skeleton when value is 0
+            {(isLoading || isDebouncing) && Number(withdrawAmount) ? (  // Prevents skeleton when withdrawAmount is falsy (0)
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
               // show placeholder "0.00" when no withdraw amount is inputted
