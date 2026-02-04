@@ -120,7 +120,15 @@ export function WithdrawTab() {
             </p>
             <PayInput
               value={withdrawAmount}
-              onChangeFunction={(value) => setWithdrawAmount(value)}
+              onChangeFunction={(value) => {
+                if (value.startsWith("-")) {
+                  setWithdrawAmount("0");
+                  return;
+                }
+
+                setWithdrawAmount(value);
+                return;
+              }}
               disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
             />
           </div>
@@ -190,7 +198,7 @@ export function WithdrawTab() {
             key={percent}
             className="h-[28px] rounded-xs"
             onClick={() => {
-              const withdrawAmount = (currentChainBalanceBigInt / 100n) * BigInt(percent);
+              const withdrawAmount = (currentChainBalanceBigInt * BigInt(percent)) / 100n;
               const withdrawAmountString = truncateNumber(
                 formatUnits(withdrawAmount, projectTokenDecimals)
               );

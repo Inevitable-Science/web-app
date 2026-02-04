@@ -1,16 +1,12 @@
-import { BookCheck, Check, Landmark, Loader2, Receipt, X } from "lucide-react";
+import { BookCheck, Check, Landmark, Loader2, X } from "lucide-react";
 import { BorrowStatus } from "./LoanActionButton";
 
 export function LoanStepper({
   currentStep,
   userHasPermission,
-  userHasApproved,
-  baseTokenIsNative,
 }: {
   currentStep: BorrowStatus;
   userHasPermission: boolean;
-  userHasApproved: boolean;
-  baseTokenIsNative: boolean;
 }) {
   return (
     <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">

@@ -8,20 +8,14 @@ import {
   JB_TOKEN_DECIMALS,
   JBChainId,
   jbPermissionsAbi,
-  NATIVE_TOKEN,
-  revDeployerAbi,
   revLoansAbi,
-  RevnetCoreContracts,
-  SuckerPair,
-  USDC_ADDRESSES,
 } from "juice-sdk-core";
 import { useJBContractContext, useJBTokenContext } from "juice-sdk-react";
 import { useEffect, useState } from "react";
-import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import {
   useAccount,
   usePublicClient,
-  useReadContract,
   useWriteContract,
 } from "wagmi";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -29,6 +23,7 @@ import { LoanFeeChart } from "./LoanFeeChart";
 import { generateFeeData } from "@/lib/feeHelpers";
 import { LoanStepper } from "./LoanStepper";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 
 const shimmerClasses = `
   w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
@@ -42,8 +37,6 @@ export type BorrowStatus =
   | ""
   | "signing-permission"
   | "rejected-permission"
-  | "signing-approval"
-  | "rejected-approval"
   | "signing-borrow"
   | "rejected-borrow"
   | "success";
@@ -52,12 +45,10 @@ export function LoanActionButton({
   loanAmount,
   collateralAmount,
   projectTokenBalance,
-  revLoansContractAddress,
 }: {
   loanAmount: bigint | undefined;
   collateralAmount: string;
   projectTokenBalance: bigint;
-  revLoansContractAddress: Address;
 }) {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const [prepaidPercent, setPrepaidPercent] = useState(2.5);
@@ -65,7 +56,6 @@ export function LoanActionButton({
   const [borrowStatus, setBorrowStatus] = useState<BorrowStatus>("");
   const [isBorrowing, setIsBorrowing] = useState(false);
   const [userHasBorrowPerm, setUserHasBorrowPerm] = useState(false);
-  const [userHasApproved, setUserHasApproved] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dialogStage, setDialogStage] = useState<
@@ -75,7 +65,6 @@ export function LoanActionButton({
   // JB Hooks
   const {
     contracts: { primaryNativeTerminal },
-    contractAddress,
   } = useJBContractContext();
   const { token } = useJBTokenContext();
   const baseToken = useProjectBaseToken();
@@ -87,33 +76,16 @@ export function LoanActionButton({
   const { toast } = useToast();
 
   // Sucker Derived Values
-  const activeChainId = selectedSucker.peerChainId;
-  const activeProjectId = selectedSucker.projectId;
+  const { peerChainId: activeChainId, projectId: activeProjectId } = selectedSucker;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
-
   const baseTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
 
-  // Contract Calls
-  const { data: revDeployerFee } = useReadContract({
-    abi: revDeployerAbi,
-    functionName: "FEE",
-    address: contractAddress(RevnetCoreContracts.REVDeployer),
-    chainId: activeChainId ? (Number(activeChainId) as JBChainId) : undefined,
-  });
-
-  const { data: resolvedPermissionsAddress } = useReadContract({
-    abi: revDeployerAbi,
-    functionName: "PERMISSIONS",
-    address: contractAddress(RevnetCoreContracts.REVDeployer),
-    chainId: activeChainId ? (Number(activeChainId) as JBChainId) : undefined,
-  });
-
-  const { data: revPrepaidFeePercent } = useReadContract({
-    abi: revLoansAbi,
-    functionName: "REV_PREPAID_FEE_PERCENT",
-    address: revLoansContractAddress,
-    chainId: activeChainId ? (Number(activeChainId) as JBChainId) : undefined,
-  });
+  const {
+    revLoansContractAddress,
+    revDeployerFee,
+    resolvedPermissionsAddress,
+    revPrepaidFeePercent
+  } = useLoanFeeData(activeChainId);
 
   const userHasPermission = useHasBorrowPermission({
     address: address as `0x${string}`,
@@ -202,43 +174,6 @@ export function LoanActionButton({
         }
       }
 
-      // Check allowance for non-ETH base tokens (for standard borrow)
-      /*if (!baseToken.isNative && loanAmount) {
-        const allowance = await publicClient.readContract({
-          address: baseTokenAddress,
-          abi: erc20Abi,
-          functionName: "allowance",
-          args: [address as Address, revLoansContractAddress as Address],
-        });
-
-        if (BigInt(allowance) < loanAmount) {
-          try {
-            setBorrowStatus("signing-approval");
-
-            const approveHash = await writeContractAsync({
-              address: baseTokenAddress,
-              abi: erc20Abi,
-              functionName: "approve",
-              args: [revLoansContractAddress as Address, loanAmount],
-            });
-
-            await publicClient.waitForTransactionReceipt({ hash: approveHash });
-            setBorrowStatus("");
-            setUserHasApproved(true);
-
-          } catch (err) {
-            setBorrowStatus("rejected-approval");
-            toast({
-              variant: "destructive",
-              title: "Approval Denied",
-              description: "Approval was cancelled by user",
-            });
-            return;
-          }
-        } else {
-          setUserHasApproved(true);
-        }
-      }*/
       try {
         setBorrowStatus("signing-borrow");
         await writeContractAsync({
@@ -418,9 +353,7 @@ export function LoanActionButton({
 
               <LoanStepper
                 currentStep={borrowStatus}
-                userHasApproved={userHasApproved}
                 userHasPermission={userHasPermission ?? false}
-                baseTokenIsNative={baseToken.isNative}
               />
 
               <div className="mt-6 flex justify-end space-x-2">

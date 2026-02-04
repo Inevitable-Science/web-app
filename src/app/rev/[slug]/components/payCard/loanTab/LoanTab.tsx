@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import {
-  useJBContractContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "juice-sdk-react";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, truncateNumber } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
@@ -14,40 +13,30 @@ import { PayInput } from "@/components/PayInput";
 import { LoanChainSelector } from "./LoanChainSelector";
 import { useReadContract } from "wagmi";
 import {
-  getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
   revLoansAbi,
 } from "juice-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { LoanActionButton } from "./LoanActionButton";
+import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 
 export function LoanTab() {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const { peerChainId: activeChainId, projectId: activeProjectId } = selectedSucker;
+  
+  const [collateralAmount, setCollateralAmount] = useState("");
 
+  const { revLoansContractAddress } = useLoanFeeData(activeChainId);
   const { token } = useJBTokenContext();
-  const { version } = useJBContractContext();
   const baseToken = useProjectBaseToken();
   const balanceQuery = useSuckersUserTokenBalance();
 
-  const [collateralAmount, setCollateralAmount] = useState("");
-  const [borrowEstimate, setBorrowEstimate] = useState("");
-
   // Token Balances
-  const currentChainBalanceObj = balanceQuery?.data?.find(
-    (tkn) => tkn.chainId === selectedSucker.peerChainId
-  )?.balance;
-  const currentChainBalNum = Number(currentChainBalanceObj?.format()) || 0;
-
-  // Sucker Derived Values
-  const cashOutChainId = selectedSucker.peerChainId;
-  const effectiveProjectId = selectedSucker.projectId;
+  const currentChainBalanceObj = balanceQuery?.data?.find((tkn) => tkn.chainId === selectedSucker.peerChainId)?.balance;
+  const currentChainBalBigInt = currentChainBalanceObj?.value ?? 0n;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  const revLoansContractAddress = getRevnetLoanContract(
-    version,
-    cashOutChainId
-  );
-
+  // TODO: debounce
   const {
     data: estimatedBorrowFromInputOnly,
     isLoading: estimatedBorrowIsLoading,
@@ -55,11 +44,11 @@ export function LoanTab() {
     abi: revLoansAbi,
     functionName: "borrowableAmountFrom",
     address: revLoansContractAddress,
-    chainId: cashOutChainId,
+    chainId: activeChainId,
     args:
       collateralAmount && baseToken
         ? [
-            BigInt(effectiveProjectId),
+            BigInt(activeProjectId),
             parseUnits(collateralAmount, projectTokenDecimals),
             BigInt(baseToken.decimals),
             BigInt(baseToken.currency),
@@ -67,49 +56,14 @@ export function LoanTab() {
         : undefined,
   });
 
-  useEffect(() => {
-    if (estimatedBorrowFromInputOnly) {
-      const formatted = Number(
-        formatUnits(estimatedBorrowFromInputOnly ?? 0n, baseToken.decimals)
-      );
-
-      setBorrowEstimate(formatNumber(formatted, false));
-    } else {
-      setBorrowEstimate("");
-    }
-  }, [estimatedBorrowFromInputOnly]);
-
-  const setManualCollateralAmount = (percentage: number) => {
-    if (percentage === 100) {
-      // no rounding for MAX - rounding is an issue for balances like 0.9999
-      const s = currentChainBalNum.toString();
-      if (!s.includes(".")) return s;
-      const [int, frac] = s.split(".");
-      const val =
-        int === "0" ? `0.${frac.slice(0, 3)}` : `${int}.${frac.slice(0, 3)}`;
-
-      setCollateralAmount(val);
-      return;
-    }
-
-    if (percentage < 0 || percentage > 99) return;
-    const loanCollateral = (currentChainBalNum / 100) * percentage;
-    const loanCollateralString = formatNumber(loanCollateral, false);
-
-    setCollateralAmount(loanCollateralString);
-    return;
-  };
-
-  // This prevents scrolling to reduce the value below 0
-  const handleCollateralAmountChange = (value: string) => {
-    if (value.startsWith("-")) {
-      setCollateralAmount("0");
-      return;
-    }
-
-    setCollateralAmount(value);
-    return;
-  };
+  const estimatedBorrowString = estimatedBorrowFromInputOnly ?
+    formatNumber(
+      formatUnits(
+        estimatedBorrowFromInputOnly ?? 0n,
+        baseToken.decimals
+      ),
+      false
+    ) : "";
 
   return (
     <div className="flex flex-col gap-4">
@@ -122,18 +76,22 @@ export function LoanTab() {
             </p>
             <PayInput
               value={collateralAmount}
-              onChangeFunction={handleCollateralAmountChange}
+              onChangeFunction={(value) => {
+                if (value.startsWith("-")) {
+                  setCollateralAmount("0");
+                  return;
+                }
+
+                setCollateralAmount(value);
+                return;
+              }}
             />
           </div>
-          <div className="flex flex-col items-end gap-[2px]">
+          <div className="flex flex-col items-end gap-1">
             <LoanChainSelector suckersBalance={balanceQuery.data} />
             <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {!currentChainBalNum
-                ? "0.00"
-                : currentChainBalNum < 100
-                  ? currentChainBalNum.toFixed(4)
-                  : formatNumber(currentChainBalNum)}
+              {truncateNumber(currentChainBalanceObj?.format() ?? "0", true)}
             </p>
           </div>
         </div>
@@ -147,10 +105,13 @@ export function LoanTab() {
             {estimatedBorrowIsLoading && collateralAmount ? (
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
-              <PayInput value={borrowEstimate} disabled />
+              <PayInput
+                value={estimatedBorrowString}
+                disabled
+              />
             )}
           </div>
-          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full px-1.5 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full pl-1.5 pr-2 py-1">
             <div className="flex items-end">
               {baseToken.isNative ? (
                 <ChainLogo chainId={1} height={24} width={24} />
@@ -184,46 +145,25 @@ export function LoanTab() {
         </div>
       </div>
 
-      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid">
-        <Button
-          className="h-[28px] rounded-l-lg rounded-r-xs"
-          onClick={() => {
-            setManualCollateralAmount(10);
-          }}
-        >
-          10%
-        </Button>
-        <Button
-          className="h-[28px] rounded-xs"
-          onClick={() => {
-            setManualCollateralAmount(25);
-          }}
-        >
-          25%
-        </Button>
-        <Button
-          className="h-[28px] rounded-xs"
-          onClick={() => {
-            setManualCollateralAmount(50);
-          }}
-        >
-          50%
-        </Button>
-        <Button
-          className="h-[28px] rounded-l-xs rounded-r-lg"
-          onClick={() => {
-            setManualCollateralAmount(100);
-          }}
-        >
-          MAX
-        </Button>
+      <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg">
+        {[10, 25, 50, 100].map(percent => 
+          <Button
+            className="h-[28px] rounded-xs"
+            onClick={() => {
+              const collateralAmt = (currentChainBalBigInt * BigInt(percent)) / 100n;
+              const formattedCollateralAmt = truncateNumber(formatUnits(collateralAmt, projectTokenDecimals));
+              setCollateralAmount(formattedCollateralAmt);
+            }}
+          >
+            {percent === 100 ? "MAX": `${percent}%`}
+          </Button>
+        )}
       </div>
 
       <LoanActionButton
         loanAmount={estimatedBorrowFromInputOnly}
         collateralAmount={collateralAmount}
-        projectTokenBalance={currentChainBalanceObj?._value ?? 0n}
-        revLoansContractAddress={revLoansContractAddress}
+        projectTokenBalance={currentChainBalBigInt}
       />
     </div>
   );

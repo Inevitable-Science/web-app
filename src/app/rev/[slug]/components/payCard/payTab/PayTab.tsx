@@ -86,6 +86,10 @@ export function PayTab({
   }, [isQuoteLoading]);
 
   const handlePayAmountChange = (value: string) => {
+    if (value.startsWith("-")) {
+      setAmountA("0");
+      return;
+    }
     setAmountA(value);
 
     if (version === 4 && ruleset && rulesetMetadata) {
@@ -116,6 +120,11 @@ export function PayTab({
   };
 
   const handleReceiveAmountChange = (value: string) => {
+    if (value.startsWith("-")) {
+      setAmountA("0");
+      return;
+    }
+    
     setAmountB(value);
 
     if (!ruleset || !rulesetMetadata) return;
