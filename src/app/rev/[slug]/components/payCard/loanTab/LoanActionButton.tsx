@@ -123,6 +123,12 @@ export function LoanActionButton({
   const feeBasisPoints = Math.round(prepaidPercent * 10);
   const collateralBigInt = parseUnits(collateralAmount, projectTokenDecimals);
 
+  // Chart Vars
+  const monthsToPrepay = (prepaidPercent / 50) * 120;
+  const prepaidMonths = monthsToPrepay;
+  const displayYears = Math.floor(prepaidMonths / 12);
+  const displayMonths = Math.round(prepaidMonths % 12);
+
   const handleBorrow = async () => {
     try {
       if (
@@ -311,8 +317,8 @@ export function LoanActionButton({
                   collateralAmount={collateralAmount}
                   tokenSymbol={baseToken.symbol}
                   collateralTokenSymbol={token.data?.symbol}
-                  displayYears={1}
-                  displayMonths={12}
+                  displayYears={displayYears}
+                  displayMonths={displayMonths}
                 />
               </div>
 

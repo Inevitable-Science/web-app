@@ -40,8 +40,8 @@ export function LoanDialog({ loan }: { loan: LoanType }) {
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
 
         <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl px-6 pt-4 pb-6 shadow-lg duration-200">
-          <div className="">
-            <div className="">
+          <div>
+            <div>
               <Button
                 className={`${activeTab === "repay" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
                 onClick={() => setActiveTab("repay")}

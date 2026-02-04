@@ -1,11 +1,7 @@
 import { USDC_DECIMALS } from "@/app/constants";
 import { ChainLogo } from "@/components/ChainLogo";
-import { Button } from "@/components/ui/button";
-import {
-  LoansByAccountDocument,
-  SuckerGroupDocument,
-} from "@/generated/graphql";
-import { formatDate, formatNumber, formatSeconds } from "@/lib/utils";
+import { LoansByAccountDocument } from "@/generated/graphql";
+import { formatNumber, formatSeconds } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import {
   DEFAULT_NATIVE_TOKEN_SYMBOL,
@@ -18,9 +14,7 @@ import {
   useBendystrawQuery,
   useJBContractContext,
   useJBTokenContext,
-  useSuckers,
 } from "juice-sdk-react";
-import { ArrowRight } from "lucide-react";
 import { Address, formatUnits } from "viem";
 import { useAccount } from "wagmi";
 import { LoanDialog, LoanType } from "./LoanDialog";
@@ -69,10 +63,10 @@ export function LoansTable() {
     <div className="bg-grey-450 mb-4 rounded-2xl p-[12px]">
       <h3 className="text-lg">Your Loans</h3>
 
-      <div className="my-2 grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center text-sm">
+      <div className="loanTableContainer my-2 items-center text-sm">
         <p>Chain</p>
-        <p>Borrowed</p>
-        <p>Collateral</p>
+        <p className="borrowedCol">Borrowed</p>
+        <p className="collateralCol">Collateral</p>
         <p>Fees Increase In</p>
         <div />
       </div>
@@ -100,17 +94,17 @@ export function LoansTable() {
           return (
             <div
               key={loan.id}
-              className="border-grey-450 grid grid-cols-[2fr_4fr_4fr_4fr_3fr] items-center border-b py-2"
+              className="loanTableContainer border-grey-450 items-center border-b py-2"
             >
               <ChainLogo chainId={loan.chainId as JBChainId} />
-              <p>
+              <p className="borrowedCol">
                 {formatNumber(
                   formatUnits(loan.borrowAmount, loanTokenDecimals),
                   false
                 )}{" "}
                 {loanTokenSymbol}
               </p>
-              <p>
+              <p className="collateralCol">
                 {formatNumber(
                   formatUnits(loan.collateral, projectTokenDecimals),
                   false
@@ -125,6 +119,42 @@ export function LoansTable() {
           );
         })}
       </div>
+      <style>{`
+      @media (max-width:1250px) {
+        .loanTableContainer {
+          grid-template-columns: 2fr 4fr 4fr 3fr !important;
+        }
+
+        .borrowedCol {
+          display: none;
+        }
+      }
+
+      @media (min-width:768px) and (max-width:950px) {
+        .loanTableContainer {
+          grid-template-columns: 2fr 4fr 3fr !important;
+        }
+
+        .collateralCol {
+          display: none;
+        }
+      }
+
+      @media (max-width:530px) {
+        .loanTableContainer {
+          grid-template-columns: 2fr 4fr 3fr !important;
+        }
+
+        .collateralCol {
+          display: none;
+        }
+      }
+
+      .loanTableContainer {
+        display: grid;
+        grid-template-columns: 2fr 4fr 4fr 4fr 3fr;
+      }
+      `}</style>
     </div>
   );
 }

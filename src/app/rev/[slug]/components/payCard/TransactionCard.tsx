@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   JBChainId,
   useJBChainId,
-  useJBContractContext,
-  useSuckers,
+  useJBContractContext
 } from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
@@ -36,22 +35,30 @@ export function TransactionCard() {
   const chainId = useChainId();
   const { version } = useJBContractContext();
 
-  const now = new Date().getTime() / 1000;
-  const startDate = allRulesets?.[0]?.start;
-  const timeUntilStart = startDate ? startDate - now : 0;
-  const hasStarted = timeUntilStart <= 0;
-
   const peerChainId = selectedSucker?.peerChainId;
   const tokens = useMemo(
     () => getTokensForChain(peerChainId, version),
     [peerChainId, version]
   );
 
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">(
+  const [activeTab, setActiveTab] = useState<
+    "buy" |
+    "withdraw" |
+    "loan"
+  >(
     "buy"
   );
+  const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
+  useEffect(() => {
+    const id = setInterval(() => {
+      setNow(Math.floor(Date.now() / 1000));
+    }, 1000);
+
+    return () => clearInterval(id);
+  }, []);
+  
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
     if (suckers && !selectedSucker && suckers.length > 0) {
@@ -69,6 +76,10 @@ export function TransactionCard() {
       setSelectedSucker(defaultSucker || suckers[0]);
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
+
+  const startDate = allRulesets?.[0]?.start;
+  const timeUntilStart = startDate ? startDate - now : 0;
+  const hasStarted = timeUntilStart <= 0;
 
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;

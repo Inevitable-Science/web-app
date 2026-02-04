@@ -7,7 +7,6 @@ import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
 import {
   getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
-  JBChainId,
   revLoansAbi,
 } from "juice-sdk-core";
 import {
@@ -19,7 +18,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";
 import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
-import { formatNumber, formatWalletError } from "@/lib/utils";
+import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import {
   useAccount,
@@ -65,16 +64,17 @@ export function RepayTab({ loan }: { loan: LoanType }) {
   const baseTokenAddress = baseToken.tokenMap[loanChainId].token;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
+  const publicClient = usePublicClient();
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
-  const publicClient = usePublicClient();
   const { toast } = useToast();
 
   const collateralToReturnBigInt = parseUnits(
     collateralToReturn,
     baseToken.decimals
   );
-  const collateralToReturnPercent = loan.collateral
+  const collateralToReturnPercent =
+  loan.collateral
     ? (collateralToReturnBigInt * 100n) / loan.collateral
     : 0n;
 
@@ -87,8 +87,6 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     chainId: loanChainId,
     args: [BigInt(loan.id)],
   });
-
-  console.log(loanData, "loanData");
 
   const simulationArgs = [
     BigInt(loan.id),
@@ -112,7 +110,6 @@ export function RepayTab({ loan }: { loan: LoanType }) {
   const {
     data: simulationResult,
     isLoading: isSimulating,
-    error: simulationError,
   } = useSimulateContract({
     abi: revLoansAbi,
     functionName: "repayLoan",
@@ -291,7 +288,15 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           </p>
           <PayInput
             value={collateralToReturn}
-            onChangeFunction={setCollateralToReturn}
+            onChangeFunction={(value) => {
+              if (value.startsWith("-")) {
+                setCollateralToReturn("0");
+                return;
+              }
+
+              setCollateralToReturn(value);
+              return;
+            }}
           />
         </div>
         <div className="flex flex-col items-end gap-1">
@@ -367,7 +372,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         </p>
         <p>Amount To Pay Now:</p>
         <div className="flex justify-end">
-          {collateralToReturn && isSimulating ? (
+          {Number(collateralToReturn) && isSimulating ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
           ) : exactRepayAmount === undefined ? (
             `0 ${baseToken.symbol}`
@@ -380,7 +385,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         </div>
         <p>Amount Carried Into New Loan:</p>
         <div className="flex justify-end">
-          {collateralToReturn && (isSimulating || isLoadingLoan) ? (
+          {Number(collateralToReturn) && (isSimulating || isLoadingLoan) ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
           ) : exactRepayAmount === undefined || !loanData?.amount ? (
             `0 ${baseToken.symbol}`

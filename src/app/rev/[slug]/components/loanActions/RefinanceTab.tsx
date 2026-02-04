@@ -4,12 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
 import {
-  getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
-  JBChainId,
-  revDeployerAbi,
-  revLoansAbi,
-  RevnetCoreContracts,
+  revLoansAbi
 } from "juice-sdk-core";
 import {
   useJBContractContext,
@@ -21,9 +17,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";
 import { formatUnits, parseUnits } from "viem";
-import { formatNumber, formatWalletError } from "@/lib/utils";
+import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { useTokenBalances } from "@/hooks/useTokenBalances";
 import {
   useAccount,
   usePublicClient,
@@ -34,6 +29,7 @@ import { generateFeeData } from "@/lib/feeHelpers";
 import { useToast } from "@/components/ui/use-toast";
 import { LoanFeeChart } from "../payCard/loanTab/LoanFeeChart";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 
 export function RefinanceTab({ loan }: { loan: LoanType }) {
   const [additionalCollateral, setAdditionalCollateral] = useState("");
@@ -47,11 +43,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
-  const {
-    contractAddress,
-    contracts: { primaryNativeTerminal },
-    version,
-  } = useJBContractContext();
+  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
   const baseToken = useProjectBaseToken();
   const baseTokenAddress = baseToken.tokenMap[loan.chainId].token;
 
@@ -69,7 +61,11 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  const revLoansContractAddress = getRevnetLoanContract(version, loanChainId);
+  const {
+    revLoansContractAddress,
+    revDeployerFee,
+    revPrepaidFeePercent
+  } = useLoanFeeData(loanChainId);
 
   const {
     data: currentBorrowableOnSelectedCollateral,
@@ -124,28 +120,22 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       : undefined,
   });
 
-  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } =
-    useReadContract({
-      abi: revLoansAbi,
-      functionName: "borrowableAmountFrom",
-      address: revLoansContractAddress,
-      chainId: loanChainId,
-      args:
-        additionalCollateral && newLoanCollateral > 0n
-          ? [
-              // Use the same project ID as the loan table for consistency
-              BigInt(loan.projectId),
-              newLoanCollateral,
-              BigInt(baseToken.decimals),
-              BigInt(baseToken.currency),
-            ]
-          : undefined,
-    });
-
-  console.log(
-    currentBorrowableOnSelectedCollateral,
-    "currentBorrowableOnSelectedCollateral"
-  );
+  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } = useReadContract({
+    abi: revLoansAbi,
+    functionName: "borrowableAmountFrom",
+    address: revLoansContractAddress,
+    chainId: loanChainId,
+    args:
+      additionalCollateral && newLoanCollateral > 0n
+        ? [
+            // Use the same project ID as the loan table for consistency
+            BigInt(loan.projectId),
+            newLoanCollateral,
+            BigInt(baseToken.decimals),
+            BigInt(baseToken.currency),
+          ]
+        : undefined,
+  });
 
   const collateralCountToTransfer =
     loan && currentBorrowableOnSelectedCollateral
@@ -163,34 +153,6 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
   );
   const noCollateralToTransfer = collateralToTransfer <= 0;
 
-  /*const borrowAmountForFeeCalculation =
-    internalSelectedLoan && additionalCollateral
-      ? Number(
-          formatUnits(
-            additionalCollateral,
-            selectedChainTokenConfig?.decimals || NATIVE_TOKEN_DECIMALS,
-          ),
-        )
-      : grossBorrowedNative;
-
-  const feeData = generateFeeData({
-    grossBorrowedEth: borrowAmountForFeeCalculation,
-    prepaidPercent,
-  });*/
-
-  const { data: revDeployerFee } = useReadContract({
-    abi: revDeployerAbi,
-    functionName: "FEE",
-    address: contractAddress(RevnetCoreContracts.REVDeployer),
-    chainId: loanChainId,
-  });
-
-  const { data: revPrepaidFeePercent } = useReadContract({
-    abi: revLoansAbi,
-    functionName: "REV_PREPAID_FEE_PERCENT",
-    address: revLoansContractAddress,
-    chainId: loanChainId,
-  });
 
   const newLoanFeeData = generateFeeData({
     grossBorrowedEth: newLoanBorrowableAmount
@@ -387,7 +349,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               <PayInput
                 value={additionalCollateral}
                 onChangeFunction={setAdditionalCollateral}
-                disabled={noCollateralToTransfer}
+                //disabled={noCollateralToTransfer}
               />
             </div>
             <div className="flex flex-col items-end gap-1">
@@ -442,13 +404,15 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                   const amount = chainBalanceBigInt
                     ? (chainBalanceBigInt / 100n) * BigInt(percent)
                     : 0n;
-                  const formattedAmount = formatUnits(
-                    amount,
-                    projectTokenDecimals
+                  const formattedAmount = truncateNumber(
+                    formatUnits(
+                      amount,
+                      projectTokenDecimals
+                    )
                   );
                   setAdditionalCollateral(formattedAmount);
                 }}
-                disabled={noCollateralToTransfer}
+                //disabled={noCollateralToTransfer}
               >
                 {percent === 100 ? "MAX" : `${percent}%`}
               </Button>

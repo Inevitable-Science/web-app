@@ -148,6 +148,7 @@ export function LoanTab() {
       <div className="background-color hidden grid-cols-[repeat(auto-fit,minmax(40px,1fr))] items-center gap-1 rounded-xl p-1 sm:grid [&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg">
         {[10, 25, 50, 100].map(percent => 
           <Button
+            key={percent}
             className="h-[28px] rounded-xs"
             onClick={() => {
               const collateralAmt = (currentChainBalBigInt * BigInt(percent)) / 100n;
