@@ -12,9 +12,10 @@ import { Address, formatUnits, parseUnits } from "viem";
 import {
   getTokenAToBQuote,
   getTokenBtoAQuote,
+  JB_TOKEN_DECIMALS,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
-import { formatNumber, formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, truncateNumber } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
@@ -36,47 +37,42 @@ export function PayTab({
   selectedToken: Token;
   setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
 }) {
-  const suckers = useRevnetDataStore((state) => state.suckers);
   const project = useRevnetDataStore((state) => state.project);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const suckers = useRevnetDataStore((state) => state.suckers);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const setSelectedSucker = useRevnetDataStore(
     (state) => state.setSelectedSucker
   );
 
-  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
-  const ruleset = useRevnetDataStore((state) => state.ruleset);
+  const [amountA, setAmountA] = useState("");
+  const [amountB, setAmountB] = useState("");
+  const [memo, setMemo] = useState("");
 
-  const { token: tokenBContext } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { version } = useJBContractContext();
+  const { token } = useJBTokenContext();
+  const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
   const baseToken = useProjectBaseToken();
-  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
-    selectedSucker.peerChainId
-  );
   const { balances, isLoading: isBalanceLoading } = useTokenBalances(
     tokens,
+    selectedSucker.peerChainId
+  );
+  const currentTokenBalNum = Number(
+    formatUnits(
+      balances.get(selectedToken.address) ?? 0n,
+      selectedToken.decimals
+    ));
+
+  const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
     selectedSucker.peerChainId
   );
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
 
-  const now = new Date().getTime() / 1000;
-  const startDate = allRulesets?.[0]?.start;
-  const timeUntilStart = startDate ? startDate - now : 0;
-  const hasStarted = timeUntilStart <= 0;
-
-  const [amountA, setAmountA] = useState("");
-  const [amountB, setAmountB] = useState("");
-  const [memo, setMemo] = useState("");
-
-  const defaultToken = {
-    symbol: "TOKENS",
-    decimals: 18,
-  };
-
-  const tokenB = tokenBContext.data || defaultToken;
 
   useEffect(() => {
     if (!selectedToken || !amountA) return;
@@ -90,16 +86,7 @@ export function PayTab({
   }, [isQuoteLoading]);
 
   const handlePayAmountChange = (value: string) => {
-    if (value.startsWith("-")) {
-      setAmountA("0");
-      return;
-    }
-
     setAmountA(value);
-    if (!value || value === ".") {
-      setAmountB("");
-      return;
-    }
 
     if (version === 4 && ruleset && rulesetMetadata) {
       const quote = getTokenAToBQuote(
@@ -112,7 +99,7 @@ export function PayTab({
           reservedPercent: rulesetMetadata.reservedPercent,
         }
       );
-      setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
+      setAmountB(formatUnits(quote.payerTokens, projectTokenDecimals));
       return;
     } else {
       if (isQuoteLoading) return;
@@ -129,18 +116,13 @@ export function PayTab({
   };
 
   const handleReceiveAmountChange = (value: string) => {
-    //const value = e.target.value;
     setAmountB(value);
-    if (!value || value === ".") {
-      setAmountA("");
-      return;
-    }
 
     if (!ruleset || !rulesetMetadata) return;
 
     const quote = getTokenBtoAQuote(
-      new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
-      tokenB.decimals,
+      new FixedInt(parseUnits(value, projectTokenDecimals), projectTokenDecimals),
+      projectTokenDecimals,
       {
         weight: ruleset.weight,
         reservedPercent: rulesetMetadata.reservedPercent,
@@ -157,12 +139,9 @@ export function PayTab({
     const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
     const newChainTokens = getTokensForChain(chainId, version);
 
-    let token;
-    if (selectedToken.isNative) {
-      token = newChainTokens.find((t) => t.isNative);
-    } else {
-      token = newChainTokens.find((t) => t.address === USDC_ADDRESSES[chainId]);
-    }
+    const token = selectedToken.isNative ?
+      newChainTokens.find((t) => t.isNative) :
+      newChainTokens.find((t) => t.address.toLowerCase() === USDC_ADDRESSES[chainId].toLowerCase())
 
     if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
@@ -179,26 +158,20 @@ export function PayTab({
     return;
   };
 
-  const preparedAmountA = {
-    amount: new FixedInt(
-      parseUnits(amountA || "0", selectedToken.decimals),
-      selectedToken.decimals
-    ),
-    symbol: selectedToken.symbol,
-  };
+  const preparedAmountA = parseUnits(amountA || "0", selectedToken.decimals);
+  const preparedAmountB = parseUnits(amountB || "0", projectTokenDecimals);
 
-  const preparedAmountB = {
-    amount: new FixedInt(
-      parseUnits(amountB || "0", tokenB.decimals),
-      tokenB.decimals
-    ),
-    symbol: formatTokenSymbol(tokenB.symbol),
-  };
+  // Constants used to check if a project is accepting payments
+  const now = new Date().getTime() / 1000;
+  const startDate = allRulesets?.[0]?.start;
+  const timeUntilStart = startDate ? startDate - now : 0;
+  const hasStarted = timeUntilStart <= 0;
+
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+        <div className="background-color grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
             <PayInput
@@ -229,16 +202,13 @@ export function PayTab({
               ) : (
                 <p className="w-[130px]">
                   Balance:{" "}
-                  {formatTokenAmount(
-                    balances.get(selectedToken.address) ?? 0n,
-                    selectedToken
-                  )}
+                  {truncateNumber(currentTokenBalNum, true)}
                 </p>
               )}
             </div>
           </div>
         </div>
-        <div className="background-color flex items-center justify-between gap-2 rounded-xl p-[16px]">
+        <div className="background-color grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
@@ -251,7 +221,7 @@ export function PayTab({
               }
             />
           </div>
-          <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full px-1.5 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full pl-1.5 pr-2 py-1">
             <div className="flex items-end">
               <Image
                 src={
@@ -278,7 +248,7 @@ export function PayTab({
                 />
               </div>
             </div>
-            <p className="text-lg font-light">{tokenB.symbol || "TOKENS"}</p>
+            <p className="text-lg font-light">{token.data?.symbol ?? "TOKENS"}</p>
           </div>
         </div>
       </div>
@@ -295,6 +265,7 @@ export function PayTab({
         paymentToken={selectedToken}
         walletBalance={balances}
         memo={memo}
+        hasStarted={hasStarted}
         disabled={!amountA || parseFloat(amountA) === 0 || isQuoteLoading}
       />
     </div>

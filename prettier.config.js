@@ -3,7 +3,7 @@
 /** @type {import("prettier").Config} */
 module.exports = {
   // General Formatting
-  printWidth: 80,
+  printWidth: 100,
   tabWidth: 2,
   useTabs: false,
   semi: true,

@@ -124,16 +124,14 @@ export function WithdrawTab() {
               disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
             />
           </div>
-          <div className="flex flex-col items-end gap-[2px]">
+          <div className="flex flex-col items-end gap-1">
             <WithdrawSelector suckersBalance={balanceQuery.data} />
             <div className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
               {balanceQuery.isLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
-              ) : currentChainBalanceBigInt === 0n ? (
-                "0.00"
               ) : (
-                truncateNumber(currentChainBalObj?.format() ?? 0)
+                truncateNumber(currentChainBalObj?.format() ?? 0, true)
               )}
             </div>
           </div>

@@ -1,7 +1,6 @@
 import {
   BanknoteArrowUp,
   Check,
-  Landmark,
   Loader2,
   Receipt,
   X,
@@ -11,36 +10,32 @@ import { PaymentStatusType } from "./PayActionButton";
 export function PayStepper({
   currentStep,
   userHasApproved,
-  paymentTokenIsNative,
 }: {
   currentStep: PaymentStatusType;
   userHasApproved: boolean;
-  paymentTokenIsNative: boolean;
 }) {
   return (
     <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
       <ol className="text-body border-color relative mx-4 border-s-[1.5px]">
-        {!paymentTokenIsNative && (
-          <li className="ms-7 mb-10">
-            {currentStep === "signing-approval" ? (
-              <LoadingBubble />
-            ) : currentStep === "rejected-approval" ? (
-              <FailureBubble />
-            ) : userHasApproved ? (
-              <SuccessBubble />
-            ) : (
-              <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
-                <span className="ring-buffer ring-grey-450 relative flex h-8 w-8 items-center justify-center rounded-full bg-(--muted)/20 ring-2">
-                  <Receipt height={18} width={18} />
-                </span>
-              </div>
-            )}
-            <h3 className="leading-tight font-medium">Approve Allowance</h3>
-            <p className="text-muted-foreground text-sm">
-              Allow the project to send and exchange your USDC
-            </p>
-          </li>
-        )}
+        <li className="ms-7 mb-10">
+          {currentStep === "signing-approval" ? (
+            <LoadingBubble />
+          ) : currentStep === "rejected-approval" ? (
+            <FailureBubble />
+          ) : userHasApproved ? (
+            <SuccessBubble />
+          ) : (
+            <div className="background-color absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full">
+              <span className="ring-buffer ring-grey-450 relative flex h-8 w-8 items-center justify-center rounded-full bg-(--muted)/20 ring-2">
+                <Receipt height={18} width={18} />
+              </span>
+            </div>
+          )}
+          <h3 className="leading-tight font-medium">Approve Allowance</h3>
+          <p className="text-muted-foreground text-sm">
+            Allow the project to send and exchange your USDC
+          </p>
+        </li>
 
         <li className="ms-7">
           {currentStep === "signing-pay" ? (

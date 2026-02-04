@@ -52,10 +52,27 @@ function truncate(num: number, decimals: number) {
 
 // use for bal/tx calculations, no rounding
 export function truncateNumber(
-  passedNum: number | string | null
+  passedNum: number | string | null,
+  pretty?: boolean,
 ): string {
   const num = passedNum != null ? Number(passedNum) : null;
   if (num === null || isNaN(num)) return "--";
+
+  if (pretty) {
+    if (num === 0) return "0.00";
+
+    if (num < 100) {
+      // emulate toPrecision(3) but truncate
+      const digits = 3;
+      const factor =
+        10 ** (digits - Math.floor(Math.log10(Math.abs(num))) - 1);
+
+      const truncated = Math.trunc(num * factor) / factor;
+      return truncated.toString();
+    }
+
+    return formatNumber(truncate(num, 0))
+  }
 
   if (num === 0) return "0";
 
