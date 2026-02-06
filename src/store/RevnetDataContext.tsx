@@ -37,13 +37,11 @@ export type SelectedTabType =
 
 interface RevnetDataStore {
   // Interactive State
-  selectedTab: SelectedTabType;
-  setSelectedTab: (tab: SelectedTabType) => void;
-
   selectedSucker: SuckerPair;
   setSelectedSucker: (sucker: SuckerPair) => void;
 
   // State
+  slug: string;
   suckers: SuckerPair[] | undefined;
   ruleset: JBRulesetData | undefined;
   rulesetMetadata: JBRulesetMetadata | undefined;
@@ -72,6 +70,7 @@ interface ContextPropType {
   projectData: NonNullable<ProjectQuery["project"]>;
   treasuryAnalytics: TreasuryResponse | null;
   tokenAnalytics: TokenResponse | null;
+  slug: string;
 }
 
 export const RevnetDataProvider = ({
@@ -79,6 +78,7 @@ export const RevnetDataProvider = ({
   projectData,
   treasuryAnalytics,
   tokenAnalytics,
+  slug,
 }: ContextPropType) => {
   // Foundational Hooks
   const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
@@ -101,12 +101,10 @@ export const RevnetDataProvider = ({
 
   const [store] = useState(() =>
     createStore<RevnetDataStore>((set) => ({
-      selectedTab: "about",
-      setSelectedTab: (tab) => set({ selectedTab: tab }),
-
       selectedSucker: { peerChainId: chainId!, projectId }, // todo review if this is safe (chainId!)
       setSelectedSucker: (sucker) => set({ selectedSucker: sucker }),
 
+      slug: slug,
       suckers: suckers,
       ruleset: ruleset.data ?? undefined,
       rulesetMetadata: rulesetMetadata.data!,

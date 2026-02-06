@@ -85,11 +85,9 @@ export function HoldersTable() {
               <div>
                 <span className="text-sm whitespace-nowrap">
                   {formatNumber(
-                    Number(
-                      formatUnits(
-                        participant.balance,
-                        token.data?.decimals ?? 18
-                      )
+                    formatUnits(
+                      participant.balance,
+                      token.data?.decimals ?? 18
                     ),
                     true
                   )}{" "}

@@ -117,7 +117,7 @@ export default async function ProjectVestingPage({
       <div className="bg-grey-450 grid grid-cols-[repeat(auto-fit,minmax(190px,1fr))] gap-3 rounded-2xl p-[12px]">
         <div className="background-color rounded-xl p-[16px]">
           <h3 className="text-xl">
-            {formatNumber(Number(formatEther(totalLockedTokens)))}
+            {formatNumber(formatEther(totalLockedTokens))}
           </h3>
           <p className="text-muted-foreground font-light uppercase">
             Locked Tokens
@@ -134,7 +134,7 @@ export default async function ProjectVestingPage({
 
         <div className="background-color rounded-xl p-[16px]">
           <h3 className="text-xl">
-            {formatNumber(Number(formatEther(totalReleasableTokens)))}
+            {formatNumber(formatEther(totalReleasableTokens))}
           </h3>
           <p className="text-muted-foreground font-light uppercase">
             Releasable Tokens
@@ -143,7 +143,7 @@ export default async function ProjectVestingPage({
 
         <div className="background-color rounded-xl p-[16px]">
           <h3 className="text-xl">
-            {formatNumber(Number(formatEther(totalReleasedTokens)))}
+            {formatNumber(formatEther(totalReleasedTokens))}
           </h3>
           <p className="text-muted-foreground font-light uppercase">
             Claimed Tokens

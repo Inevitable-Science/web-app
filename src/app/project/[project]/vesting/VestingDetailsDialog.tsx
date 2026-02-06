@@ -1,5 +1,12 @@
 "use client";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
@@ -135,151 +142,144 @@ export function VestingDetailsDialog({
   };
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
+      <DialogContent>
+        <DialogTitle className="flex items-center justify-between gap-2">
+          Schedule Details
+          {schedule.status === 0 ? (
+            <div className="flex">
+              <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal text-nowrap uppercase">
+                {isCompleted
+                  ? " Completed"
+                  : schedule.revokable
+                    ? "Active - Revokable"
+                    : "Active - Irrevocable"}
+              </p>
+            </div>
+          ) : (
+            <div className="flex">
+              <p className="rounded-full bg-red-900 px-2 py-1 text-xs font-normal uppercase">
+                Revoked
+              </p>
+            </div>
+          )}
+        </DialogTitle>
+        {address?.toLowerCase() === schedule.beneficiary.toLowerCase() && (
+          <DialogDescription>
+            This is your vesting schedule, open the "Your Schedules" tab to
+            release all of your tokens, alternatively unlock your tokens
+            below.
+          </DialogDescription>
+        )}
 
-        <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg duration-200">
-          <Dialog.Title className="flex items-center gap-2 justify-between text-lg font-semibold">
-            Schedule Details
-            {schedule.status === 0 ? (
-              <div className="flex">
-                <p className="rounded-full bg-(--input) px-2 py-1 text-xs font-normal uppercase text-nowrap">
-                  {isCompleted
-                    ? " Completed"
-                    : schedule.revokable
-                      ? "Active - Revokable"
-                      : "Active - Irrevocable"}
-                </p>
+        <div className="my-4 flex flex-col gap-2">
+          <div className="background-color flex flex-col rounded p-2">
+            <p className="text-muted-foreground text-sm font-light">
+              Beneficiary
+            </p>
+            <EthereumAddress
+              address={schedule.beneficiary as Address}
+              chain={JB_CHAINS[vestingChainId ?? 1].chain}
+              short
+              withEnsName
+            />
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2">
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                Total Tokens
+              </p>
+              <p>{formatNumber(formatEther(schedule.amountTotal))}</p>
+            </div>
+
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                Releasable Tokens
+              </p>
+              <p>{formatNumber(formatEther(schedule.releasableAmount))}</p>
+            </div>
+          </div>
+
+          <div className="background-color flex flex-col rounded p-2">
+            <p className="text-muted-foreground text-sm font-light">
+              Released Tokens
+            </p>
+            <p>{formatNumber(formatEther(schedule.released))}</p>
+          </div>
+
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2">
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                Start Date
+              </p>
+              <p>{formatDate(startDate, true)}</p>
+            </div>
+
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                Cliff End
+              </p>
+              <p>
+                {cliffEndMs === startDateMs
+                  ? "No Cliff"
+                  : formatDate(cliffEndDate, true)}
+              </p>
+            </div>
+
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                End Date
+              </p>
+              <p>{formatDate(endDate, true)}</p>
+            </div>
+          </div>
+
+          {canReleaseTokens && !!vestingChainId && (
+            <div className="background-color flex flex-col rounded p-2">
+              <p className="text-muted-foreground text-sm font-light">
+                Release Specified Amount
+              </p>
+              <div className="mt-1 grid grid-cols-[1fr_auto] items-center gap-1">
+                <Input
+                  onChange={(e) => setReleaseAmount(e.target.value)}
+                  value={releaseAmount}
+                  onKeyDown={preventMinusKey}
+                  className="w-full text-sm"
+                  placeholder="Amount to release"
+                />
+                <ButtonWithWallet
+                  targetChainId={vestingChainId}
+                  onClick={releaseTokens}
+                  disabled={disableRelease}
+                  loading={isReleasing}
+                  className="w-fit text-nowrap"
+                >
+                  Release
+                </ButtonWithWallet>
               </div>
-            ) : (
-              <div className="flex">
-                <p className="rounded-full bg-red-900 px-2 py-1 text-xs font-normal uppercase">
-                  Revoked
-                </p>
-              </div>
-            )}
-          </Dialog.Title>
-          {address?.toLowerCase() === schedule.beneficiary.toLowerCase() && (
-            <Dialog.Description className="text-muted-foreground mt-2 text-sm">
-              This is your vesting schedule, open the "Your Schedules" tab to
-              release all of your tokens, alternatively unlock your tokens below.
-            </Dialog.Description>
+            </div>
           )}
 
-          <div className="my-4 flex flex-col gap-2">
-            <div className="background-color flex flex-col rounded p-2">
-              <p className="text-muted-foreground text-sm font-light">
-                Beneficiary
-              </p>
-              <EthereumAddress
-                address={schedule.beneficiary as Address}
-                chain={JB_CHAINS[vestingChainId ?? 1].chain}
-                short
-                withEnsName
-              />
-            </div>
+          {isOwner && !!vestingChainId && (
+            <ButtonWithWallet
+              targetChainId={vestingChainId}
+              onClick={revokeSchedule}
+              disabled={schedule.status !== 0}
+              loading={isRevoking}
+              variant={"destructive"}
+            >
+              Revoke Schedule
+            </ButtonWithWallet>
+          )}
+        </div>
 
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2">
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  Total Tokens
-                </p>
-                <p>{formatNumber(Number(formatEther(schedule.amountTotal)))}</p>
-              </div>
-
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  Releasable Tokens
-                </p>
-                <p>
-                  {formatNumber(Number(formatEther(schedule.releasableAmount)))}
-                </p>
-              </div>
-            </div>
-
-            <div className="background-color flex flex-col rounded p-2">
-              <p className="text-muted-foreground text-sm font-light">
-                Released Tokens
-              </p>
-              <p>{formatNumber(Number(formatEther(schedule.released)))}</p>
-            </div>
-
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,1fr))] gap-2">
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  Start Date
-                </p>
-                <p>{formatDate(startDate, true)}</p>
-              </div>
-
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  Cliff End
-                </p>
-                <p>
-                  {cliffEndMs === startDateMs
-                    ? "No Cliff"
-                    : formatDate(cliffEndDate, true)}
-                </p>
-              </div>
-
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  End Date
-                </p>
-                <p>{formatDate(endDate, true)}</p>
-              </div>
-            </div>
-
-            {canReleaseTokens && !!vestingChainId && (
-              <div className="background-color flex flex-col rounded p-2">
-                <p className="text-muted-foreground text-sm font-light">
-                  Release Specified Amount
-                </p>
-                <div className="mt-1 flex flex-col items-center gap-1 sm:flex-row">
-                  <Input
-                    onChange={(e) => setReleaseAmount(e.target.value)}
-                    value={releaseAmount}
-                    onKeyDown={preventMinusKey}
-                    className="w-full text-sm"
-                    placeholder="Amount to release"
-                  />
-                  <ButtonWithWallet
-                    targetChainId={vestingChainId}
-                    onClick={releaseTokens}
-                    disabled={disableRelease}
-                    loading={isReleasing}
-                    className="w-fit text-nowrap"
-                  >
-                    Release
-                  </ButtonWithWallet>
-                </div>
-              </div>
-            )}
-
-            {isOwner && !!vestingChainId && (
-              <ButtonWithWallet
-                targetChainId={vestingChainId}
-                onClick={revokeSchedule}
-                disabled={schedule.status !== 0}
-                loading={isRevoking}
-                variant={"destructive"}
-              >
-                Revoke Schedule
-              </ButtonWithWallet>
-            )}
-          </div>
-
-          <div className="mt-6 flex justify-end space-x-2">
-            <Dialog.Close asChild>
-              <Button variant={"secondary"}>Close</Button>
-            </Dialog.Close>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        <div className="mt-6 flex justify-end space-x-2">
+          <DialogClose />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

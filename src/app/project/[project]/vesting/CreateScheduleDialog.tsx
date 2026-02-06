@@ -16,7 +16,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
@@ -176,22 +183,19 @@ export function CreateScheduleDialogue() {
   if (!canCreate) return null;
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
         <Button variant={"accent"}>Create Schedule</Button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg duration-200">
-          <Dialog.Title className="text-lg font-semibold">
+        <DialogContent>
+          <DialogTitle>
             Create Vesting Schedule
-          </Dialog.Title>
+          </DialogTitle>
           {withdrawableAmount !== null && (
-            <Dialog.Description className="text-muted-foreground text-sm">
+            <DialogDescription>
               Max Token Amount: ~{formatNumber(withdrawableAmount)}
-            </Dialog.Description>
+            </DialogDescription>
           )}
 
           <div className="my-4 flex flex-col gap-2">
@@ -298,9 +302,7 @@ export function CreateScheduleDialogue() {
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
-            <Dialog.Close asChild>
-              <Button variant={"secondary"}>Cancel</Button>
-            </Dialog.Close>
+            <DialogClose />
             <ButtonWithWallet
               targetChainId={vestingChainId ?? 1}
               disabled={!enableCreateButton}
@@ -311,8 +313,7 @@ export function CreateScheduleDialogue() {
               Create
             </ButtonWithWallet>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+    </Dialog>
   );
 }

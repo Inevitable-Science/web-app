@@ -55,9 +55,12 @@ export function PayInput({
       className="focus:placeholder:text-muted-foreground w-full border-none bg-transparent p-0 text-2xl shadow-none ring-0 outline-hidden placeholder:text-white focus:ring-0 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-80"
       placeholder="0.00"
       value={value}
-      onChange={(e) =>
-        onChangeFunction ? onChangeFunction(e.target.value) : undefined
-      }
+      onChange={(e) => {
+        if (onChangeFunction) {
+          onChangeFunction(e.target.value);
+          return;
+        }
+      }}
       onKeyDown={preventMinusKey}
       disabled={disabled}
     />

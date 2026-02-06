@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 const buttonVariants = cva(
   "inline-flex cursor-pointer items-center justify-center text-sm font-medium ring-offset-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60",
@@ -12,12 +12,13 @@ const buttonVariants = cva(
       variant: {
         default: "bg-grey-450 text-color rounded-lg hover:bg-grey-500",
         accent:
-          "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase hover:bg-primary/90",
+          "bg-primary whitespace-nowrap text-primary-foreground rounded-full px-6 w-fit font-medium uppercase",
         destructive: "bg-red-900 rounded-lg",
+        gunmetalArrow:
+          "bg-gunmetal rounded-full px-[12px] py-[6px] focus:outline-hidden",
         outline:
           "border border-(--grey-500) rounded-lg hover:bg-grey-450 hover:border-(--grey-100)",
-        bottomline:
-          "border-b rounded-none rounded-t-md text-muted-foreground dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
+        bottomline: "border-b border-primary text-sm rounded-none rounded-t",
         tabSelected:
           "border-b border-primary rounded-none rounded-t-md dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-50",
         secondary: "rounded-lg background-color",

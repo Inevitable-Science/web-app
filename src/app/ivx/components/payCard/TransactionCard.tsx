@@ -16,9 +16,8 @@ import { FixedInt } from "fpnum";
 
 import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
-import { ChainSelector } from "./ChainSelect";
 
-import { formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, formatTokenSymbol } from "@/lib/utils";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
@@ -26,6 +25,7 @@ import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 
 export function TransactionCard() {
   const suckers = useRevnetDataStore((state) => state.suckers);
@@ -107,15 +107,8 @@ export function TransactionCard() {
         selectedToken
       );
       const numberPayerTokens = Number(payerTokens);
-
-      if (numberPayerTokens < 0) {
-        // Round 3 to sigfigs then remove trailing 0's
-        // this prevents strings like 0.0100000 and 0.000111111111
-        setAmountB(Number(numberPayerTokens.toPrecision(3)).toString());
-        return;
-      }
-
-      setAmountB(Number(numberPayerTokens.toFixed(3)).toString());
+      const formattedAmountB = formatNumber(numberPayerTokens, false);
+      setAmountB(formattedAmountB);
       return;
     }
   };
@@ -139,12 +132,8 @@ export function TransactionCard() {
     );
 
     const numberPayerTokens = Number(quote.format());
-    if (numberPayerTokens < 1) {
-      setAmountA(Number(numberPayerTokens.toPrecision(3)).toString());
-      return;
-    }
-
-    setAmountA(Number(numberPayerTokens.toFixed(3)).toString());
+    const formattedAmountA = formatNumber(numberPayerTokens, false);
+    setAmountA(formattedAmountA);
     return;
   };
 
@@ -192,7 +181,7 @@ export function TransactionCard() {
   };
 
   if (!balances || !suckers) {
-    return <PayCardSkeleton selectedToken={selectedToken} tokens={tokens} />;
+    return <PayCardSkeleton selectedToken={selectedToken} />;
   }
 
   return (
@@ -207,12 +196,14 @@ export function TransactionCard() {
             />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <ChainSelector
-              disabled={!suckers || suckers.length <= 1}
-              value={selectedToken}
+            <TokenAndChainSelector
+              currentToken={selectedToken}
+              tokenOptions={tokens}
+              selectedSucker={selectedSucker}
+              suckers={suckers}
               handleChainChange={handleChainChange}
               handleTokenChange={handleTokenChange}
-              options={tokens}
+              disabled={!suckers || suckers.length <= 1}
             />
             <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
