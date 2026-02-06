@@ -3,7 +3,7 @@ import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
@@ -280,8 +280,8 @@ export function RepayTab({ loan }: { loan: LoanType }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <DialogTitle className="text-lg font-semibold">Repay Loan</DialogTitle>
-      <p className="text-muted-foreground text-sm">
+      <DialogTitle>Repay Loan</DialogTitle>
+      <p className="text-muted-foreground text-sm mb-1">
         Amount of collateral you want to unlock
       </p>
 
@@ -407,9 +407,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
       </div>
 
       <div className="mt-6 flex justify-end space-x-2">
-        <DialogClose asChild>
-          <Button>Cancel</Button>
-        </DialogClose>
+        <DialogClose className="bg-grey-450!"/>
         <ButtonWithWallet
           targetChainId={loanChainId}
           onClick={handleRepay}

@@ -28,7 +28,14 @@ import { Token } from "@/lib/token";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { twMerge } from "tailwind-merge";
 
@@ -261,26 +268,23 @@ export function PayActionButton({
 
   // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
         <Button
           disabled={!onCorrectChain || disabled}
           className={twMerge(primaryButtonClasses, shimmerClasses)}
         >
           Buy
         </Button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg">
-          <Dialog.Title className="text-lg font-semibold">
+        <DialogContent>
+          <DialogTitle>
             Before you continue...
-          </Dialog.Title>
-          <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+          </DialogTitle>
+          <DialogDescription>
             Please review and agree to the project's terms before proceeding.
-          </Dialog.Description>
+          </DialogDescription>
 
           <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
             {metadata.data?.payDisclosure ? (
@@ -311,11 +315,7 @@ export function PayActionButton({
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
-            <Dialog.Close asChild>
-              <Button className="background-color hover:background-color rounded-md">
-                Cancel
-              </Button>
-            </Dialog.Close>
+            <DialogClose />
             <ButtonWithWallet
               targetChainId={targetChainId}
               disabled={!agreedToTerms || loading}
@@ -326,8 +326,7 @@ export function PayActionButton({
               {actionButtonContent}
             </ButtonWithWallet>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+    </Dialog>
   );
 }

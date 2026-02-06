@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { uploadImage } from "../../UploadHelper";
 import {
@@ -291,24 +296,19 @@ export function EditOrgDialogue({
 
   return (
     <>
-      <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogTrigger asChild>{children}</DialogTrigger>
 
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-          <Dialog.Content className="bg-grey-450 fixed top-1/2 left-1/2 z-50 max-h-[80vh] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-xl p-6 shadow-lg">
+          <DialogContent>
             <div className="flex items-center justify-between">
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Edit Organisation
-              </Dialog.Title>
+              </DialogTitle>
 
               <Button onClick={resetModalState} variant={"ghost"} size={"icon"}>
                 <X />
               </Button>
             </div>
-
-            <Dialog.Description className="hidden"></Dialog.Description>
 
             {organisation ? (
               <div className="mt-4">
@@ -562,9 +562,8 @@ export function EditOrgDialogue({
                 Save Changes
               </Button>
             </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+          </DialogContent>
+      </Dialog>
     </>
   );
 }

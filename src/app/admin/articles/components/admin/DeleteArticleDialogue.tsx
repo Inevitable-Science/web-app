@@ -4,7 +4,14 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useArticleAuth, useAuthToken, useUser } from "@/store/AdminAuthStore";
 
 interface ArticleProp {
@@ -96,40 +103,29 @@ export function DeleteArticleDialogue({
   };
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content
-          //className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
-          className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg"
-        >
-          <Dialog.Title className="text-lg font-semibold">
+        <DialogContent>
+          <DialogTitle>
             Confirm Action
-          </Dialog.Title>
-          <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+          </DialogTitle>
+          <DialogDescription>
             Are you sure you would like to delete
             <span className="text-color font-semibold">
               {" "}
               {article.articleTitle}
             </span>
-          </Dialog.Description>
+          </DialogDescription>
 
           <div className="mt-6 flex justify-end space-x-2">
-            <Dialog.Close asChild>
-              <Button className="background-color hover:background-color rounded-md">
-                Cancel
-              </Button>
-            </Dialog.Close>
+            <DialogClose />
 
             <Button onClick={deleteArticle} variant={"destructive"}>
               Delete Article
             </Button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+    </Dialog>
   );
 }

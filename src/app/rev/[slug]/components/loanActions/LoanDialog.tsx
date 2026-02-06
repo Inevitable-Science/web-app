@@ -1,6 +1,10 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger
+} from "@/components/ui/dialog";
 import { JBChainId } from "juice-sdk-react";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
@@ -25,8 +29,8 @@ export function LoanDialog({ loan }: { loan: LoanType }) {
   const [activeTab, setActiveTab] = useState<"repay" | "refinance">("repay");
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
         <Button
           className="flex h-[32px] items-center gap-2"
           variant={"gunmetalArrow"}
@@ -34,37 +38,33 @@ export function LoanDialog({ loan }: { loan: LoanType }) {
           Actions
           <ArrowRight height="18" width="18" />
         </Button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl px-6 pt-4 pb-6 shadow-lg duration-200">
+      <DialogContent>
+        <div>
           <div>
-            <div>
-              <Button
-                className={`${activeTab === "repay" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
-                onClick={() => setActiveTab("repay")}
-              >
-                Repay
-              </Button>
-              <Button
-                className={`${activeTab === "refinance" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
-                onClick={() => setActiveTab("refinance")}
-              >
-                Refinance
-              </Button>
-            </div>
-
-            <div
-              className={`${activeTab === "refinance" ? "rounded-xl" : "rounded-[0_8px_8px_8px]"} background-color p-3 transition-all`}
+            <Button
+              className={`${activeTab === "repay" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
+              onClick={() => setActiveTab("repay")}
             >
-              {activeTab === "repay" && <RepayTab loan={loan} />}
-              {activeTab === "refinance" && <RefinanceTab loan={loan} />}
-            </div>
+              Repay
+            </Button>
+            <Button
+              className={`${activeTab === "refinance" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
+              onClick={() => setActiveTab("refinance")}
+            >
+              Refinance
+            </Button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+
+          <div
+            className={`${activeTab === "refinance" ? "rounded-xl" : "rounded-[0_8px_8px_8px]"} background-color p-3 transition-all`}
+          >
+            {activeTab === "repay" && <RepayTab loan={loan} />}
+            {activeTab === "refinance" && <RefinanceTab loan={loan} />}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

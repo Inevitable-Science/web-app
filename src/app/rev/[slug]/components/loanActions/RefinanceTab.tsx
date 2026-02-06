@@ -2,7 +2,7 @@ import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
-import { DialogClose, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   JB_TOKEN_DECIMALS,
   revLoansAbi
@@ -306,7 +306,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <DialogTitle className="text-lg font-semibold">
+      <DialogTitle>
         Refinance Loan
       </DialogTitle>
 
@@ -464,9 +464,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
-            <DialogClose asChild>
-              <Button>Cancel</Button>
-            </DialogClose>
+            <DialogClose className="bg-grey-450!" />
             <Button
               className="bg-cerulean!"
               onClick={() => setDialogStage("feeStructure")}

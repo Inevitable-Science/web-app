@@ -18,7 +18,14 @@ import {
   usePublicClient,
   useWriteContract,
 } from "wagmi";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { LoanFeeChart } from "./LoanFeeChart";
 import { generateFeeData } from "@/lib/feeHelpers";
 import { LoanStepper } from "./LoanStepper";
@@ -237,25 +244,22 @@ export function LoanActionButton({
   }
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
         <Button className={shimmerClasses} disabled={!collateralAmount}>
           Open Loan
         </Button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content className="bg-grey-450 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg duration-200">
+        <DialogContent>
           {dialogStage === "acknowledgement" && (
             <>
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Before you continue...
-              </Dialog.Title>
-              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 Please note the following before proceeding.
-              </Dialog.Description>
+              </DialogDescription>
 
               <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
                 <ul className="flex list-disc flex-col gap-0.5 pl-2">
@@ -271,9 +275,9 @@ export function LoanActionButton({
               </div>
 
               <div className="mt-6 flex justify-end space-x-2">
-                <Dialog.Close asChild>
-                  <Button>Cancel</Button>
-                </Dialog.Close>
+                <DialogClose className="bg-transparent! hover:underline">
+                  Cancel
+                </DialogClose>
                 <Button
                   variant={"secondary"}
                   onClick={() => setDialogStage("feeStructure")}
@@ -286,12 +290,12 @@ export function LoanActionButton({
 
           {dialogStage === "feeStructure" && (
             <>
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Confirm Fee Structure
-              </Dialog.Title>
-              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 Please confirm the fee structure of the loan.
-              </Dialog.Description>
+              </DialogDescription>
 
               <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
                 <p>
@@ -323,9 +327,9 @@ export function LoanActionButton({
               </div>
 
               <div className="mt-6 flex justify-end space-x-2">
-                <Dialog.Close asChild>
-                  <Button>Cancel</Button>
-                </Dialog.Close>
+                <DialogClose className="bg-transparent! hover:underline">
+                  Cancel
+                </DialogClose>
                 <Button
                   variant={"secondary"}
                   onClick={() => setDialogStage("transactions")}
@@ -338,12 +342,12 @@ export function LoanActionButton({
 
           {dialogStage === "transactions" && (
             <>
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Sign Transactions
-              </Dialog.Title>
-              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 Sign the following transactions to open a new loan.
-              </Dialog.Description>
+              </DialogDescription>
 
               <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
                 <p>
@@ -363,9 +367,9 @@ export function LoanActionButton({
               />
 
               <div className="mt-6 flex justify-end space-x-2">
-                <Dialog.Close asChild>
-                  <Button>Cancel</Button>
-                </Dialog.Close>
+                <DialogClose>
+                  Cancel
+                </DialogClose>
                 <ButtonWithWallet
                   targetChainId={activeChainId}
                   onClick={handleBorrow}
@@ -378,8 +382,7 @@ export function LoanActionButton({
               </div>
             </>
           )}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+    </Dialog>
   );
 }

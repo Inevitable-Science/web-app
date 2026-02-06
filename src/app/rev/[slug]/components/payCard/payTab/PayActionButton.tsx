@@ -9,7 +9,14 @@ import { Token } from "@/lib/token";
 import { formatNumber } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ConnectKitButton } from "connectkit";
 import {
   JB_TOKEN_DECIMALS,
@@ -286,8 +293,8 @@ export function PayActionButton({
 
   // State 3: User is connected and on the correct chain. Show the 'Buy' button.
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
         <ButtonWithWallet
           targetChainId={activeChainId}
           className={twMerge(primaryButtonClasses, shimmerClasses)}
@@ -295,24 +302,19 @@ export function PayActionButton({
         >
           Buy
         </ButtonWithWallet>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl bg-grey-450 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
-        >
+        <DialogContent>
           {dialogStage === "terms" || paymentToken.isNative ? (
             <>
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Before you continue...
-              </Dialog.Title>
-              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 {metadata.data?.payDisclosure
                   ? "Please review and agree to the project's terms before proceeding."
                   : "Please review the following."}
-              </Dialog.Description>
+              </DialogDescription>
 
               {metadata.data?.payDisclosure ? (
                 <>
@@ -355,11 +357,7 @@ export function PayActionButton({
               )}
 
               <div className="mt-6 flex justify-end space-x-2">
-                <Dialog.Close asChild>
-                  <Button className="background-color hover:background-color rounded-md">
-                    Cancel
-                  </Button>
-                </Dialog.Close>
+                <DialogClose />
 
                 {paymentToken.isNative ? (
                   <ButtonWithWallet
@@ -383,12 +381,12 @@ export function PayActionButton({
             </>
           ) : (
             <>
-              <Dialog.Title className="text-lg font-semibold">
+              <DialogTitle>
                 Confirm Payment
-              </Dialog.Title>
-              <Dialog.Description className="text-muted-foreground mt-2 text-sm">
+              </DialogTitle>
+              <DialogDescription>
                 Sign the following transactions to open a new loan.
-              </Dialog.Description>
+              </DialogDescription>
 
               <div>
                 <PayStepper
@@ -398,11 +396,7 @@ export function PayActionButton({
               </div>
 
               <div className="mt-6 flex justify-end space-x-2">
-                <Dialog.Close asChild>
-                  <Button className="background-color hover:background-color rounded-md">
-                    Cancel
-                  </Button>
-                </Dialog.Close>
+                <DialogClose />
                 <ButtonWithWallet
                   targetChainId={activeChainId}
                   disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
@@ -415,8 +409,7 @@ export function PayActionButton({
               </div>
             </>
           )}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+      </Dialog>
   );
 }

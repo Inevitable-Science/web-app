@@ -2,7 +2,12 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import * as Dialog from "@radix-ui/react-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import {
   CreateResponseType,
@@ -98,16 +103,13 @@ export function CreateUserDialogue({
   };
 
   return (
-    <Dialog.Root open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs" />
-
-        <Dialog.Content className="bg-grey-450 fixed top-1/2 left-1/2 z-50 w-full max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-xl p-6 shadow-lg">
-          <Dialog.Title className="text-lg font-semibold">
+        <DialogContent>
+          <DialogTitle>
             Create User
-          </Dialog.Title>
+          </DialogTitle>
 
           {data ? (
             <div className="mt-2 flex flex-col gap-2">
@@ -155,8 +157,6 @@ export function CreateUserDialogue({
             </div>
           )}
 
-          <Dialog.Description className="hidden"></Dialog.Description>
-
           <div className="mt-6 flex justify-end space-x-2">
             <Button onClick={resetModalState}>Cancel</Button>
 
@@ -168,8 +168,7 @@ export function CreateUserDialogue({
               Create User
             </Button>
           </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        </DialogContent>
+    </Dialog>
   );
 }
