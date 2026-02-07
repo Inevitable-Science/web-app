@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useHasBorrowPermission } from "@/hooks/useHasBorrowPermission";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { formatNumber, formatWalletError } from "@/lib/utils";
+import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import {
   JB_TOKEN_DECIMALS,
   JBChainId,
@@ -127,8 +127,13 @@ export function LoanActionButton({
   const prepaidAmount = (prepaidPercent / 100) * loanAmountNum;
   const amountToWallet = loanAmountNum - protocolFees - prepaidAmount;
 
+  const amountToWalletFormatted = amountToWallet < 1 ? 
+    truncateNumber(amountToWallet) :
+    formatNumber(amountToWallet, false);
+
   const feeBasisPoints = Math.round(prepaidPercent * 10);
   const collateralBigInt = parseUnits(collateralAmount, projectTokenDecimals);
+  const lessThanMinCollateral = collateralBigInt < parseUnits("0.001", projectTokenDecimals);
 
   // Chart Vars
   const monthsToPrepay = (prepaidPercent / 50) * 120;
@@ -243,6 +248,14 @@ export function LoanActionButton({
     );
   }
 
+  if (Number(collateralAmount) && lessThanMinCollateral) {
+    return (
+      <Button className={shimmerClasses} disabled>
+        Loan Amount Is Too Small
+      </Button>
+    );
+  }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
@@ -303,7 +316,7 @@ export function LoanActionButton({
                   {token.data?.symbol}
                 </p>
                 <p>
-                  You Receive: {formatNumber(amountToWallet, false)}{" "}
+                  You Receive: {amountToWalletFormatted}{" "}
                   {baseToken.symbol}
                 </p>
               </div>
@@ -356,7 +369,7 @@ export function LoanActionButton({
                 </p>
                 <p>Prepaid Percent: {prepaidPercent}%</p>
                 <p>
-                  You Receive: {formatNumber(amountToWallet, false)}{" "}
+                  You Receive: {amountToWalletFormatted}{" "}
                   {baseToken.symbol}
                 </p>
               </div>

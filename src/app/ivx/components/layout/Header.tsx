@@ -14,7 +14,7 @@ export function IvxPageHeader() {
           <h3 className="text-xl">
             $
             {treasuryData?.treasuryValue
-              ? formatNumber(treasuryData.treasuryValue, false)
+              ? formatNumber(treasuryData.treasuryValue)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Treasury Holdings</p>
@@ -23,7 +23,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.averageBal
-              ? formatNumber(tokenData.selectedToken.averageBal, true)
+              ? formatNumber(tokenData.selectedToken.averageBal)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">
@@ -34,10 +34,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.totalHolders
-              ? formatNumber(
-                  Number(tokenData?.selectedToken.totalHolders),
-                  false
-                )
+              ? formatNumber(tokenData?.selectedToken.totalHolders)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Total Holders</p>
@@ -48,7 +45,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.totalSupply
-              ? formatNumber(tokenData.selectedToken.totalSupply, false)
+              ? formatNumber(tokenData.selectedToken.totalSupply)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Total IVX Supply</p>
@@ -57,7 +54,7 @@ export function IvxPageHeader() {
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
             {tokenData?.selectedToken.medianBal
-              ? formatNumber(tokenData.selectedToken.medianBal, false)
+              ? formatNumber(tokenData.selectedToken.medianBal)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Median IVX Balance</p>

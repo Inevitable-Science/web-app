@@ -112,9 +112,9 @@ export function PayTab({
         selectedToken
       );
 
-      const numberPayerTokens = Number(payerTokens);
-      const formattedAmountB = formatNumber(numberPayerTokens, false);
-      setAmountB(formattedAmountB);
+      setAmountB(
+        truncateNumber(payerTokens)
+      );
       return;
     }
   };
@@ -138,9 +138,8 @@ export function PayTab({
       }
     );
 
-    const numberPayerTokens = Number(quote.format());
-    const formattedAmountA = formatNumber(numberPayerTokens, false);
-    setAmountA(formattedAmountA);
+    const numberPayerTokens = formatUnits(quote.value, projectTokenDecimals);
+    setAmountA(numberPayerTokens);
     return;
   };
 
@@ -211,7 +210,7 @@ export function PayTab({
               ) : (
                 <p className="w-[130px]">
                   Balance:{" "}
-                  {truncateNumber(currentTokenBalNum, true)}
+                  {currentTokenBalNum > 0.00001 ? truncateNumber(currentTokenBalNum, true) : '0.00'}
                 </p>
               )}
             </div>

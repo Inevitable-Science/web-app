@@ -31,7 +31,7 @@ import {
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { formatUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import {
   useAccount,
   usePublicClient,
@@ -40,11 +40,11 @@ import {
 import { PayStepper } from "./PayStepper";
 
 const shimmerClasses = `
-    relative overflow-hidden 
-    before:content-[''] before:absolute before:inset-0 
-    before:-translate-x-full before:animate-shimmer 
-    before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
-  `;
+  relative overflow-hidden 
+  before:content-[''] before:absolute before:inset-0 
+  before:-translate-x-full before:animate-shimmer 
+  before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
+`;
 
 // Define shared styles for the main action button for consistency
 const primaryButtonClasses =
@@ -105,6 +105,11 @@ export function PayActionButton({
   const amountANum = formatUnits(amountA, paymentToken.decimals);
   const amountBNum = formatUnits(amountB, projectTokenDecimals);
   const insufficientFunds = (walletBalance.get(paymentToken.address) ?? 0n) < amountA;
+  
+  const minPaymentAmount = paymentToken.isNative ? 
+    parseUnits('0.000001', paymentToken.decimals) :
+    parseUnits('0.0001', paymentToken.decimals);
+  const lessThanMinPayment = amountA < minPaymentAmount;
 
   // --- 3. DERIVED STATE & MEMOS ---
   const actionButtonContent = 
@@ -278,6 +283,14 @@ export function PayActionButton({
     );
   }
 
+  if (amountA && lessThanMinPayment) {
+    return (
+      <Button className={primaryButtonClasses} disabled>
+        Contribution Is Too Small
+      </Button>
+    );
+  }
+
   // State 2: User is connected however has inputted an amount greater than their balance
   if (
     walletBalance &&
@@ -285,7 +298,7 @@ export function PayActionButton({
     insufficientFunds
   ) {
     return (
-      <Button className={twMerge(primaryButtonClasses)} disabled={true}>
+      <Button className={twMerge(primaryButtonClasses)} disabled>
         Insufficient Funds
       </Button>
     );
@@ -298,105 +311,68 @@ export function PayActionButton({
         <ButtonWithWallet
           targetChainId={activeChainId}
           className={twMerge(primaryButtonClasses, shimmerClasses)}
-          disabled={disabled}
+          disabled={disabled || (!amountA && !amountB)}
         >
           Buy
         </ButtonWithWallet>
       </DialogTrigger>
 
-        <DialogContent>
-          {dialogStage === "terms" || paymentToken.isNative ? (
-            <>
-              <DialogTitle>
-                Before you continue...
-              </DialogTitle>
-              <DialogDescription>
-                {metadata.data?.payDisclosure
-                  ? "Please review and agree to the project's terms before proceeding."
-                  : "Please review the following."}
-              </DialogDescription>
+      <DialogContent>
+        {dialogStage === "terms" || paymentToken.isNative ? (
+          <>
+            <DialogTitle>
+              Before you continue...
+            </DialogTitle>
+            <DialogDescription>
+              {metadata.data?.payDisclosure
+                ? "Please review and agree to the project's terms before proceeding."
+                : "Please review the following."}
+            </DialogDescription>
 
-              {metadata.data?.payDisclosure ? (
-                <>
-                  <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
-                    <p className="font-semibold whitespace-pre-wrap">
-                      {metadata.data.payDisclosure}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 flex items-center space-x-3">
-                    <Checkbox.Root
-                      id="terms"
-                      checked={agreedToTerms}
-                      onCheckedChange={(checked) =>
-                        setAgreedToTerms(Boolean(checked))
-                      }
-                      className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
-                    >
-                      <Checkbox.Indicator className="flex items-center justify-center text-current">
-                        <Check className="h-4 w-4" />
-                      </Checkbox.Indicator>
-                    </Checkbox.Root>
-                    <label
-                      htmlFor="terms"
-                      className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      I have read and agree to the terms.
-                    </label>
-                  </div>
-                </>
-              ) : (
-                <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
-                  <p>
-                    Paying: {formatNumber(amountANum, false)} {paymentToken.symbol}
-                  </p>
-                  <p>
-                    Receive: ~{formatNumber(amountBNum, false)} {token.data?.symbol ?? "TOKENS"}
+            {metadata.data?.payDisclosure ? (
+              <>
+                <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
+                  <p className="font-semibold whitespace-pre-wrap">
+                    {metadata.data.payDisclosure}
                   </p>
                 </div>
-              )}
 
-              <div className="mt-6 flex justify-end space-x-2">
-                <DialogClose />
-
-                {paymentToken.isNative ? (
-                  <ButtonWithWallet
-                    targetChainId={activeChainId}
-                    disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
-                    loading={pending}
-                    onClick={handlePay}
-                    className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                <div className="mt-4 flex items-center space-x-3">
+                  <Checkbox.Root
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) =>
+                      setAgreedToTerms(Boolean(checked))
+                    }
+                    className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
                   >
-                    {actionButtonContent}
-                  </ButtonWithWallet>
-                ) : (
-                  <Button
-                    onClick={() => setDialogStage("tx")}
-                    className="bg-cerulean!"
+                    <Checkbox.Indicator className="flex items-center justify-center text-current">
+                      <Check className="h-4 w-4" />
+                    </Checkbox.Indicator>
+                  </Checkbox.Root>
+                  <label
+                    htmlFor="terms"
+                    className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    Confirm
-                  </Button>
-                )}
+                    I have read and agree to the terms.
+                  </label>
+                </div>
+              </>
+            ) : (
+              <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
+                <p>
+                  Paying: {formatNumber(amountANum, false)} {paymentToken.symbol}
+                </p>
+                <p>
+                  Receive: ~{formatNumber(amountBNum, false)} {token.data?.symbol ?? "TOKENS"}
+                </p>
               </div>
-            </>
-          ) : (
-            <>
-              <DialogTitle>
-                Confirm Payment
-              </DialogTitle>
-              <DialogDescription>
-                Sign the following transactions to open a new loan.
-              </DialogDescription>
+            )}
 
-              <div>
-                <PayStepper
-                  currentStep={currentStep}
-                  userHasApproved={userHasApproved}
-                />
-              </div>
+            <div className="mt-6 flex justify-end space-x-2">
+              <DialogClose />
 
-              <div className="mt-6 flex justify-end space-x-2">
-                <DialogClose />
+              {paymentToken.isNative ? (
                 <ButtonWithWallet
                   targetChainId={activeChainId}
                   disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
@@ -406,10 +382,47 @@ export function PayActionButton({
                 >
                   {actionButtonContent}
                 </ButtonWithWallet>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+              ) : (
+                <Button
+                  onClick={() => setDialogStage("tx")}
+                  className="bg-cerulean!"
+                >
+                  Confirm
+                </Button>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <DialogTitle>
+              Confirm Payment
+            </DialogTitle>
+            <DialogDescription>
+              Sign the following transactions to open a new loan.
+            </DialogDescription>
+
+            <div>
+              <PayStepper
+                currentStep={currentStep}
+                userHasApproved={userHasApproved}
+              />
+            </div>
+
+            <div className="mt-6 flex justify-end space-x-2">
+              <DialogClose />
+              <ButtonWithWallet
+                targetChainId={activeChainId}
+                disabled={!!metadata.data?.payDisclosure && !agreedToTerms}
+                loading={pending}
+                onClick={handlePay}
+                className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              >
+                {actionButtonContent}
+              </ButtonWithWallet>
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
