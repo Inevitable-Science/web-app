@@ -16,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json" />
         {/* Light theme favicon */}
         <link
           rel="icon"

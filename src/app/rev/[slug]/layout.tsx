@@ -74,7 +74,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: "summary_large_image",
       images: [projectLogo],
     },
-    manifest: metadata.manifest,
   };
 }
 

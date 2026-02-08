@@ -96,7 +96,6 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
           "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
         ],
       },
-      manifest: "/manifest/manifest.json",
     };
   }
 
@@ -133,7 +132,6 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
       card: "summary_large_image",
       images: [imgUrl],
     },
-    manifest: "/manifest/manifest.json",
   };
 }
 

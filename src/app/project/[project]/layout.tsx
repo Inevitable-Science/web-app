@@ -62,7 +62,6 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       card: "summary_large_image",
       images: [daoData.logo],
     },
-    manifest: metadata.manifest,
   };
 }
 
