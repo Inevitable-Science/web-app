@@ -67,7 +67,7 @@ export default function Vision() {
       </div>
 
       <section className="mt-24">
-        <h2 className="ctWrapper text-xl md:text-3xl">
+        <h2 className="ctWrapper text-xl font-light md:text-3xl">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -99,9 +99,9 @@ export default function Vision() {
         </div>
 
         <div className="ctWrapper">
-          <div className="my-24 flex flex-col gap-4 md:flex-row md:gap-12">
-            <div className="flex flex-col gap-4 sm:min-w-[470px]">
-              <h3 className="text-5xl font-extralight">
+          <div className="my-24 grid grid-cols-[1fr] gap-4 md:grid-cols-[400px_auto] md:gap-12 lg:grid-cols-[470px_auto]">
+            <div className="flex flex-col gap-4 w-full">
+              <h3 className="text-5xl font-extralight text-wrap">
                 This Is Where The
                 <span className="text-primary"> Impossible </span>
                 Begins.

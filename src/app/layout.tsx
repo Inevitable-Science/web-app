@@ -16,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Sitemap required, manifest added automatically, robots.txt assumed */}
         <link rel="alternate" type="application/xml" href="/sitemap.xml" />
         {/* Light theme favicon */}
         <link

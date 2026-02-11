@@ -83,7 +83,7 @@ export default async function Ecosystem() {
 
       <section className="ctWrapper mt-[140px]">
         <div className="mb-[52px] flex flex-col gap-4 md:flex-row md:gap-12">
-          <div className="flex flex-col gap-4 sm:min-w-[400px]">
+          <div className="flex flex-col gap-4 min-w-[300px] lg:min-w-[400px]">
             <h3 className="text-5xl font-extralight">
               The Inevitable
               <span className="text-primary"> Ecosystem</span>
