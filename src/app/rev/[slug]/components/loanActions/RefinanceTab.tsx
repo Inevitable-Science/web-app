@@ -154,6 +154,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     formatUnits(collateralCountToTransfer, projectTokenDecimals)
   );
   const noCollateralToTransfer = collateralToTransfer <= 0;
+  const insufficientBalance = Number(chainBalance) < Number(additionalCollateral);
 
 
   const newLoanFeeData = generateFeeData({
@@ -468,9 +469,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             <Button
               className="bg-cerulean!"
               onClick={() => setDialogStage("feeStructure")}
-              disabled={!additionalCollateral}
+              disabled={!additionalCollateral || insufficientBalance}
             >
-              Next
+              {insufficientBalance ? "Insufficient Balance" : "Next"}
             </Button>
           </div>
         </>
@@ -540,9 +541,10 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               targetChainId={loan.chainId}
               onClick={handleBorrow}
               loading={isBorrowing}
+              disabled={insufficientBalance}
               className="bg-cerulean!"
             >
-              Pay
+              {insufficientBalance ? "Insufficient Balance" : "Pay"}
             </ButtonWithWallet>
           </div>
         </>

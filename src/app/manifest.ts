@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "Inevitable Protocol",
+		name: "Inevitable Science",
 		short_name: "Inevitable",
 		description:
 			"Begin your journey. Build the future of life—together.",

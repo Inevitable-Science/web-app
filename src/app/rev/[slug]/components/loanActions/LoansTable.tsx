@@ -15,7 +15,7 @@ import {
   useJBContractContext,
   useJBTokenContext,
 } from "juice-sdk-react";
-import { Address, formatUnits } from "viem";
+import { Address, formatUnits, parseUnits } from "viem";
 import { useAccount } from "wagmi";
 import { LoanDialog, LoanType } from "./LoanDialog";
 
@@ -72,6 +72,9 @@ export function LoansTable() {
       </div>
       <div className="background-color rounded p-3 text-sm">
         {sortedLoans.map((loan) => {
+          // hide loans with <0.001 tokens in collateral, difficult to pay off/manage
+          if (loan.collateral < parseUnits("0.001", projectTokenDecimals)) return null;
+
           const loanTokenIsNative =
             loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();
           const loanTokenDecimals = loanTokenIsNative
