@@ -26,5 +26,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: "https://www.inevitable.science/project/cryodao",
+      lastModified: "2026-02-07",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://www.inevitable.science/project/hydradao",
+      lastModified: "2026-02-07",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://www.inevitable.science/project/erectusdao",
+      lastModified: "2026-02-07",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://www.inevitable.science/project/cryorat",
+      lastModified: "2026-02-07",
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
   ];
 }
