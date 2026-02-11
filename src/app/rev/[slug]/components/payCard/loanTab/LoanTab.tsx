@@ -93,7 +93,7 @@ export function LoanTab() {
           </div>
           <div className="flex flex-col items-end gap-1">
             <LoanChainSelector suckersBalance={balanceQuery.data} />
-            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
+            <div className="flex items-center justify-end gap-1 text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
               {balanceQuery.isLoading ? 
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
@@ -101,7 +101,7 @@ export function LoanTab() {
                   truncateNumber(currentChainBalNum ?? "0", true) :
                   "0.00"
               }
-            </p>
+            </div>
           </div>
         </div>
 

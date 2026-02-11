@@ -31,6 +31,7 @@ import { generateFeeData } from "@/lib/feeHelpers";
 import { LoanStepper } from "./LoanStepper";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
+import { ConnectKitButton } from "connectkit";
 
 const shimmerClasses = `
   w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
@@ -78,7 +79,7 @@ export function LoanActionButton({
 
   // Client Hooks
   const publicClient = usePublicClient();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
 
@@ -239,6 +240,22 @@ export function LoanActionButton({
       setIsBorrowing(false);
     }
   };
+
+  if (!isConnected) {
+    return (
+      <ConnectKitButton.Custom>
+        {({ isConnecting, show }) => (
+          <Button
+            onClick={show}
+            loading={isConnecting}
+            className={shimmerClasses}
+          >
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
+          </Button>
+        )}
+      </ConnectKitButton.Custom>
+    );
+  }
 
   if (projectTokenBalance < collateralBigInt) {
     return (

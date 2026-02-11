@@ -274,7 +274,7 @@ export function PayActionButton({
           <Button
             onClick={show}
             loading={isConnecting}
-            className={twMerge(primaryButtonClasses)}
+            className={primaryButtonClasses}
           >
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </Button>

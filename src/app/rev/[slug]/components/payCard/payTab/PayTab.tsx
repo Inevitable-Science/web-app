@@ -138,7 +138,8 @@ export function PayTab({
       }
     );
 
-    const numberPayerTokens = formatUnits(quote.value, projectTokenDecimals);
+    // Round this value as clipped exact values create a invalid minReturnAmount
+    const numberPayerTokens = formatNumber(formatUnits(quote.value, projectTokenDecimals), false);
     setAmountA(numberPayerTokens);
     return;
   };

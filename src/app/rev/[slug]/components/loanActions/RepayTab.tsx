@@ -333,7 +333,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           </div>
           <p className="text-muted-foreground text-right text-sm font-light text-nowrap select-none">
             Collateral:{" "}
-            {formatNumber(formatUnits(loan.collateral, projectTokenDecimals))}
+            {truncateNumber(formatUnits(loan.collateral, projectTokenDecimals), true)}
           </p>
         </div>
       </div>
@@ -347,7 +347,11 @@ export function RepayTab({ loan }: { loan: LoanType }) {
             onClick={() => {
               const amount = (loan.collateral / 100n) * BigInt(percent);
               const formattedAmount = formatUnits(amount, projectTokenDecimals);
-              setCollateralToReturn(formattedAmount);
+              const formattedAmountString = percent === 100 ?
+                formattedAmount :
+                formatNumber(formattedAmount, false);
+              
+              setCollateralToReturn(formattedAmountString);
             }}
           >
             {percent === 100 ? "MAX" : `${percent}%`}
