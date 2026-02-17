@@ -20,7 +20,7 @@ import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
-import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
+import { getTokensForChain, Token } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
@@ -139,8 +139,12 @@ export function PayTab({
     );
 
     // Round this value as clipped exact values create a invalid minReturnAmount
-    const numberPayerTokens = formatNumber(formatUnits(quote.value, projectTokenDecimals), false);
-    setAmountA(numberPayerTokens);
+    const numberPayerTokens = Number(formatUnits(quote.value, quote.decimals));
+    if (numberPayerTokens < 0.000001) {
+      setAmountA("0");
+      return;
+    }
+    setAmountA(formatNumber(numberPayerTokens, false));
     return;
   };
 

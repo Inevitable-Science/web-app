@@ -1,5 +1,4 @@
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
-import { JBChainId } from "juice-sdk-react";
 import { notFound } from "next/navigation";
 import MainIvxLayout from "./components/Main";
 
@@ -71,8 +70,10 @@ export default async function IvxTokenPage() {
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
       <JBProjectProviderRoot
-        chainId={1 as JBChainId}
-        projectId={17n as bigint}
+        //chainId={1 as JBChainId}
+        //projectId={17n as bigint}
+        chainId={11155111}
+        projectId={BigInt(3)}
         version={5}
       >
         <RevnetDataProvider

@@ -1,11 +1,8 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
-  JB_CHAINS,
-  JBChainId,
   jbMultiTerminalAbi,
   NATIVE_TOKEN,
-  TokenAmountType,
 } from "juice-sdk-core";
 import {
   useJBContractContext,
@@ -14,16 +11,14 @@ import {
 
 import {
   useAccount,
-  useChainId,
   usePublicClient,
-  useSwitchChain,
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
-import { formatUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 
-import { formatWalletError } from "@/lib/utils";
+import { truncateNumber } from "@/lib/utils";
 import { Token } from "@/lib/token";
 import { getPaymentTerminal } from "@/lib/paymentTerminal";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
@@ -43,7 +38,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
@@ -66,46 +60,35 @@ export function PayActionButton({
   walletBalance,
   disabled,
 }: {
-  amountA: TokenAmountType;
-  amountB: TokenAmountType;
+  amountA: bigint;
+  amountB: bigint;
   paymentToken: Token;
   walletBalance: Map<string, bigint>;
   disabled?: boolean;
 }) {
   // --- 1. HOOKS ---
   const { metadata } = useJBProjectMetadataContext();
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-
   const {
     version,
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
-  const { data: accountingContext } = useProjectAccountingContext();
-
-  const { peerChainId: chainId, projectId } = selectedSucker;
-
-  const { address, isConnected } = useAccount();
-  const userChainId = useChainId();
-  const { switchChain, isPending: isSwitchingChain } = useSwitchChain();
-  const { ensureAllowance, isApproving } = useAllowance(chainId);
-
-  const { toast } = useToast();
   const baseToken = useProjectBaseToken();
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const { peerChainId: targetChainId, projectId } = selectedSucker;
 
-  const targetChainId = selectedSucker?.peerChainId as JBChainId | undefined;
-  const value = amountA.amount.value;
+  const { address, chainId: userChainId, isConnected } = useAccount();
+  const { ensureAllowance, isApproving } = useAllowance(targetChainId);
+  const { toast } = useToast();
 
   const {
     data: txHash,
     isPending: isWriteLoading,
-    isError: isWriteError,
     writeContractAsync,
   } = useWriteContract();
 
   const {
     isLoading: isTxLoading,
     isSuccess,
-    isError: isTxError,
   } = useWaitForTransactionReceipt({ hash: txHash });
 
   const publicClient = usePublicClient();
@@ -115,13 +98,12 @@ export function PayActionButton({
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const loading = isWriteLoading || isTxLoading;
+  const minPaymentAmount = paymentToken.isNative ? 
+    parseUnits('0.000001', paymentToken.decimals) :
+    parseUnits('0.0001', paymentToken.decimals);
+  const lessThanMinPayment = amountA < minPaymentAmount;
 
   // --- 3. DERIVED STATE & MEMOS ---
-  const onCorrectChain = userChainId === targetChainId;
-  const targetChainName = targetChainId
-    ? JB_CHAINS[targetChainId]?.name
-    : "the correct network";
-
   const actionButtonContent = useMemo(() => {
     if (loading) return "Processing...";
     if (isApproving) return "Approving...";
@@ -129,27 +111,23 @@ export function PayActionButton({
     return "Agree & Buy";
   }, [loading, isSuccess]);
 
-  const primaryPayTokenAddress = accountingContext?.project?.token;
-  const isPrimaryPayTokenNative =
-    primaryPayTokenAddress?.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  function successToast() {
+    const contributionAmount = formatUnits(amountA, paymentToken.decimals);
+    toast({
+      title: "Success",
+      description: `Your contribution of ${truncateNumber(contributionAmount, true)} ${paymentToken.symbol} was successful.`,
+    });
+    setIsModalOpen(false);
+    setAgreedToTerms(false);
+  }
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast({
-        title: "Success",
-        description: `Your contribution of ${amountA.amount.format(4)} ${amountA.symbol} was successful.`,
-      });
-      setIsModalOpen(false);
-      setAgreedToTerms(false);
-    }
-    if (isTxError || isWriteError) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Transaction unsuccessful.",
-      });
-    }
-  }, [isSuccess, isTxError, isWriteError]);
+  function failureToast() {
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: "Transaction unsuccessful.",
+    });
+  }
 
   const handlePay = async () => {
     if (!address || !selectedSucker || !publicClient) return;
@@ -160,7 +138,7 @@ export function PayActionButton({
           return;
         }
 
-        await writeContractAsync({
+        const txHash = await writeContractAsync({
           abi: jbMultiTerminalAbi,
           functionName: "pay",
           chainId: selectedSucker.peerChainId,
@@ -168,48 +146,62 @@ export function PayActionButton({
           args: [
             selectedSucker.projectId,
             NATIVE_TOKEN,
-            value,
+            amountA,
             address,
             0n,
             memo || "",
             "0x0",
           ],
-          value,
+          value: amountA,
         });
+
+        const paymentStatus = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        if (paymentStatus.status === "success") {
+          successToast();
+        } else {
+          failureToast();
+        }
       } else {
         const terminal = await getPaymentTerminal({
           client: publicClient,
           version,
-          chainId,
+          chainId: targetChainId,
           projectId,
           token: paymentToken,
           baseToken,
         });
 
         if (!paymentToken.isNative) {
-          await ensureAllowance(paymentToken.address, terminal.address, value);
+          await ensureAllowance(paymentToken.address, terminal.address, amountA);
         }
 
         const minTokens = paymentToken.isNative
-          ? 0n
-          : (amountB.amount.value * 95n) / 100n;
+          ? amountB
+          : (amountB * 95n) / 100n;
 
-        await writeContractAsync({
+        const txHash = await writeContractAsync({
           abi: terminal.abi,
           functionName: "pay",
-          chainId,
+          chainId: targetChainId,
           address: terminal.address,
           args: [
             projectId,
             paymentToken.address,
-            value,
+            amountA,
             address,
             minTokens,
             memo || "",
             "0x0",
           ],
-          value: paymentToken.isNative ? value : 0n,
+          value: paymentToken.isNative ? amountA : 0n,
         });
+
+        const paymentStatus = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        if (paymentStatus.status === "success") {
+          successToast();
+        } else {
+          failureToast();
+        };
       }
     } catch (err) {
       console.error("Payment failed:", err);
@@ -235,29 +227,11 @@ export function PayActionButton({
     );
   }
 
-  // State 2: User is connected, but on the wrong chain
-  if (targetChainId && !onCorrectChain) {
-    return (
-      <Button
-        onClick={() => switchChain({ chainId: targetChainId })}
-        loading={isSwitchingChain}
-        className={primaryButtonClasses}
-      >
-        {isSwitchingChain === false && `Switch to ${targetChainName}`}
-      </Button>
-    );
-  }
-
-  // State 3: User is connected however has inputted an amount greater than their balance
+  // State 2: User is connected however has entered an amount greater than their balance
   if (
     walletBalance &&
-    amountA.amount._value &&
-    Number(
-      formatUnits(
-        walletBalance.get(paymentToken.address) ?? 0n,
-        paymentToken.decimals
-      )
-    ) < Number(formatUnits(amountA.amount._value, amountA.amount.decimals))
+    amountA &&
+    (walletBalance.get(paymentToken.address) ?? 0n) < amountA
   ) {
     return (
       <Button className={primaryButtonClasses} disabled={true}>
@@ -266,16 +240,26 @@ export function PayActionButton({
     );
   }
 
+  // State 3: Contribution is less than min threshold
+  if (amountA && lessThanMinPayment) {
+      return (
+        <Button className={primaryButtonClasses} disabled>
+          Contribution Is Too Small
+        </Button>
+      );
+    }
+
   // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
-        <Button
-          disabled={!onCorrectChain || disabled}
+        <ButtonWithWallet
+          targetChainId={targetChainId}
+          disabled={disabled}
           className={twMerge(primaryButtonClasses, shimmerClasses)}
         >
           Buy
-        </Button>
+        </ButtonWithWallet>
       </DialogTrigger>
 
         <DialogContent>
@@ -288,11 +272,9 @@ export function PayActionButton({
 
           <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
             {metadata.data?.payDisclosure ? (
-              <>
-                <p className="font-semibold whitespace-pre-wrap">
-                  {metadata.data.payDisclosure}
-                </p>
-              </>
+              <p className="font-semibold whitespace-pre-wrap">
+                {metadata.data.payDisclosure}
+              </p>
             ) : null}
           </div>
           <div className="mt-4 flex items-center space-x-3">

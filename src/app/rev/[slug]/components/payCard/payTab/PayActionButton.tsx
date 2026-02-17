@@ -283,6 +283,7 @@ export function PayActionButton({
     );
   }
 
+  // State 2: Contribution is less than min threshold
   if (amountA && lessThanMinPayment) {
     return (
       <Button className={primaryButtonClasses} disabled>
@@ -291,7 +292,7 @@ export function PayActionButton({
     );
   }
 
-  // State 2: User is connected however has inputted an amount greater than their balance
+  // State 3: User is connected however has inputted an amount greater than their balance
   if (
     walletBalance &&
     amountA &&
@@ -304,7 +305,7 @@ export function PayActionButton({
     );
   }
 
-  // State 3: User is connected and on the correct chain. Show the 'Buy' button.
+  // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
