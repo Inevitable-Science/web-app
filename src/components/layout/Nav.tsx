@@ -178,7 +178,7 @@ export function Nav() {
             Projects
           </Link>
           <Link
-            className={`${pathname === "/ecosystem" && "text-light-gold"} hover:underline`}
+            className={`${pathname === "/ecosystem" && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/ecosystem"
             aria-label="Ecosystem"
           >
