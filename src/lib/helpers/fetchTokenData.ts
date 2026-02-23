@@ -7,7 +7,7 @@ export const fetchTokenData = async (
     if (!tokenName) throw new Error("No token name provided"); // throw gracefully
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/analytics/token/${tokenName}`,
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/analytics/token/${tokenName}`,
       { next: { revalidate: 900 } }
     );
 

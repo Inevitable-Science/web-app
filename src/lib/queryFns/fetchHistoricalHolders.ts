@@ -1,7 +1,7 @@
 import { TokenHoldersResponseZ } from "../types/AnalyticTypes";
 
 export const fetchHistoricalHolders = async (tokenName: string) => {
-  const apiUrl = `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/analytics/chart/token/holders/${tokenName}`;
+  const apiUrl = `${process.env.NEXT_PUBLIC_CORE_API_URL}/analytics/chart/token/holders/${tokenName}`;
 
   const response = await fetch(apiUrl);
   if (!response.ok) throw new Error("Failed to fetch historical token holders");

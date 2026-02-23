@@ -29,8 +29,7 @@ export function ActivityFeedSection() {
   const [page, setPage] = useState<number>(1);
 
   const daoName = daoData?.name;
-  const { data, isLoading, isError, error } = useFetchLegacyActivity(daoName, page);
-  console.error(error);
+  const { data, isLoading, isError } = useFetchLegacyActivity(daoName, page);
 
   return (
     <div>
