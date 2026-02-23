@@ -140,7 +140,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="block w-fit max-w-[130px] min-w-[90px] truncate overflow-hidden px-3 text-center text-ellipsis normal-case"
+                  className="block w-fit max-w-[140px] min-w-[90px] truncate overflow-hidden px-3 text-center text-ellipsis normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))
@@ -178,7 +178,7 @@ export function Nav() {
             Projects
           </Link>
           <Link
-            className={`${pathname === "/ecosystem" && "text-light-gold"} hover:underline`}
+            className={`${pathname === "/ecosystem" && "text-light-gold"} w-fit py-2 hover:underline`}
             href="/ecosystem"
             aria-label="Ecosystem"
           >
@@ -214,7 +214,7 @@ export function Nav() {
                 <Button
                   onClick={show}
                   variant="accent"
-                  className="block w-fit max-w-[130px] min-w-[90px] truncate overflow-hidden px-4 text-center text-ellipsis normal-case"
+                  className="block w-fit min-w-[90px] truncate overflow-hidden px-4 text-center text-ellipsis normal-case"
                 >
                   {isConnected
                     ? (ensName ?? (address ? formatEthAddress(address) : ""))

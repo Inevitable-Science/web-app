@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import {
   getTokenAToBQuote,
   getTokenBtoAQuote,
+  JB_TOKEN_DECIMALS,
   USDC_ADDRESSES,
 } from "juice-sdk-core";
 import {
@@ -17,7 +18,7 @@ import { FixedInt } from "fpnum";
 import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
 
-import { formatNumber, formatTokenSymbol } from "@/lib/utils";
+import { formatNumber, truncateNumber } from "@/lib/utils";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
@@ -55,12 +56,8 @@ export function TransactionCard() {
   const [amountB, setAmountB] = useState("");
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
-  const defaultToken = {
-    symbol: "IVX",
-    decimals: 18,
-  };
-
-  const tokenB = tokenBContext.data || defaultToken;
+  const tokenB = tokenBContext.data;
+  const projectTokenDecimals = tokenB?.decimals ?? JB_TOKEN_DECIMALS;
 
   useEffect(() => {
     if (!selectedToken || !amountA) return;
@@ -98,7 +95,7 @@ export function TransactionCard() {
           reservedPercent: rulesetMetadata.reservedPercent,
         }
       );
-      setAmountB(formatUnits(quote.payerTokens, tokenB.decimals));
+      setAmountB(formatUnits(quote.payerTokens, projectTokenDecimals));
       return;
     } else {
       if (isQuoteLoading) return;
@@ -107,8 +104,7 @@ export function TransactionCard() {
         selectedToken
       );
       const numberPayerTokens = Number(payerTokens);
-      const formattedAmountB = formatNumber(numberPayerTokens, false);
-      setAmountB(formattedAmountB);
+      setAmountB(truncateNumber(numberPayerTokens));
       return;
     }
   };
@@ -123,15 +119,20 @@ export function TransactionCard() {
     if (!ruleset || !rulesetMetadata) return;
 
     const quote = getTokenBtoAQuote(
-      new FixedInt(parseUnits(value, tokenB.decimals), tokenB.decimals),
-      tokenB.decimals,
+      new FixedInt(parseUnits(value, projectTokenDecimals), projectTokenDecimals),
+      projectTokenDecimals,
       {
         weight: ruleset.weight,
         reservedPercent: rulesetMetadata.reservedPercent,
       }
     );
 
-    const numberPayerTokens = Number(quote.format());
+    const numberPayerTokens = Number(formatUnits(quote.value, quote.decimals));
+    if (numberPayerTokens < 0.000001) {
+      setAmountA("0");
+      return;
+    }
+
     const formattedAmountA = formatNumber(numberPayerTokens, false);
     setAmountA(formattedAmountA);
     return;
@@ -164,21 +165,8 @@ export function TransactionCard() {
     return;
   };
 
-  const preparedAmountA = {
-    amount: new FixedInt(
-      parseUnits(amountA || "0", selectedToken.decimals),
-      selectedToken.decimals
-    ),
-    symbol: selectedToken.symbol,
-  };
-
-  const preparedAmountB = {
-    amount: new FixedInt(
-      parseUnits(amountB || "0", tokenB.decimals),
-      tokenB.decimals
-    ),
-    symbol: formatTokenSymbol(tokenB.symbol),
-  };
+  const preparedAmountA = parseUnits(amountA || "0", selectedToken.decimals);
+  const preparedAmountB = parseUnits(amountB || "0", projectTokenDecimals);
 
   if (!balances || !suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
@@ -237,7 +225,7 @@ export function TransactionCard() {
               width={24}
               alt="Token Icon"
             />
-            <p className="text-lg font-light">{tokenB.symbol}</p>
+            <p className="text-lg font-light">{tokenB?.symbol}</p>
           </div>
         </div>
         <PayActionButton

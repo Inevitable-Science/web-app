@@ -83,6 +83,7 @@ export default function AdminArticlesPage() {
             className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="User ID"
             autoComplete="username"
+            name="username"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
           />
@@ -91,7 +92,8 @@ export default function AdminArticlesPage() {
             type="password"
             className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="Password"
-            autoComplete="new-password"
+            autoComplete="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -100,6 +102,8 @@ export default function AdminArticlesPage() {
             type="text"
             className="background-color placeholder:text-muted-foreground focus:ring-cerulean focus:ring-offset-grey-450 w-full rounded-lg border-none p-2 font-light outline-hidden transition-shadow focus:ring-2 focus:ring-offset-2"
             placeholder="MFA Code"
+            autoComplete="one-time-code"
+            name="one-time-code"
             maxLength={6}
             value={mfaCode}
             onChange={(e) => setMfaCode(e.target.value)}

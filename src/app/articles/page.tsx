@@ -62,7 +62,6 @@ export async function generateMetadata(): Promise<Metadata> {
         "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
       ],
     },
-    manifest: metadata.manifest,
   };
 }
 

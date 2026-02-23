@@ -154,6 +154,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     formatUnits(collateralCountToTransfer, projectTokenDecimals)
   );
   const noCollateralToTransfer = collateralToTransfer <= 0;
+  const insufficientBalance = Number(chainBalance) < Number(additionalCollateral);
 
 
   const newLoanFeeData = generateFeeData({
@@ -324,8 +325,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 Collateral:
                 <br />
                 <span className="text-foreground text-md">
-                  {formatNumber(
-                    formatUnits(loan.collateral, projectTokenDecimals)
+                  {truncateNumber(
+                    formatUnits(loan.collateral, projectTokenDecimals), true
                   )}{" "}
                   {token.data?.symbol ?? "TOKENS"}
                 </span>
@@ -335,7 +336,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 <br />
                 <span className="text-foreground text-md">
                   {formatNumber(
-                    formatUnits(loan.borrowAmount, baseToken.decimals)
+                    formatUnits(loan.borrowAmount, baseToken.decimals), false
                   )}{" "}
                   {baseToken.symbol}
                 </span>
@@ -396,7 +397,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 {balances.isLoading ? (
                   <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
                 ) : chainBalance ? (
-                  formatNumber(chainBalance, false)
+                  truncateNumber(chainBalance, true)
                 ) : (
                   "0.00"
                 )}
@@ -437,9 +438,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               {collateralToTransfer}
             </p>*/}
             <p>Borrowing:</p>
-            <div className="flex justify-end">
+            <div className="flex items-center justify-end">
               {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
-                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
+                <div className="activeSkeleton h-[17px] w-[32px] mr-1 rounded-md opacity-30" />
               ) : newLoanBorrowableAmount ? (
                 formatNumber(
                   formatUnits(newLoanBorrowableAmount, baseToken.decimals),
@@ -451,9 +452,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               {baseToken.symbol}
             </div>
             <p>Receive After Fees:</p>
-            <div className="flex justify-end">
+            <div className="flex items-center justify-end">
               {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
-                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
+                <div className="activeSkeleton h-[17px] w-[32px] mr-1 rounded-md opacity-30" />
               ) : amountToWallet ? (
                 formatNumber(amountToWallet, false)
               ) : (
@@ -468,9 +469,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             <Button
               className="bg-cerulean!"
               onClick={() => setDialogStage("feeStructure")}
-              disabled={!additionalCollateral}
+              disabled={!additionalCollateral || insufficientBalance}
             >
-              Next
+              {insufficientBalance ? "Insufficient Balance" : "Next"}
             </Button>
           </div>
         </>
@@ -540,9 +541,10 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
               targetChainId={loan.chainId}
               onClick={handleBorrow}
               loading={isBorrowing}
+              disabled={insufficientBalance}
               className="bg-cerulean!"
             >
-              Pay
+              {insufficientBalance ? "Insufficient Balance" : "Pay"}
             </ButtonWithWallet>
           </div>
         </>

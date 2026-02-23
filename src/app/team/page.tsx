@@ -43,7 +43,6 @@ export async function generateMetadata(): Promise<Metadata> {
         "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
       ],
     },
-    manifest: metadata.manifest,
   };
 }
 
@@ -59,7 +58,7 @@ export default function Team() {
             </h3>
           </div>
 
-          <div className="text-base font-light md:text-sm lg:text-xl">
+          <div className="text-base font-light text-lg sm:text-xl">
             The Inevitable team has collectively launched 5 DAOs, co-founded 36
             companies, and achieved 10 successful exits, securing capital in
             excess of $300 million, with an additional $10 million raised for

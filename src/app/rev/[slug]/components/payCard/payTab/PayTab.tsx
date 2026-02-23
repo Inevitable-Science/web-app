@@ -20,7 +20,7 @@ import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
-import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
+import { getTokensForChain, Token } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
@@ -112,9 +112,9 @@ export function PayTab({
         selectedToken
       );
 
-      const numberPayerTokens = Number(payerTokens);
-      const formattedAmountB = formatNumber(numberPayerTokens, false);
-      setAmountB(formattedAmountB);
+      setAmountB(
+        truncateNumber(payerTokens)
+      );
       return;
     }
   };
@@ -138,9 +138,13 @@ export function PayTab({
       }
     );
 
-    const numberPayerTokens = Number(quote.format());
-    const formattedAmountA = formatNumber(numberPayerTokens, false);
-    setAmountA(formattedAmountA);
+    // Round this value as clipped exact values create a invalid minReturnAmount
+    const numberPayerTokens = Number(formatUnits(quote.value, quote.decimals));
+    if (numberPayerTokens < 0.000001) {
+      setAmountA("0");
+      return;
+    }
+    setAmountA(formatNumber(numberPayerTokens, false));
     return;
   };
 
@@ -211,7 +215,7 @@ export function PayTab({
               ) : (
                 <p className="w-[130px]">
                   Balance:{" "}
-                  {truncateNumber(currentTokenBalNum, true)}
+                  {currentTokenBalNum > 0.00001 ? truncateNumber(currentTokenBalNum, true) : '0.00'}
                 </p>
               )}
             </div>

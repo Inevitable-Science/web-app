@@ -50,6 +50,14 @@ function truncate(num: number, decimals: number) {
   return Math.trunc(num * factor) / factor;
 }
 
+function toPlainString(num: number, maxDecimals = 18): string {
+  // Convert exponential notation to fixed
+  const str = num.toString();
+  if (!str.includes("e")) return str;
+
+  return num.toFixed(maxDecimals).replace(/\.?0+$/, "");
+}
+
 // use for bal/tx calculations, no rounding
 export function truncateNumber(
   passedNum: number | string | null,
@@ -84,7 +92,7 @@ export function truncateNumber(
       10 ** (digits - Math.floor(Math.log10(Math.abs(num))) - 1);
 
     const truncated = Math.trunc(num * factor) / factor;
-    return truncated.toString();
+    return toPlainString(truncated);
   }
 
   // >= 1 → truncate to 3 decimals

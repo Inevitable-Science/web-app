@@ -67,7 +67,6 @@ export default async function ProjectVestingPage({
     };
 
     const parsed = ScheduleSchemaZ.safeParse(scheduleObj);
-    console.log(scheduleObj);
     if (!parsed.success) continue;
 
     const parsedSchedule = parsed.data;
@@ -89,27 +88,28 @@ export default async function ProjectVestingPage({
   );
   numRevokedSchedules = schedulesWithId.length - unrevokedSchedules.length;
 
-  const batchReleasableAmount = await client.multicall({
-    contracts: unrevokedSchedules.map((schedule) => ({
-      address: vestingContractObj.vestingContract,
-      abi: vestingAbi,
-      functionName: "computeReleasableAmount",
-      args: [schedule.id],
-    })),
-  });
-
-  for (let i = 0; i < batchReleasableAmount.length; i++) {
-    const r = batchReleasableAmount[i];
-    if (r.status !== "success") continue;
-
-    const released = r.result as bigint;
-    totalReleasableTokens += released;
-
-    schedules.push({
-      ...unrevokedSchedules[i],
-      //id: unrevokedSchedules[i].id,
-      releasableAmount: released,
+  if (unrevokedSchedules.length > 0) {
+    const batchReleasableAmount = await client.multicall({
+      contracts: unrevokedSchedules.map((schedule) => ({
+        address: vestingContractObj.vestingContract,
+        abi: vestingAbi,
+        functionName: "computeReleasableAmount",
+        args: [schedule.id],
+      })),
     });
+
+    for (let i = 0; i < batchReleasableAmount.length; i++) {
+      const r = batchReleasableAmount[i];
+      if (r.status !== "success") continue;
+
+      const released = r.result as bigint;
+      totalReleasableTokens += released;
+
+      schedules.push({
+        ...unrevokedSchedules[i],
+        releasableAmount: released,
+      });
+    }
   }
 
   return (

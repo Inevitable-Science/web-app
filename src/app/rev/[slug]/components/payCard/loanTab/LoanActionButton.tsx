@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useHasBorrowPermission } from "@/hooks/useHasBorrowPermission";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { formatNumber, formatWalletError } from "@/lib/utils";
+import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import {
   JB_TOKEN_DECIMALS,
   JBChainId,
@@ -31,6 +31,7 @@ import { generateFeeData } from "@/lib/feeHelpers";
 import { LoanStepper } from "./LoanStepper";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
+import { ConnectKitButton } from "connectkit";
 
 const shimmerClasses = `
   w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
@@ -78,7 +79,7 @@ export function LoanActionButton({
 
   // Client Hooks
   const publicClient = usePublicClient();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
 
@@ -127,8 +128,13 @@ export function LoanActionButton({
   const prepaidAmount = (prepaidPercent / 100) * loanAmountNum;
   const amountToWallet = loanAmountNum - protocolFees - prepaidAmount;
 
+  const amountToWalletFormatted = amountToWallet < 1 ? 
+    truncateNumber(amountToWallet) :
+    formatNumber(amountToWallet, false);
+
   const feeBasisPoints = Math.round(prepaidPercent * 10);
   const collateralBigInt = parseUnits(collateralAmount, projectTokenDecimals);
+  const lessThanMinCollateral = collateralBigInt < parseUnits("0.001", projectTokenDecimals);
 
   // Chart Vars
   const monthsToPrepay = (prepaidPercent / 50) * 120;
@@ -235,10 +241,34 @@ export function LoanActionButton({
     }
   };
 
+  if (!isConnected) {
+    return (
+      <ConnectKitButton.Custom>
+        {({ isConnecting, show }) => (
+          <Button
+            onClick={show}
+            loading={isConnecting}
+            className={shimmerClasses}
+          >
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
+          </Button>
+        )}
+      </ConnectKitButton.Custom>
+    );
+  }
+
   if (projectTokenBalance < collateralBigInt) {
     return (
       <Button className={shimmerClasses} disabled>
         Insufficient Funds
+      </Button>
+    );
+  }
+
+  if (Number(collateralAmount) && lessThanMinCollateral) {
+    return (
+      <Button className={shimmerClasses} disabled>
+        Loan Amount Is Too Small
       </Button>
     );
   }
@@ -303,7 +333,7 @@ export function LoanActionButton({
                   {token.data?.symbol}
                 </p>
                 <p>
-                  You Receive: {formatNumber(amountToWallet, false)}{" "}
+                  You Receive: {amountToWalletFormatted}{" "}
                   {baseToken.symbol}
                 </p>
               </div>
@@ -356,7 +386,7 @@ export function LoanActionButton({
                 </p>
                 <p>Prepaid Percent: {prepaidPercent}%</p>
                 <p>
-                  You Receive: {formatNumber(amountToWallet, false)}{" "}
+                  You Receive: {amountToWalletFormatted}{" "}
                   {baseToken.symbol}
                 </p>
               </div>

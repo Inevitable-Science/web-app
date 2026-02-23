@@ -36,6 +36,7 @@ export function LoanTab() {
   // Token Balances
   const currentChainBalanceObj = balanceQuery?.data?.find((tkn) => tkn.chainId === selectedSucker.peerChainId)?.balance;
   const currentChainBalBigInt = currentChainBalanceObj?.value ?? 0n;
+  const currentChainBalNum = currentChainBalanceObj?.format();
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
   const collateralAmountBigIntDB = parseUnits(debounceCollateralAmount, projectTokenDecimals);
@@ -61,12 +62,11 @@ export function LoanTab() {
   });
 
   const estimatedBorrowString = estimatedBorrowFromInputOnly ?
-    formatNumber(
+    truncateNumber(
       formatUnits(
         estimatedBorrowFromInputOnly ?? 0n,
         baseToken.decimals
-      ),
-      false
+      )
     ) : "";
 
   return (
@@ -93,10 +93,15 @@ export function LoanTab() {
           </div>
           <div className="flex flex-col items-end gap-1">
             <LoanChainSelector suckersBalance={balanceQuery.data} />
-            <p className="text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
+            <div className="flex items-center justify-end gap-1 text-muted-foreground w-[130px] text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {truncateNumber(currentChainBalanceObj?.format() ?? "0", true)}
-            </p>
+              {balanceQuery.isLoading ? 
+                <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
+              : currentChainBalNum && Number(currentChainBalNum) > 0.00001 ?
+                  truncateNumber(currentChainBalNum ?? "0", true) :
+                  "0.00"
+              }
+            </div>
           </div>
         </div>
 
