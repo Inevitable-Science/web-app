@@ -29,7 +29,8 @@ export function ActivityFeedSection() {
   const [page, setPage] = useState<number>(1);
 
   const daoName = daoData?.name;
-  const { data, isLoading, isError } = useFetchLegacyActivity(daoName, page);
+  const { data, isLoading, isError, error } = useFetchLegacyActivity(daoName, page);
+  console.error(error);
 
   return (
     <div>
@@ -52,7 +53,7 @@ export function ActivityFeedSection() {
             <>
               {data.data.map((tx) => (
                 <div
-                  key={tx.transaction_hash}
+                  key={tx.transactionHash}
                   className="border-color mb-1 min-h-[80px] border-b pb-2"
                 >
                   <div className="flex items-center justify-between">
@@ -60,7 +61,7 @@ export function ActivityFeedSection() {
                     <div className="text-md text-grey-50 mb-2 font-light">
                       <EtherscanLink
                         type="tx"
-                        value={tx.transaction_hash}
+                        value={tx.transactionHash}
                         chain={mainnet}
                       >
                         {getRelativeTime(tx.date)}
@@ -69,16 +70,16 @@ export function ActivityFeedSection() {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-color font-light">Ξ{tx.eth_paid}</div>
+                    <div className="text-color font-light">Ξ{tx.ethPaid}</div>
 
-                    {tokenAnalytics?.selectedToken.chain_id && (
+                    {tokenAnalytics?.token.chainId && (
                       <div className="text-md text-grey-100 flex flex-wrap items-center gap-1 font-light">
                         <EthereumAddress
                           address={tx.beneficiary as Address}
                           chain={
                             JB_CHAINS[
-                              tokenAnalytics?.selectedToken
-                                .chain_id as JBChainId
+                              tokenAnalytics?.token
+                                .chainId as JBChainId
                             ].chain
                           }
                           short

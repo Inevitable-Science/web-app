@@ -5,7 +5,7 @@ export const fetchDaoData = async (
 ): Promise<DaoResponse | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/${daoName}`,
+      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/analytics/dao/${daoName}`,
       { next: { revalidate: 900 } }
     );
 

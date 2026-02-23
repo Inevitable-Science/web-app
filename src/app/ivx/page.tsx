@@ -70,9 +70,9 @@ export default async function IvxTokenPage() {
     <>
       {/*<Providers chainId={1 as JBChainId} projectId={64n as bigint} version={4}>*/}
       <JBProjectProviderRoot
-        //chainId={1 as JBChainId}
+        chainId={1}
         //projectId={17n as bigint}
-        chainId={11155111}
+        //chainId={11155111}
         projectId={BigInt(3)}
         version={5}
       >

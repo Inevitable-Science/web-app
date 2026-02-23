@@ -68,9 +68,9 @@ export function TokenSection() {
 
   return (
     <section>
-      {tokenAnalytics?.selectedToken.ticker && (
+      {tokenAnalytics?.token.ticker && (
         <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-          <TokenChart tokenTicker={tokenAnalytics.selectedToken.ticker} />
+          <TokenChart tokenTicker={tokenAnalytics.token.ticker} />
         </div>
       )}
 
@@ -84,13 +84,13 @@ export function TokenSection() {
                 <h3 className="text-xl">
                   {calculateRatio(
                     tokenAnalytics.assetsUnderManagement,
-                    tokenAnalytics.selectedToken.marketCap
+                    tokenAnalytics.token.marketCap
                   )}
                 </h3>
                 <p className="text-muted-foreground font-light uppercase">
                   {getValuationLabel(
                     tokenAnalytics.assetsUnderManagement,
-                    tokenAnalytics.selectedToken.marketCap
+                    tokenAnalytics.token.marketCap
                   )}
                 </p>
               </div>
@@ -120,7 +120,7 @@ export function TokenSection() {
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {formatNumber(tokenAnalytics.selectedToken.totalSupply)}
+                  {formatNumber(tokenAnalytics.token.totalSupply)}
                 </h3>
                 <p className="text-muted-foreground font-light uppercase">
                   Total Supply
@@ -128,7 +128,7 @@ export function TokenSection() {
               </div>
               <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
-                  ${formatNumber(tokenAnalytics.selectedToken.marketCap)}
+                  ${formatNumber(tokenAnalytics.token.marketCap)}
                 </div>
                 <p className="text-muted-foreground font-light uppercase">
                   Market Cap
@@ -139,7 +139,7 @@ export function TokenSection() {
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {formatNumber(tokenAnalytics.selectedToken.averageBal)}
+                  {formatNumber(tokenAnalytics.token.averageBal)}
                 </h3>
                 <p className="text-muted-foreground font-light uppercase">
                   Average Balance
@@ -147,7 +147,7 @@ export function TokenSection() {
               </div>
               <div className="background-color rounded-2xl p-[16px]">
                 <div className="text-xl">
-                  {formatNumber(tokenAnalytics.selectedToken.medianBal)}
+                  {formatNumber(tokenAnalytics.token.medianBal)}
                 </div>
                 <p className="text-muted-foreground font-light uppercase">
                   Median Balance
@@ -160,7 +160,7 @@ export function TokenSection() {
             <div className="bg-grey-450 rounded-2xl p-[12px]">
               <div className="background-color mb-2 rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {tokenAnalytics.selectedToken.totalHolders}
+                  {tokenAnalytics.token.totalHolders}
                 </h3>
                 <p className="text-muted-foreground font-light uppercase">
                   Total Holders
@@ -172,7 +172,7 @@ export function TokenSection() {
               </h3>
               <div>
                 {tokenAnalytics.topHolders.slice(0, 5).map((holder, idx) => {
-                  const { address, token_amount } = holder;
+                  const { address, tokenAmount } = holder;
 
                   return (
                     <div
@@ -183,13 +183,13 @@ export function TokenSection() {
                         address={address as Address}
                         chain={
                           JB_CHAINS[
-                            tokenAnalytics.selectedToken.chain_id as JBChainId
+                            tokenAnalytics.token.chainId as JBChainId
                           ].chain
                         }
                         withEnsName
                         short
                       />
-                      {formatNumber(token_amount, true)}
+                      {formatNumber(tokenAmount, true)}
                     </div>
                   );
                 })}
@@ -197,10 +197,10 @@ export function TokenSection() {
             </div>
           )}
 
-          {tokenAnalytics.selectedToken.ticker && (
+          {tokenAnalytics.token.ticker && (
             <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
               <TokenStatsChart
-                tokenTicker={tokenAnalytics.selectedToken.ticker}
+                tokenTicker={tokenAnalytics.token.ticker}
               />
             </div>
           )}

@@ -63,7 +63,7 @@ export function IvxTreasuryAnalytics() {
           <div className="my-[24px] flex h-[calc(100%-20px)] items-center justify-center lg:my-0">
             <TreasuryPieChart
               filteredData={treasuryData?.treasuryTokens}
-              chainId={treasuryData.treasury.chain_id as JBChainId}
+              chainId={treasuryData.treasury.chainId as JBChainId}
             />
           </div>
         </div>

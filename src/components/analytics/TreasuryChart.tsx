@@ -79,9 +79,9 @@ export function TreasuryChart({ daoName }: { daoName: string }) {
       }));
     };
 
-    const historicalTreasuryData = transformData(data.historical_treasury);
-    const historicalAssetsData = transformData(data.historical_assets);
-    const totalAssetsData = transformData(data.total_assets);
+    const historicalTreasuryData = transformData(data.historicalTreasury);
+    const historicalAssetsData = transformData(data.historicalAssets);
+    const totalAssetsData = transformData(data.totalAssets);
 
     treasurySeries.setData(historicalTreasuryData);
     assetsSeries.setData(historicalAssetsData);

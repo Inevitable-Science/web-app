@@ -64,20 +64,20 @@ export function DaoData() {
               <div className="background-color rounded-2xl p-[16px]">
                 {tokenAnalytics ? (
                   <h4 className="mb-0.5 text-xl tracking-wider">
-                    {formatNumber(tokenAnalytics?.selectedToken.averageBal)}
+                    {formatNumber(tokenAnalytics?.token.averageBal)}
                   </h4>
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
                 )}
                 <p className="text-muted-foreground font-light uppercase">
-                  Average {`${tokenAnalytics?.selectedToken.ticker} `}
+                  Average {`${tokenAnalytics?.token.ticker} `}
                   Balance
                 </p>
               </div>
               <div className="background-color rounded-2xl p-[16px]">
                 {tokenAnalytics ? (
                   <h4 className="mb-0.5 text-xl tracking-wider">
-                    {formatNumber(tokenAnalytics.selectedToken.totalSupply)}
+                    {formatNumber(tokenAnalytics.token.totalSupply)}
                   </h4>
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -92,7 +92,7 @@ export function DaoData() {
               <div className="background-color rounded-2xl p-[16px]">
                 {tokenAnalytics ? (
                   <h4 className="mb-0.5 text-xl tracking-wider">
-                    ${formatNumber(tokenAnalytics.selectedToken.marketCap)}
+                    ${formatNumber(tokenAnalytics.token.marketCap)}
                   </h4>
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>
@@ -104,7 +104,7 @@ export function DaoData() {
               <div className="background-color rounded-2xl p-[16px]">
                 {tokenAnalytics ? (
                   <h4 className="mb-0.5 text-xl tracking-wider">
-                    {formatNumber(tokenAnalytics.selectedToken.totalHolders)}
+                    {formatNumber(tokenAnalytics.token.totalHolders)}
                   </h4>
                 ) : (
                   <div className="activeSkeleton mb-1 h-[28px] w-[142px] rounded"></div>

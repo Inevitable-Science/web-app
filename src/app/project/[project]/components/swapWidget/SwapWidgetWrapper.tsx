@@ -27,9 +27,9 @@ export function SwapWidgetWrapper({ placement }: Props) {
   const tokenAnalytics = useLegacyProjectStore((state) => state.tokenAnalytics);
 
   const swapWidget = useMemo(() => {
-    if (!tokenAnalytics?.selectedToken?.address) return null;
-    return <SwapWidget token={tokenAnalytics.selectedToken.address} />;
-  }, [tokenAnalytics?.selectedToken?.address]);
+    if (!tokenAnalytics?.token?.address) return null;
+    return <SwapWidget token={tokenAnalytics.token.address} />;
+  }, [tokenAnalytics?.token?.address]);
 
   if (placement === "mobile" && isMobile !== true) return null;
   if (placement === "desktop" && isMobile !== false) return null;

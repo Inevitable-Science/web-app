@@ -4,25 +4,25 @@ export const DaoResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   backdrop: z.string(),
-  date_created: z.string(),
+  dateCreated: z.string(),
   payments: z.number(),
-  eth_raised: z.string(),
+  ethRaised: z.string(),
   tags: z.string(),
   socials: z.object({
     site: z.string().nullable(),
-    linked_in: z.string().nullable(),
+    linkedIn: z.string().nullable(),
     x: z.string().nullable(),
     discord: z.string().nullable(),
   }),
   description: z.string(),
-  treasuryHoldings: z.string().nullable(),
+  treasuryHoldings: z.number().nullable(),
   assetsUnderManagement: z.number().nullable(),
   nativeToken: z.object({
     name: z.string().nullable(),
     address: z.string().nullable(),
-    mc_ticker: z.string().nullable(),
+    mcTicker: z.string().nullable(),
     totalSupply: z.number().nullable(),
-    totalHolders: z.string().nullable(),
+    totalHolders: z.number().nullable(),
     marketCap: z.number().nullable(),
   }),
 });
@@ -36,26 +36,26 @@ export const TreasuryResponseZ = z.object({
   tags: z.string(),
   socials: z.object({
     site: z.string().nullable(),
-    linked_in: z.string().nullable(),
+    linkedIn: z.string().nullable(),
     x: z.string().nullable(),
     discord: z.string().nullable(),
   }),
   treasury: z.object({
     address: z.string(),
-    ens_name: z.string(),
-    chain_id: z.number(),
+    ensName: z.string(),
+    chainId: z.number(),
   }),
   signers: z.object({
     required: z.number(),
     total: z.number(),
     signers: z.array(z.string()),
   }),
-  managed_accounts: z.array(
+  managedAccounts: z.array(
     z.object({
       address: z.string(),
       comment: z.string(),
       ens: z.string().nullable(),
-      chain_id: z.number(),
+      chainId: z.number(),
     })
   ),
   treasuryValue: z.number(),
@@ -91,9 +91,9 @@ export const TokenResponseZ = z.object({
   name: z.string(),
   logo: z.string(),
   assetsUnderManagement: z.number().nullable(),
-  selectedToken: z.object({
+  token: z.object({
     address: z.string().nullable(),
-    chain_id: z.number().nullable(),
+    chainId: z.number().nullable(),
     logoUrl: z.string().nullable(),
     ticker: z.string().nullable(),
     name: z.string().nullable(),
@@ -103,14 +103,14 @@ export const TokenResponseZ = z.object({
     marketCap: z.number().nullable(),
     averageBal: z.number().nullable(),
     medianBal: z.number().nullable(),
-    totalHolders: z.string().nullable(),
+    totalHolders: z.number().nullable(),
   }),
   topHolders: z
     .array(
       z.object({
         address: z.string().nullable(),
-        token_amount: z.number().nullable(),
-        account_type: z.string().nullable(),
+        tokenAmount: z.number().nullable(),
+        accountType: z.string().nullable(),
       })
     )
     .nullable(),
@@ -119,8 +119,8 @@ export const TokenResponseZ = z.object({
       z.object({
         range: z.string().nullable(),
         accounts: z.string().nullable(),
-        amount_tokens_held: z.number().nullable(),
-        percent_tokens_held: z.number().nullable(),
+        amountTokensHeld: z.number().nullable(),
+        percentTokensHeld: z.number().nullable(),
       })
     )
     .nullable(),
@@ -129,9 +129,9 @@ export const TokenResponseZ = z.object({
 export type TokenResponse = z.infer<typeof TokenResponseZ>;
 
 export const HistoricalTreasuryResponseZ = z.object({
-  historical_treasury: z.array(z.tuple([z.number(), z.number()])),
-  historical_assets: z.array(z.tuple([z.number(), z.number()])),
-  total_assets: z.array(z.tuple([z.number(), z.number()])),
+  historicalTreasury: z.array(z.tuple([z.number(), z.number()])),
+  historicalAssets: z.array(z.tuple([z.number(), z.number()])),
+  totalAssets: z.array(z.tuple([z.number(), z.number()])),
 });
 
 export type HistoricalTreasuryResponse = z.infer<
@@ -164,11 +164,11 @@ export const LegacyActivityResponseZ = z.object({
   data: z.array(
     z.object({
       date: z.string(),
-      eth_paid: z.string(),
-      usd_value: z.string(),
-      payer_address: z.string(),
+      ethPaid: z.string(),
+      usdValue: z.string(),
+      payerAddress: z.string(),
       beneficiary: z.string(),
-      transaction_hash: z.string(),
+      transactionHash: z.string(),
     })
   ),
 });
