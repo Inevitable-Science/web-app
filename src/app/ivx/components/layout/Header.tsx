@@ -22,8 +22,8 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {tokenData?.selectedToken.averageBal
-              ? formatNumber(tokenData.selectedToken.averageBal)
+            {tokenData?.token.averageBal
+              ? formatNumber(tokenData.token.averageBal)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">
@@ -33,8 +33,8 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {tokenData?.selectedToken.totalHolders
-              ? formatNumber(tokenData?.selectedToken.totalHolders)
+            {tokenData?.token.totalHolders
+              ? formatNumber(tokenData?.token.totalHolders)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Total Holders</p>
@@ -44,8 +44,8 @@ export function IvxPageHeader() {
       <div className="hidden gap-[12px] uppercase md:grid md:grid-cols-3 lg:flex lg:flex-col">
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {tokenData?.selectedToken.totalSupply
-              ? formatNumber(tokenData.selectedToken.totalSupply)
+            {tokenData?.token.totalSupply
+              ? formatNumber(tokenData.token.totalSupply)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Total IVX Supply</p>
@@ -53,8 +53,8 @@ export function IvxPageHeader() {
 
         <div className="bg-grey-450 rounded-2xl p-[12px]">
           <h3 className="text-xl">
-            {tokenData?.selectedToken.medianBal
-              ? formatNumber(tokenData.selectedToken.medianBal)
+            {tokenData?.token.medianBal
+              ? formatNumber(tokenData.token.medianBal)
               : "--"}
           </h3>
           <p className="text-muted-foreground font-light">Median IVX Balance</p>

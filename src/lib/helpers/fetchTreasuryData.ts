@@ -5,7 +5,7 @@ export const fetchTreasuryData = async (
 ): Promise<TreasuryResponse | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/${daoName}`,
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/analytics/treasury/${daoName}`,
       { next: { revalidate: 900 } }
     );
 

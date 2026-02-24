@@ -97,7 +97,7 @@ export function Header() {
               <div className="bg-grey-450 rounded-2xl p-[20px]">
                 <div className="flex h-fit items-center">
                   <h3 className="text-2xl font-semibold tracking-wider">
-                    Ξ{daoData?.eth_raised}
+                    Ξ{daoData?.ethRaised}
                   </h3>
                 </div>
                 <p className="text-muted-foreground mt-1.5 text-sm font-light uppercase">
@@ -124,7 +124,7 @@ export function Header() {
                         address={treasuryAnalytics.treasury.address as Address}
                         chain={
                           JB_CHAINS[
-                            treasuryAnalytics.treasury.chain_id as JBChainId
+                            treasuryAnalytics.treasury.chainId as JBChainId
                           ].chain
                         }
                         short
@@ -146,7 +146,7 @@ export function Header() {
                 <div className="flex h-fit items-center">
                   <h3 className="text-xl font-light">
                     {daoData?.description ? (
-                      <>{daoData.date_created}</>
+                      <>{daoData.dateCreated}</>
                     ) : (
                       <div className="activeSkeleton h-[28px] w-full max-w-[142px] rounded-md" />
                     )}

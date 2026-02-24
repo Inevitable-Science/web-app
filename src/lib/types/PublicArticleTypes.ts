@@ -34,31 +34,37 @@ export const LatestArticlesResponseZ = z.array(
 
 export type LatestArticlesResponse = z.infer<typeof LatestArticlesResponseZ>;
 
-export const AllArticlesResponseZ = z.array(
-  z.object({
-    title: z.string(),
-    datePublished: z.string(),
-    articleId: z.string(),
+export const AllArticlesResponseZ = z.object({
+  page: z.number(),
+  limit: z.number(),
+  totalItems: z.number(),
+  totalPages: z.number(),
+  data: z.array(
+    z.object({
+      title: z.string(),
+      datePublished: z.string(),
+      articleId: z.string(),
 
-    landingImage: z.string(),
+      landingImage: z.string(),
 
-    keywords: z.array(z.string()),
-    tags: z.array(z.string()),
-    overview: z.string().nullable(),
+      keywords: z.array(z.string()),
+      tags: z.array(z.string()),
+      overview: z.string().nullable(),
 
-    organisation: z.object({
-      organisationName: z.string(),
-      organisationId: z.string(),
+      organisation: z.object({
+        organisationName: z.string(),
+        organisationId: z.string(),
 
-      metadata: z.object({
-        logo: z.string(),
-        description: z.string(),
-        website: z.string(),
-        x: z.string(),
-        discord: z.string(),
+        metadata: z.object({
+          logo: z.string(),
+          description: z.string(),
+          website: z.string(),
+          x: z.string(),
+          discord: z.string(),
+        }),
       }),
     }),
-  })
-);
+  )
+});
 
 export type AllArticlesResponse = z.infer<typeof AllArticlesResponseZ>;

@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
 import { Address, zeroAddress } from "viem";
-import { Link, Loader2, RotateCw } from "lucide-react";
+import { Link, Loader2 } from "lucide-react";
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
@@ -15,30 +14,6 @@ export function TreasurySection() {
   const treasuryAnalytics = useLegacyProjectStore(
     (state) => state.treasuryAnalytics
   );
-  const [responseData, setResponseData] = useState("");
-
-  const refreshData = async (): Promise<void> => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/refresh/${treasuryAnalytics?.name}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const responseJson = await response.json();
-
-      if (!response.ok) {
-        setResponseData(responseJson.error);
-        return;
-      }
-
-      setResponseData(responseJson.message);
-    } catch (error) {
-      console.error("Request failed:", error);
-      setResponseData("Failed to refresh");
-    }
-  };
 
   return (
     <section>
@@ -55,19 +30,12 @@ export function TreasurySection() {
             </div>
 
             <div className="background-color rounded-2xl p-[16px]">
-              <div className="flex items-center justify-between">
-                <h4 className="mb-0.5 text-xl tracking-wider">
-                  {treasuryAnalytics?.lastUpdated &&
-                    formatDate(treasuryAnalytics.lastUpdated)}
-                </h4>
-
-                <RotateCw
-                  onClick={refreshData}
-                  className="text-grey-100 cursor-pointer"
-                />
-              </div>
+              <h4 className="mb-0.5 text-xl tracking-wider">
+                {treasuryAnalytics?.lastUpdated &&
+                  formatDate(treasuryAnalytics.lastUpdated)}
+              </h4>
               <p className="text-muted-foreground font-light">
-                {responseData ? responseData : "LAST UPDATED"}
+                LAST UPDATED
               </p>
             </div>
           </div>
@@ -79,7 +47,7 @@ export function TreasurySection() {
             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
               <div className="background-color rounded-2xl p-[16px]">
                 <a className="mb-0.5 text-xl tracking-wider underline">
-                  {treasuryAnalytics.treasury.ens_name}
+                  {treasuryAnalytics.treasury.ensName}
                 </a>
                 <p className="text-muted-foreground font-light uppercase">
                   Treasury Wallet
@@ -131,7 +99,7 @@ export function TreasurySection() {
                               chain={
                                 JB_CHAINS[
                                   treasuryAnalytics.treasury
-                                    .chain_id as JBChainId
+                                    .chainId as JBChainId
                                 ].chain
                               }
                               truncateTo={4}
@@ -157,7 +125,7 @@ export function TreasurySection() {
             {treasuryAnalytics?.treasuryTokens && (
               <TreasuryPieChart
                 filteredData={treasuryAnalytics.treasuryTokens}
-                chainId={treasuryAnalytics.treasury.chain_id as JBChainId}
+                chainId={treasuryAnalytics.treasury.chainId as JBChainId}
               />
             )}
           </div>
@@ -195,13 +163,13 @@ export function TreasurySection() {
             </div>
           )}
 
-          {treasuryAnalytics?.managed_accounts && (
+          {treasuryAnalytics?.managedAccounts && (
             <div className="bg-grey-450 rounded-2xl p-[12px]">
               <h3 className="text-grey-50 py-1 text-sm uppercase">
                 Accounts Manged
               </h3>
               <div className="flex flex-col text-sm font-light">
-                {treasuryAnalytics.managed_accounts.map((account) => (
+                {treasuryAnalytics.managedAccounts.map((account) => (
                   <div
                     key={account.address}
                     className="text-grey-50 flex items-center justify-between border-b border-[#282828] py-3 text-sm font-light"
@@ -214,7 +182,7 @@ export function TreasurySection() {
 
                     <EthereumAddress
                       address={account.address as Address}
-                      chain={JB_CHAINS[account.chain_id as JBChainId].chain}
+                      chain={JB_CHAINS[account.chainId as JBChainId].chain}
                       withEnsName
                       short
                     />
@@ -249,7 +217,7 @@ export function TreasurySection() {
                       value={address as Address}
                       chain={
                         JB_CHAINS[
-                          treasuryAnalytics.treasury.chain_id as JBChainId
+                          treasuryAnalytics.treasury.chainId as JBChainId
                         ].chain
                       }
                     >

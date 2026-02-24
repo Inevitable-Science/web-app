@@ -22,7 +22,7 @@ const fetchArticle = async (
 ): Promise<SingleArticleResponse | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/article/id/${articleId}`
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/articles/id/${articleId}`
     );
 
     const data = await response.json();
@@ -40,7 +40,7 @@ const fetchLatestArticles = async (
 ): Promise<LatestArticlesResponse | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles/latest`
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/articles/latest`
     );
 
     const data = await response.json();

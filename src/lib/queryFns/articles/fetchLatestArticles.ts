@@ -6,7 +6,7 @@ import {
 export const fetchLatestArticles =
   async (): Promise<LatestArticlesResponse | null> => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles/latest`
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/articles/latest`
     );
 
     const data = await response.json();

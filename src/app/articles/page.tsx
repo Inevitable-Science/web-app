@@ -11,7 +11,7 @@ import {
 const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ARTICLE_API_ENDPOINT}/public/articles`
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/articles`
     );
 
     const data = await response.json();
@@ -66,7 +66,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Articles() {
-  const articles = await fetchArticles();
+  const articlesResponse = await fetchArticles();
+  const articles = articlesResponse?.data;
 
   if (!articles) {
     return notFound();
