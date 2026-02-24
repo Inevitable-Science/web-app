@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
 import { Address, zeroAddress } from "viem";
-import { Link, Loader2, RotateCw } from "lucide-react";
+import { Link, Loader2 } from "lucide-react";
 import { formatNumber, formatDate, truncateAddress } from "@/lib/utils";
 
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
@@ -15,30 +14,6 @@ export function TreasurySection() {
   const treasuryAnalytics = useLegacyProjectStore(
     (state) => state.treasuryAnalytics
   );
-  const [responseData, setResponseData] = useState("");
-
-  const refreshData = async (): Promise<void> => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STATS_API_ENDPOINT}/dao/treasury/refresh/${treasuryAnalytics?.name}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const responseJson = await response.json();
-
-      if (!response.ok) {
-        setResponseData(responseJson.error);
-        return;
-      }
-
-      setResponseData(responseJson.message);
-    } catch (error) {
-      console.error("Request failed:", error);
-      setResponseData("Failed to refresh");
-    }
-  };
 
   return (
     <section>
@@ -55,19 +30,12 @@ export function TreasurySection() {
             </div>
 
             <div className="background-color rounded-2xl p-[16px]">
-              <div className="flex items-center justify-between">
-                <h4 className="mb-0.5 text-xl tracking-wider">
-                  {treasuryAnalytics?.lastUpdated &&
-                    formatDate(treasuryAnalytics.lastUpdated)}
-                </h4>
-
-                <RotateCw
-                  onClick={refreshData}
-                  className="text-grey-100 cursor-pointer"
-                />
-              </div>
+              <h4 className="mb-0.5 text-xl tracking-wider">
+                {treasuryAnalytics?.lastUpdated &&
+                  formatDate(treasuryAnalytics.lastUpdated)}
+              </h4>
               <p className="text-muted-foreground font-light">
-                {responseData ? responseData : "LAST UPDATED"}
+                LAST UPDATED
               </p>
             </div>
           </div>
