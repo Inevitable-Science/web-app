@@ -44,7 +44,7 @@ export default function Footer() {
 
       {/* BOTTOM SECTION */}
       <div className="mb-8 flex w-full flex-col-reverse items-center justify-between gap-4 text-center text-sm md:mb-2 md:flex-row md:gap-0">
-        <p>All rights reserved Inevitable 2025</p>
+        <p>All rights reserved Inevitable 2026</p>
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <div className="flex items-center gap-4">
             <a
