@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { JB_CHAINS, JBChainId, jbUrn, JBVersion } from "juice-sdk-core";
 
 export function parseSlug(slug?: string) {
@@ -53,6 +54,7 @@ export async function resolveIpfsLogo(
         )}`
       : metadata.logoUri;
   } catch (err) {
+    Sentry.captureException(err);
     console.error("Failed to fetch IPFS metadata:", err);
     return fallbackUrl;
   }

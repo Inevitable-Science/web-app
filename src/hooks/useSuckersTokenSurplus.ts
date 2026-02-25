@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import {
   getJBContractAddress,
   JBChainId,
@@ -102,10 +103,11 @@ export function useSuckersTokenSurplus(
               BigInt(currency),
             ]);
             return { surplus, chainId: peerChainId, projectId };
-          } catch (error) {
+          } catch (err) {
+            Sentry.captureException(err);
             console.error(
               `Error getting surplus for chain ${peerChainId}:`,
-              error
+              err
             );
             return { surplus: null, chainId: peerChainId, projectId };
           }

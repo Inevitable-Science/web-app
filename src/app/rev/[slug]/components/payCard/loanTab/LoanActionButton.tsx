@@ -1,3 +1,5 @@
+"use client"
+import * as Sentry from "@sentry/nextjs";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -230,6 +232,7 @@ export function LoanActionButton({
         return;
       }
     } catch (err) {
+      Sentry.captureException(err);
       setBorrowStatus("rejected-borrow");
       toast({
         variant: "destructive",

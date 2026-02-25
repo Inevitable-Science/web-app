@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import {
   ProjectDocument,
   ProjectQuery,
@@ -24,6 +25,7 @@ export async function fetchProjectData(config: {
 
     return project.project;
   } catch (err) {
+    Sentry.captureException(err);
     console.error("Failed to fetch project:", err);
     return null;
   }

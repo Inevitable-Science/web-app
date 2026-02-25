@@ -1,10 +1,10 @@
 "use client";
+import * as Sentry from "@sentry/nextjs";
 import { useEffect, useState } from "react";
 import { Address, formatEther, getContract } from "viem";
 import {
   useAccount,
   useChainId,
-  usePublicClient,
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
@@ -125,8 +125,9 @@ export function SchedulesSection({
 
         setUserSchedules(userSchedulesArr);
         setHasSchedule(true);
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        Sentry.captureException(err);
+        console.error(err);
       }
     };
 

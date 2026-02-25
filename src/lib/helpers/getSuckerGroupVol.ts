@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import {
   SuckerGroupDocument,
   SuckerGroupQuery,
@@ -30,8 +31,9 @@ export async function fetchSuckerGroupVol(
       volume: volume as bigint,
       decimals: decimals,
     };
-  } catch (error) {
-    console.error("Failed to fetch SuckerGroup:", error);
+  } catch (err) {
+    Sentry.captureException(err);
+    console.error("Failed to fetch SuckerGroup:", err);
     return null;
   }
 }

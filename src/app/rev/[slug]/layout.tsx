@@ -1,10 +1,10 @@
+import * as Sentry from "@sentry/nextjs";
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
 import { RevnetDataProvider } from "@/store/RevnetDataContext";
 import { headers } from "next/headers";
 import { Metadata } from "next";
-import { metadata } from "@/lib/metadata";
 import { parseSlug, resolveIpfsLogo } from "./ProjectHelpers";
 import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
 import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     config = parseSlug(slug);
     projectData = await fetchProjectData(config);
   } catch (err) {
+    Sentry.captureException(err);
     console.error(err);
     return notFound();
   }

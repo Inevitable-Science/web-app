@@ -1,4 +1,5 @@
 "use client";
+import * as Sentry from "@sentry/nextjs";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,8 @@ const calculateCollateralAmount = (
   try {
     const userInputWei = parseUnits(input, projectTokenDecimals);
     return userInputWei >= maxCollateral ? maxCollateral : userInputWei;
-  } catch (error) {
+  } catch (err) {
+    console.error(`Error calculating collateral: ${err}`);
     return 0n;
   }
 };
@@ -267,11 +269,13 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         console.error(err);
         setRepayStatus("rejected-repay");
       }
-    } catch (error: any) {
+    } catch (err) {
+      Sentry.captureException(err);
+      console.error(err);
       toast({
         variant: "destructive",
         title: "Repayment Failed",
-        description: formatWalletError(error),
+        description: formatWalletError(err),
       });
     } finally {
       setIsPending(false);

@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import PlaceholderActivityGraph from "./DummyChart";
 import ClientTable from "./ClientTable";
 
@@ -69,6 +70,7 @@ const fetchEcosystemData = async (): Promise<EcosystemResponse | null> => {
 
     return parsed;
   } catch (err) {
+    Sentry.captureException(err);
     console.error(err);
     return null;
   }
