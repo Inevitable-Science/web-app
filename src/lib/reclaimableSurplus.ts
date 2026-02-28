@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { type Project } from "@/generated/graphql";
 import { FixedInt } from "fpnum";
 import {
@@ -48,7 +49,8 @@ export async function getReclaimableSurplus(
     ]);
 
     return applyNanaFee(userReclaimable).toString();
-  } catch (error) {
+  } catch (err) {
+    Sentry.captureException(err);
     console.debug({
       chainId,
       projectId,
@@ -57,7 +59,7 @@ export async function getReclaimableSurplus(
       decimals,
       currencyId,
     });
-    console.error(error);
+    console.error(err);
     return "0";
   }
 }

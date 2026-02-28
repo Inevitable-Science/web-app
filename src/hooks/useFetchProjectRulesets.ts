@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { decodeRulesetMetadata, RulesetMetadata } from "@/lib/utils";
 import { wagmiConfig } from "@/lib/wagmiConfig";
@@ -62,9 +63,10 @@ export function useFetchProjectRulesets(
           })),
       }));
       setSuckerPairsWithRulesets(pairsWithRulesets);
-    } catch (error) {
-      console.error(error);
-      setError(error);
+    } catch (err) {
+      Sentry.captureException(err);
+      console.error(err);
+      setError(err);
     } finally {
       setIsLoading(false);
     }

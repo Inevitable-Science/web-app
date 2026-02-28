@@ -1,4 +1,5 @@
 "use client";
+import * as Sentry from "@sentry/nextjs";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,7 @@ export function CreateScheduleDialogue() {
         const tokenAmt = Number(formatEther(availableTokens));
         setWithdrawableAmount(tokenAmt);
       } catch (err) {
+        Sentry.captureException(err);
         console.error(err);
       }
     };

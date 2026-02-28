@@ -1,4 +1,5 @@
 "use client";
+import * as Sentry from "@sentry/nextjs";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -215,6 +216,7 @@ export default function ClientTable() {
 
         setBalances(parsed);
       } catch (err) {
+        Sentry.captureException(err);
         console.error("Error fetching token balances:", err);
       }
     };

@@ -1,5 +1,6 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { scheduleCreateRole, vestingContracts } from "@/lib/vesting/constants";
 import { useEffect } from "react";
@@ -62,8 +63,9 @@ export function VestingInitialiser({
         } else if (hasRole) {
           setCanCreate(true);
         }
-      } catch (e) {
-        console.log("error fetching roles", e);
+      } catch (err) {
+        Sentry.captureException(err);
+        console.error("error fetching roles", err);
       }
     };
 

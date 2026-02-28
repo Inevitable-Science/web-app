@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/utils";
+import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import {
   SingleArticleResponse,
   SingleArticleResponseZ,
 } from "@/lib/types/PublicArticleTypes";
+import { formatDate } from "@/lib/utils";
 
 interface ParamsProp {
   params: Promise<{
@@ -30,6 +31,7 @@ const fetchArticle = async (
 
     return parsedData;
   } catch (err) {
+    Sentry.captureException(err);
     console.error(err);
     return null;
   }
@@ -51,6 +53,7 @@ const fetchLatestArticles = async (
 
     return filteredArticles;
   } catch (err) {
+    Sentry.captureException(err);
     console.error(err);
     return null;
   }

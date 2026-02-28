@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -19,6 +20,7 @@ const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
 
     return parsedData;
   } catch (err) {
+    Sentry.captureException(err);
     console.error(err);
     return null;
   }
