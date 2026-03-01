@@ -68,7 +68,7 @@ const v4ProjectVars: v4ProjectInterface[] = [
   {
     name: "Stasis",
     href: "stasis",
-    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.webp",
     projectID: 64,
   },
 ];

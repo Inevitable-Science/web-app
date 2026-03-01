@@ -58,7 +58,7 @@ export default function Team() {
             </h3>
           </div>
 
-          <div className="text-base font-light text-lg sm:text-xl">
+          <div className="text-base font-light text-xl lg:text-2xl">
             The Inevitable team has collectively launched 5 DAOs, co-founded 36
             companies, and achieved 10 successful exits, securing capital in
             excess of $300 million, with an additional $10 million raised for
