@@ -119,7 +119,10 @@ export function TransactionCard() {
     if (!ruleset || !rulesetMetadata) return;
 
     const quote = getTokenBtoAQuote(
-      new FixedInt(parseUnits(value, projectTokenDecimals), projectTokenDecimals),
+      new FixedInt(
+        parseUnits(value, projectTokenDecimals),
+        projectTokenDecimals
+      ),
       projectTokenDecimals,
       {
         weight: ruleset.weight,

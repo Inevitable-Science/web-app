@@ -1,9 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import {
-  jbMultiTerminalAbi,
-  NATIVE_TOKEN,
-} from "juice-sdk-core";
+import { jbMultiTerminalAbi, NATIVE_TOKEN } from "juice-sdk-core";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
@@ -86,10 +83,9 @@ export function PayActionButton({
     writeContractAsync,
   } = useWriteContract();
 
-  const {
-    isLoading: isTxLoading,
-    isSuccess,
-  } = useWaitForTransactionReceipt({ hash: txHash });
+  const { isLoading: isTxLoading, isSuccess } = useWaitForTransactionReceipt({
+    hash: txHash,
+  });
 
   const publicClient = usePublicClient();
 
@@ -98,9 +94,9 @@ export function PayActionButton({
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const loading = isWriteLoading || isTxLoading;
-  const minPaymentAmount = paymentToken.isNative ? 
-    parseUnits('0.000001', paymentToken.decimals) :
-    parseUnits('0.0001', paymentToken.decimals);
+  const minPaymentAmount = paymentToken.isNative
+    ? parseUnits("0.000001", paymentToken.decimals)
+    : parseUnits("0.0001", paymentToken.decimals);
   const lessThanMinPayment = amountA < minPaymentAmount;
 
   // --- 3. DERIVED STATE & MEMOS ---
@@ -155,7 +151,9 @@ export function PayActionButton({
           value: amountA,
         });
 
-        const paymentStatus = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        const paymentStatus = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        });
         if (paymentStatus.status === "success") {
           successToast();
         } else {
@@ -172,7 +170,11 @@ export function PayActionButton({
         });
 
         if (!paymentToken.isNative) {
-          await ensureAllowance(paymentToken.address, terminal.address, amountA);
+          await ensureAllowance(
+            paymentToken.address,
+            terminal.address,
+            amountA
+          );
         }
 
         const minTokens = paymentToken.isNative
@@ -196,12 +198,14 @@ export function PayActionButton({
           value: paymentToken.isNative ? amountA : 0n,
         });
 
-        const paymentStatus = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        const paymentStatus = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        });
         if (paymentStatus.status === "success") {
           successToast();
         } else {
           failureToast();
-        };
+        }
       }
     } catch (err) {
       console.error("Payment failed:", err);
@@ -242,12 +246,12 @@ export function PayActionButton({
 
   // State 3: Contribution is less than min threshold
   if (amountA && lessThanMinPayment) {
-      return (
-        <Button className={primaryButtonClasses} disabled>
-          Contribution Is Too Small
-        </Button>
-      );
-    }
+    return (
+      <Button className={primaryButtonClasses} disabled>
+        Contribution Is Too Small
+      </Button>
+    );
+  }
 
   // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
@@ -262,53 +266,51 @@ export function PayActionButton({
         </ButtonWithWallet>
       </DialogTrigger>
 
-        <DialogContent>
-          <DialogTitle>
-            Before you continue...
-          </DialogTitle>
-          <DialogDescription>
-            Please review and agree to the project's terms before proceeding.
-          </DialogDescription>
+      <DialogContent>
+        <DialogTitle>Before you continue...</DialogTitle>
+        <DialogDescription>
+          Please review and agree to the project's terms before proceeding.
+        </DialogDescription>
 
-          <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
-            {metadata.data?.payDisclosure ? (
-              <p className="font-semibold whitespace-pre-wrap">
-                {metadata.data.payDisclosure}
-              </p>
-            ) : null}
-          </div>
-          <div className="mt-4 flex items-center space-x-3">
-            <Checkbox.Root
-              id="terms"
-              checked={agreedToTerms}
-              onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
-              className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
-            >
-              <Checkbox.Indicator className="flex items-center justify-center text-current">
-                <Check className="h-4 w-4" />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <label
-              htmlFor="terms"
-              className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              I have read and agree to the terms.
-            </label>
-          </div>
+        <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
+          {metadata.data?.payDisclosure ? (
+            <p className="font-semibold whitespace-pre-wrap">
+              {metadata.data.payDisclosure}
+            </p>
+          ) : null}
+        </div>
+        <div className="mt-4 flex items-center space-x-3">
+          <Checkbox.Root
+            id="terms"
+            checked={agreedToTerms}
+            onCheckedChange={(checked) => setAgreedToTerms(Boolean(checked))}
+            className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
+          >
+            <Checkbox.Indicator className="flex items-center justify-center text-current">
+              <Check className="h-4 w-4" />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
+          <label
+            htmlFor="terms"
+            className="cursor-pointer text-sm leading-none font-medium font-semibold select-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            I have read and agree to the terms.
+          </label>
+        </div>
 
-          <div className="mt-6 flex justify-end space-x-2">
-            <DialogClose />
-            <ButtonWithWallet
-              targetChainId={targetChainId}
-              disabled={!agreedToTerms || loading}
-              loading={loading}
-              onClick={handlePay}
-              className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            >
-              {actionButtonContent}
-            </ButtonWithWallet>
-          </div>
-        </DialogContent>
+        <div className="mt-6 flex justify-end space-x-2">
+          <DialogClose />
+          <ButtonWithWallet
+            targetChainId={targetChainId}
+            disabled={!agreedToTerms || loading}
+            loading={loading}
+            onClick={handlePay}
+            className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            {actionButtonContent}
+          </ButtonWithWallet>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -169,8 +169,7 @@ export function VestingDetailsDialog({
         {address?.toLowerCase() === schedule.beneficiary.toLowerCase() && (
           <DialogDescription>
             This is your vesting schedule, open the "Your Schedules" tab to
-            release all of your tokens, alternatively unlock your tokens
-            below.
+            release all of your tokens, alternatively unlock your tokens below.
           </DialogDescription>
         )}
 

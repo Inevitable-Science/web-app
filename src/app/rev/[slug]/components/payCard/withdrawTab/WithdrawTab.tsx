@@ -13,9 +13,7 @@ import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { SuckerGroupDocument } from "@/generated/graphql";
-import {
-  getProjectsReclaimableSurplus
-} from "@/lib/reclaimableSurplus";
+import { getProjectsReclaimableSurplus } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
 import { useReclaimableSurplus } from "@/hooks/useReclaimableSurplus";
@@ -36,8 +34,9 @@ export interface Surplus {
 export function WithdrawTab() {
   const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const { peerChainId: selectedChain, projectId: activeProjectId } = selectedSucker;
-  
+  const { peerChainId: selectedChain, projectId: activeProjectId } =
+    selectedSucker;
+
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [debouncedWithdrawAmount] = useDebounce(withdrawAmount, 600);
 
@@ -60,9 +59,11 @@ export function WithdrawTab() {
   const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
   const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals); // preserve for instant UI changes
 
-  const withdrawAmountBigIntDB = parseUnits(debouncedWithdrawAmount, projectTokenDecimals); // use only for state within hook
+  const withdrawAmountBigIntDB = parseUnits(
+    debouncedWithdrawAmount,
+    projectTokenDecimals
+  ); // use only for state within hook
   const isDebouncing = debouncedWithdrawAmount !== withdrawAmount;
-
 
   const surplus = surpluses?.find((s) => s.chainId === selectedChain) || null;
   const zeroSurplusValue = Number(surplus?.value ?? 0) == 0;
@@ -83,7 +84,7 @@ export function WithdrawTab() {
 
     fetchSurpluses();
   }, []);
-  
+
   const { data: reclaimableAmount, isLoading } = useReclaimableSurplus({
     chainId: selectedChain,
     projectId: activeProjectId,
@@ -111,10 +112,10 @@ export function WithdrawTab() {
     baseToken.decimals
   );
 
-  const receiveAmountString = 
-    withdrawAmountBigInt > currentChainBalanceBigInt ?
-      truncateNumber(maxReceiveAmount) : 
-      truncateNumber(receiveAmount);
+  const receiveAmountString =
+    withdrawAmountBigInt > currentChainBalanceBigInt
+      ? truncateNumber(maxReceiveAmount)
+      : truncateNumber(receiveAmount);
 
   return (
     <div className="flex flex-col gap-4">
@@ -156,16 +157,20 @@ export function WithdrawTab() {
         <div className="background-color grid grid-cols-[1fr_auto] items-center gap-2 rounded-xl p-[16px]">
           <div className="flex flex-col gap-[2px]">
             <p className="text-muted-foreground text-sm font-light select-none">
-              YOU RECEIVE {withdrawAmountBigInt > currentChainBalanceBigInt && "MAX"}
+              YOU RECEIVE{" "}
+              {withdrawAmountBigInt > currentChainBalanceBigInt && "MAX"}
             </p>
-            {(isLoading || isDebouncing) && Number(withdrawAmount) ? (  // Prevents skeleton when withdrawAmount is falsy (0)
+            {(isLoading || isDebouncing) && Number(withdrawAmount) ? ( // Prevents skeleton when withdrawAmount is falsy (0)
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
               // show placeholder "0.00" when no withdraw amount is inputted
-              <PayInput value={withdrawAmount ? receiveAmountString : ""} disabled />
+              <PayInput
+                value={withdrawAmount ? receiveAmountString : ""}
+                disabled
+              />
             )}
           </div>
-          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full pl-1.5 pr-2 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full py-1 pr-2 pl-1.5">
             <div className="flex items-end">
               {baseToken.isNative ? (
                 <ChainLogo chainId={1} height={24} width={24} />
@@ -187,11 +192,7 @@ export function WithdrawTab() {
               )}
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
-                <ChainLogo
-                  chainId={selectedChain}
-                  height={16}
-                  width={16}
-                />
+                <ChainLogo chainId={selectedChain} height={16} width={16} />
               </div>
             </div>
             <p className="text-lg font-light">{baseToken.symbol}</p>
@@ -205,7 +206,8 @@ export function WithdrawTab() {
             key={percent}
             className="h-[28px] rounded-xs"
             onClick={() => {
-              const withdrawAmount = (currentChainBalanceBigInt * BigInt(percent)) / 100n;
+              const withdrawAmount =
+                (currentChainBalanceBigInt * BigInt(percent)) / 100n;
               const withdrawAmountString = truncateNumber(
                 formatUnits(withdrawAmount, projectTokenDecimals)
               );

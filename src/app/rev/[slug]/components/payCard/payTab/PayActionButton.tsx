@@ -32,11 +32,7 @@ import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { formatUnits, parseUnits } from "viem";
-import {
-  useAccount,
-  usePublicClient,
-  useWriteContract,
-} from "wagmi";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { PayStepper } from "./PayStepper";
 
 const shimmerClasses = `
@@ -76,7 +72,8 @@ export function PayActionButton({
   disabled?: boolean;
 }) {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const { peerChainId: activeChainId, projectId: activeProjectId } = selectedSucker;
+  const { peerChainId: activeChainId, projectId: activeProjectId } =
+    selectedSucker;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -104,22 +101,22 @@ export function PayActionButton({
 
   const amountANum = formatUnits(amountA, paymentToken.decimals);
   const amountBNum = formatUnits(amountB, projectTokenDecimals);
-  const insufficientFunds = (walletBalance.get(paymentToken.address) ?? 0n) < amountA;
-  
-  const minPaymentAmount = paymentToken.isNative ? 
-    parseUnits('0.000001', paymentToken.decimals) :
-    parseUnits('0.0001', paymentToken.decimals);
+  const insufficientFunds =
+    (walletBalance.get(paymentToken.address) ?? 0n) < amountA;
+
+  const minPaymentAmount = paymentToken.isNative
+    ? parseUnits("0.000001", paymentToken.decimals)
+    : parseUnits("0.0001", paymentToken.decimals);
   const lessThanMinPayment = amountA < minPaymentAmount;
 
   // --- 3. DERIVED STATE & MEMOS ---
-  const actionButtonContent = 
-    pending ? 
-      "Processing..." :
-    isApproving ?
-      "Approving..." :
-    currentStep === "success" ?
-      "Success" :
-    "Agree & Buy";
+  const actionButtonContent = pending
+    ? "Processing..."
+    : isApproving
+      ? "Approving..."
+      : currentStep === "success"
+        ? "Success"
+        : "Agree & Buy";
 
   useEffect(() => {
     if (isApproving) {
@@ -144,7 +141,7 @@ export function PayActionButton({
           description: "Required data was ",
         });
         return;
-      };
+      }
 
       setPending(true);
 
@@ -168,21 +165,22 @@ export function PayActionButton({
           value: amountA,
         });
 
-        const result = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        const result = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        });
         if (result.status !== "success") {
           toast({
             variant: "destructive",
             title: "Error",
             description: "Transaction unsuccessful.",
           });
-        };
+        }
 
         toast({
           title: "Success",
           description: `Your contribution of ${formatNumber(amountANum, false)} ${paymentToken.symbol} was successful.`,
         });
         setAgreedToTerms(false);
-
       } else {
         const terminal = await getPaymentTerminal({
           client: publicClient,
@@ -232,14 +230,16 @@ export function PayActionButton({
           value: paymentToken.isNative ? amountA : 0n,
         });
 
-        const result = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        const result = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        });
         if (result.status !== "success") {
           toast({
             variant: "destructive",
             title: "Error",
             description: "Transaction unsuccessful.",
           });
-        };
+        }
 
         toast({
           title: "Success",
@@ -293,11 +293,7 @@ export function PayActionButton({
   }
 
   // State 3: User is connected however has inputted an amount greater than their balance
-  if (
-    walletBalance &&
-    amountA &&
-    insufficientFunds
-  ) {
+  if (walletBalance && amountA && insufficientFunds) {
     return (
       <Button className={twMerge(primaryButtonClasses)} disabled>
         Insufficient Funds
@@ -321,9 +317,7 @@ export function PayActionButton({
       <DialogContent>
         {dialogStage === "terms" || paymentToken.isNative ? (
           <>
-            <DialogTitle>
-              Before you continue...
-            </DialogTitle>
+            <DialogTitle>Before you continue...</DialogTitle>
             <DialogDescription>
               {metadata.data?.payDisclosure
                 ? "Please review and agree to the project's terms before proceeding."
@@ -362,10 +356,12 @@ export function PayActionButton({
             ) : (
               <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-sm">
                 <p>
-                  Paying: {formatNumber(amountANum, false)} {paymentToken.symbol}
+                  Paying: {formatNumber(amountANum, false)}{" "}
+                  {paymentToken.symbol}
                 </p>
                 <p>
-                  Receive: ~{formatNumber(amountBNum, false)} {token.data?.symbol ?? "TOKENS"}
+                  Receive: ~{formatNumber(amountBNum, false)}{" "}
+                  {token.data?.symbol ?? "TOKENS"}
                 </p>
               </div>
             )}
@@ -395,9 +391,7 @@ export function PayActionButton({
           </>
         ) : (
           <>
-            <DialogTitle>
-              Confirm Payment
-            </DialogTitle>
+            <DialogTitle>Confirm Payment</DialogTitle>
             <DialogDescription>
               Sign the following transactions to open a new loan.
             </DialogDescription>

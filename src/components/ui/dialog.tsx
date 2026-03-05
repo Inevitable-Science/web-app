@@ -2,7 +2,11 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { forwardRef, type ComponentPropsWithoutRef, type ElementRef } from "react";
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type ElementRef,
+} from "react";
 import { Button } from "./button";
 import { twMerge } from "tailwind-merge";
 
@@ -16,11 +20,7 @@ const DialogClose = forwardRef<
   React.ElementRef<typeof DialogPrimitive.Close>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close>
 >(({ children, className, ...props }, ref) => (
-  <DialogPrimitive.Close
-    ref={ref}
-    {...props}
-    asChild
-  >
+  <DialogPrimitive.Close ref={ref} {...props} asChild>
     <Button
       className={cn(
         "background-color hover:background-color rounded-md",
@@ -38,15 +38,11 @@ const DialogOverlay = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={cn(
-      "fixed inset-0 z-60 bg-black/50 backdrop-blur-xs",
-      className
-    )}
+    className={cn("fixed inset-0 z-60 bg-black/50 backdrop-blur-xs", className)}
     {...props}
   />
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
-
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
@@ -74,7 +70,10 @@ const DialogHeader = ({
   ...props
 }: ComponentPropsWithoutRef<"div">) => (
   <div
-    className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)}
+    className={cn(
+      "flex flex-col space-y-1.5 text-center sm:text-left",
+      className
+    )}
     {...props}
   />
 );
@@ -85,7 +84,10 @@ const DialogFooter = ({
   ...props
 }: ComponentPropsWithoutRef<"div">) => (
   <div
-    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)}
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
     {...props}
   />
 );
@@ -109,7 +111,7 @@ const DialogDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Description
     ref={ref}
-    className={cn("text-sm text-muted-foreground mt-2", className)}
+    className={cn("text-muted-foreground mt-2 text-sm", className)}
     {...props}
   />
 ));

@@ -1,14 +1,17 @@
-import { getRevnetLoanContract, JBChainId, revDeployerAbi, revLoansAbi, RevnetCoreContracts } from "juice-sdk-core";
+import {
+  getRevnetLoanContract,
+  JBChainId,
+  revDeployerAbi,
+  revLoansAbi,
+  RevnetCoreContracts,
+} from "juice-sdk-core";
 import { useJBContractContext } from "juice-sdk-react";
 import { useReadContract } from "wagmi";
 
 export function useLoanFeeData(activeChainId: JBChainId) {
   const { contractAddress, version } = useJBContractContext();
-  
-  const revLoansContractAddress = getRevnetLoanContract(
-    version,
-    activeChainId
-  );
+
+  const revLoansContractAddress = getRevnetLoanContract(version, activeChainId);
 
   const { data: revDeployerFee } = useReadContract({
     abi: revDeployerAbi,
@@ -35,6 +38,6 @@ export function useLoanFeeData(activeChainId: JBChainId) {
     revLoansContractAddress,
     revDeployerFee,
     resolvedPermissionsAddress,
-    revPrepaidFeePercent
-  }
-};
+    revPrepaidFeePercent,
+  };
+}

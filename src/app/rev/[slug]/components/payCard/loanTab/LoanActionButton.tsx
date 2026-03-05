@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as Sentry from "@sentry/nextjs";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,7 @@ import {
 import { useJBContractContext, useJBTokenContext } from "juice-sdk-react";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
-import {
-  useAccount,
-  usePublicClient,
-  useWriteContract,
-} from "wagmi";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import {
   Dialog,
   DialogContent,
@@ -86,7 +82,8 @@ export function LoanActionButton({
   const { toast } = useToast();
 
   // Sucker Derived Values
-  const { peerChainId: activeChainId, projectId: activeProjectId } = selectedSucker;
+  const { peerChainId: activeChainId, projectId: activeProjectId } =
+    selectedSucker;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
   const baseTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
 
@@ -94,7 +91,7 @@ export function LoanActionButton({
     revLoansContractAddress,
     revDeployerFee,
     resolvedPermissionsAddress,
-    revPrepaidFeePercent
+    revPrepaidFeePercent,
   } = useLoanFeeData(activeChainId);
 
   const userHasPermission = useHasBorrowPermission({
@@ -130,13 +127,15 @@ export function LoanActionButton({
   const prepaidAmount = (prepaidPercent / 100) * loanAmountNum;
   const amountToWallet = loanAmountNum - protocolFees - prepaidAmount;
 
-  const amountToWalletFormatted = amountToWallet < 1 ? 
-    truncateNumber(amountToWallet) :
-    formatNumber(amountToWallet, false);
+  const amountToWalletFormatted =
+    amountToWallet < 1
+      ? truncateNumber(amountToWallet)
+      : formatNumber(amountToWallet, false);
 
   const feeBasisPoints = Math.round(prepaidPercent * 10);
   const collateralBigInt = parseUnits(collateralAmount, projectTokenDecimals);
-  const lessThanMinCollateral = collateralBigInt < parseUnits("0.001", projectTokenDecimals);
+  const lessThanMinCollateral =
+    collateralBigInt < parseUnits("0.001", projectTokenDecimals);
 
   // Chart Vars
   const monthsToPrepay = (prepaidPercent / 50) * 120;
@@ -284,138 +283,128 @@ export function LoanActionButton({
         </Button>
       </DialogTrigger>
 
-        <DialogContent>
-          {dialogStage === "acknowledgement" && (
-            <>
-              <DialogTitle>
-                Before you continue...
-              </DialogTitle>
-              <DialogDescription>
-                Please note the following before proceeding.
-              </DialogDescription>
+      <DialogContent>
+        {dialogStage === "acknowledgement" && (
+          <>
+            <DialogTitle>Before you continue...</DialogTitle>
+            <DialogDescription>
+              Please note the following before proceeding.
+            </DialogDescription>
 
-              <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
-                <ul className="flex list-disc flex-col gap-0.5 pl-2">
-                  <li>
-                    Your {formatNumber(collateralAmount, false)} $
-                    {token.data?.symbol} tokens will be burned as collateral
-                  </li>
-                  <li>You will receive an NFT to reclaim them when repaying</li>
-                  <li>
-                    After 10 years, loan is liquidated and collateral is lost
-                  </li>
-                </ul>
-              </div>
+            <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
+              <ul className="flex list-disc flex-col gap-0.5 pl-2">
+                <li>
+                  Your {formatNumber(collateralAmount, false)} $
+                  {token.data?.symbol} tokens will be burned as collateral
+                </li>
+                <li>You will receive an NFT to reclaim them when repaying</li>
+                <li>
+                  After 10 years, loan is liquidated and collateral is lost
+                </li>
+              </ul>
+            </div>
 
-              <div className="mt-6 flex justify-end space-x-2">
-                <DialogClose className="bg-transparent! hover:underline">
-                  Cancel
-                </DialogClose>
-                <Button
-                  variant={"secondary"}
-                  onClick={() => setDialogStage("feeStructure")}
-                >
-                  Next
-                </Button>
-              </div>
-            </>
-          )}
+            <div className="mt-6 flex justify-end space-x-2">
+              <DialogClose className="bg-transparent! hover:underline">
+                Cancel
+              </DialogClose>
+              <Button
+                variant={"secondary"}
+                onClick={() => setDialogStage("feeStructure")}
+              >
+                Next
+              </Button>
+            </div>
+          </>
+        )}
 
-          {dialogStage === "feeStructure" && (
-            <>
-              <DialogTitle>
-                Confirm Fee Structure
-              </DialogTitle>
-              <DialogDescription>
-                Please confirm the fee structure of the loan.
-              </DialogDescription>
+        {dialogStage === "feeStructure" && (
+          <>
+            <DialogTitle>Confirm Fee Structure</DialogTitle>
+            <DialogDescription>
+              Please confirm the fee structure of the loan.
+            </DialogDescription>
 
-              <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
-                <p>
-                  Collateral Amount: {formatNumber(collateralAmount, false)} $
-                  {token.data?.symbol}
-                </p>
-                <p>
-                  You Receive: {amountToWalletFormatted}{" "}
-                  {baseToken.symbol}
-                </p>
-              </div>
+            <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
+              <p>
+                Collateral Amount: {formatNumber(collateralAmount, false)} $
+                {token.data?.symbol}
+              </p>
+              <p>
+                You Receive: {amountToWalletFormatted} {baseToken.symbol}
+              </p>
+            </div>
 
-              <div className="background-color my-4 overflow-y-auto rounded-xl px-4 py-2 text-xs">
-                <LoanFeeChart
-                  prepaidPercent={prepaidPercent}
-                  setPrepaidPercent={setPrepaidPercent}
-                  feeData={feeData}
-                  grossBorrowedNative={
-                    loanAmount
-                      ? Number(formatUnits(loanAmount, baseToken.decimals))
-                      : 0
-                  }
-                  collateralAmount={collateralAmount}
-                  tokenSymbol={baseToken.symbol}
-                  collateralTokenSymbol={token.data?.symbol}
-                  displayYears={displayYears}
-                  displayMonths={displayMonths}
-                />
-              </div>
-
-              <div className="mt-6 flex justify-end space-x-2">
-                <DialogClose className="bg-transparent! hover:underline">
-                  Cancel
-                </DialogClose>
-                <Button
-                  variant={"secondary"}
-                  onClick={() => setDialogStage("transactions")}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </>
-          )}
-
-          {dialogStage === "transactions" && (
-            <>
-              <DialogTitle>
-                Sign Transactions
-              </DialogTitle>
-              <DialogDescription>
-                Sign the following transactions to open a new loan.
-              </DialogDescription>
-
-              <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
-                <p>
-                  Collateral Amount: {formatNumber(collateralAmount, false)} $
-                  {token.data?.symbol}
-                </p>
-                <p>Prepaid Percent: {prepaidPercent}%</p>
-                <p>
-                  You Receive: {amountToWalletFormatted}{" "}
-                  {baseToken.symbol}
-                </p>
-              </div>
-
-              <LoanStepper
-                currentStep={borrowStatus}
-                userHasPermission={userHasPermission ?? false}
+            <div className="background-color my-4 overflow-y-auto rounded-xl px-4 py-2 text-xs">
+              <LoanFeeChart
+                prepaidPercent={prepaidPercent}
+                setPrepaidPercent={setPrepaidPercent}
+                feeData={feeData}
+                grossBorrowedNative={
+                  loanAmount
+                    ? Number(formatUnits(loanAmount, baseToken.decimals))
+                    : 0
+                }
+                collateralAmount={collateralAmount}
+                tokenSymbol={baseToken.symbol}
+                collateralTokenSymbol={token.data?.symbol}
+                displayYears={displayYears}
+                displayMonths={displayMonths}
               />
+            </div>
 
-              <div className="mt-6 flex justify-end space-x-2">
-                <DialogClose>
-                  Cancel
-                </DialogClose>
-                <ButtonWithWallet
-                  targetChainId={activeChainId}
-                  onClick={handleBorrow}
-                  className={"bg-cerulean hover:bg-cerulean"}
-                  loading={isBorrowing}
-                  disabled={!collateralAmount}
-                >
-                  Open Loan
-                </ButtonWithWallet>
-              </div>
-            </>
-          )}
-        </DialogContent>
+            <div className="mt-6 flex justify-end space-x-2">
+              <DialogClose className="bg-transparent! hover:underline">
+                Cancel
+              </DialogClose>
+              <Button
+                variant={"secondary"}
+                onClick={() => setDialogStage("transactions")}
+              >
+                Confirm
+              </Button>
+            </div>
+          </>
+        )}
+
+        {dialogStage === "transactions" && (
+          <>
+            <DialogTitle>Sign Transactions</DialogTitle>
+            <DialogDescription>
+              Sign the following transactions to open a new loan.
+            </DialogDescription>
+
+            <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
+              <p>
+                Collateral Amount: {formatNumber(collateralAmount, false)} $
+                {token.data?.symbol}
+              </p>
+              <p>Prepaid Percent: {prepaidPercent}%</p>
+              <p>
+                You Receive: {amountToWalletFormatted} {baseToken.symbol}
+              </p>
+            </div>
+
+            <LoanStepper
+              currentStep={borrowStatus}
+              userHasPermission={userHasPermission ?? false}
+            />
+
+            <div className="mt-6 flex justify-end space-x-2">
+              <DialogClose>Cancel</DialogClose>
+              <ButtonWithWallet
+                targetChainId={activeChainId}
+                onClick={handleBorrow}
+                className={"bg-cerulean hover:bg-cerulean"}
+                loading={isBorrowing}
+                disabled={!collateralAmount}
+              >
+                Open Loan
+              </ButtonWithWallet>
+            </div>
+          </>
+        )}
+      </DialogContent>
     </Dialog>
   );
 }

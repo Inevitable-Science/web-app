@@ -10,7 +10,10 @@ export type InfuraPinResponse = {
   Hash: string;
 };
 
-export const pinFile = async (file: File | Blob | string, options?: { signal?: AbortSignal }) => {
+export const pinFile = async (
+  file: File | Blob | string,
+  options?: { signal?: AbortSignal }
+) => {
   const formData = new FormData();
   formData.append("file", file);
 
@@ -91,10 +94,11 @@ export function IpfsImageUploader({
   showMessages?: boolean;
   showPreview?: boolean;
 }) {
-  const { HiddenInput, openFilePicker, isPending, error, data } = useIpfsImageUpload({
-    onUploadSuccess: setCID,
-    disabled,
-  });
+  const { HiddenInput, openFilePicker, isPending, error, data } =
+    useIpfsImageUpload({
+      onUploadSuccess: setCID,
+      disabled,
+    });
 
   const trigger = React.cloneElement(children, {
     onClick: openFilePicker,
@@ -105,8 +109,14 @@ export function IpfsImageUploader({
     <div>
       {HiddenInput}
       {trigger}
-      {showMessages && isPending && <div className="text-sm text-muted-foreground mt-1">Uploading...</div>}
-      {showMessages && error && <div className="text-sm text-red-500 mt-1">Logo upload failed, try again.</div>}
+      {showMessages && isPending && (
+        <div className="text-muted-foreground mt-1 text-sm">Uploading...</div>
+      )}
+      {showMessages && error && (
+        <div className="mt-1 text-sm text-red-500">
+          Logo upload failed, try again.
+        </div>
+      )}
       {showPreview && data && (
         <div className="mt-3 overflow-hidden">
           <Image

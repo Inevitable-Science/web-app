@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { Address } from "viem";
-import {
-  useAccount,
-  usePublicClient,
-  useWriteContract,
-} from "wagmi";
-import {
-  DEFAULT_METADATA,
-  jbMultiTerminalAbi,
-} from "juice-sdk-core";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import { DEFAULT_METADATA, jbMultiTerminalAbi } from "juice-sdk-core";
 import { JBChainId, useJBContractContext } from "juice-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
@@ -40,8 +33,10 @@ export function WithdrawActionButton({
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
-  
+  const {
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
+
   const publicClient = usePublicClient();
   const { address, isConnected, chainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
@@ -63,7 +58,7 @@ export function WithdrawActionButton({
       });
       return;
     }
-    
+
     try {
       setIsLoading(true);
 
@@ -90,7 +85,6 @@ export function WithdrawActionButton({
         title: "Withdraw Successful!",
         description: "You Successfully Withdrew Your Tokens.",
       });
-
     } catch (err) {
       console.log(err);
       toast({
@@ -100,7 +94,7 @@ export function WithdrawActionButton({
       });
     } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   if (!isConnected) {
@@ -119,14 +113,12 @@ export function WithdrawActionButton({
     );
   }
 
-  if (insufficientFunds) return (
-    <Button
-      className={shimmerClasses}
-      disabled
-    >
-      Insufficient Funds
-    </Button>
-  );
+  if (insufficientFunds)
+    return (
+      <Button className={shimmerClasses} disabled>
+        Insufficient Funds
+      </Button>
+    );
 
   return (
     <ButtonWithWallet
@@ -140,10 +132,7 @@ export function WithdrawActionButton({
       onClick={handleWithdraw}
       className={shimmerClasses}
     >
-      {isLoading ? 
-        "Processing..." :
-        "Withdraw"
-      }
+      {isLoading ? "Processing..." : "Withdraw"}
     </ButtonWithWallet>
   );
 }

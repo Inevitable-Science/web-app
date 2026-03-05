@@ -135,7 +135,7 @@ export function Header() {
               />
               <Image
                 src={ipfsUriToGatewayUrl(logoUri)}
-                className="border-background block overflow-hidden rounded-2xl border-4 hidden sm:block"
+                className="border-background block hidden overflow-hidden rounded-2xl border-4 sm:block"
                 alt={"Project Logo"}
                 width={144}
                 height={144}

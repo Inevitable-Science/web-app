@@ -74,39 +74,37 @@ const v4ProjectVars: v4ProjectInterface[] = [
 ];
 
 export default function ClientTable() {
-
   const publicClient = usePublicClient();
   const { address, isConnected } = useAccount();
 
   const [balances, setBalances] = useState<BalanceMap | null>(null);
   const [v4Balances, setV4Balances] = useState<BalanceMap | null>(null);
 
-
   const fetchBalances = async () => {
     try {
-      const contracts = PROJECTS.flatMap(({ tokenAddress, vestingContract }) => {
-        const entries = [
-          {
-            address: tokenAddress,
-            abi: erc20Abi,
-            functionName: "balanceOf" as const,
-            args: [address] as [Address],
-          },
-        ];
-
-        if (vestingContract) {
-          entries.push(
+      const contracts = PROJECTS.flatMap(
+        ({ tokenAddress, vestingContract }) => {
+          const entries = [
             {
-              address: vestingContract,
+              address: tokenAddress,
               abi: erc20Abi,
               functionName: "balanceOf" as const,
               args: [address] as [Address],
             },
-          );
-        }
+          ];
 
-        return entries;
-      });
+          if (vestingContract) {
+            entries.push({
+              address: vestingContract,
+              abi: erc20Abi,
+              functionName: "balanceOf" as const,
+              args: [address] as [Address],
+            });
+          }
+
+          return entries;
+        }
+      );
 
       if (!isConnected || !publicClient) {
         const fallback: BalanceMap = {};
@@ -116,7 +114,7 @@ export default function ClientTable() {
 
         setBalances(fallback);
         return;
-      };
+      }
 
       const result = await publicClient.multicall({ contracts });
 
@@ -129,7 +127,7 @@ export default function ClientTable() {
         const formattedBalance = formatUnits(bal.result, 18);
         const tokenAddress = contracts[index++].address;
         balances[tokenAddress] = formattedBalance;
-      };
+      }
 
       setBalances(balances);
     } catch (err) {
@@ -231,7 +229,6 @@ export default function ClientTable() {
     fetchGraphQLQuery();
   }, [isConnected]);
 
-
   return (
     <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <h3 className="text-xl">Projects</h3>
@@ -255,7 +252,9 @@ export default function ClientTable() {
                 {balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
-                  <span>{formatNumber(balances[project.tokenAddress], true)}</span>
+                  <span>
+                    {formatNumber(balances[project.tokenAddress], true)}
+                  </span>
                 )}
               </div>
 
@@ -266,10 +265,7 @@ export default function ClientTable() {
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? formatNumber(
-                          balances[project.vestingContract],
-                          true
-                        )
+                      ? formatNumber(balances[project.vestingContract], true)
                       : "—"}
                   </span>
                 )}
@@ -300,7 +296,9 @@ export default function ClientTable() {
                 {balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
-                  <span>{formatNumber(balances[project.tokenAddress], true)}</span>
+                  <span>
+                    {formatNumber(balances[project.tokenAddress], true)}
+                  </span>
                 )}
               </div>
 
@@ -311,10 +309,7 @@ export default function ClientTable() {
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? formatNumber(
-                          balances[project.vestingContract],
-                          true
-                        )
+                      ? formatNumber(balances[project.vestingContract], true)
                       : "—"}
                   </span>
                 )}
@@ -346,9 +341,7 @@ export default function ClientTable() {
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(
-                      v4Balances[project.projectID], true
-                    )}
+                    {formatNumber(v4Balances[project.projectID], true)}
                   </span>
                 )}
               </div>
@@ -392,9 +385,7 @@ export default function ClientTable() {
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(
-                      v4Balances[project.projectID], true
-                    )}
+                    {formatNumber(v4Balances[project.projectID], true)}
                   </span>
                 )}
               </div>

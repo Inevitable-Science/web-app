@@ -64,7 +64,8 @@ export function PayTab({
     formatUnits(
       balances.get(selectedToken.address) ?? 0n,
       selectedToken.decimals
-    ));
+    )
+  );
 
   const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
     selectedSucker.peerChainId
@@ -72,7 +73,6 @@ export function PayTab({
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
-
 
   useEffect(() => {
     if (!selectedToken || !amountA) return;
@@ -112,9 +112,7 @@ export function PayTab({
         selectedToken
       );
 
-      setAmountB(
-        truncateNumber(payerTokens)
-      );
+      setAmountB(truncateNumber(payerTokens));
       return;
     }
   };
@@ -124,13 +122,16 @@ export function PayTab({
       setAmountA("0");
       return;
     }
-    
+
     setAmountB(value);
 
     if (!ruleset || !rulesetMetadata) return;
 
     const quote = getTokenBtoAQuote(
-      new FixedInt(parseUnits(value, projectTokenDecimals), projectTokenDecimals),
+      new FixedInt(
+        parseUnits(value, projectTokenDecimals),
+        projectTokenDecimals
+      ),
       projectTokenDecimals,
       {
         weight: ruleset.weight,
@@ -152,9 +153,12 @@ export function PayTab({
     const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
     const newChainTokens = getTokensForChain(chainId, version);
 
-    const token = selectedToken.isNative ?
-      newChainTokens.find((t) => t.isNative) :
-      newChainTokens.find((t) => t.address.toLowerCase() === USDC_ADDRESSES[chainId].toLowerCase())
+    const token = selectedToken.isNative
+      ? newChainTokens.find((t) => t.isNative)
+      : newChainTokens.find(
+          (t) =>
+            t.address.toLowerCase() === USDC_ADDRESSES[chainId].toLowerCase()
+        );
 
     if (newSelectedSucker && token) {
       setSelectedSucker(newSelectedSucker);
@@ -179,7 +183,6 @@ export function PayTab({
   const startDate = allRulesets?.[0]?.start;
   const timeUntilStart = startDate ? startDate - now : 0;
   const hasStarted = timeUntilStart <= 0;
-
 
   return (
     <div className="flex flex-col gap-4">
@@ -215,7 +218,9 @@ export function PayTab({
               ) : (
                 <p className="w-[130px]">
                   Balance:{" "}
-                  {currentTokenBalNum > 0.00001 ? truncateNumber(currentTokenBalNum, true) : '0.00'}
+                  {currentTokenBalNum > 0.00001
+                    ? truncateNumber(currentTokenBalNum, true)
+                    : "0.00"}
                 </p>
               )}
             </div>
@@ -234,7 +239,7 @@ export function PayTab({
               }
             />
           </div>
-          <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full pl-1.5 pr-2 py-1">
+          <div className="bg-grey-450 flex w-fit min-w-fit items-center gap-1 rounded-full py-1 pr-2 pl-1.5">
             <div className="flex items-end">
               <Image
                 src={
@@ -261,7 +266,9 @@ export function PayTab({
                 />
               </div>
             </div>
-            <p className="text-lg font-light">{token.data?.symbol ?? "TOKENS"}</p>
+            <p className="text-lg font-light">
+              {token.data?.symbol ?? "TOKENS"}
+            </p>
           </div>
         </div>
       </div>

@@ -3,10 +3,7 @@ import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
-import {
-  JB_TOKEN_DECIMALS,
-  revLoansAbi
-} from "juice-sdk-core";
+import { JB_TOKEN_DECIMALS, revLoansAbi } from "juice-sdk-core";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
@@ -46,7 +43,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
+  const {
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
   const baseToken = useProjectBaseToken();
   const baseTokenAddress = baseToken.tokenMap[loan.chainId].token;
 
@@ -64,11 +63,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  const {
-    revLoansContractAddress,
-    revDeployerFee,
-    revPrepaidFeePercent
-  } = useLoanFeeData(loanChainId);
+  const { revLoansContractAddress, revDeployerFee, revPrepaidFeePercent } =
+    useLoanFeeData(loanChainId);
 
   const {
     data: currentBorrowableOnSelectedCollateral,
@@ -122,22 +118,23 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       : undefined,
   });
 
-  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } = useReadContract({
-    abi: revLoansAbi,
-    functionName: "borrowableAmountFrom",
-    address: revLoansContractAddress,
-    chainId: loanChainId,
-    args:
-      additionalCollateral && newLoanCollateral > 0n
-        ? [
-            // Use the same project ID as the loan table for consistency
-            BigInt(loan.projectId),
-            newLoanCollateral,
-            BigInt(baseToken.decimals),
-            BigInt(baseToken.currency),
-          ]
-        : undefined,
-  });
+  const { data: newLoanBorrowableAmount, isLoading: isBorrowableAmtLoading } =
+    useReadContract({
+      abi: revLoansAbi,
+      functionName: "borrowableAmountFrom",
+      address: revLoansContractAddress,
+      chainId: loanChainId,
+      args:
+        additionalCollateral && newLoanCollateral > 0n
+          ? [
+              // Use the same project ID as the loan table for consistency
+              BigInt(loan.projectId),
+              newLoanCollateral,
+              BigInt(baseToken.decimals),
+              BigInt(baseToken.currency),
+            ]
+          : undefined,
+    });
 
   const collateralCountToTransfer =
     loan && currentBorrowableOnSelectedCollateral
@@ -154,8 +151,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
     formatUnits(collateralCountToTransfer, projectTokenDecimals)
   );
   const noCollateralToTransfer = collateralToTransfer <= 0;
-  const insufficientBalance = Number(chainBalance) < Number(additionalCollateral);
-
+  const insufficientBalance =
+    Number(chainBalance) < Number(additionalCollateral);
 
   const newLoanFeeData = generateFeeData({
     grossBorrowedEth: newLoanBorrowableAmount
@@ -307,9 +304,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <DialogTitle>
-        Refinance Loan
-      </DialogTitle>
+      <DialogTitle>Refinance Loan</DialogTitle>
 
       {dialogStage === "setCollateral" && (
         <>
@@ -326,7 +321,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 <br />
                 <span className="text-foreground text-md">
                   {truncateNumber(
-                    formatUnits(loan.collateral, projectTokenDecimals), true
+                    formatUnits(loan.collateral, projectTokenDecimals),
+                    true
                   )}{" "}
                   {token.data?.symbol ?? "TOKENS"}
                 </span>
@@ -336,7 +332,8 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 <br />
                 <span className="text-foreground text-md">
                   {formatNumber(
-                    formatUnits(loan.borrowAmount, baseToken.decimals), false
+                    formatUnits(loan.borrowAmount, baseToken.decimals),
+                    false
                   )}{" "}
                   {baseToken.symbol}
                 </span>
@@ -416,10 +413,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                     ? (chainBalanceBigInt / 100n) * BigInt(percent)
                     : 0n;
                   const formattedAmount = truncateNumber(
-                    formatUnits(
-                      amount,
-                      projectTokenDecimals
-                    )
+                    formatUnits(amount, projectTokenDecimals)
                   );
                   setAdditionalCollateral(formattedAmount);
                 }}
@@ -439,8 +433,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </p>*/}
             <p>Borrowing:</p>
             <div className="flex items-center justify-end">
-              {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
-                <div className="activeSkeleton h-[17px] w-[32px] mr-1 rounded-md opacity-30" />
+              {(isBorrowableAmtLoading || isDebouncing) &&
+              Number(additionalCollateral) ? (
+                <div className="activeSkeleton mr-1 h-[17px] w-[32px] rounded-md opacity-30" />
               ) : newLoanBorrowableAmount ? (
                 formatNumber(
                   formatUnits(newLoanBorrowableAmount, baseToken.decimals),
@@ -453,8 +448,9 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
             </div>
             <p>Receive After Fees:</p>
             <div className="flex items-center justify-end">
-              {(isBorrowableAmtLoading || isDebouncing) && Number(additionalCollateral) ? (
-                <div className="activeSkeleton h-[17px] w-[32px] mr-1 rounded-md opacity-30" />
+              {(isBorrowableAmtLoading || isDebouncing) &&
+              Number(additionalCollateral) ? (
+                <div className="activeSkeleton mr-1 h-[17px] w-[32px] rounded-md opacity-30" />
               ) : amountToWallet ? (
                 formatNumber(amountToWallet, false)
               ) : (

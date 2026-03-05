@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next"
+import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   const blockedBots = [
@@ -32,7 +32,7 @@ export default function robots(): MetadataRoute.Robots {
     "k2spider",
     "NPBot",
     "WebReaper",
-  ]
+  ];
 
   return {
     rules: [
@@ -46,5 +46,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: "https://www.inevitable.science/sitemap.xml",
-  }
+  };
 }

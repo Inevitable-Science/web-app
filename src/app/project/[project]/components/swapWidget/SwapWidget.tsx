@@ -21,7 +21,9 @@ export function SwapWidget({ token }: TokenState) {
     width: "100%",
     height: "582px",
     chainId: 1,
-    tokenLists: [`${process.env.NEXT_PUBLIC_CORE_API_URL}/tokenlist.schema.json`],
+    tokenLists: [
+      `${process.env.NEXT_PUBLIC_CORE_API_URL}/tokenlist.schema.json`,
+    ],
     tradeType: TradeType.SWAP,
     sell: { asset: "USDC", amount: "100" },
     buy: { asset: token, amount: "0" },

@@ -20,20 +20,29 @@ interface Props {
 }
 
 export function RelayrPaymentSelect(props: Props) {
-  const { payments, selectedPayment, onSelectPayment, disabled = false } = props;
+  const {
+    payments,
+    selectedPayment,
+    onSelectPayment,
+    disabled = false,
+  } = props;
 
   if (payments && payments.length > 0) {
     return (
       <div>
         {/* TODO: review if this calculation of the gas amount is correct with relayr */}
-        <div className="text-left text-sm mb-1">Pay {formatHexEther(payments[0].amount)} ETH on:</div>
+        <div className="mb-1 text-left text-sm">
+          Pay {formatHexEther(payments[0].amount)} ETH on:
+        </div>
         <div className="max-w-sm">
           <Select
-            onValueChange={(v) => onSelectPayment(payments.find((p) => p.chain === Number(v))!)}
+            onValueChange={(v) =>
+              onSelectPayment(payments.find((p) => p.chain === Number(v))!)
+            }
             value={selectedPayment?.chain.toString()}
             disabled={disabled}
           >
-            <SelectTrigger className="background-color rounded-full border-none p-2 m-0 h-[38px]">
+            <SelectTrigger className="background-color m-0 h-[38px] rounded-full border-none p-2">
               {selectedPayment ? (
                 <div className="flex items-center gap-1.5">
                   <ChainLogo
@@ -49,22 +58,19 @@ export function RelayrPaymentSelect(props: Props) {
             </SelectTrigger>
             <SelectContent className="z-[100]">
               {payments.map((payment) => (
-                  <SelectItem 
-                    className="[&>*:last-child]:flex [&>*:last-child]:w-full [&>*:last-child]:items-center [&>*:last-child]:gap-1.5"
-                    value={payment.chain.toString()} 
-                    key={payment.chain}
-                  >
-                    <ChainLogo
-                      chainId={payment.chain}
-                    />
-                    {JB_CHAINS[payment.chain as JBChainId].name}
-                  </SelectItem>
-                )
-              )}
+                <SelectItem
+                  className="[&>*:last-child]:flex [&>*:last-child]:w-full [&>*:last-child]:items-center [&>*:last-child]:gap-1.5"
+                  value={payment.chain.toString()}
+                  key={payment.chain}
+                >
+                  <ChainLogo chainId={payment.chain} />
+                  {JB_CHAINS[payment.chain as JBChainId].name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
       </div>
     );
-  };
+  }
 }

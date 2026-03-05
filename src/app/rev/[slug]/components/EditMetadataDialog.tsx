@@ -1,6 +1,13 @@
 import { RelayrPaymentSelect } from "@/components/RelayrPaymentSelect";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
@@ -11,21 +18,29 @@ import { formatWalletError } from "@/lib/utils";
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { getPublicClient } from "@wagmi/core";
-import { JBChainId, jbControllerAbi, JBCoreContracts, NATIVE_TOKEN } from "juice-sdk-core";
-import { ChainPayment, RelayrPostBundleResponse, useGetRelayrTxQuote, useJBContractContext, useJBProjectMetadataContext, useSendRelayrTx } from "juice-sdk-react";
+import {
+  JBChainId,
+  jbControllerAbi,
+  JBCoreContracts,
+} from "juice-sdk-core";
+import {
+  ChainPayment,
+  RelayrPostBundleResponse,
+  useGetRelayrTxQuote,
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useSendRelayrTx,
+} from "juice-sdk-react";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { encodeFunctionData } from "viem";
 import { useAccount, useSwitchChain, useWriteContract } from "wagmi";
 
-
-
 export function EditMetadataDialog() {
   const { contractAddress } = useJBContractContext();
   const { metadata: metadataContext } = useJBProjectMetadataContext();
   const suckers = useRevnetDataStore((state) => state.suckers);
-  const baseToken = useProjectBaseToken();
   const metadata = metadataContext.data;
 
   // Wagmi Hooks
@@ -36,7 +51,8 @@ export function EditMetadataDialog() {
 
   const { getRelayrTxQuote, reset: resetRelayr } = useGetRelayrTxQuote();
   const { sendRelayrTx } = useSendRelayrTx();
-  const [relayrQuote, setRelayrQuote] = useState<RelayrPostBundleResponse | null>(null);
+  const [relayrQuote, setRelayrQuote] =
+    useState<RelayrPostBundleResponse | null>(null);
   const [selectedPayment, selectPayment] = useState<ChainPayment | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -67,11 +83,11 @@ export function EditMetadataDialog() {
 
     setLogo(ipfsUriToGatewayUrl(metadata?.logoUri ?? ""));
     setBackdrop(ipfsUriToGatewayUrl(metadata?.coverImageUri ?? ""));
-    
+
     setTwitter(metadata?.twitter ?? "");
-    setTelegram(metadata?.telegram ?? "")
-    setDiscord(metadata?.discord ?? "")
-    setWebsite(metadata?.infoUri ?? "")
+    setTelegram(metadata?.telegram ?? "");
+    setDiscord(metadata?.discord ?? "");
+    setWebsite(metadata?.infoUri ?? "");
   }, [metadataContext]);
 
   const resetQuote = () => {
@@ -90,7 +106,9 @@ export function EditMetadataDialog() {
         name,
         description, // review formatting
         logoUri: newLogoCID ? ipfsUri(newLogoCID) : metadata?.logoUri,
-        coverImageUri: newBackdropCID ? ipfsUri(newBackdropCID) : metadata?.coverImageUri,
+        coverImageUri: newBackdropCID
+          ? ipfsUri(newBackdropCID)
+          : metadata?.coverImageUri,
         twitter,
         telegram,
         discord,
@@ -130,10 +148,15 @@ export function EditMetadataDialog() {
       for (const sucker of suckers) {
         const { peerChainId: chainId, projectId } = sucker;
 
-        const controller = contractAddress(JBCoreContracts.JBController, chainId);
+        const controller = contractAddress(
+          JBCoreContracts.JBController,
+          chainId
+        );
         const args = [BigInt(projectId), metadataUri] as const;
 
-        const gasEstimate = await getPublicClient(wagmiConfig, { chainId }).estimateContractGas({
+        const gasEstimate = await getPublicClient(wagmiConfig, {
+          chainId,
+        }).estimateContractGas({
           address: controller,
           abi: jbControllerAbi,
           functionName: "setUriOf",
@@ -147,7 +170,11 @@ export function EditMetadataDialog() {
             to: controller,
             value: 0n,
             gas: gasEstimate + 50_000n,
-            data: encodeFunctionData({ abi: jbControllerAbi, functionName: "setUriOf", args }),
+            data: encodeFunctionData({
+              abi: jbControllerAbi,
+              functionName: "setUriOf",
+              args,
+            }),
           },
           chainId,
         });
@@ -158,8 +185,8 @@ export function EditMetadataDialog() {
 
       setRelayrQuote(quote);
       selectPayment(
-        quote.payment_info.find(q => q.chain === suckers[0].peerChainId)
-        || quote.payment_info[0]
+        quote.payment_info.find((q) => q.chain === suckers[0].peerChainId) ||
+          quote.payment_info[0]
       );
     } catch (e: any) {
       toast({
@@ -198,19 +225,16 @@ export function EditMetadataDialog() {
     }
   };
 
-
   const valuesHaveChanged =
-  !!metadata &&
-  (
-    name !== (metadata?.name ?? "") ||
-    description !== (metadata?.description ?? "") ||
-    twitter !== (metadata?.twitter ?? "") ||
-    telegram !== (metadata?.telegram ?? "") ||
-    discord !== (metadata?.discord ?? "") ||
-    website !== (metadata?.infoUri ?? "") ||
-    newBackdropCID ||
-    newLogoCID
-  );
+    !!metadata &&
+    (name !== (metadata?.name ?? "") ||
+      description !== (metadata?.description ?? "") ||
+      twitter !== (metadata?.twitter ?? "") ||
+      telegram !== (metadata?.telegram ?? "") ||
+      discord !== (metadata?.discord ?? "") ||
+      website !== (metadata?.infoUri ?? "") ||
+      newBackdropCID ||
+      newLogoCID);
 
   return (
     <Dialog
@@ -218,31 +242,32 @@ export function EditMetadataDialog() {
         resetQuote();
       }}
     >
-      <DialogTrigger>
-        Open Dialog
-      </DialogTrigger>
+      <DialogTrigger>Open Dialog</DialogTrigger>
 
       <DialogContent>
-        <DialogTitle>
-          Edit Metadata
-        </DialogTitle>
+        <DialogTitle>Edit Metadata</DialogTitle>
         <DialogDescription>
           Update the project name, logo, and description.
         </DialogDescription>
 
         <div className="my-3">
-          <IpfsImageUploader setCID={setNewBackdropCID} disabled={!!relayrQuote}>
-            <div className="w-full h-[128px] relative group cursor-pointer">
+          <IpfsImageUploader
+            setCID={setNewBackdropCID}
+            disabled={!!relayrQuote}
+          >
+            <div className="group relative h-[128px] w-full cursor-pointer">
               {backdrop || newBackdropCID ? (
                 <Image
-                  src={newBackdropCID ? ipfsGatewayUrl(newBackdropCID) : backdrop}
+                  src={
+                    newBackdropCID ? ipfsGatewayUrl(newBackdropCID) : backdrop
+                  }
                   alt={"project header image"}
                   className="inset-0 h-full w-full rounded object-cover"
                   width={600}
                   height={400}
                 />
               ) : (
-                <div className="background-color py-8 inset-0 flex h-full w-full items-center justify-center rounded opacity-60">
+                <div className="background-color inset-0 flex h-full w-full items-center justify-center rounded py-8 opacity-60">
                   <Image
                     src="https://cdn.inevitable.science/static/img/branding/logo.svg"
                     alt="placeholder header image"
@@ -253,40 +278,36 @@ export function EditMetadataDialog() {
                 </div>
               )}
 
-              <div className="background-color h-full w-full flex items-center justify-center absolute rounded top-0 transition-all opacity-0 group-hover:opacity-55">
-                <Pencil
-                  height={32}
-                  width={32}
-                />
+              <div className="background-color absolute top-0 flex h-full w-full items-center justify-center rounded opacity-0 transition-all group-hover:opacity-55">
+                <Pencil height={32} width={32} />
               </div>
             </div>
           </IpfsImageUploader>
-          
+
           <IpfsImageUploader setCID={setNewLogoCID} disabled={!!relayrQuote}>
-            <div className="flex items-center justify-center background-color h-[90px] w-[90px] ml-4 -mt-18 relative z-10 rounded-xl p-[3px] shadow cursor-pointer group">
+            <div className="background-color group relative z-10 -mt-18 ml-4 flex h-[90px] w-[90px] cursor-pointer items-center justify-center rounded-xl p-[3px] shadow">
               {logo || newLogoCID ? (
                 <Image
                   src={newLogoCID ? ipfsGatewayUrl(newLogoCID) : logo}
-                  className="border-background w-full h-full block overflow-hidden rounded-lg"
+                  className="border-background block h-full w-full overflow-hidden rounded-lg"
                   alt={"Project Logo"}
                   width={90}
                   height={90}
                 />
               ) : (
                 <Image
-                  src={"https://cdn.inevitable.science/static/img/branding/icon.svg"}
-                  className="border-background h-[50px] w-auto max-w-full max-h-full block overflow-hidden"
+                  src={
+                    "https://cdn.inevitable.science/static/img/branding/icon.svg"
+                  }
+                  className="border-background block h-[50px] max-h-full w-auto max-w-full overflow-hidden"
                   alt={"Project Logo"}
                   width={90}
                   height={90}
                 />
               )}
 
-              <div className="background-color flex items-center justify-center absolute z-20 w-full h-full rounded-xl transition-all group-hover:opacity-55 opacity-0">
-                <Pencil
-                  height={32}
-                  width={32}
-                />
+              <div className="background-color absolute z-20 flex h-full w-full items-center justify-center rounded-xl opacity-0 transition-all group-hover:opacity-55">
+                <Pencil height={32} width={32} />
               </div>
             </div>
           </IpfsImageUploader>
@@ -294,7 +315,7 @@ export function EditMetadataDialog() {
 
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <p className="font-semibold text-sm">Project Name</p>
+            <p className="text-sm font-semibold">Project Name</p>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -303,9 +324,9 @@ export function EditMetadataDialog() {
           </div>
 
           <div className="flex flex-col gap-1">
-            <p className="font-semibold text-sm">Project Description</p>
+            <p className="text-sm font-semibold">Project Description</p>
             <textarea
-              className="resize-none background-color border-color flex h-90 rounded bg-transparent font-light ring-0 placeholder:text-muted-foreground "
+              className="background-color border-color placeholder:text-muted-foreground flex h-90 resize-none rounded bg-transparent font-light ring-0"
               placeholder="..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -313,9 +334,9 @@ export function EditMetadataDialog() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 items-center">
+          <div className="grid grid-cols-2 items-center gap-4">
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-sm">Twitter (X)</p>
+              <p className="text-sm font-semibold">Twitter (X)</p>
               <Input
                 value={twitter}
                 onChange={(e) => setTwitter(e.target.value)}
@@ -325,7 +346,7 @@ export function EditMetadataDialog() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-sm">Telegram</p>
+              <p className="text-sm font-semibold">Telegram</p>
               <Input
                 value={telegram}
                 onChange={(e) => setTelegram(e.target.value)}
@@ -335,9 +356,9 @@ export function EditMetadataDialog() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 items-center">
+          <div className="grid grid-cols-2 items-center gap-4">
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-sm">Discord</p>
+              <p className="text-sm font-semibold">Discord</p>
               <Input
                 value={discord}
                 onChange={(e) => setDiscord(e.target.value)}
@@ -347,7 +368,7 @@ export function EditMetadataDialog() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-sm">Website</p>
+              <p className="text-sm font-semibold">Website</p>
               <Input
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
@@ -358,15 +379,13 @@ export function EditMetadataDialog() {
           </div>
 
           <div className="flex items-center justify-end gap-2">
-            {!relayrQuote && (
-              <DialogClose>
-                Cancel
-              </DialogClose>
-            )}
+            {!relayrQuote && <DialogClose>Cancel</DialogClose>}
             {relayrQuote ? (
               <>
                 <RelayrPaymentSelect
-                  payments={relayrQuote.payment_info.filter(quote => suckers?.some(s => s.peerChainId === quote.chain))}
+                  payments={relayrQuote.payment_info.filter((quote) =>
+                    suckers?.some((s) => s.peerChainId === quote.chain)
+                  )}
                   selectedPayment={selectedPayment}
                   onSelectPayment={selectPayment}
                   disabled={isLoading}
@@ -393,5 +412,5 @@ export function EditMetadataDialog() {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

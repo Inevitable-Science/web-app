@@ -1,11 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  JBChainId,
-  useJBChainId,
-  useJBContractContext
-} from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
 import { useChainId } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
@@ -41,11 +37,7 @@ export function TransactionCard() {
     [peerChainId, version]
   );
 
-  const [activeTab, setActiveTab] = useState<
-    "buy" |
-    "withdraw" |
-    "loan"
-  >(
+  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">(
     "buy"
   );
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
@@ -58,7 +50,7 @@ export function TransactionCard() {
 
     return () => clearInterval(id);
   }, []);
-  
+
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
     if (suckers && !selectedSucker && suckers.length > 0) {
