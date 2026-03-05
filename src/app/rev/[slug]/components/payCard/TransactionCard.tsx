@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
-import { useChainId } from "wagmi";
+import { useAccount } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
@@ -28,7 +28,7 @@ export function TransactionCard() {
   });
 
   const activeChain = useJBChainId();
-  const chainId = useChainId();
+  const { chainId } = useAccount();
   const { version } = useJBContractContext();
 
   const peerChainId = selectedSucker?.peerChainId;

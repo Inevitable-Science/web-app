@@ -7,11 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
   useAccount,
-  useChainId,
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
@@ -34,8 +32,7 @@ export function VestingDetailsDialog({
   children: React.ReactNode;
   schedule: ProcessedSchedule;
 }) {
-  const { address } = useAccount();
-  const userChainId = useChainId();
+  const { address, chainId: userChainId } = useAccount();
   const { toast } = useToast();
   const { writeContractAsync } = useWriteContract();
   const { switchChainAsync } = useSwitchChain();
