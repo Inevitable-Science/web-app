@@ -8,6 +8,7 @@ import { ChartSection } from "./ChartSection";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { LoansTable } from "./components/loanActions/LoansTable";
 import { EditMetadataDialog } from "./components/EditMetadataDialog";
+import { useUserPermissions } from "@/hooks/useUserPermissions";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -52,11 +53,17 @@ export function DescriptionSection() {
   const { metadata } = useJBProjectMetadataContext();
   const { description, name } = metadata?.data ?? {};
 
+  const { hasPermission } = useUserPermissions();
+  const canEditMetadata = hasPermission("SET_PROJECT_URI");
+
+
   return (
     <div className="text-sm">
+      {canEditMetadata && (
+        <EditMetadataDialog />
+      )}
+      
       <LoansTable />
-
-      <EditMetadataDialog />
 
       <ChartSection />
 

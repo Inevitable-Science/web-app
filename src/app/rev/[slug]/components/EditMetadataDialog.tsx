@@ -1,3 +1,4 @@
+"use client";
 import { RelayrPaymentSelect } from "@/components/RelayrPaymentSelect";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { ipfsGatewayUrl, ipfsUri, ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { IpfsImageUploader } from "@/lib/ipfs/ipfsImageUploader";
 import { pinProjectMetadata } from "@/lib/ipfs/pinProjectMetaData";
@@ -70,10 +70,6 @@ export function EditMetadataDialog() {
   const [discord, setDiscord] = useState("");
   const [website, setWebsite] = useState("");
 
-  useEffect(() => {
-    console.log(metadata?.logoUri, "logoUri", newLogoCID, "newLogoCID");
-    console.log(relayrQuote);
-  }, [logo, newLogoCID, relayrQuote]);
 
   useEffect(() => {
     if (name) return;
@@ -98,7 +94,7 @@ export function EditMetadataDialog() {
 
   const handleSubmit = async () => {
     try {
-      if (!address || !suckers) throw new Error("Please connect your wallet");
+      if (!address || !suckers) throw new Error("No address or suckers found");
 
       setIsLoading(true);
 
@@ -242,7 +238,11 @@ export function EditMetadataDialog() {
         resetQuote();
       }}
     >
-      <DialogTrigger>Open Dialog</DialogTrigger>
+      <DialogTrigger asChild>
+        <Button variant={"accent"} className="mb-4">
+          Edit Project Metadata
+        </Button>
+      </DialogTrigger>
 
       <DialogContent>
         <DialogTitle>Edit Metadata</DialogTitle>
