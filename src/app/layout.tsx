@@ -5,6 +5,7 @@ import { AppSpecificProviders } from "./AppSpecificProviders";
 import { geistSans, optima } from "@/components/fonts/fonts";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
+//import Script from "next/script";
 
 export const revalidate = 300;
 
@@ -16,6 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/*<Script // react-scan see react-scan.com
+          src="//unpkg.com/react-scan/dist/auto.global.js"
+          crossOrigin="anonymous"
+          strategy="beforeInteractive"
+        />*/}
         {/* Sitemap required, manifest added automatically, robots.txt assumed */}
         <link rel="alternate" type="application/xml" href="/sitemap.xml" />
         {/* Light theme favicon */}

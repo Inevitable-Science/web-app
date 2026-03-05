@@ -44,6 +44,11 @@ export function TransactionCard() {
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
   useEffect(() => {
+    // only re-render component if the revnet has not started taking 
+    // payments and the start date is <24 hours from initial render
+    // allows for nice countdown effect
+    if (hasStarted || timeUntilStart > 24 * 60 * 60) return;
+
     const id = setInterval(() => {
       setNow(Math.floor(Date.now() / 1000));
     }, 1000);
