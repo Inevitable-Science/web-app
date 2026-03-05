@@ -5,7 +5,7 @@ import {
   ProjectOperatorDocument,
   SuckerGroupDocument,
 } from "@/generated/graphql";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { formatDate, formatNumber } from "@/lib/utils";
 import {
   useJBProjectMetadataContext,
@@ -126,24 +126,20 @@ export function Header() {
         <div className="mx-4">
           {logoUri ? (
             <>
-              <div className="sm:hidden">
-                <Image
-                  src={ipfsUriToGatewayUrl(logoUri)}
-                  className="border-background block overflow-hidden rounded-xl border-[3px]"
-                  alt={"Project Logo"}
-                  width={120}
-                  height={10}
-                />
-              </div>
-              <div className="hidden sm:block">
-                <Image
-                  src={ipfsUriToGatewayUrl(logoUri)}
-                  className="border-background block overflow-hidden rounded-2xl border-4"
-                  alt={"Project Logo"}
-                  width={144}
-                  height={144}
-                />
-              </div>
+              <Image
+                src={ipfsUriToGatewayUrl(logoUri)}
+                className="border-background block overflow-hidden rounded-xl border-[3px] sm:hidden"
+                alt={"Project Logo"}
+                width={120}
+                height={120}
+              />
+              <Image
+                src={ipfsUriToGatewayUrl(logoUri)}
+                className="border-background block overflow-hidden rounded-2xl border-4 hidden sm:block"
+                alt={"Project Logo"}
+                width={144}
+                height={144}
+              />
             </>
           ) : (
             <div className="flex h-36 w-36 items-center justify-center rounded bg-(--card)">

@@ -7,6 +7,7 @@ import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { LoansTable } from "./components/loanActions/LoansTable";
+import { EditMetadataDialog } from "./components/EditMetadataDialog";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -55,6 +56,8 @@ export function DescriptionSection() {
     <div className="text-sm">
       <LoansTable />
 
+      <EditMetadataDialog />
+
       <ChartSection />
 
       <DaoData />
@@ -63,7 +66,7 @@ export function DescriptionSection() {
         <RichPreview source={description || name || "..."} />
       </div>
 
-      <SocialLinks {...metadata} />
+      <SocialLinks />
     </div>
   );
 }

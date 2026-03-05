@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   getRevnetLoanContract,

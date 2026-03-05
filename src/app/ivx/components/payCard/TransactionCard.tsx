@@ -19,7 +19,7 @@ import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
 
 import { formatNumber, truncateNumber } from "@/lib/utils";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";

@@ -1,25 +1,25 @@
-import { JBProjectMetadata } from "juice-sdk-core";
-import { AsyncData } from "juice-sdk-react/dist/contexts/types";
+import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { Globe } from "lucide-react";
 import Image from "next/image";
 
-export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
-  const dataHolder = data?.data;
+export function SocialLinks() {
+  const { metadata: metadataContext } = useJBProjectMetadataContext();
+  const metadata = metadataContext.data;
 
   // Ensure the discord link has a protocol
-  const discordLink = dataHolder?.discord
-    ? dataHolder.discord.startsWith("http")
-      ? dataHolder.discord
-      : `https://${dataHolder.discord}`
+  const discordLink = metadata?.discord
+    ? metadata.discord.startsWith("http")
+      ? metadata.discord
+      : `https://${metadata.discord}`
     : "";
 
-  const websiteUrl = dataHolder?.infoUri
-    ? dataHolder.infoUri.startsWith("http")
-      ? dataHolder.infoUri
-      : `https://${dataHolder.infoUri}`
+  const websiteUrl = metadata?.infoUri
+    ? metadata.infoUri.startsWith("http")
+      ? metadata.infoUri
+      : `https://${metadata.infoUri}`
     : "";
 
-  if (!websiteUrl && !discordLink && !dataHolder?.twitter) return;
+  if (!websiteUrl && !discordLink && !metadata?.twitter) return;
 
   return (
     <div className="bg-grey-450 mt-6 flex flex-col gap-2 rounded-2xl p-[12px]">
@@ -52,10 +52,10 @@ export function SocialLinks(data: AsyncData<JBProjectMetadata>) {
         </a>
       )}
 
-      {dataHolder?.twitter && (
+      {metadata?.twitter && (
         <a
           className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-          href={`https://x.com/${dataHolder.twitter}`}
+          href={`https://x.com/${metadata.twitter}`}
           target="_blank"
           rel="noopener noreferrer"
         >

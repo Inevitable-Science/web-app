@@ -1,7 +1,7 @@
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   JB_TOKEN_DECIMALS,

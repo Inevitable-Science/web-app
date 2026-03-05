@@ -18,7 +18,7 @@ import {
 import { formatNumber, truncateNumber } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { getTokensForChain, Token } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
