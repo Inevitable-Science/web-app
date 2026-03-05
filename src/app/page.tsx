@@ -60,8 +60,8 @@ export default function Page() {
       <div className="relative h-[500px] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
         {/* Fallback Image - optimal for slower networks */}
         <img
-          src="https://cdn.inevitable.science/static/img/layout/home_hero_main.webp"
-          alt=""
+          src="https://cdn.inevitable.science/static/img/layout/vid_first_frame.webp"
+          alt="Landing Video"
           className="h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
         />
 
