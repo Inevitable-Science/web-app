@@ -8,6 +8,7 @@ import { useAccount, usePublicClient } from "wagmi";
 import { Address, erc20Abi, formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
+import { getViemPublicClient } from "@/lib/wagmiConfig";
 
 type BalanceMap = Record<string, string>;
 
@@ -74,7 +75,7 @@ const v4ProjectVars: v4ProjectInterface[] = [
 ];
 
 export default function ClientTable() {
-  const publicClient = usePublicClient();
+  const client = getViemPublicClient(1);  // default to mainnet
   const { address, isConnected } = useAccount();
 
   const [balances, setBalances] = useState<BalanceMap | null>(null);
@@ -106,7 +107,7 @@ export default function ClientTable() {
         }
       );
 
-      if (!isConnected || !publicClient) {
+      if (!isConnected) {
         const fallback: BalanceMap = {};
         for (const c of contracts) {
           fallback[c.address] = "0";
@@ -116,7 +117,7 @@ export default function ClientTable() {
         return;
       }
 
-      const result = await publicClient.multicall({ contracts });
+      const result = await client.multicall({ contracts });
 
       const balances: BalanceMap = {};
       let index = 0;
