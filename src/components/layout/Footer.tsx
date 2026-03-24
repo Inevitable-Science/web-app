@@ -76,7 +76,7 @@ export default function Footer() {
 
           <div className="flex items-center gap-4">
             <Link
-              href="/legal/privacy"
+              href="/whitepaper"
               aria-label="Privacy Policy"
               className="hover:underline"
             >
