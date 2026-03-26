@@ -3,14 +3,14 @@ import Link from "next/link";
 import { formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
-import { fetchSuckerGroupVol } from "@/lib/helpers/getSuckerGroupVol";
+import { fetchSuckerGroupData } from "@/lib/helpers/getSuckerGroupData";
 
 export const revalidate = 900;
 
 export default async function AuctionComponent() {
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
   const chainId = 1;
-  const suckerGroupVol = await fetchSuckerGroupVol(suckerGroupId, chainId);
+  const suckerGroupData = await fetchSuckerGroupData(suckerGroupId, chainId);
 
   return (
     <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
@@ -46,6 +46,8 @@ export default async function AuctionComponent() {
           </Link>
         </div>
 
+        {/* TODO - archive
+        
         <div className="flex items-center justify-between rounded-2xl bg-[#1F1F1F] p-[12px]">
           <div className="ml-2 flex flex-col gap-4">
             <div className="flex items-center gap-2 md:gap-4">
@@ -86,6 +88,33 @@ export default async function AuctionComponent() {
               <h5>RAISED</h5>
             </div>
           </div>
+        </div>*/}
+
+        <div className="grid gap-3 items-center h-[112px] grid-cols-2 rounded-2xl bg-grey-450 p-[12px] sm:h-[120px]">
+            <div className="flex flex-col items-center justify-center h-full text-center rounded-2xl bg-gunmetal">
+              <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
+                {suckerGroupData?.decimals === 18 ? "Ξ" : "$"}
+                {suckerGroupData
+                  ? Number(
+                      formatNumber(
+                        formatUnits(
+                          suckerGroupData.volume,
+                          suckerGroupData.decimals
+                        ),
+                        true
+                      )
+                    ).toFixed(2)
+                  : "—"}
+              </h4>
+              <h5>RAISED</h5>
+          </div>
+
+            <div className="flex flex-col items-center justify-center h-full text-center rounded-2xl bg-gunmetal">
+              <h4 className="flex items-center text-xl font-semibold sm:text-3xl">
+                {suckerGroupData && formatNumber(suckerGroupData.paymentsCount)}
+              </h4>
+              <h5>PAYMENTS</h5>
+            </div>
         </div>
       </div>
     </section>

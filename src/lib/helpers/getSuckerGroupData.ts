@@ -7,15 +7,16 @@ import {
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 import { JBChainId } from "juice-sdk-core";
 
-interface FetchSuckerGroupVolResponse {
+interface FetchSuckerGroupData {
   volume: bigint;
   decimals: number;
+  paymentsCount: number | null;
 }
 
-export async function fetchSuckerGroupVol(
+export async function fetchSuckerGroupData(
   suckerGroupId: string,
   chainId: JBChainId
-): Promise<FetchSuckerGroupVolResponse | null> {
+): Promise<FetchSuckerGroupData | null> {
   try {
     const client = getBendystrawClient(chainId);
     const result = await client.request<
@@ -30,6 +31,7 @@ export async function fetchSuckerGroupVol(
     return {
       volume: volume as bigint,
       decimals: decimals,
+      paymentsCount: result.suckerGroup?.paymentsCount ?? null,
     };
   } catch (err) {
     Sentry.captureException(err);
