@@ -1,5 +1,6 @@
+import { Analytics } from "@vercel/analytics/next"
 import { Nav } from "@/components/layout/Nav";
-import Footer from "@/components/layout/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { AppSpecificProviders } from "./AppSpecificProviders";
 import { geistSans, optima } from "@/components/fonts/fonts";
@@ -50,6 +51,7 @@ export default function RootLayout({
           <Footer />
         </AppSpecificProviders>
 
+        <Analytics />
         <Toaster />
       </body>
     </html>
