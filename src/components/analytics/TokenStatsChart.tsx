@@ -213,9 +213,8 @@ export function TokenStatsChart({ tokenTicker }: { tokenTicker: string }) {
           </Button>
           <Button
             variant={"graphRounded"}
-            className={`${chartType === "holders" && "bg-white! text-black!"}`}
-            onClick={() => setTimeRange("max")}
-            disabled={chartType === "holders" || timeRange === "max"}
+            className={`${chartType === "holders" && "bg-white! text-black!"} disabled:bg-transparent`}
+            disabled
           >
             MAX
           </Button>

@@ -216,13 +216,13 @@ export function TokenChart({ tokenTicker }: { tokenTicker: string }) {
           >
             1y
           </Button>
-          <Button
+          {/*<Button
             variant={"graphRounded"}
             onClick={() => setTimeRange("max")}
             disabled={timeRange === "max" || (timeRange === "1" && isLoading)}
           >
             MAX
-          </Button>
+          </Button>*/}
         </div>
       </div>
 

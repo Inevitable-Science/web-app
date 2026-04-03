@@ -5,7 +5,7 @@ export interface PriceData {
   prices: LineData<Time>[];
 }
 
-export type MarketChartRangeType = "1" | "7" | "30" | "365" | "max";
+export type MarketChartRangeType = "1" | "7" | "30" | "365"; //| "max";
 
 export const fetchMarketChartData = async (
   tokenName: string,
