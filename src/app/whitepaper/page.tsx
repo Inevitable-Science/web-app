@@ -54,13 +54,13 @@ export default function WhitePaperPage() {
 
       <a
         className="flex items-center my-8 gap-2 cursor-pointer text-lg transition-all hover:text-primary hover:underline"
-        href="/assets/inevitable_whitepaper_Q1-2026.pdf"
+        href="/assets/inevitable_whitepaper.pdf"
         download
       >
         <span>
           Download{" "}
           <span className="text-primary">
-            inevitable_whitepaper_Q1-2026.pdf
+            inevitable_whitepaper.pdf
           </span>
         </span>
         <Download
@@ -71,7 +71,7 @@ export default function WhitePaperPage() {
 
       <div className="w-full h-screen max-h-[2400px] max-w-[] rounded-lg">
         <iframe
-          src="/assets/inevitable_whitepaper_Q1-2026.pdf"
+          src="/assets/inevitable_whitepaper.pdf"
           className="rounded-md"
           title="Inevitable Whitepaper"
           height="100%"
