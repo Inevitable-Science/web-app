@@ -68,6 +68,7 @@ export default function Page() {
         {/* Background Video */}
         <video
           className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
+          preload="auto"
           autoPlay
           loop
           muted
@@ -85,10 +86,10 @@ export default function Page() {
             <h1 className="font-optima text-center text-6xl sm:text-left">
               DeSci is Inevitable.
             </h1>
-            <h4 className="text-center text-2xl font-extralight sm:text-left sm:text-3xl">
+            <p className="text-center text-2xl font-extralight sm:text-left sm:text-3xl">
               We’re building the critical infrastructure to fund technological
               breakthroughs.
-            </h4>
+            </p>
 
             <ExploreButton />
           </div>

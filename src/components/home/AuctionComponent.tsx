@@ -90,8 +90,8 @@ export default async function AuctionComponent() {
           </div>
         </div>*/}
 
-        <div className="grid gap-3 items-center h-[112px] grid-cols-2 rounded-2xl bg-grey-450 p-[12px] sm:h-[120px]">
-            <div className="flex flex-col items-center justify-center h-full text-center rounded-2xl bg-gunmetal">
+        <div className="grid gap-3 items-center grid-cols-1 sm:grid-cols-2 rounded-2xl bg-grey-450 p-[12px] sm:h-[120px]">
+            <div className="flex flex-col items-center justify-center h-full py-1.5 text-center rounded-2xl bg-gunmetal">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
                 {suckerGroupData?.decimals === 18 ? "Ξ" : "$"}
                 {suckerGroupData
@@ -109,7 +109,7 @@ export default async function AuctionComponent() {
               <h5>RAISED</h5>
           </div>
 
-            <div className="flex flex-col items-center justify-center h-full text-center rounded-2xl bg-gunmetal">
+            <div className="flex flex-col items-center justify-center h-full py-1.5 text-center rounded-2xl bg-gunmetal">
               <h4 className="flex items-center text-xl font-semibold sm:text-3xl">
                 {suckerGroupData && formatNumber(suckerGroupData.paymentsCount)}
               </h4>
