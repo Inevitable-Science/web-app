@@ -174,3 +174,12 @@ export const LegacyActivityResponseZ = z.object({
 });
 
 export type ActivityResponse = z.infer<typeof LegacyActivityResponseZ>;
+
+export const TokenPriceResponseZ = z.array(
+  z.object({
+    token: z.string(),
+    price: z.number()
+  })
+);
+
+export type TokenPriceResponse = z.infer<typeof TokenPriceResponseZ>;

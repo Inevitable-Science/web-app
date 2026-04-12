@@ -104,7 +104,7 @@ export function formatNumber(
   const num = passedNum != null ? Number(passedNum) : null;
   if (num === null || isNaN(num)) return "--";
 
-  if (num === 0) return "0";
+  if (num === 0 || num < 0.00001) return "0";
 
   if (compact === false) {
     if (num < 1) {

@@ -9,6 +9,7 @@ import { Address, erc20Abi, formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
+import { useFetchTokenPrices } from "@/hooks/queries/useFetchTokenPrices";
 
 type BalanceMap = Record<string, string>;
 
@@ -75,6 +76,8 @@ const v4ProjectVars: v4ProjectInterface[] = [
 ];
 
 export default function ClientTable() {
+  const { data: tokenPriceData, isLoading: isTokenPriceLoading } = useFetchTokenPrices(PROJECTS.map(p => p.href));
+
   const client = getViemPublicClient(1);  // default to mainnet
   const { address, isConnected } = useAccount();
 
@@ -235,7 +238,10 @@ export default function ClientTable() {
       <h3 className="text-xl">Projects</h3>
 
       <div className="background-color rounded-xl p-[8px] font-light">
-        {PROJECTS.map((project, index) => (
+        {PROJECTS.map((project, index) => {
+          const tokenPrice = tokenPriceData?.find(t => t.token === project.href)?.price;
+
+          return (
           <div key={index} className="border-grey-500 border-b">
             <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
               <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
@@ -273,11 +279,25 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>
+                $
+                {isTokenPriceLoading ?
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
+                  tokenPrice ? 
+                    formatNumber(tokenPrice) :
+                    "0"
+                }
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>
+                $
+                {isTokenPriceLoading || balances === null ?
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
+                  tokenPrice && balances ? 
+                    formatNumber(tokenPrice * Number(balances[project.tokenAddress])) :
+                    "0"
+                }
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
@@ -321,7 +341,8 @@ export default function ClientTable() {
               </div>
             </div>
           </div>
-        ))}
+          )
+        })}
 
         {v4ProjectVars.map((project, index) => (
           <div key={index} className="border-grey-500 border-b">
@@ -361,11 +382,13 @@ export default function ClientTable() {
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>
+                $0
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>
+                $0
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
