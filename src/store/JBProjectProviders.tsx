@@ -3,7 +3,6 @@
 "use client";
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs/ipfs";
 import { JBProjectProvider, JBChainId, JBVersion } from "juice-sdk-react";
-import { BendystrawConfig } from "juice-sdk-react/dist/lib/bendystraw/getBendystrawUrl";
 import { notFound } from "next/navigation";
 
 export function JBProjectProviderRoot({
@@ -32,7 +31,7 @@ export function JBProjectProviderRoot({
       chainId={chainId}
       projectId={projectId}
       version={version}
-      bendystraw={bendystrawProvider as BendystrawConfig}
+      bendystraw={bendystrawProvider}
       ctxProps={{
         metadata: { ipfsGatewayHostname: OPEN_IPFS_GATEWAY_HOSTNAME },
       }}
