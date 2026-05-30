@@ -39,7 +39,7 @@ export function Nav() {
 
   // Close menu on route change
   useEffect(() => {
-    setIsMenuOpen(false);
+    if (isMenuOpen) setIsMenuOpen(false);
   }, [pathname]);
 
   // Manage body scrolling and viewport width changes

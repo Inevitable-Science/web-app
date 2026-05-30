@@ -22,7 +22,6 @@ import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import {
   TokenResponse,
-  DaoResponse,
   TreasuryResponse,
 } from "@/lib/types/AnalyticTypes";
 import { createStore, StoreApi, useStore } from "zustand";
@@ -81,7 +80,7 @@ export const RevnetDataProvider = ({
   slug,
 }: ContextPropType) => {
   // Foundational Hooks
-  const { data: suckers, isLoading: areSuckersLoading } = useSuckers();
+  const { data: suckers } = useSuckers();
   const { ruleset, rulesetMetadata } = useJBRulesetContext();
 
   const chainId = useJBChainId();
@@ -93,7 +92,7 @@ export const RevnetDataProvider = ({
     [loadTimestamp]
   );
 
-  const { dailyTotals, isLoading: isVolumeLoading } = useVolumeData({
+  const { dailyTotals } = useVolumeData({
     suckerGroupId: projectData.suckerGroupId,
     startTimestamp: twoWeeksAgo,
     endTimestamp: loadTimestamp,
