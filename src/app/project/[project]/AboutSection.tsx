@@ -58,7 +58,7 @@ export function AboutSection() {
         {daoData?.socials.site && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={daoData?.socials.site}
+            href={daoData.socials.site}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -70,7 +70,7 @@ export function AboutSection() {
         {daoData?.socials.discord && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={daoData?.socials.discord}
+            href={daoData.socials.discord}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -84,10 +84,10 @@ export function AboutSection() {
           </a>
         )}
 
-        {daoData?.socials.discord && (
+        {daoData?.socials.x && (
           <a
             className="background-color flex items-center gap-2 rounded-2xl p-[16px]"
-            href={`https://x.com/${daoData?.socials.x}`}
+            href={`https://x.com/${daoData.socials.x}`}
             target="_blank"
             rel="noopener noreferrer"
           >

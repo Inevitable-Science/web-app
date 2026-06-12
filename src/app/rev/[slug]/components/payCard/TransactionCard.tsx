@@ -23,6 +23,7 @@ export function TransactionCard() {
   );
 
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
@@ -74,9 +75,19 @@ export function TransactionCard() {
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
+  const isIssuingTokens = useMemo(() => {
+    const weight = ruleset?.weight;
+    return Boolean(weight && weight.value > 0n)
+  }, [ruleset?.weight])
+
+  console.log(isIssuingTokens, "IS ISSUING TOKENS");
+
   const startDate = allRulesets?.[0]?.start;
   const timeUntilStart = startDate ? startDate - now : 0;
   const hasStarted = timeUntilStart <= 0;
+
+  const showDepreciationNotice = version === 5;
+  const showHasNotStartedBanner = !hasStarted && startDate;
 
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
@@ -84,15 +95,23 @@ export function TransactionCard() {
 
   return (
     <div className="flex w-full flex-col rounded-xl">
-      {!hasStarted && startDate && (
+      {showHasNotStartedBanner && (
         <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
           <p className="text-sm font-light">
             Token Sale Starts in: {formatSeconds(timeUntilStart)}
           </p>
         </div>
+      )} 
+
+      {showDepreciationNotice && hasStarted && (
+       <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+          <p className="text-sm font-light">
+            Revnets v5 is depreciated
+          </p>
+        </div> 
       )}
       <div
-        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${!hasStarted && startDate && "-mt-4"}`}
+        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${showHasNotStartedBanner || showDepreciationNotice && "-mt-4"}`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center">
