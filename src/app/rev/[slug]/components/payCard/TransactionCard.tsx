@@ -86,8 +86,11 @@ export function TransactionCard() {
   const timeUntilStart = startDate ? startDate - now : 0;
   const hasStarted = timeUntilStart <= 0;
 
-  const showDepreciationNotice = version === 5;
+  // Logic to show payment notices
+  const showDepreciationNotice = version === 4 || version === 5;
   const showHasNotStartedBanner = !hasStarted && startDate;
+  const paymentsPaused = rulesetMetadata?.pausePay && !showHasNotStartedBanner;
+  
 
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
@@ -95,23 +98,48 @@ export function TransactionCard() {
 
   return (
     <div className="flex w-full flex-col rounded-xl">
-      {showHasNotStartedBanner && (
-        <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+      {(showHasNotStartedBanner || paymentsPaused) && showDepreciationNotice ? (
+        <>
+          <div className="bg-cerulean flex rounded-t-xl px-4 py-2">
+            <p className="text-sm font-light">
+              Revnets v{version} is depreciated
+            </p>
+          </div>
+          <div className="bg-cerulean w-full">
+            <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+              <p className="text-sm font-light">
+                {
+                showHasNotStartedBanner 
+                  ? `Token Sale Starts in: ${formatSeconds(timeUntilStart)}`
+                  : paymentsPaused
+                  && "Payments are currently paused"
+                }
+              </p>
+            </div> 
+          </div>
+        </>
+      ) : (showHasNotStartedBanner || paymentsPaused || showDepreciationNotice) && (
+        <div
+          className={`flex rounded-t-xl px-4 pt-2 pb-6 
+          ${showDepreciationNotice 
+            ? "bg-cerulean" 
+            : "bg-orange-900"
+          }`}
+        >
           <p className="text-sm font-light">
-            Token Sale Starts in: {formatSeconds(timeUntilStart)}
+            {showHasNotStartedBanner 
+              ? `Token Sale Starts in: ${formatSeconds(timeUntilStart)}`
+              : paymentsPaused
+              ? "Payments are currently paused"
+              : showDepreciationNotice
+              && `Revnets v${version} is depreciated`
+            }
           </p>
         </div>
-      )} 
-
-      {showDepreciationNotice && hasStarted && (
-       <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
-          <p className="text-sm font-light">
-            Revnets v5 is depreciated
-          </p>
-        </div> 
       )}
+      
       <div
-        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${showHasNotStartedBanner || showDepreciationNotice && "-mt-4"}`}
+        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${(showHasNotStartedBanner || showDepreciationNotice || paymentsPaused) && "-mt-4"}`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center">

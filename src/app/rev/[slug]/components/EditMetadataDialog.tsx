@@ -239,7 +239,7 @@ export function EditMetadataDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant={"accent"} className="mb-4">
+        <Button variant={"accent"}>
           Edit Project Metadata
         </Button>
       </DialogTrigger>
@@ -377,28 +377,29 @@ export function EditMetadataDialog() {
               />
             </div>
           </div>
-
-          <div className="flex items-center justify-end gap-2">
-            {!relayrQuote && <DialogClose>Cancel</DialogClose>}
-            {relayrQuote ? (
-              <>
-                <RelayrPaymentSelect
-                  payments={relayrQuote.payment_info.filter((quote) =>
-                    suckers?.some((s) => s.peerChainId === quote.chain)
-                  )}
-                  selectedPayment={selectedPayment}
-                  onSelectPayment={selectPayment}
-                  disabled={isLoading}
-                />
-                <Button
-                  className="bg-cerulean! min-w-30"
-                  onClick={handlePayAndSubmit}
-                  loading={isLoading}
-                >
-                  Pay and submit
-                </Button>
-              </>
-            ) : (
+          
+          {/* TODO: Make this select dropdown look better */}
+          {relayrQuote ? (
+            <div className="flex items-center justify-end gap-4">
+              <RelayrPaymentSelect
+                payments={relayrQuote.payment_info.filter((quote) =>
+                  suckers?.some((s) => s.peerChainId === quote.chain)
+                )}
+                selectedPayment={selectedPayment}
+                onSelectPayment={selectPayment}
+                disabled={isLoading}
+              />
+              <Button
+                className="bg-cerulean! min-w-30"
+                onClick={handlePayAndSubmit}
+                loading={isLoading}
+              >
+                Pay and submit
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-end gap-2">
+              <DialogClose>Cancel</DialogClose>
               <Button
                 className="bg-cerulean! min-w-30"
                 onClick={handleSubmit}
@@ -407,8 +408,8 @@ export function EditMetadataDialog() {
               >
                 {suckers?.length === 1 ? "Pay" : "Get Quote"}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

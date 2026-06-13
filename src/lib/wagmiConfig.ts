@@ -109,9 +109,9 @@ export const wagmiConfig = createConfig({
       projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
       showQrModal: false,
       metadata: {
-        name: "Inevitable Sciences",
+        name: "Inevitable Science",
         description: "Fund radical science.",
-        url: "https://app.inevitable.science",
+        url: "https://inevitable.science",
         icons: ["https://inevitable.science/assets/img/branding/icon.svg"],
       },
     }),
@@ -201,7 +201,7 @@ export const wagmiConfig = createConfig({
       projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
       showQrModal: false,
       metadata: {
-        name: "Inevitable Sciences",
+        name: "Inevitable Science",
         description: "Fund radical science.",
         url: isProduction
           ? "https://inevitable.science"

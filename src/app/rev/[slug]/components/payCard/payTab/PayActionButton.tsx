@@ -71,9 +71,10 @@ export function PayActionButton({
   hasStarted: boolean;
   disabled?: boolean;
 }) {
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);     
+  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker); 
   const { peerChainId: activeChainId, projectId: activeProjectId } =
-    selectedSucker;
+    selectedSucker; 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -92,6 +93,7 @@ export function PayActionButton({
 
   const baseToken = useProjectBaseToken();
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
+  const paymentsPaused = rulesetMetadata?.pausePay;
 
   const publicClient = usePublicClient();
   const { address, isConnected } = useAccount();
@@ -264,6 +266,16 @@ export function PayActionButton({
         Payments Haven't Started Yet
       </Button>
     );
+  }
+
+  if (paymentsPaused) {
+    return (
+      <Button
+        className={`${primaryButtonClasses} hover:bg-cerulean cursor-not-allowed opacity-50 hover:text-white`}
+      >
+        Payments Are Currently Paused
+      </Button>
+    )
   }
 
   // State 1: User is not connected
