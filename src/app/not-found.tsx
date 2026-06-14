@@ -1,50 +1,10 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata";
+import { notFoundMetadata } from "@/lib/metadata";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
-
-  const fullPath = "/";
-  const url = new URL(fullPath, origin);
-
-  return {
-    title: "Page Not Found | Inevitable Science",
-    description: metadata.description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Page Not Found | Inevitable Science",
-      description: metadata.description,
-      siteName: metadata.siteName,
-      images: [
-        {
-          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-          width: 700,
-          height: 370,
-          alt: "Inevitable preview image",
-        },
-      ],
-      url: url,
-      type: "website",
-    },
-    twitter: {
-      title: "Page Not Found | Inevitable Science",
-      description: metadata.description,
-      card: "summary_large_image",
-      images: [
-        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-      ],
-    },
-  };
-}
+export const metadata: Metadata = notFoundMetadata;
 
 export default function NotFound() {
   return (

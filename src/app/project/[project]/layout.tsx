@@ -3,7 +3,6 @@ import { LegacyProjectProvider } from "@/store/LegacyProjectContext";
 import { headers } from "next/headers";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { metadata } from "@/lib/metadata";
 import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
 import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
 import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
@@ -12,39 +11,48 @@ import { TabSelectorLG, TabSelectorSM } from "./components/TabSelector";
 import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 import { SwapWidgetWrapper } from "./components/swapWidget/SwapWidgetWrapper";
 import { VestingInitialiser } from "./VestingProvider";
-
-interface Props {
-  children: React.ReactNode;
-  params: Promise<{
-    project: string;
-  }>;
-}
+import { ReactNode } from "react";
+import { metadata, notFoundMetadata } from "@/lib/metadata";
 
 export const revalidate = 900; // Revalidate every 15 minutes
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params;
-  const projectName = params.project;
+export function truncateDescription(s: string): string {
+  if (!s?.trim()) return "";
+  
+  const words = s.trim().split(/\s+/); // handles all whitespace
+  if (words.length <= 25) return s.trim();
+  
+  return `${words.slice(0, 25).join(" ")}...`;
+};
+
+export async function generateMetadata({ params }: {
+  params: Promise<{ project: string }>
+}): Promise<Metadata> {
+  const { project } = await params;
 
   const headersList = await headers();
   const host = headersList.get("host");
   const proto = headersList.get("x-forwarded-proto") || "http";
   const origin = `${proto}://${host}`;
 
-  const fullPath = `/project/${params.project}`;
+  const fullPath = `/project/${project}`;
   const url = new URL(fullPath, origin);
 
-  const daoData = await fetchDaoData(projectName);
-  if (!daoData) return notFound();
+  const daoData = await fetchDaoData(project);
+  if (!daoData) return notFoundMetadata;
+
+  const pageDescription = daoData.description 
+    ? truncateDescription(daoData.description)
+    : metadata.description;
 
   return {
     title: `${daoData.name} | Inevitable Science`,
-    description: daoData.description,
+    description: pageDescription,
     alternates: { canonical: url },
     openGraph: {
       title: `${daoData.name} | Inevitable Science`,
-      description: daoData.description,
-      siteName: "Inevitable Science",
+      description: pageDescription,
+      siteName: metadata.siteName,
       images: [
         {
           url: daoData.logo,
@@ -58,24 +66,26 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     },
     twitter: {
       title: `${daoData.name} | Inevitable Science`,
-      description: daoData.description,
+      description: pageDescription,
       card: "summary_large_image",
       images: [daoData.logo],
     },
   };
 }
 
-export default async function ProjectLayout(props: Props) {
-  const params = await props.params;
-  const projectName = params.project;
+export default async function ProjectLayout({ children, params }: {
+  children: ReactNode;
+  params: Promise<{ project: string }>;
+}) {
+  const { project } = await params;
 
-  const daoData = await fetchDaoData(projectName);
+  const daoData = await fetchDaoData(project);
   if (!daoData) return notFound();
 
   const tokenName = daoData.nativeToken.name;
 
   const [treasuryData, tokenData] = await Promise.all([
-    fetchTreasuryData(projectName),
+    fetchTreasuryData(project),
     fetchTokenData(tokenName),
   ]);
 
@@ -107,7 +117,7 @@ export default async function ProjectLayout(props: Props) {
 
               <div className="sm:min-h-[700px]">
                 {/* IMPORTANT - Init's vesting page */}
-                <VestingInitialiser>{props.children}</VestingInitialiser>
+                <VestingInitialiser>{children}</VestingInitialiser>
               </div>
             </section>
           </div>

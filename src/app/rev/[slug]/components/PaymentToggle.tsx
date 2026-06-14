@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
+{/** TODO: Add functionality */}
+
 export function PaymentToggle() {
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   

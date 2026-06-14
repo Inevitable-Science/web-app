@@ -1,10 +1,11 @@
+import { metadata } from "@/lib/metadata";
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Inevitable Science",
+    name: metadata.siteName,
     short_name: "Inevitable",
-    description: "Begin your journey. Build the future of life—together.",
+    description: metadata.description,
     start_url: "/",
     scope: "/",
     icons: [

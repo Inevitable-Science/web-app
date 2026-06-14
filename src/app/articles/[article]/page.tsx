@@ -11,6 +11,7 @@ import {
   SingleArticleResponseZ,
 } from "@/lib/types/PublicArticleTypes";
 import { formatDate } from "@/lib/utils";
+import { metadata } from "@/lib/metadata";
 
 interface ParamsProp {
   params: Promise<{
@@ -79,13 +80,13 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
       openGraph: {
         title: "Article Not Found | Inevitable Science",
         description: "The requested article could not be found.",
-        siteName: "Inevitable Science",
+        siteName: metadata.siteName,
         images: [
           {
             url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
             width: 700,
             height: 370,
-            alt: "Inevitable preview image",
+            alt: "Inevitable Science preview image",
           },
         ],
         url: `${origin}/articles`,
@@ -117,7 +118,7 @@ export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
     openGraph: {
       title: `${article.title} | Inevitable Science`,
       description: article.overview,
-      siteName: "Inevitable Science",
+      siteName: metadata.siteName,
       images: [
         {
           url: imgUrl,
