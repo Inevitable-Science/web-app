@@ -30,21 +30,13 @@ import {
 } from "juice-sdk-react";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { PayStepper } from "./PayStepper";
 
-const shimmerClasses = `
-  relative overflow-hidden 
-  before:content-[''] before:absolute before:inset-0 
-  before:-translate-x-full before:animate-shimmer 
-  before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
-`;
-
 // Define shared styles for the main action button for consistency
-const primaryButtonClasses =
-  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
+export const primaryPayButtonClass =
+  "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-cerulean/80 focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
 
 export type PaymentStatusType =
   | ""
@@ -258,24 +250,14 @@ export function PayActionButton({
   };
 
   // --- 5. RENDER LOGIC ---
-  if (!hasStarted) {
+  if (!hasStarted || paymentsPaused) {
     return (
-      <Button
-        className={`${primaryButtonClasses} hover:bg-cerulean cursor-not-allowed opacity-50 hover:text-white`}
-      >
-        Payments Haven't Started Yet
+      <Button className={primaryPayButtonClass} disabled>
+        {!hasStarted 
+        ? "Payments Haven't Started Yet" 
+        : "Payments Are Currently Paused"}
       </Button>
     );
-  }
-
-  if (paymentsPaused) {
-    return (
-      <Button
-        className={`${primaryButtonClasses} hover:bg-cerulean cursor-not-allowed opacity-50 hover:text-white`}
-      >
-        Payments Are Currently Paused
-      </Button>
-    )
   }
 
   // State 1: User is not connected
@@ -286,7 +268,7 @@ export function PayActionButton({
           <Button
             onClick={show}
             loading={isConnecting}
-            className={primaryButtonClasses}
+            className={primaryPayButtonClass}
           >
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </Button>
@@ -298,7 +280,7 @@ export function PayActionButton({
   // State 2: Contribution is less than min threshold
   if (amountA && lessThanMinPayment) {
     return (
-      <Button className={primaryButtonClasses} disabled>
+      <Button className={primaryPayButtonClass} disabled>
         Contribution Is Too Small
       </Button>
     );
@@ -307,7 +289,7 @@ export function PayActionButton({
   // State 3: User is connected however has inputted an amount greater than their balance
   if (walletBalance && amountA && insufficientFunds) {
     return (
-      <Button className={twMerge(primaryButtonClasses)} disabled>
+      <Button className={primaryPayButtonClass} disabled>
         Insufficient Funds
       </Button>
     );
@@ -319,7 +301,7 @@ export function PayActionButton({
       <DialogTrigger asChild>
         <ButtonWithWallet
           targetChainId={activeChainId}
-          className={twMerge(primaryButtonClasses, shimmerClasses)}
+          className={`shimmer ${primaryPayButtonClass}`}
           disabled={disabled || (!amountA && !amountB)}
         >
           Buy

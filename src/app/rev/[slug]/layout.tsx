@@ -83,21 +83,21 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   try {
     config = parseSlug(slug);
 
-    // parseSlug.chainId can return a testnet's chainId
+    // parseSlug.chainId can return a testnet's chainId - don't want that in prod
     if (!TransportChainIds.includes(config.chainId)) throw new Error();
-  } catch {
+  } catch (err) {
     return notFound();
   }
 
   const project = await fetchProjectData(config);
-  if (!slug || !project || !project?.name) {
+  if (!slug || !config || !project) {
     return notFound();
   }
 
-  const daoData = await fetchDaoData(project.name);
+  const daoData = project.name ? await fetchDaoData(project.name) : null;
   const tokenName = daoData?.nativeToken.name;
 
-  const treasuryPromise = daoData
+  const treasuryPromise = (daoData && project.name)
     ? fetchTreasuryData(project.name)
     : Promise.resolve(null);
 

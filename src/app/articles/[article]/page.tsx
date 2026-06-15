@@ -27,6 +27,7 @@ const fetchArticle = async (
       `${process.env.NEXT_PUBLIC_CORE_API_URL}/articles/id/${articleId}`
     );
 
+    if (!response.ok) return null;
     const data = await response.json();
     const parsedData = SingleArticleResponseZ.parse(data);
 

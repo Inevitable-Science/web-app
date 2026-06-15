@@ -177,6 +177,7 @@ export function LoanTab() {
         loanAmount={estimatedBorrowFromInputOnly}
         collateralAmount={collateralAmount}
         projectTokenBalance={currentChainBalBigInt}
+        isLoanAmountLoading={isDebouncing || estimatedBorrowIsLoading}
       />
     </div>
   );

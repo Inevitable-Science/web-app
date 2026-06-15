@@ -226,6 +226,7 @@ export function WithdrawTab() {
         tokenBalance={currentChainBalanceBigInt}
         minTokensReturned={reclaimableAmount}
         receiveTokenAddress={receiveTokenAddress}
+        isTokensReturnedLoading={isDebouncing || isLoading}
       />
     </div>
   );

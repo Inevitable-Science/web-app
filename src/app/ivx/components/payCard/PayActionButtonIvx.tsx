@@ -29,7 +29,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { twMerge } from "tailwind-merge";
 
 import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
@@ -37,13 +36,7 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-
-const shimmerClasses = `
-  relative overflow-hidden
-  before:content-[''] before:absolute before:inset-0
-  before:-translate-x-full before:animate-shimmer
-  before:bg-linear-to-r before:from-transparent before:via-black/20 before:to-transparent
-`;
+import { useRulesetData } from "@/hooks/useRulesetData";
 
 const primaryButtonClasses =
   "w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-hidden disabled:opacity-50";
@@ -67,9 +60,14 @@ export function PayActionButton({
   const { metadata } = useJBProjectMetadataContext();
   const {
     version,
+    projectId: slugDerivedProjectId,
     contracts: { primaryNativeTerminal },
   } = useJBContractContext();
+  const { allRulesets } = useRulesetData({
+    projectId: Number(slugDerivedProjectId)
+  });
   const baseToken = useProjectBaseToken();
+  const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const { peerChainId: targetChainId, projectId } = selectedSucker;
 
@@ -98,6 +96,12 @@ export function PayActionButton({
     ? parseUnits("0.000001", paymentToken.decimals)
     : parseUnits("0.0001", paymentToken.decimals);
   const lessThanMinPayment = amountA < minPaymentAmount;
+
+  const now = new Date().getTime() / 1000;
+  const startDate = allRulesets?.[0]?.start;
+  const timeUntilStart = startDate ? startDate - now : 0;
+  const hasStarted = timeUntilStart <= 0;
+  const paymentsPaused = rulesetMetadata?.pausePay;
 
   // --- 3. DERIVED STATE & MEMOS ---
   const actionButtonContent = useMemo(() => {
@@ -213,6 +217,15 @@ export function PayActionButton({
   };
 
   // --- 5. RENDER LOGIC ---
+  if (!hasStarted || paymentsPaused) {
+    return (
+      <Button className={primaryButtonClasses} disabled>
+        {!hasStarted 
+        ? "Payments Haven't Started Yet" 
+        : "Payments Are Currently Paused"}
+      </Button>
+    );
+  }
 
   // State 1: User is not connected
   if (!isConnected) {
@@ -260,7 +273,7 @@ export function PayActionButton({
         <ButtonWithWallet
           targetChainId={targetChainId}
           disabled={disabled}
-          className={twMerge(primaryButtonClasses, shimmerClasses)}
+          className={`shimmer-dark ${primaryButtonClasses}`}
         >
           Buy
         </ButtonWithWallet>
