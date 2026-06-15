@@ -227,22 +227,27 @@ export default async function ArticlePage(props: ParamsProp) {
       <style>{`
         .articleParent p {
           font-size: 18px;
+          min-height: 18px;
         }
 
         .articleParent h1 {
           font-size: 30px;
+          min-height: 30px;
         }
 
         .articleParent h2 {
           font-size: 24px;
+          min-height: 24px;
         }
 
         .articleParent h3 {
           font-size: 20px;
+          min-height: 20px;
         }
 
         .articleParent h4 {
           font-size: 16px;
+          min-height: 16px;
         }
 
         .articleParent a {
@@ -255,13 +260,13 @@ export default async function ArticlePage(props: ParamsProp) {
           border-radius: 8px;
         }
 
-        .articleParent ol [data-list="ordered"] {
+        .articleParent ol {
           list-style: decimal;
           padding-left: 0.5em;
           margin-left: 1.5em;
         }
 
-        .articleParent ol [data-list="bullet"] {
+        .articleParent ul {
           list-style: disc;
           padding-left: 0.5em;
           margin-left: 1.5em;
