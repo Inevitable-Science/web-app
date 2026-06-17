@@ -35,7 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let projectData: ProjectQuery["project"] | null = null;
   try {
     config = parseSlug(slug); // throws if invalid
-    projectData = await fetchProjectData(config);
+    projectData = await fetchProjectData({
+      projectId: Number(config.projectId),
+      chainId: config.chainId,
+      version: config.version
+    });
   } catch (err) {
     console.error(err);
   }
@@ -89,7 +93,12 @@ export default async function RevnetPageLayout({ children, params }: Props) {
     return notFound();
   }
 
-  const project = await fetchProjectData(config);
+  const project = await fetchProjectData({
+    projectId: Number(config.projectId),
+    chainId: config.chainId,
+    version: config.version
+  });
+
   if (!slug || !config || !project) {
     return notFound();
   }

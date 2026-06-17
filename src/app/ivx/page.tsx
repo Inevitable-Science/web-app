@@ -58,7 +58,7 @@ export default async function IvxTokenPage() {
     fetchTreasuryData("hydradao"),
     fetchTokenData("hydra"),
     fetchProjectData({
-      projectId: 17n,
+      projectId: Number(17n),
       chainId: 1,
       version: 5,
     }),

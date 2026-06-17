@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
+import { unstable_cache } from "next/cache";
 import {
   SuckerGroupDocument,
   SuckerGroupQuery,
@@ -6,7 +7,6 @@ import {
 } from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 import { JBChainId } from "juice-sdk-core";
-import { unstable_cache } from "next/cache";
 
 interface FetchSuckerGroupData {
   volume: bigint;
@@ -41,11 +41,12 @@ async function _fetchSuckerGroupData(
   }
 }
 
+
 export const fetchSuckerGroupData = unstable_cache(
   _fetchSuckerGroupData,
   ["sucker-group-data"],
   {
-    revalidate: 600,        // revalidate every 10 mins
+    revalidate: 900,        // revalidate every 15 mins
     tags: ["sucker-group"], // allow for on-demand revalidation
   }
 );

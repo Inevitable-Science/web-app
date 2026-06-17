@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
+import { unstable_cache } from "next/cache";
 import {
   ProjectDocument,
   ProjectQuery,
@@ -6,20 +7,24 @@ import {
 } from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 
-export async function fetchProjectData(config: {
-  projectId: bigint;
+async function _fetchProjectData({
+  projectId,
+  chainId,
+  version
+}: {
+  projectId: number;
   chainId: number;
   version: number;
 }): Promise<ProjectQuery["project"] | null> {
   try {
-    const client = getBendystrawClient(config.chainId);
+    const client = getBendystrawClient(chainId);
 
     const project = await client.request<ProjectQuery, ProjectQueryVariables>(
       ProjectDocument,
       {
-        chainId: Number(config.chainId),
-        projectId: Number(config.projectId),
-        version: Number(config.version),
+        chainId: Number(chainId),
+        projectId: Number(projectId),
+        version: Number(version),
       }
     );
 
@@ -30,3 +35,13 @@ export async function fetchProjectData(config: {
     return null;
   }
 }
+
+
+export const fetchProjectData = unstable_cache(
+  _fetchProjectData,
+  ["project-data"],
+  {
+    revalidate: 900,        // revalidate every 15 mins
+    tags: ["project-data"], // allow for on-demand revalidation
+  }
+);
