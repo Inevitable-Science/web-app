@@ -6,6 +6,7 @@ import {
 } from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 import { JBChainId } from "juice-sdk-core";
+import { unstable_cache } from "next/cache";
 
 interface FetchSuckerGroupData {
   volume: bigint;
@@ -13,7 +14,7 @@ interface FetchSuckerGroupData {
   paymentsCount: number | null;
 }
 
-export async function fetchSuckerGroupData(
+async function _fetchSuckerGroupData(
   suckerGroupId: string,
   chainId: JBChainId
 ): Promise<FetchSuckerGroupData | null> {
@@ -39,3 +40,12 @@ export async function fetchSuckerGroupData(
     return null;
   }
 }
+
+export const fetchSuckerGroupData = unstable_cache(
+  _fetchSuckerGroupData,
+  ["sucker-group-data"],
+  {
+    revalidate: 600,        // revalidate every 10 mins
+    tags: ["sucker-group"], // allow for on-demand revalidation
+  }
+);
