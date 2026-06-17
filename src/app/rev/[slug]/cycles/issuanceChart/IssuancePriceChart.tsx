@@ -4,7 +4,6 @@ import { ChartConfig, ChartContainer, ChartTooltip } from "./chartHelper";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { format } from "date-fns";
 import {
-  JBChainId,
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
@@ -54,7 +53,7 @@ export function IssuancePriceChart({ range }: { range: ProjectionRange }) {
         chainId as ViemChainIdType,
         version
       );
-      console.log(data, "passed rulesets");
+
       setRulesets(data);
     }
 

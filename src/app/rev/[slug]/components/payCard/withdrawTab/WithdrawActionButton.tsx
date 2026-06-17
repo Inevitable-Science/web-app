@@ -82,7 +82,7 @@ export function WithdrawActionButton({
         description: "You Successfully Withdrew Your Tokens.",
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast({
         variant: "destructive",
         title: "Withdraw Failed",

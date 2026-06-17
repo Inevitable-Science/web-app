@@ -12,7 +12,7 @@ export const fetchTokenData = async (
     );
 
     if (response.status === 404) {
-      console.log("No token data found");
+      console.warn("No token data found");
       return null;
     }
     if (!response.ok) throw new Error("Failed to fetch token data");

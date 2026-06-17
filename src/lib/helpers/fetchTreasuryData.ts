@@ -10,7 +10,7 @@ export const fetchTreasuryData = async (
     );
 
     if (response.status === 404) {
-      console.log("No treasury data found");
+      console.warn("No treasury data found");
       return null;
     }
     if (!response.ok) throw new Error("Failed to fetch treasury data");

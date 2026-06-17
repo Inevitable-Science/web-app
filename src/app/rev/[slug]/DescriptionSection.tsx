@@ -9,7 +9,6 @@ import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { LoansTable } from "./components/loanActions/LoansTable";
 import { EditMetadataDialog } from "./components/EditMetadataDialog";
 import { useUserPermissions } from "@/hooks/useUserPermissions";
-import { PaymentToggle } from "./components/PaymentToggle";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -63,7 +62,7 @@ export function DescriptionSection() {
       {canEditMetadata && (
         <div className="flex items-center gap-2 mb-4">
           <EditMetadataDialog />
-          {/*<PaymentToggle />*/}
+          {/* Maybe add pause payment/edit metadata function */}
         </div>
       )}
       

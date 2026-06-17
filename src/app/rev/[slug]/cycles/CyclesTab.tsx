@@ -6,16 +6,16 @@ import {
   JBRulesetMetadata,
   ReservedPercent,
 } from "juice-sdk-core";
-import { useJBContractContext, useNativeTokenSurplus } from "juice-sdk-react";
+import { useNativeTokenSurplus } from "juice-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 
-import { formatEther, formatUnits } from "viem";
+import { formatUnits } from "viem";
 import { ChevronDown, ChevronRightIcon, ChevronUp } from "lucide-react";
-import { decodeRulesetMetadata } from "@/lib/utils";
+import { decodeRulesetMetadata, formatNumber } from "@/lib/utils";
 import {
   IssuancePriceChart,
   ProjectionRange,
@@ -37,12 +37,10 @@ export function NetworkDetailsTable() {
   const currentIssuance = useFormattedTokenIssuance({
     reservedPercent: new ReservedPercent(0),
   });
-  console.log(project.volume, "vol");
 
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
-  console.log(allRulesets, "all rulesets");
 
   const sortedRulesets = useMemo(() => {
     if (!allRulesets) return undefined;
@@ -52,8 +50,9 @@ export function NetworkDetailsTable() {
   useEffect(() => {
     // FIX: Only set the index if data is ready AND the index hasn't been set yet.
     if (sortedRulesets && currentRuleset && selectedStageIdx === null) {
+      // Use id instead of cycle number, cycle number has weird behaviour
       const currentIndex = sortedRulesets.findIndex(
-        (rs) => rs.cycleNumber === currentRuleset.cycleNumber
+        (rs) => rs.id === currentRuleset.id
       );
 
       if (currentIndex !== -1) {
@@ -167,9 +166,13 @@ export function NetworkDetailsTable() {
 
   // NEW: Handlers for the cycle navigation buttons
   const handleNextCycle = () => {
-    setSelectedStageIdx((prev) =>
-      prev != undefined && prev != 0 ? Math.max(0, prev - 1) : null
-    );
+    if (allRulesets && allRulesets.length > 1) {
+      const nextStage = (selectedStageIdx !== null  && selectedStageIdx + 2 <= allRulesets.length) 
+        ? selectedStageIdx + 1 
+        : 0;
+
+      setSelectedStageIdx(nextStage);
+    }
   };
 
   return (
@@ -233,8 +236,12 @@ export function NetworkDetailsTable() {
           {/* NEW: Updated Cycle # display and wired up buttons */}
           <div className="background-color flex items-center justify-between rounded-xl p-[16px]">
             <div className="flex flex-col">
-              <p className="text-muted-foreground text-sm font-light uppercase">
-                Cycle
+              <p className="flex items-center gap-1.5 text-muted-foreground text-sm font-light uppercase">
+                Cycle{" "}
+                {(selectedStageIdx !== null && allRulesets) 
+                  ? `${selectedStageIdx + 1}/${allRulesets.length}`
+                  : <div className="activeSkeleton h-4 w-8 rounded-sm" /> 
+                }
               </p>
               <h3 className="text-xl">
                 {displayedRuleset?.cycleNumber ?? "-"}
@@ -254,10 +261,13 @@ export function NetworkDetailsTable() {
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
               {displayedRuleset
-                ? Number(displayedRuleset.start) <= Date.now() / 1000
-                  ? "Active"
+              ? displayedRuleset.id === currentRuleset?.id
+                ? "Active"
+                : displayedRuleset.start < Date.now() / 1000 
+                  ? "Completed"
                   : "Upcoming"
-                : "-"}
+                : "-"
+              }
             </h3>
             <p className="text-muted-foreground text-sm font-light uppercase">
               Status
@@ -352,7 +362,7 @@ export function NetworkDetailsTable() {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
           <div className="background-color rounded-xl p-[16px]">
             <h3 className="text-xl">
-              Ξ{parseFloat(formatUnits(project.volume, baseToken.decimals))}
+              Ξ{formatNumber(formatUnits(project.volume, baseToken.decimals), false)}
             </h3>
             <p className="text-muted-foreground text-sm font-light uppercase">
               Total Raised

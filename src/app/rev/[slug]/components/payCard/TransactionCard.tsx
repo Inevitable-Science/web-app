@@ -75,12 +75,12 @@ export function TransactionCard() {
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
-  const isIssuingTokens = useMemo(() => {
+  /*const isIssuingTokens = useMemo(() => {
     const weight = ruleset?.weight;
     return Boolean(weight && weight.value > 0n)
   }, [ruleset?.weight])
 
-  console.log(isIssuingTokens, "IS ISSUING TOKENS");
+  console.log(isIssuingTokens, "IS ISSUING TOKENS");*/
 
   const startDate = allRulesets?.[0]?.start;
   const timeUntilStart = startDate ? startDate - now : 0;
