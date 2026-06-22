@@ -8,6 +8,7 @@ import {
   ETH_CURRENCY_ID,
   getTokenAToBQuote,
   getTokenBtoAQuote,
+  JB_TOKEN_DECIMALS,
   JBChainId,
   USD_CURRENCY_ID,
 } from "juice-sdk-core";
@@ -36,9 +37,12 @@ export function usePaymentQuote(chainId: JBChainId) {
 
   function tokenAToBQuote(valueRaw: string, token: Token) {
     try {
-      if (!ruleset?.data || !rulesetMetadata?.data || !tokenB) {
+      // NOTE: tokenB is not required! Not all projects have tokens, some projects only accept payments
+      if (!ruleset?.data || !rulesetMetadata?.data/* || !tokenB*/) {        
         throw new Error("Missing data. Please refresh the page and try again");
       }
+
+      const projectTokenDecimals = tokenB?.decimals ?? JB_TOKEN_DECIMALS;
 
       const amountInProjectCurrency = toProjectCurrencyAmount(
         valueRaw,
@@ -56,10 +60,10 @@ export function usePaymentQuote(chainId: JBChainId) {
       );
 
       return {
-        payerTokens: formatUnits(amountBQuote.payerTokens, tokenB.decimals),
+        payerTokens: formatUnits(amountBQuote.payerTokens, projectTokenDecimals),
         reservedTokens: formatUnits(
           amountBQuote.reservedTokens,
-          tokenB.decimals
+          projectTokenDecimals
         ),
       };
     } catch (err) {

@@ -73,7 +73,8 @@ export function LoansTable() {
       <div className="background-color rounded p-3 text-sm">
         {sortedLoans.map((loan) => {
           // hide loans with <0.001 tokens in collateral, difficult to pay off/manage
-          if (loan.collateral < parseUnits("0.001", projectTokenDecimals)) return null;
+          if (loan.collateral < parseUnits("0.001", projectTokenDecimals))
+            return null;
 
           const loanTokenIsNative =
             loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();

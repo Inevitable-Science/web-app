@@ -257,7 +257,7 @@ export function SplitSection() {
               </div>
             )
           ) : (
-            <div className="border-grey-450 grid grid-cols-[4fr_3fr_3fr] border-b py-3 text-sm opacity-40">
+            <div className="border-grey-450 grid grid-cols-[3.5fr_3fr_3fr] border-b py-3 text-sm opacity-40">
               <div className="activeSkeleton h-[22px] w-[44px] rounded-sm sm:w-[112px]" />
               <div className="activeSkeleton h-[22px] w-[32px] rounded-sm sm:w-[64px]" />
               <div className="activeSkeleton h-[22px] w-[32px] rounded-sm sm:w-[64px]" />

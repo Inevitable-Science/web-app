@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   getRevnetLoanContract,
@@ -78,8 +78,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     collateralToReturn,
     baseToken.decimals
   );
-  const collateralToReturnPercent =
-  loan.collateral
+  const collateralToReturnPercent = loan.collateral
     ? (collateralToReturnBigInt * 100n) / loan.collateral
     : 0n;
 
@@ -113,29 +112,27 @@ export function RepayTab({ loan }: { loan: LoanType }) {
     },
   ];
 
-  const {
-    data: simulationResult,
-    isLoading: isSimulating,
-  } = useSimulateContract({
-    abi: revLoansAbi,
-    functionName: "repayLoan",
-    address: getRevnetLoanContract(version, loanChainId),
-    chainId: loanChainId,
-    args: simulationArgs as unknown as readonly [
-      bigint,
-      bigint,
-      bigint,
-      `0x${string}`,
-      {
-        sigDeadline: bigint;
-        amount: bigint;
-        expiration: number;
-        nonce: number;
-        signature: `0x${string}`;
-      },
-    ],
-    value: baseToken.isNative ? loanData?.amount : 0n, // Only send ETH value for ETH-based projects
-  });
+  const { data: simulationResult, isLoading: isSimulating } =
+    useSimulateContract({
+      abi: revLoansAbi,
+      functionName: "repayLoan",
+      address: getRevnetLoanContract(version, loanChainId),
+      chainId: loanChainId,
+      args: simulationArgs as unknown as readonly [
+        bigint,
+        bigint,
+        bigint,
+        `0x${string}`,
+        {
+          sigDeadline: bigint;
+          amount: bigint;
+          expiration: number;
+          nonce: number;
+          signature: `0x${string}`;
+        },
+      ],
+      value: baseToken.isNative ? loanData?.amount : 0n, // Only send ETH value for ETH-based projects
+    });
 
   // Extract the exact amount from simulation result for display purposes only
   const exactRepayAmount = (() => {
@@ -285,7 +282,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
   return (
     <div className="flex flex-col gap-2">
       <DialogTitle>Repay Loan</DialogTitle>
-      <p className="text-muted-foreground text-sm mb-1">
+      <p className="text-muted-foreground mb-1 text-sm">
         Amount of collateral you want to unlock
       </p>
 
@@ -337,7 +334,10 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           </div>
           <p className="text-muted-foreground text-right text-sm font-light text-nowrap select-none">
             Collateral:{" "}
-            {truncateNumber(formatUnits(loan.collateral, projectTokenDecimals), true)}
+            {truncateNumber(
+              formatUnits(loan.collateral, projectTokenDecimals),
+              true
+            )}
           </p>
         </div>
       </div>
@@ -351,10 +351,11 @@ export function RepayTab({ loan }: { loan: LoanType }) {
             onClick={() => {
               const amount = (loan.collateral / 100n) * BigInt(percent);
               const formattedAmount = formatUnits(amount, projectTokenDecimals);
-              const formattedAmountString = percent === 100 ?
-                formattedAmount :
-                formatNumber(formattedAmount, false);
-              
+              const formattedAmountString =
+                percent === 100
+                  ? formattedAmount
+                  : formatNumber(formattedAmount, false);
+
               setCollateralToReturn(formattedAmountString);
             }}
           >
@@ -397,7 +398,8 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         </div>
         <p>Amount Carried Into New Loan:</p>
         <div className="flex justify-end">
-          {(isDebouncing || isSimulating || isLoadingLoan) && Number(collateralToReturn) ? (
+          {(isDebouncing || isSimulating || isLoadingLoan) &&
+          Number(collateralToReturn) ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
           ) : exactRepayAmount === undefined || !loanData?.amount ? (
             `0 ${baseToken.symbol}`
@@ -415,7 +417,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
       </div>
 
       <div className="mt-6 flex justify-end space-x-2">
-        <DialogClose className="bg-grey-450!"/>
+        <DialogClose className="bg-grey-450!" />
         <ButtonWithWallet
           targetChainId={loanChainId}
           onClick={handleRepay}

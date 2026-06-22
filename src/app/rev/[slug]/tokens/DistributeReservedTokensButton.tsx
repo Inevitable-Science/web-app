@@ -79,7 +79,7 @@ export function DistributeReservedTokensButton({
 
       setHash(hash);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setIsPending(false);
     }

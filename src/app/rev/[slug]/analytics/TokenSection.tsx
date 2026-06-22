@@ -159,9 +159,7 @@ export function TokenSection() {
           {tokenAnalytics.topHolders && (
             <div className="bg-grey-450 rounded-2xl p-[12px]">
               <div className="background-color mb-2 rounded-xl p-[16px]">
-                <h3 className="text-xl">
-                  {tokenAnalytics.token.totalHolders}
-                </h3>
+                <h3 className="text-xl">{tokenAnalytics.token.totalHolders}</h3>
                 <p className="text-muted-foreground font-light uppercase">
                   Total Holders
                 </p>
@@ -182,9 +180,8 @@ export function TokenSection() {
                       <EthereumAddress
                         address={address as Address}
                         chain={
-                          JB_CHAINS[
-                            tokenAnalytics.token.chainId as JBChainId
-                          ].chain
+                          JB_CHAINS[tokenAnalytics.token.chainId as JBChainId]
+                            .chain
                         }
                         withEnsName
                         short
@@ -199,9 +196,7 @@ export function TokenSection() {
 
           {tokenAnalytics.token.ticker && (
             <div className="bg-grey-450 mb-4 h-auto max-h-[550px] rounded-2xl p-[12px]">
-              <TokenStatsChart
-                tokenTicker={tokenAnalytics.token.ticker}
-              />
+              <TokenStatsChart tokenTicker={tokenAnalytics.token.ticker} />
             </div>
           )}
         </div>

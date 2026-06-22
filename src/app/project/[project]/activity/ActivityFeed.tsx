@@ -77,8 +77,7 @@ export function ActivityFeedSection() {
                           address={tx.beneficiary as Address}
                           chain={
                             JB_CHAINS[
-                              tokenAnalytics?.token
-                                .chainId as JBChainId
+                              tokenAnalytics?.token.chainId as JBChainId
                             ].chain
                           }
                           short

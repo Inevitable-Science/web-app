@@ -3,6 +3,7 @@ query SuckerGroup($id: String!) {
     id
     tokenSupply
     volume
+    paymentsCount
     projects {
       items {
         balance

@@ -1,10 +1,4 @@
-import {
-  BanknoteArrowUp,
-  Check,
-  Loader2,
-  Receipt,
-  X,
-} from "lucide-react";
+import { BanknoteArrowUp, Check, Loader2, Receipt, X } from "lucide-react";
 import { PaymentStatusType } from "./PayActionButton";
 
 export function PayStepper({

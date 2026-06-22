@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Address, formatEther, getContract } from "viem";
 import {
   useAccount,
-  useChainId,
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
@@ -29,8 +28,7 @@ export function SchedulesSection({
 }: {
   schedules: ProcessedSchedule[];
 }) {
-  const { address, isConnected } = useAccount();
-  const userChainId = useChainId();
+  const { address, isConnected, chainId: userChainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { switchChainAsync } = useSwitchChain();
   const { toast } = useToast();

@@ -2,7 +2,7 @@ import { ConnectKitButton } from "connectkit";
 import { JB_CHAINS, JBChainId } from "juice-sdk-core";
 import { useJBChainId } from "juice-sdk-react";
 import React from "react";
-import { useAccount, useChainId, useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { Button, ButtonProps } from "./ui/button";
 
 const ButtonWithWallet = React.forwardRef<
@@ -14,8 +14,7 @@ const ButtonWithWallet = React.forwardRef<
   } & ButtonProps
 >(({ children, connectWalletText, targetChainId, ...props }, ref) => {
   const jbChainId = useJBChainId();
-  const userChainId = useChainId();
-  const { isConnected } = useAccount();
+  const { isConnected, chainId: userChainId } = useAccount();
   const { switchChain, isPending } = useSwitchChain();
 
   const _targetChainId = targetChainId || jbChainId;

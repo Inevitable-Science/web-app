@@ -65,11 +65,25 @@ export function TokenStatsChart({ tokenTicker }: { tokenTicker: string }) {
     let prices;
 
     if (chartType === "holders") {
-      const seriesData =
-        holdersData?.holders.map(([timestamp, value]: [number, number]) => ({
+      const seriesData = (() => {
+        if (!holdersData?.holders) return null;
+
+        const mapped = holdersData.holders.map(([timestamp, value]: [number, number]) => ({
           time: Math.floor(timestamp / 1000) as Time,
           value,
-        })) ?? null;
+          date: new Date(timestamp),
+        }));
+
+        const latestTime = Math.max(...mapped.map((d) => Number(d.time)));
+
+        const filtered = mapped.filter(({ date, time }) => {
+          const isFirstOfMonth = date.getUTCDate() === 1;
+          const isLatest = time === latestTime;
+          return isFirstOfMonth || isLatest;
+        });
+
+        return filtered.map(({ time, value }) => ({ time, value }));
+      })();
 
       prices = seriesData;
     } else {
@@ -213,9 +227,8 @@ export function TokenStatsChart({ tokenTicker }: { tokenTicker: string }) {
           </Button>
           <Button
             variant={"graphRounded"}
-            className={`${chartType === "holders" && "bg-white! text-black!"}`}
-            onClick={() => setTimeRange("max")}
-            disabled={chartType === "holders" || timeRange === "max"}
+            className={`${chartType === "holders" && "bg-white! text-black!"} disabled:bg-transparent`}
+            disabled
           >
             MAX
           </Button>

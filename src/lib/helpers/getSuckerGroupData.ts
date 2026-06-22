@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
+import { unstable_cache } from "next/cache";
 import {
   SuckerGroupDocument,
   SuckerGroupQuery,
@@ -7,15 +8,16 @@ import {
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
 import { JBChainId } from "juice-sdk-core";
 
-interface FetchSuckerGroupVolResponse {
+interface FetchSuckerGroupData {
   volume: bigint;
   decimals: number;
+  paymentsCount: number | null;
 }
 
-export async function fetchSuckerGroupVol(
+async function _fetchSuckerGroupData(
   suckerGroupId: string,
   chainId: JBChainId
-): Promise<FetchSuckerGroupVolResponse | null> {
+): Promise<FetchSuckerGroupData | null> {
   try {
     const client = getBendystrawClient(chainId);
     const result = await client.request<
@@ -30,6 +32,7 @@ export async function fetchSuckerGroupVol(
     return {
       volume: volume as bigint,
       decimals: decimals,
+      paymentsCount: result.suckerGroup?.paymentsCount ?? null,
     };
   } catch (err) {
     Sentry.captureException(err);
@@ -37,3 +40,13 @@ export async function fetchSuckerGroupVol(
     return null;
   }
 }
+
+
+export const fetchSuckerGroupData = unstable_cache(
+  _fetchSuckerGroupData,
+  ["sucker-group-data"],
+  {
+    revalidate: 900,        // revalidate every 15 mins
+    tags: ["sucker-group"], // allow for on-demand revalidation
+  }
+);

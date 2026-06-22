@@ -7,6 +7,8 @@ import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
 import { useJBProjectMetadataContext } from "juice-sdk-react";
 import { LoansTable } from "./components/loanActions/LoansTable";
+import { EditMetadataDialog } from "./components/EditMetadataDialog";
+import { useUserPermissions } from "@/hooks/useUserPermissions";
 
 const RichPreview = ({ source }: { source: string }) => {
   useEffect(() => {
@@ -51,8 +53,19 @@ export function DescriptionSection() {
   const { metadata } = useJBProjectMetadataContext();
   const { description, name } = metadata?.data ?? {};
 
+  const { hasPermission } = useUserPermissions();
+  const canEditMetadata = hasPermission("SET_PROJECT_URI");
+
+
   return (
     <div className="text-sm">
+      {canEditMetadata && (
+        <div className="flex items-center gap-2 mb-4">
+          <EditMetadataDialog />
+          {/* Maybe add pause payment/edit metadata function */}
+        </div>
+      )}
+      
       <LoansTable />
 
       <ChartSection />
@@ -63,7 +76,7 @@ export function DescriptionSection() {
         <RichPreview source={description || name || "..."} />
       </div>
 
-      <SocialLinks {...metadata} />
+      <SocialLinks />
     </div>
   );
 }

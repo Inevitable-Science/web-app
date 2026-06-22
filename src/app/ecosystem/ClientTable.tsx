@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useAccount } from "wagmi";
-import { getBalance } from "@wagmi/core";
-import { Address, formatUnits } from "viem";
-import { wagmiConfig } from "@/lib/wagmiConfig";
+import { useAccount, usePublicClient } from "wagmi";
+import { Address, erc20Abi, formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
-
 import { ArrowRightIcon } from "lucide-react";
+import { getViemPublicClient } from "@/lib/wagmiConfig";
+import { useFetchTokenPrices } from "@/hooks/queries/useFetchTokenPrices";
 
-interface projectInterface {
+type BalanceMap = Record<string, string>;
+
+interface ProjectType {
   name: string;
   logo: string;
   href: string;
@@ -34,9 +35,7 @@ interface Participant {
   creditBalance: string;
 }
 
-type ProjectBalanceMap = Record<string, bigint | string>;
-
-const projectVars: projectInterface[] = [
+const PROJECTS: ProjectType[] = [
   {
     name: "HydraDAO",
     href: "hydradao",
@@ -71,32 +70,92 @@ const v4ProjectVars: v4ProjectInterface[] = [
   {
     name: "Stasis",
     href: "stasis",
-    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.svg",
+    logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.webp",
     projectID: 64,
   },
 ];
 
 export default function ClientTable() {
+  const { data: tokenPriceData, isLoading: isTokenPriceLoading } = useFetchTokenPrices(PROJECTS.map(p => p.href));
+
+  const client = getViemPublicClient(1);  // default to mainnet
   const { address, isConnected } = useAccount();
-  const [balances, setBalances] = useState<Record<string, string>>({});
-  const [v4Balances, setV4Balances] = useState<ProjectBalanceMap>({});
 
-  useEffect(() => {
-    if (!address || !isConnected) {
-      const fallback: Record<string, string> = {};
+  const [balances, setBalances] = useState<BalanceMap | null>(null);
+  const [v4Balances, setV4Balances] = useState<BalanceMap | null>(null);
 
-      v4ProjectVars.forEach((project) => {
-        fallback[project.projectID.toString()] = "0";
-        if (project.vestingContract) {
-          fallback[project.vestingContract] = "0";
+  const fetchBalances = async () => {
+    try {
+      const contracts = PROJECTS.flatMap(
+        ({ tokenAddress, vestingContract }) => {
+          const entries = [
+            {
+              address: tokenAddress,
+              abi: erc20Abi,
+              functionName: "balanceOf" as const,
+              args: [address] as [Address],
+            },
+          ];
+
+          if (vestingContract) {
+            entries.push({
+              address: vestingContract,
+              abi: erc20Abi,
+              functionName: "balanceOf" as const,
+              args: [address] as [Address],
+            });
+          }
+
+          return entries;
         }
-      });
+      );
 
-      setV4Balances(fallback);
-      return;
+      if (!isConnected) {
+        const fallback: BalanceMap = {};
+        for (const c of contracts) {
+          fallback[c.address] = "0";
+        }
+
+        setBalances(fallback);
+        return;
+      }
+
+      const result = await client.multicall({ contracts });
+
+      const balances: BalanceMap = {};
+      let index = 0;
+
+      for (const bal of result) {
+        if (bal.status !== "success") continue;
+
+        const formattedBalance = formatUnits(bal.result, 18);
+        const tokenAddress = contracts[index++].address;
+        balances[tokenAddress] = formattedBalance;
+      }
+
+      setBalances(balances);
+    } catch (err) {
+      console.error(err);
+      Sentry.captureException(err);
     }
+  };
 
-    const fetchGraphQLQuery = async () => {
+  const fetchGraphQLQuery = async () => {
+    try {
+      if (!isConnected) {
+        const fallback: Record<string, string> = {};
+
+        v4ProjectVars.forEach((project) => {
+          fallback[project.projectID.toString()] = "0";
+          if (project.vestingContract) {
+            fallback[project.vestingContract] = "0";
+          }
+        });
+
+        setV4Balances(fallback);
+        return;
+      }
+
       const chainIds = [1, 10, 42161, 8453];
       const endpoint = "https://bendystraw.xyz/schema";
 
@@ -115,7 +174,7 @@ export default function ClientTable() {
         }
       `;
 
-      const balances: ProjectBalanceMap = {};
+      const balances: BalanceMap = {};
 
       await Promise.all(
         v4ProjectVars.map(async ({ projectID }) => {
@@ -155,81 +214,34 @@ export default function ClientTable() {
             BigInt(0)
           );
 
-          balances[projectID.toString()] = totalBalance;
+          const formattedBalance = formatUnits(totalBalance, 18);
+
+          balances[projectID.toString()] = formattedBalance;
         })
       );
 
       setV4Balances(balances);
-    };
-
-    fetchGraphQLQuery();
-  }, [address, isConnected]);
+      return;
+    } catch (err) {
+      console.error(err);
+      Sentry.captureException(err);
+    }
+  };
 
   useEffect(() => {
-    if (!address || !isConnected) {
-      const fallback: Record<string, string> = {};
-
-      projectVars.forEach((project) => {
-        fallback[project.tokenAddress] = "0";
-        if (project.vestingContract) {
-          fallback[project.vestingContract] = "0";
-        }
-      });
-
-      setBalances(fallback);
-      return;
-    }
-
-    const fetchBalances = async () => {
-      try {
-        const contracts: Address[] = projectVars.flatMap((project) => {
-          const list: Address[] = [project.tokenAddress];
-          if (project.vestingContract) list.push(project.vestingContract);
-          return list;
-        });
-
-        const balanceResults = await Promise.all(
-          contracts.map((token) =>
-            getBalance(wagmiConfig, {
-              address,
-              token,
-              chainId: 1, // infer mainnet, change this when expanding
-            })
-          )
-        );
-
-        const parsed = balanceResults.reduce(
-          (acc, bal, index) => {
-            const raw = Number(formatUnits(bal.value, bal.decimals));
-            let formatted: string;
-
-            if (raw < 1000) {
-              formatted = raw.toFixed(2);
-            } else {
-              formatted = formatNumber(raw, true);
-            }
-            acc[contracts[index]] = formatted;
-            return acc;
-          },
-          {} as Record<string, string>
-        );
-
-        setBalances(parsed);
-      } catch (err) {
-        Sentry.captureException(err);
-        console.error("Error fetching token balances:", err);
-      }
-    };
-
     fetchBalances();
-  }, [address, isConnected]);
+    fetchGraphQLQuery();
+  }, [isConnected]);
 
   return (
     <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
       <h3 className="text-xl">Projects</h3>
 
       <div className="background-color rounded-xl p-[8px] font-light">
-        {projectVars.map((project, index) => (
+        {PROJECTS.map((project, index) => {
+          const tokenPrice = tokenPriceData?.find(t => t.token === project.href)?.price;
+
+          return (
           <div key={index} className="border-grey-500 border-b">
             <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
               <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
@@ -244,32 +256,48 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {Object.keys(balances).length === 0 ? (
+                {balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
-                  <span>{balances[project.tokenAddress]}</span>
+                  <span>
+                    {formatNumber(balances[project.tokenAddress], true)}
+                  </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {Object.keys(balances).length === 0 ? (
+                {balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? balances[project.vestingContract]
+                      ? formatNumber(balances[project.vestingContract], true)
                       : "—"}
                   </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>
+                $
+                {isTokenPriceLoading ?
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
+                  tokenPrice ? 
+                    formatNumber(tokenPrice) :
+                    "0"
+                }
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>
+                $
+                {isTokenPriceLoading || balances === null ?
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
+                  tokenPrice && balances ? 
+                    formatNumber(tokenPrice * Number(balances[project.tokenAddress])) :
+                    "0"
+                }
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
@@ -285,11 +313,27 @@ export default function ClientTable() {
 
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">AMOUNT</span>0
+                <span className="text-grey-50 text-sm">AMOUNT</span>
+                {balances === null ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {formatNumber(balances[project.tokenAddress], true)}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">vAMOUNT</span>0
+                <span className="text-grey-50 text-sm">vAMOUNT</span>
+                {balances === null ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {project.vestingContract
+                      ? formatNumber(balances[project.vestingContract], true)
+                      : "—"}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
@@ -297,7 +341,8 @@ export default function ClientTable() {
               </div>
             </div>
           </div>
-        ))}
+          )
+        })}
 
         {v4ProjectVars.map((project, index) => (
           <div key={index} className="border-grey-500 border-b">
@@ -314,36 +359,36 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {Object.keys(v4Balances).length === 0 ? (
+                {v4Balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(
-                      formatUnits(v4Balances[project.projectID] as bigint, 18)
-                    )}
+                    {formatNumber(v4Balances[project.projectID], true)}
                   </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {Object.keys(balances).length === 0 ? (
+                {v4Balances === null ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? balances[project.vestingContract]
+                      ? v4Balances[project.vestingContract]
                       : "—"}
                   </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">PRICE</span>0
+                <span className="text-grey-50 text-sm">PRICE</span>
+                $0
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>
+                $0
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
@@ -359,11 +404,27 @@ export default function ClientTable() {
 
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">AMOUNT</span>0
+                <span className="text-grey-50 text-sm">AMOUNT</span>
+                {v4Balances === null ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {formatNumber(v4Balances[project.projectID], true)}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">vAMOUNT</span>0
+                <span className="text-grey-50 text-sm">vAMOUNT</span>
+                {v4Balances === null ? (
+                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
+                ) : (
+                  <span>
+                    {project.vestingContract
+                      ? v4Balances[project.vestingContract]
+                      : "—"}
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-col gap-1">

@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
@@ -15,6 +14,7 @@ import { TabSelectorLG, TabSelectorSM } from "./components/layout/TabSelector";
 import { TransactionCard } from "./components/payCard/TransactionCard";
 import { OtherDaosCarousel } from "@/components/OtherDaosCarousel";
 import { TransportChainIds } from "@/lib/wagmiConfig";
+import { metadata, notFoundMetadata } from "@/lib/metadata";
 
 interface Props {
   children: React.ReactNode;
@@ -32,18 +32,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = new URL(fullPath, origin);
 
   let config;
-  let projectData: ProjectQuery["project"] | null;
+  let projectData: ProjectQuery["project"] | null = null;
   try {
-    config = parseSlug(slug);
-    projectData = await fetchProjectData(config);
+    config = parseSlug(slug); // throws if invalid
+    projectData = await fetchProjectData({
+      projectId: Number(config.projectId),
+      chainId: config.chainId,
+      version: config.version
+    });
   } catch (err) {
-    Sentry.captureException(err);
     console.error(err);
-    return notFound();
   }
 
   if (!config || !projectData) {
-    return notFound();
+    return notFoundMetadata;
   }
 
   const imgUrl =
@@ -52,18 +54,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${projectData.name} | Inevitable Science`,
-    description: "Begin your journey. Build the future of life—together.",
+    description: metadata.description,
     alternates: { canonical: url },
     openGraph: {
       title: `${projectData.name} | Inevitable Science`,
-      description: "Begin your journey. Build the future of life—together.",
-      siteName: "Inevitable Science",
+      description: metadata.description,
+      siteName: metadata.siteName,
       images: [
         {
           url: projectLogo,
           width: 800,
           height: 800,
-          alt: `${projectData.name} | Inevitable Science preview image`,
+          alt: `Inevitable Science preview image`,
         },
       ],
       url,
@@ -71,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       title: `${projectData.name} | Inevitable Science`,
-      description: "Begin your journey. Build the future of life—together.",
+      description: metadata.description,
       card: "summary_large_image",
       images: [projectLogo],
     },
@@ -85,21 +87,26 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   try {
     config = parseSlug(slug);
 
-    // parseSlug.chainId can return a testnet's chainId
+    // parseSlug.chainId can return a testnet's chainId - don't want that in prod
     if (!TransportChainIds.includes(config.chainId)) throw new Error();
-  } catch {
+  } catch (err) {
     return notFound();
   }
 
-  const project = await fetchProjectData(config);
-  if (!slug || !project || !project?.name) {
+  const project = await fetchProjectData({
+    projectId: Number(config.projectId),
+    chainId: config.chainId,
+    version: config.version
+  });
+
+  if (!slug || !config || !project) {
     return notFound();
   }
 
-  const daoData = await fetchDaoData(project.name);
+  const daoData = project.name ? await fetchDaoData(project.name) : null;
   const tokenName = daoData?.nativeToken.name;
 
-  const treasuryPromise = daoData
+  const treasuryPromise = (daoData && project.name)
     ? fetchTreasuryData(project.name)
     : Promise.resolve(null);
 

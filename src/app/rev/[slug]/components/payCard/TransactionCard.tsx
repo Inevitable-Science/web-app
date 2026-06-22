@@ -1,12 +1,8 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  JBChainId,
-  useJBChainId,
-  useJBContractContext
-} from "juice-sdk-react";
-import { useChainId } from "wagmi";
+import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { useAccount } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { getTokensForChain, Token } from "@/lib/token";
@@ -27,12 +23,13 @@ export function TransactionCard() {
   );
 
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
+  const ruleset = useRevnetDataStore((state) => state.ruleset);
   const { allRulesets } = useRulesetData({
     projectId: project.projectId,
   });
 
   const activeChain = useJBChainId();
-  const chainId = useChainId();
+  const { chainId } = useAccount();
   const { version } = useJBContractContext();
 
   const peerChainId = selectedSucker?.peerChainId;
@@ -41,24 +38,25 @@ export function TransactionCard() {
     [peerChainId, version]
   );
 
-  const [activeTab, setActiveTab] = useState<
-    "buy" |
-    "withdraw" |
-    "loan"
-  >(
+  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">(
     "buy"
   );
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
   const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
 
   useEffect(() => {
+    // only re-render component if the revnet has not started taking 
+    // payments and the start date is <24 hours from initial render
+    // allows for nice countdown effect
+    if (hasStarted || timeUntilStart > 24 * 60 * 60) return;
+
     const id = setInterval(() => {
       setNow(Math.floor(Date.now() / 1000));
     }, 1000);
 
     return () => clearInterval(id);
   }, []);
-  
+
   useEffect(() => {
     // Only set default if context has no value and suckers have loaded
     if (suckers && !selectedSucker && suckers.length > 0) {
@@ -77,9 +75,22 @@ export function TransactionCard() {
     }
   }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
 
+  /*const isIssuingTokens = useMemo(() => {
+    const weight = ruleset?.weight;
+    return Boolean(weight && weight.value > 0n)
+  }, [ruleset?.weight])
+
+  console.log(isIssuingTokens, "IS ISSUING TOKENS");*/
+
   const startDate = allRulesets?.[0]?.start;
   const timeUntilStart = startDate ? startDate - now : 0;
   const hasStarted = timeUntilStart <= 0;
+
+  // Logic to show payment notices
+  const showDepreciationNotice = version === 4 || version === 5;
+  const showHasNotStartedBanner = !hasStarted && startDate;
+  const paymentsPaused = rulesetMetadata?.pausePay && !showHasNotStartedBanner;
+  
 
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
@@ -87,15 +98,48 @@ export function TransactionCard() {
 
   return (
     <div className="flex w-full flex-col rounded-xl">
-      {!hasStarted && startDate && (
-        <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+      {(showHasNotStartedBanner || paymentsPaused) && showDepreciationNotice ? (
+        <>
+          <div className="bg-cerulean flex rounded-t-xl px-4 py-2">
+            <p className="text-sm font-light">
+              Revnets v{version} is depreciated
+            </p>
+          </div>
+          <div className="bg-cerulean w-full">
+            <div className="flex rounded-t-xl bg-orange-900 px-4 pt-2 pb-6">
+              <p className="text-sm font-light">
+                {
+                showHasNotStartedBanner 
+                  ? `Token Sale Starts in: ${formatSeconds(timeUntilStart)}`
+                  : paymentsPaused
+                  && "Payments are currently paused"
+                }
+              </p>
+            </div> 
+          </div>
+        </>
+      ) : (showHasNotStartedBanner || paymentsPaused || showDepreciationNotice) && (
+        <div
+          className={`flex rounded-t-xl px-4 pt-2 pb-6 
+          ${showDepreciationNotice 
+            ? "bg-cerulean" 
+            : "bg-orange-900"
+          }`}
+        >
           <p className="text-sm font-light">
-            Token Sale Starts in: {formatSeconds(timeUntilStart)}
+            {showHasNotStartedBanner 
+              ? `Token Sale Starts in: ${formatSeconds(timeUntilStart)}`
+              : paymentsPaused
+              ? "Payments are currently paused"
+              : showDepreciationNotice
+              && `Revnets v${version} is depreciated`
+            }
           </p>
         </div>
       )}
+      
       <div
-        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${!hasStarted && startDate && "-mt-4"}`}
+        className={`bg-grey-450 flex flex-col rounded-xl p-[12px] ${(showHasNotStartedBanner || showDepreciationNotice || paymentsPaused) && "-mt-4"}`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center">

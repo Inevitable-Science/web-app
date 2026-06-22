@@ -10,7 +10,7 @@ export const fetchDaoData = async (
     );
 
     if (response.status === 404) {
-      console.log("No DAO data found");
+      console.warn("No DAO data found");
       return null;
     }
     if (!response.ok) throw new Error("Failed to fetch DAO data");

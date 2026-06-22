@@ -49,9 +49,9 @@ export default function DaosGrid() {
           href="/project/hydradao"
           className="div1-1 bg-[url('https://cdn.inevitable.science/static/img/daos/hydra.webp')] bg-cover bg-center"
         >
-          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+          <p className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
-          </h5>
+          </p>
           <div>
             <h4 className="font-optima text-2xl">HydraDAO</h4>
             <p className="text-sm">
@@ -65,9 +65,9 @@ export default function DaosGrid() {
           href="/project/cryodao"
           className="div2-1 bg-[url('https://cdn.inevitable.science/static/img/daos/cryo.webp')] bg-cover bg-center"
         >
-          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+          <p className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
-          </h5>
+          </p>
           <div>
             <h4 className="font-optima text-2xl">CryoDAO</h4>
             <p className="text-sm">
@@ -119,9 +119,9 @@ export default function DaosGrid() {
           href="/project/cryorat"
           className="div1-mid bg-[url('https://cdn.inevitable.science/static/img/daos/cryorat.webp')] bg-cover bg-center"
         >
-          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+          <p className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
-          </h5>
+          </p>
           <div>
             <h4 className="font-optima text-2xl">CryoRat</h4>
             <p className="text-sm">
@@ -134,9 +134,9 @@ export default function DaosGrid() {
           href="/project/erectusdao"
           className="div2-mid bg-[url('https://cdn.inevitable.science/static/img/daos/erectus.webp')] bg-cover bg-center"
         >
-          <h5 className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
+          <p className="w-fit rounded-full bg-[#315659] px-[12px] py-[8px] text-sm font-semibold">
             LIVE
-          </h5>
+          </p>
           <div>
             <h4 className="font-optima text-2xl">ErectusDAO</h4>
             <p className="text-sm">

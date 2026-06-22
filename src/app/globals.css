@@ -58,7 +58,6 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-shimmer: shimmer 2s infinite;
 
   @keyframes accordion-down {
     from {
@@ -74,14 +73,6 @@
     }
     to {
       height: 0;
-    }
-  }
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
     }
   }
 }
@@ -248,4 +239,52 @@ body {
   .iconNavSvg {
     display: block !important;
   }
+}
+
+/* Transaction Button Shimmer */
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); opacity: 1; }
+  30%  { transform: translateX(100%);  opacity: 1; }
+  31%  { opacity: 0; }
+  100% { transform: translateX(100%);  opacity: 0; }
+}
+
+.shimmer,
+.shimmer-dark {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::before,
+.shimmer-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  animation: shimmer 4.5s ease-in-out infinite;
+}
+
+.shimmer::before {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.12) 50%,
+    transparent
+  );
+}
+
+.shimmer-dark::before {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 0, 0, 0.18) 50%,
+    transparent
+  );
+}
+
+.shimmer > *,
+.shimmer-dark > * {
+  position: relative;
+  z-index: 2;
 }

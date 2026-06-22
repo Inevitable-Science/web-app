@@ -1,47 +1,38 @@
 import { useState } from "react";
 import { Address } from "viem";
-import {
-  useAccount,
-  usePublicClient,
-  useWriteContract,
-} from "wagmi";
-import {
-  DEFAULT_METADATA,
-  jbMultiTerminalAbi,
-} from "juice-sdk-core";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import { DEFAULT_METADATA, jbMultiTerminalAbi } from "juice-sdk-core";
 import { JBChainId, useJBContractContext } from "juice-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
+import { primaryPayButtonClass } from "../payTab/PayActionButton";
 
-const shimmerClasses = `
-    w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-columbia-blue hover:text-dark-slate-grey focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50
-    relative overflow-hidden 
-    before:content-[''] before:absolute before:inset-0 
-    before:-translate-x-full before:animate-shimmer 
-    before:bg-linear-to-r before:from-transparent before:via-white/20 before:to-transparent
-`;
 
 export function WithdrawActionButton({
   withdrawAmount,
   tokenBalance,
   minTokensReturned,
   receiveTokenAddress,
+  isTokensReturnedLoading,
   disabled,
 }: {
   withdrawAmount: bigint;
   tokenBalance: bigint;
   minTokensReturned: bigint | undefined;
   receiveTokenAddress: Address;
+  isTokensReturnedLoading: boolean;
   disabled?: boolean;
 }) {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { contracts: { primaryNativeTerminal } } = useJBContractContext();
-  
+  const {
+    contracts: { primaryNativeTerminal },
+  } = useJBContractContext();
+
   const publicClient = usePublicClient();
   const { address, isConnected, chainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
@@ -63,7 +54,7 @@ export function WithdrawActionButton({
       });
       return;
     }
-    
+
     try {
       setIsLoading(true);
 
@@ -90,9 +81,8 @@ export function WithdrawActionButton({
         title: "Withdraw Successful!",
         description: "You Successfully Withdrew Your Tokens.",
       });
-
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast({
         variant: "destructive",
         title: "Withdraw Failed",
@@ -100,7 +90,7 @@ export function WithdrawActionButton({
       });
     } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   if (!isConnected) {
@@ -110,7 +100,7 @@ export function WithdrawActionButton({
           <Button
             onClick={show}
             loading={isConnecting}
-            className={shimmerClasses}
+            className={primaryPayButtonClass}
           >
             {isConnecting ? "Connecting..." : "Connect Wallet"}
           </Button>
@@ -119,31 +109,27 @@ export function WithdrawActionButton({
     );
   }
 
-  if (insufficientFunds) return (
-    <Button
-      className={shimmerClasses}
-      disabled
-    >
-      Insufficient Funds
-    </Button>
-  );
+  if (insufficientFunds)
+    return (
+      <Button className={primaryPayButtonClass} disabled>
+        Insufficient Funds
+      </Button>
+    );
 
   return (
     <ButtonWithWallet
       targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
       disabled={
         disabled ||
+        isTokensReturnedLoading ||
         !minTokensReturned ||
         (!withdrawAmount && chainId === selectedSucker?.peerChainId)
       }
       loading={isLoading}
       onClick={handleWithdraw}
-      className={shimmerClasses}
+      className={`shimmer ${primaryPayButtonClass}`}
     >
-      {isLoading ? 
-        "Processing..." :
-        "Withdraw"
-      }
+      {isLoading ? "Processing..." : "Withdraw"}
     </ButtonWithWallet>
   );
 }

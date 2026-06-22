@@ -50,31 +50,37 @@ export function DynamicArticleCarousel({
       </div>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="-ml-4 flex touch-pan-y">
-          {slides.map((slide) => (
-            <a
-              key={slide.articleId}
-              href={`/articles/${slide.articleId}`}
-              className="flex max-w-[520px] min-w-[280px] pl-4 sm:min-w-[440px]"
-            >
-              <div className="border-grey-500 bg-background flex h-full flex-col items-start rounded-2xl border p-4 select-none">
-                <Image
-                  src={slide.landingImage || "/placeholder.png"}
-                  alt={slide.title}
-                  height={270}
-                  width={470}
-                  className="h-auto w-full rounded-lg object-cover"
-                />
-                <div className="mt-4">
-                  <h4 className="font-optima line-clamp-1 text-xl">
-                    {slide.title}
-                  </h4>
-                  <p className="text-muted-foreground line-clamp-2 text-sm font-light">
-                    {slide.overview}
-                  </p>
+          {slides.map((slide) => {
+            const rawOverview = new DOMParser()
+              .parseFromString(slide.overview, 'text/html')
+              .body.textContent;
+
+            return (
+              <a
+                key={slide.articleId}
+                href={`/articles/${slide.articleId}`}
+                className="flex max-w-[520px] min-w-[280px] pl-4 sm:min-w-[440px]"
+              >
+                <div className="border-grey-500 bg-background flex h-full flex-col items-start rounded-2xl border p-4 select-none">
+                  <Image
+                    src={slide.landingImage || "/placeholder.png"}
+                    alt={slide.title}
+                    height={270}
+                    width={470}
+                    className="h-auto w-full rounded-lg object-cover aspect-16/9"
+                  />
+                  <div className="mt-4">
+                    <h4 className="font-optima line-clamp-1 text-xl">
+                      {slide.title}
+                    </h4>
+                    <p className="text-muted-foreground line-clamp-2 text-sm font-light">
+                      {rawOverview}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </a>
-          ))}
+              </a>
+              )}
+            )}
         </div>
       </div>
     </section>

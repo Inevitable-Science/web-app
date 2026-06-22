@@ -34,9 +34,7 @@ export function TreasurySection() {
                 {treasuryAnalytics?.lastUpdated &&
                   formatDate(treasuryAnalytics.lastUpdated)}
               </h4>
-              <p className="text-muted-foreground font-light">
-                LAST UPDATED
-              </p>
+              <p className="text-muted-foreground font-light">LAST UPDATED</p>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ConnectKitButton } from "connectkit";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatEthAddress } from "@/lib/utils";
@@ -11,9 +11,9 @@ import { Menu, X } from "lucide-react";
 
 export function Nav() {
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isPastViewport, setIsPastViewport] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const lastScrollYRef = useRef(0);
   const pathname = usePathname();
 
   // Handle scroll behavior
@@ -23,23 +23,23 @@ export function Nav() {
       const triggerPoint = window.innerHeight;
       setIsPastViewport(currentScrollY >= triggerPoint);
 
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      if (currentScrollY > lastScrollYRef.current && currentScrollY > 50) {
         setIsVisible(false);
         setIsMenuOpen(false); // Close mobile menu when scrolling down
-      } else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollYRef.current) {
         setIsVisible(true);
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   // Close menu on route change
   useEffect(() => {
-    setIsMenuOpen(false);
+    if (isMenuOpen) setIsMenuOpen(false);
   }, [pathname]);
 
   // Manage body scrolling and viewport width changes

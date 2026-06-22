@@ -63,8 +63,8 @@ export const AllArticlesResponseZ = z.object({
           discord: z.string(),
         }),
       }),
-    }),
-  )
+    })
+  ),
 });
 
 export type AllArticlesResponse = z.infer<typeof AllArticlesResponseZ>;

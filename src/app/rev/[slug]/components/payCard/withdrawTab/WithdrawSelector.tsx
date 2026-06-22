@@ -15,7 +15,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { ChevronDown } from "lucide-react";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { formatNumber } from "@/lib/utils";
 
 export interface SuckersBalance {

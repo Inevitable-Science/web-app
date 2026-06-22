@@ -100,7 +100,7 @@ export default function Vision() {
 
         <div className="ctWrapper">
           <div className="my-24 grid grid-cols-[1fr] gap-4 md:grid-cols-[400px_auto] md:gap-12 lg:grid-cols-[470px_auto]">
-            <div className="flex flex-col gap-4 w-full">
+            <div className="flex w-full flex-col gap-4">
               <h3 className="text-5xl font-extralight text-wrap">
                 This Is Where The
                 <span className="text-primary"> Impossible </span>

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FooterLoginButton } from "./FooterLoginButton";
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="flex h-screen w-full flex-col bg-[url('https://cdn.inevitable.science/static/img/layout/footer.webp')] mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_100%)] bg-cover bg-center px-12 py-8 font-light">
       {/* CENTERED SECTION */}
@@ -76,7 +76,7 @@ export default function Footer() {
 
           <div className="flex items-center gap-4">
             <Link
-              href="/legal/privacy"
+              href="/whitepaper"
               aria-label="Privacy Policy"
               className="hover:underline"
             >

@@ -4,7 +4,6 @@ import { FixedInt } from "fpnum";
 import {
   getProjectTerminalStore,
   JB_TOKEN_DECIMALS,
-  JBChainId,
   jbTerminalStoreAbi,
   JBVersion,
   NATIVE_TOKEN_DECIMALS,

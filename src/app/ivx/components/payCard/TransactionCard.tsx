@@ -19,7 +19,7 @@ import { PayActionButton } from "./PayActionButtonIvx";
 import { PayCardSkeleton } from "./PayCardSkeleton";
 
 import { formatNumber, truncateNumber } from "@/lib/utils";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { formatTokenAmount, getTokensForChain, Token } from "@/lib/token";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
@@ -119,7 +119,10 @@ export function TransactionCard() {
     if (!ruleset || !rulesetMetadata) return;
 
     const quote = getTokenBtoAQuote(
-      new FixedInt(parseUnits(value, projectTokenDecimals), projectTokenDecimals),
+      new FixedInt(
+        parseUnits(value, projectTokenDecimals),
+        projectTokenDecimals
+      ),
       projectTokenDecimals,
       {
         weight: ruleset.weight,

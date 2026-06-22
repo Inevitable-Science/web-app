@@ -190,132 +190,130 @@ export function CreateScheduleDialogue() {
         <Button variant={"accent"}>Create Schedule</Button>
       </DialogTrigger>
 
-        <DialogContent>
-          <DialogTitle>
-            Create Vesting Schedule
-          </DialogTitle>
-          {withdrawableAmount !== null && (
-            <DialogDescription>
-              Max Token Amount: ~{formatNumber(withdrawableAmount)}
-            </DialogDescription>
-          )}
+      <DialogContent>
+        <DialogTitle>Create Vesting Schedule</DialogTitle>
+        {withdrawableAmount !== null && (
+          <DialogDescription>
+            Max Token Amount: ~{formatNumber(withdrawableAmount)}
+          </DialogDescription>
+        )}
 
-          <div className="my-4 flex flex-col gap-2">
-            <div className="flex flex-col gap-1">
-              <p className="text-sm">Beneficiary/Schedule Holder</p>
-              <Input
-                value={beneficiary}
-                onChange={(e) => setBeneficiary(e.target.value)}
-                placeholder="0x1234...4321"
-                maxLength={42}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <p className="text-sm">Token Amount</p>
-              <Input
-                value={tokenAmount}
-                onChange={(e) => setTokenAmount(e.target.value)}
-                onKeyDown={preventMinusKey}
-                placeholder="100"
-                maxLength={16}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <p className="text-sm">
-                Start Date - {formatDate(startDate, true)}
-              </p>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"secondary"}
-                    className="border-color w-fit border"
-                  >
-                    {startDate
-                      ? `Edit Start Date - (${formatDate(startDate, true)})`
-                      : "Set Start Date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-fit">
-                  <Calendar
-                    mode="single"
-                    selected={startDate}
-                    onSelect={setStartDate}
-                    className="rounded-lg"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <p className="text-sm">End Date - {formatDate(endDate, true)}</p>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"secondary"}
-                    className="border-color w-fit border"
-                  >
-                    {endDate
-                      ? `Edit End Date - (${formatDate(endDate, true)})`
-                      : "Set End Date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-fit">
-                  <Calendar
-                    mode="single"
-                    selected={endDate}
-                    onSelect={setEndDate}
-                    className="rounded-lg"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <p className="text-sm">Cliff (Months)</p>
-              <Input
-                value={cliff}
-                onChange={(e) => setCliff(e.target.value)}
-                onKeyDown={preventMinusKey}
-                placeholder="12 - (0 by default)"
-                maxLength={16}
-              />
-            </div>
-
-            <div className="mt-4 flex items-center space-x-3">
-              <Checkbox.Root
-                id="terms"
-                checked={isRevokable}
-                onCheckedChange={(checked) => setIsRevokable(Boolean(checked))}
-                className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
-              >
-                <Checkbox.Indicator className="flex items-center justify-center text-current">
-                  <Check className="h-4 w-4" />
-                </Checkbox.Indicator>
-              </Checkbox.Root>
-              <label
-                htmlFor="terms"
-                className="cursor-pointer text-sm select-none"
-              >
-                Revokable - Allows the schedule to be revoked in future
-              </label>
-            </div>
+        <div className="my-4 flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">Beneficiary/Schedule Holder</p>
+            <Input
+              value={beneficiary}
+              onChange={(e) => setBeneficiary(e.target.value)}
+              placeholder="0x1234...4321"
+              maxLength={42}
+            />
           </div>
 
-          <div className="mt-6 flex justify-end space-x-2">
-            <DialogClose />
-            <ButtonWithWallet
-              targetChainId={vestingChainId ?? 1}
-              disabled={!enableCreateButton}
-              loading={isCreating}
-              onClick={createSchedule}
-              variant={"accent"}
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">Token Amount</p>
+            <Input
+              value={tokenAmount}
+              onChange={(e) => setTokenAmount(e.target.value)}
+              onKeyDown={preventMinusKey}
+              placeholder="100"
+              maxLength={16}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">
+              Start Date - {formatDate(startDate, true)}
+            </p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"secondary"}
+                  className="border-color w-fit border"
+                >
+                  {startDate
+                    ? `Edit Start Date - (${formatDate(startDate, true)})`
+                    : "Set Start Date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-fit">
+                <Calendar
+                  mode="single"
+                  selected={startDate}
+                  onSelect={setStartDate}
+                  className="rounded-lg"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">End Date - {formatDate(endDate, true)}</p>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"secondary"}
+                  className="border-color w-fit border"
+                >
+                  {endDate
+                    ? `Edit End Date - (${formatDate(endDate, true)})`
+                    : "Set End Date"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-fit">
+                <Calendar
+                  mode="single"
+                  selected={endDate}
+                  onSelect={setEndDate}
+                  className="rounded-lg"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <p className="text-sm">Cliff (Months)</p>
+            <Input
+              value={cliff}
+              onChange={(e) => setCliff(e.target.value)}
+              onKeyDown={preventMinusKey}
+              placeholder="12 - (0 by default)"
+              maxLength={16}
+            />
+          </div>
+
+          <div className="mt-4 flex items-center space-x-3">
+            <Checkbox.Root
+              id="terms"
+              checked={isRevokable}
+              onCheckedChange={(checked) => setIsRevokable(Boolean(checked))}
+              className="peer data-[state=checked]:bg-cerulean h-4 w-4 shrink-0 rounded-xs border border-slate-400 ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
             >
-              Create
-            </ButtonWithWallet>
+              <Checkbox.Indicator className="flex items-center justify-center text-current">
+                <Check className="h-4 w-4" />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+            <label
+              htmlFor="terms"
+              className="cursor-pointer text-sm select-none"
+            >
+              Revokable - Allows the schedule to be revoked in future
+            </label>
           </div>
-        </DialogContent>
+        </div>
+
+        <div className="mt-6 flex justify-end space-x-2">
+          <DialogClose />
+          <ButtonWithWallet
+            targetChainId={vestingChainId ?? 1}
+            disabled={!enableCreateButton}
+            loading={isCreating}
+            onClick={createSchedule}
+            variant={"accent"}
+          >
+            Create
+          </ButtonWithWallet>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 }
