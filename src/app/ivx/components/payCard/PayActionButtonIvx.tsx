@@ -13,7 +13,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { ConnectKitButton } from "connectkit";
-import { formatUnits, parseUnits } from "viem";
+import { Address, formatUnits, parseUnits } from "viem";
 
 import { truncateNumber } from "@/lib/utils";
 import { Token } from "@/lib/token";
@@ -37,6 +37,7 @@ import { Check } from "lucide-react";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useRulesetData } from "@/hooks/useRulesetData";
+import { useFetchOfacStatus } from "@/hooks/queries/useFetchOfacStatus";
 
 const primaryButtonClasses =
   "w-full rounded-full bg-primary px-5 py-2.5 text-center text-sm font-medium text-black hover:bg-primary focus:outline-hidden disabled:opacity-50";
@@ -75,6 +76,12 @@ export function PayActionButton({
   const { ensureAllowance, isApproving } = useAllowance(targetChainId);
   const { toast } = useToast();
 
+  const {
+    data: OfacStatus,
+    isLoading: isOfacLoading,
+    isError: isOfacError
+  } = useFetchOfacStatus(address as Address);
+  const showLoading = isOfacLoading || !rulesetMetadata || !allRulesets?.length;
   const {
     data: txHash,
     isPending: isWriteLoading,
@@ -217,6 +224,17 @@ export function PayActionButton({
   };
 
   // --- 5. RENDER LOGIC ---
+  if (
+    (address && !OfacStatus?.isGoodAddress && !isOfacLoading)
+    || (address && isOfacError)
+  ) {
+    return (
+      <Button className={primaryButtonClasses} disabled>
+        This Address is Blocked
+      </Button>
+    );
+  }
+
   if (!hasStarted || paymentsPaused) {
     return (
       <Button className={primaryButtonClasses} disabled>
@@ -273,6 +291,7 @@ export function PayActionButton({
         <ButtonWithWallet
           targetChainId={targetChainId}
           disabled={disabled}
+          loading={showLoading}
           className={`shimmer-dark ${primaryButtonClasses}`}
         >
           Buy

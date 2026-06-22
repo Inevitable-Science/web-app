@@ -6,7 +6,7 @@ export const useFetchTokenPrices = (tokens: string[] | null) => {
   const enabled = (tokens && tokens.length > 0) ?? false;
 
   return useQuery<TokenPriceResponse>({
-    queryKey: ["tokenPrices", tokens],
+    queryKey: ["token_prices", tokens],
     queryFn: () => fetchTokenPrices(tokens!),
     enabled,
     staleTime: 3600000,
