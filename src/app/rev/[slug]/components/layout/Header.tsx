@@ -12,13 +12,13 @@ import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Address, formatUnits } from "viem";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { JB_CHAINS } from "juice-sdk-core";
+import { JB_CHAINS } from "@bananapus/nana-sdk-core";
 
 export function Header() {
   const project = useRevnetDataStore((state) => state.project);

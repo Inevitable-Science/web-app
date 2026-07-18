@@ -1,4 +1,4 @@
-import { useChain, useJBChainId } from "juice-sdk-react";
+import { useChain, useJBChainId } from "@bananapus/nana-sdk-react";
 import { optimismSepolia } from "viem/chains";
 import { sepolia } from "viem/chains";
 

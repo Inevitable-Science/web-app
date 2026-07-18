@@ -11,8 +11,8 @@ import {
   revDeployerAbi,
   RevnetCoreContracts,
   SuckerPair,
-} from "juice-sdk-core";
-import { useJBChainId, useJBContractContext } from "juice-sdk-react";
+} from "@bananapus/nana-sdk-core";
+import { useJBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { useEffect, useState } from "react";
 import { Address } from "viem";
 import {

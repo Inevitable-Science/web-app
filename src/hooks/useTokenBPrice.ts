@@ -1,6 +1,6 @@
-import { useJBRulesetContext } from "juice-sdk-react";
+import { useJBRulesetContext } from "@bananapus/nana-sdk-react";
 import { useTokenA } from "./useTokenA";
-import { getTokenBPrice } from "juice-sdk-core";
+import { getTokenBPrice } from "@bananapus/nana-sdk-core";
 
 /**
  * Returns the current price of token B in terms of token A.

@@ -13,8 +13,8 @@ import {
   useJBChainId,
   useJBProjectMetadataContext,
   useJBTokenContext,
-} from "juice-sdk-react";
-import { JBProjectToken, JB_CHAINS, jbControllerAbi } from "juice-sdk-core";
+} from "@bananapus/nana-sdk-react";
+import { JBProjectToken, JB_CHAINS, jbControllerAbi } from "@bananapus/nana-sdk-core";
 import { useAccount, useReadContract, useWatchAsset } from "wagmi";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import EtherscanLink from "@/components/EtherscanLink";

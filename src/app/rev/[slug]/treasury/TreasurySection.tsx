@@ -7,7 +7,7 @@ import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import EtherscanLink from "@/components/EtherscanLink";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { notFound } from "next/navigation";
 

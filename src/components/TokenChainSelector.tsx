@@ -1,6 +1,6 @@
 "use client";
-import { JBChainId } from "juice-sdk-react";
-import { NATIVE_TOKEN, SuckerPair, USDC_ADDRESSES } from "juice-sdk-core";
+import { JBChainId } from "@bananapus/nana-sdk-react";
+import { NATIVE_TOKEN, SuckerPair, USDC_ADDRESSES } from "@bananapus/nana-sdk-core";
 import { Address } from "viem";
 import { Token } from "@/lib/token";
 import Image from "next/image";

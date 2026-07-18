@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 
 import { useAccount } from "wagmi";
 import EtherscanLink from "@/components/EtherscanLink";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import { ChainLogo } from "@/components/ChainLogo";
 import { EthereumAddress } from "@/components/EthereumAddress";
 

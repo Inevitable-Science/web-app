@@ -5,12 +5,12 @@ import {
   JBCoreContracts,
   jbDirectoryAbi,
   jbMultiTerminalAbi,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBChainId,
   useJBContractContext,
   useSuckers,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { Address, getContract } from "viem";
 import { useConfig } from "wagmi";
 import { useQuery } from "wagmi/query";

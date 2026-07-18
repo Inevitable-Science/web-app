@@ -1,11 +1,11 @@
 import { FixedInt } from "fpnum";
-import { useJBRulesetContext, useJBTokenContext } from "juice-sdk-react";
+import { useJBRulesetContext, useJBTokenContext } from "@bananapus/nana-sdk-react";
 import { useTokenA } from "./useTokenA";
 import {
   ReservedPercent,
   RulesetWeight,
   getTokenAToBQuote,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { formatTokenSymbol } from "@/lib/utils";
 

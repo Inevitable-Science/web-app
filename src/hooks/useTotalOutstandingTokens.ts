@@ -3,7 +3,7 @@ import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 
 export function useTotalOutstandingTokens() {
   const { projectId, version } = useJBContractContext();

@@ -6,7 +6,7 @@ import {
   NATIVE_TOKEN,
   NATIVE_TOKEN_DECIMALS,
   USDC_ADDRESSES,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { formatUnits } from "viem";
 
 export interface Token {

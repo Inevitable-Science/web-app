@@ -2,13 +2,13 @@
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { prettyNumber } from "@/lib/number";
 import { formatNumber, formatPortion, formatTokenSymbol } from "@/lib/utils";
-import { formatUnits, JB_CHAINS } from "juice-sdk-core";
+import { formatUnits, JB_CHAINS } from "@bananapus/nana-sdk-core";
 import { ParticipantsDocument, ParticipantsQuery } from "@/generated/graphql";
 import {
   JBChainId,
   useBendystrawQuery,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { Address } from "viem";
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useBendystrawQuery } from "juice-sdk-react";
+import { useBendystrawQuery } from "@bananapus/nana-sdk-react";
 import { ParticipantSnapshotsInRangeDocument } from "@/generated/graphql";
 
 // Define the shape of the data our hook will return

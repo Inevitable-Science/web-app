@@ -11,12 +11,12 @@ import {
   JB_TOKEN_DECIMALS,
   JBChainId,
   USD_CURRENCY_ID,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBContractContext,
   useJBRulesetContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { formatUnits, parseUnits } from "viem";
 import { useCurrencyPrice } from "./useCurrencyPrice";
 import { useProjectBaseToken } from "../useProjectBaseToken";

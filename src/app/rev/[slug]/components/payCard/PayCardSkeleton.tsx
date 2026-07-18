@@ -2,7 +2,7 @@ import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 import { Button } from "@/components/ui/button";
 import { Token } from "@/lib/token";
 import Image from "next/image";
-import { useJBChainId } from "juice-sdk-react";
+import { useJBChainId } from "@bananapus/nana-sdk-react";
 
 export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
   const chainId = useJBChainId();

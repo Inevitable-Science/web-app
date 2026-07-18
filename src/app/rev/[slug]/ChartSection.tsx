@@ -7,7 +7,7 @@ import {
   useJBChainId,
   useJBContractContext,
   useBendystrawQuery,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";

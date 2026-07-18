@@ -16,8 +16,8 @@ import {
   useJBContractContext,
   useJBRulesetContext,
   useSuckers,
-} from "juice-sdk-react";
-import { SuckerPair, JBRulesetData, JBRulesetMetadata } from "juice-sdk-core";
+} from "@bananapus/nana-sdk-react";
+import { SuckerPair, JBRulesetData, JBRulesetMetadata } from "@bananapus/nana-sdk-core";
 import { ProjectQuery } from "@/generated/graphql";
 import { useVolumeData, DailyVolume } from "@/hooks/useVolumeData";
 import {

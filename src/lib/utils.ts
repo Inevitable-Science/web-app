@@ -1,7 +1,7 @@
 import { chainSortOrder } from "@/app/constants";
 import { clsx, type ClassValue } from "clsx";
 import { Duration, formatDuration, intervalToDuration } from "date-fns";
-import { JBChainId, JBTokenContextData } from "juice-sdk-react";
+import { JBChainId, JBTokenContextData } from "@bananapus/nana-sdk-react";
 import { twMerge } from "tailwind-merge";
 import { Address, Chain, formatEther } from "viem";
 import { mainnet } from "viem/chains";
@@ -10,7 +10,7 @@ import {
   JB_CHAINS,
   ReservedPercent,
   CashOutTaxRate,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

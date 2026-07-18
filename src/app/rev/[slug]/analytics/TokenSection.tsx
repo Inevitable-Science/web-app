@@ -10,7 +10,7 @@ import { TokenChart } from "@/components/analytics/TokenChart";
 import { TokenStatsChart } from "@/components/analytics/TokenStatsChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import { notFound } from "next/navigation";
 
 function calculateRatio(

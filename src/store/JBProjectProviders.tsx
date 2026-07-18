@@ -2,7 +2,7 @@
 
 "use client";
 import { OPEN_IPFS_GATEWAY_HOSTNAME } from "@/lib/ipfs/ipfs";
-import { JBProjectProvider, JBChainId, JBVersion } from "juice-sdk-react";
+import { JBProjectProvider, JBChainId, JBVersion } from "@bananapus/nana-sdk-react";
 import { notFound } from "next/navigation";
 
 export function JBProjectProviderRoot({

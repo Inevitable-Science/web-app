@@ -9,12 +9,12 @@ import {
   getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
   revLoansAbi,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";

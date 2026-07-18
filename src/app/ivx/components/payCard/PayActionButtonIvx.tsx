@@ -1,10 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
-import { jbMultiTerminalAbi, NATIVE_TOKEN } from "juice-sdk-core";
+import { jbMultiTerminalAbi, NATIVE_TOKEN } from "@bananapus/nana-sdk-core";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 
 import {
   useAccount,

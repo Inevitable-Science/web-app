@@ -11,8 +11,8 @@ import {
   JBChainId,
   jbPermissionsAbi,
   revLoansAbi,
-} from "juice-sdk-core";
-import { useJBContractContext, useJBTokenContext } from "juice-sdk-react";
+} from "@bananapus/nana-sdk-core";
+import { useJBContractContext, useJBTokenContext } from "@bananapus/nana-sdk-react";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";

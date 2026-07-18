@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { JBChainId } from "juice-sdk-react";
+import { JBChainId } from "@bananapus/nana-sdk-react";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { RepayTab } from "./RepayTab";

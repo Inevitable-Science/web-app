@@ -8,13 +8,13 @@ import {
   JB_TOKEN_DECIMALS,
   NATIVE_TOKEN,
   NATIVE_TOKEN_DECIMALS,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   JBChainId,
   useBendystrawQuery,
   useJBContractContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { Address, formatUnits, parseUnits } from "viem";
 import { useAccount } from "wagmi";
 import { LoanDialog, LoanType } from "./LoanDialog";

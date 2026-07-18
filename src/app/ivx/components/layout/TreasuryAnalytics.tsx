@@ -2,7 +2,7 @@ import { truncateAddress } from "@/lib/utils";
 import { Address } from "viem";
 import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { JBChainId } from "juice-sdk-core";
+import { JBChainId } from "@bananapus/nana-sdk-core";
 
 export function IvxTreasuryAnalytics() {
   const treasuryData = useRevnetDataStore((state) => state.treasuryAnalytics);

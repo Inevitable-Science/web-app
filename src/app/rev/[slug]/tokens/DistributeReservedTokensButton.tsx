@@ -1,8 +1,8 @@
 "use client";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
-import { jbControllerAbi, SuckerPair } from "juice-sdk-core";
-import { useJBContractContext } from "juice-sdk-react";
+import { jbControllerAbi, SuckerPair } from "@bananapus/nana-sdk-core";
+import { useJBContractContext } from "@bananapus/nana-sdk-react";
 import { useEffect, useState } from "react";
 import {
   useAccount,

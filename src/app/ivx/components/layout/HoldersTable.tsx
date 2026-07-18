@@ -2,13 +2,13 @@
 
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { formatNumber } from "@/lib/utils";
-import { formatUnits, JB_CHAINS } from "juice-sdk-core";
+import { formatUnits, JB_CHAINS } from "@bananapus/nana-sdk-core";
 import { ParticipantsDocument } from "@/generated/graphql";
 import {
   JBChainId,
   useBendystrawQuery,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { Address } from "viem";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 

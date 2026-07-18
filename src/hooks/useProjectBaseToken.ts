@@ -5,12 +5,12 @@ import {
   NATIVE_TOKEN_DECIMALS,
   USD_CURRENCY_ID,
   USDC_ADDRESSES,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 
 export interface BaseTokenInfo {
   tokenType: "ETH" | "USDC" | "MIXED";

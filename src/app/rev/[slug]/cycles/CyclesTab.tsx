@@ -5,8 +5,8 @@ import {
   JBRulesetData,
   JBRulesetMetadata,
   ReservedPercent,
-} from "juice-sdk-core";
-import { useNativeTokenSurplus } from "juice-sdk-react";
+} from "@bananapus/nana-sdk-core";
+import { useNativeTokenSurplus } from "@bananapus/nana-sdk-react";
 import { useMemo, useState, useEffect } from "react";
 import { useCountdownToDate } from "@/hooks/useCountdownToDate";
 import { useFormatDaysAndHours } from "@/hooks/useFormatDuration";

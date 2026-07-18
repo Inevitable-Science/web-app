@@ -8,13 +8,13 @@ import {
 } from "@/generated/graphql";
 import { formatNumber, formatTokenSymbol } from "@/lib/utils";
 import { formatDistance } from "date-fns";
-import { Ether, JB_CHAINS, JBProjectToken } from "juice-sdk-core";
+import { Ether, JB_CHAINS, JBProjectToken } from "@bananapus/nana-sdk-core";
 import {
   JBChainId,
   useJBTokenContext,
   useBendystrawQuery,
   useJBProjectMetadataContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { useState, useEffect, useMemo } from "react";
 import { Address, formatUnits } from "viem";
 

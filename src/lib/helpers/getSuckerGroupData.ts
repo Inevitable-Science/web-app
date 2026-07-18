@@ -6,7 +6,7 @@ import {
   SuckerGroupQueryVariables,
 } from "@/generated/graphql";
 import { getBendystrawClient } from "@/graphql/bendystrawClient";
-import { JBChainId } from "juice-sdk-core";
+import { JBChainId } from "@bananapus/nana-sdk-core";
 
 interface FetchSuckerGroupData {
   volume: bigint;

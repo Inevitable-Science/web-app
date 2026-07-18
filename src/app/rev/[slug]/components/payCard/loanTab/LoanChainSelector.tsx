@@ -4,8 +4,8 @@ import {
   JBChainId,
   useJBProjectMetadataContext,
   useJBTokenContext,
-} from "juice-sdk-react";
-import { JB_CHAINS, JBProjectToken } from "juice-sdk-core";
+} from "@bananapus/nana-sdk-react";
+import { JB_CHAINS, JBProjectToken } from "@bananapus/nana-sdk-core";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import {

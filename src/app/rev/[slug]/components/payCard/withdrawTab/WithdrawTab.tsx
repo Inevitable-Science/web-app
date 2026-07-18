@@ -5,7 +5,7 @@ import {
   useJBContractContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { truncateNumber } from "@/lib/utils";
 import { WithdrawActionButton } from "./WithdrawActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
 import { useReclaimableSurplus } from "@/hooks/useReclaimableSurplus";
 import { formatUnits, parseUnits } from "viem";
-import { JB_TOKEN_DECIMALS } from "juice-sdk-core";
+import { JB_TOKEN_DECIMALS } from "@bananapus/nana-sdk-core";
 import { useDebounce } from "use-debounce";
 
 export interface Surplus {

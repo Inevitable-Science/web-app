@@ -4,13 +4,13 @@ import {
   getTokenBtoAQuote,
   JB_TOKEN_DECIMALS,
   USDC_ADDRESSES,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   JBChainId,
   useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { Address, formatUnits, parseUnits } from "viem";
 import { FixedInt } from "fpnum";

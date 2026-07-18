@@ -4,7 +4,7 @@ import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { useMemo } from "react";
 import { useAccount } from "wagmi";
 

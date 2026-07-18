@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { JBChainId, useJBChainId, useJBContractContext } from "juice-sdk-react";
+import { JBChainId, useJBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { useAccount } from "wagmi";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";

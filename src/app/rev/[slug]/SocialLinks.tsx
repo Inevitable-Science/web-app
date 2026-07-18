@@ -1,4 +1,4 @@
-import { useJBProjectMetadataContext } from "juice-sdk-react";
+import { useJBProjectMetadataContext } from "@bananapus/nana-sdk-react";
 import { Globe } from "lucide-react";
 import Image from "next/image";
 

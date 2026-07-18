@@ -10,13 +10,13 @@ import {
   JBCoreContracts,
   jbSplitsAbi,
   SuckerPair,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
   useSuckers,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 import {

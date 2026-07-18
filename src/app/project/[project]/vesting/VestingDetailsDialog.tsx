@@ -18,7 +18,7 @@ import { ProcessedSchedule } from "@/lib/vesting/types";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address, parseEther, weiUnits } from "viem";
-import { formatEther, JB_CHAINS } from "juice-sdk-core";
+import { formatEther, JB_CHAINS } from "@bananapus/nana-sdk-core";
 import { formatDate, formatNumber } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";

@@ -9,12 +9,12 @@ import {
   WeightCutPercent,
   formatUnits,
   CashOutTaxRate,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { useReadContract } from "wagmi";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { formatNumber, formatTokenSymbol, rulesetStartDate } from "@/lib/utils";

@@ -22,7 +22,7 @@ import {
   JBChainId,
   jbControllerAbi,
   JBCoreContracts,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   ChainPayment,
   RelayrPostBundleResponse,
@@ -30,7 +30,7 @@ import {
   useJBContractContext,
   useJBProjectMetadataContext,
   useSendRelayrTx,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";

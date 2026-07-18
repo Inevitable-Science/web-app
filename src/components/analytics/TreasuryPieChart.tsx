@@ -3,7 +3,7 @@
 import { useState, useEffect, type JSX } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
 import { Address } from "viem";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import EtherscanLink from "../EtherscanLink";
 
 interface TreasuryToken {

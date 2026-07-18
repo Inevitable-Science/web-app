@@ -8,7 +8,7 @@ import { mainnet } from "viem/chains";
 import { formatDistance } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { EthereumAddress } from "@/components/EthereumAddress";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import { useFetchLegacyActivity } from "@/hooks/queries/useFetchLegacyActivity";
 
 function getRelativeTime(dateString: string): string {

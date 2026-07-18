@@ -8,7 +8,7 @@ import {
   jbRulesetsAbi,
   JBVersion,
   WeightCutPercent,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { getContract } from "viem";
 
 export interface Ruleset {

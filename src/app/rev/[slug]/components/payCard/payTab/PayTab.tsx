@@ -6,7 +6,7 @@ import {
   useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits } from "viem";
 import {
@@ -14,7 +14,7 @@ import {
   getTokenBtoAQuote,
   JB_TOKEN_DECIMALS,
   USDC_ADDRESSES,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { formatNumber, truncateNumber } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";

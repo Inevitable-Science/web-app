@@ -5,7 +5,7 @@ import DOMPurify from "dompurify";
 import { DaoData } from "./AnalyticsPreview";
 import { SocialLinks } from "./SocialLinks";
 import { ChartSection } from "./ChartSection";
-import { useJBProjectMetadataContext } from "juice-sdk-react";
+import { useJBProjectMetadataContext } from "@bananapus/nana-sdk-react";
 import { LoansTable } from "./components/loanActions/LoansTable";
 import { EditMetadataDialog } from "./components/EditMetadataDialog";
 import { useUserPermissions } from "@/hooks/useUserPermissions";

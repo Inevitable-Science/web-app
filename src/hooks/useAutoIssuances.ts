@@ -3,12 +3,12 @@ import {
   AutoIssueEventsDocument,
   StoreAutoIssuanceAmountEventsDocument,
 } from "@/generated/graphql";
-import { JBChainId, JBCoreContracts, jbRulesetsAbi } from "juice-sdk-core";
+import { JBChainId, JBCoreContracts, jbRulesetsAbi } from "@bananapus/nana-sdk-core";
 import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { useMemo } from "react";
 import { useReadContract } from "wagmi";
 

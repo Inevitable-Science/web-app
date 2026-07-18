@@ -7,7 +7,7 @@ import { TreasuryPieChart } from "@/components/analytics/TreasuryPieChart";
 import { TreasuryChart } from "@/components/analytics/TreasuryChart";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import EtherscanLink from "@/components/EtherscanLink";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 import { EthereumAddress } from "@/components/EthereumAddress";
 
 export function TreasurySection() {

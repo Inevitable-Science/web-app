@@ -5,9 +5,9 @@ import {
   JBRulesetMetadata,
   //RulesetWeight,
   //WeightCutPercent,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { format } from "date-fns";
-//import { useReadJbRulesetsAllOf } from "juice-sdk-react";
+//import { useReadJbRulesetsAllOf } from "@bananapus/nana-sdk-react";
 import {
   CashOutTaxRate,
   jbControllerAbi,
@@ -17,12 +17,12 @@ import {
   ReservedPercent,
   RulesetWeight,
   WeightCutPercent,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import {
   useJBChainId,
   useJBContractContext,
   useJBTokenContext,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import { MAX_RULESET_COUNT } from "@/app/constants";
 import { useReadContract } from "wagmi";
 

@@ -3,13 +3,13 @@
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { ParticipantsDocument } from "@/generated/graphql";
 import { formatPortion } from "@/lib/utils";
-import { JB_CHAINS, JBChainId, JBProjectToken } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId, JBProjectToken } from "@bananapus/nana-sdk-core";
 import { useMemo, useState, useEffect, type JSX } from "react";
 import { Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import { Address } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useBendystrawQuery } from "juice-sdk-react";
+import { useBendystrawQuery } from "@bananapus/nana-sdk-react";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useTotalOutstandingTokens } from "@/hooks/useTotalOutstandingTokens";
 

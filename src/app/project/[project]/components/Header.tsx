@@ -3,7 +3,7 @@ import Image from "next/image";
 import { EthereumAddress } from "@/components/EthereumAddress";
 import { Address } from "viem";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
-import { JB_CHAINS, JBChainId } from "juice-sdk-core";
+import { JB_CHAINS, JBChainId } from "@bananapus/nana-sdk-core";
 
 export function Header() {
   const daoData = useLegacyProjectStore((state) => state.daoData);

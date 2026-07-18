@@ -9,7 +9,7 @@ import {
   NATIVE_TOKEN_DECIMALS,
   ETH_CURRENCY_ID,
   USD_CURRENCY_ID,
-} from "juice-sdk-core";
+} from "@bananapus/nana-sdk-core";
 import { getContract, parseUnits } from "viem";
 import { applyNanaFee, applyRevFee } from "./feeHelpers";
 import { getViemPublicClient, ViemChainIdType } from "./wagmiConfig";

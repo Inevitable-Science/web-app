@@ -939,6 +939,21 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
+"@bananapus/nana-sdk-core@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-core/-/nana-sdk-core-1.3.0.tgz#7e18db9111b05b0daafaae7b7eb4f4898357b543"
+  integrity sha512-rwnny4f2yFEk1q5fMz6U+ivlC7H7Utw87y3/jiBKI/BbWdRM1cVtcEbCzqkV68jE3mxuecXIaL/BK0AJesc8Zg==
+  dependencies:
+    bs58 "^5.0.0"
+    fpnum "^1.0.0"
+
+"@bananapus/nana-sdk-react@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-react/-/nana-sdk-react-4.0.0.tgz#40b5ed2d393c581f3dd4f4ebd89ed23d7f754151"
+  integrity sha512-r5lSdkxGqF86RRjpZyOsvl9Mg6q5x7l+qrFI2E32TocU8oMAeQVxdqR366TDkcIahCjIBXnuAWqy+wOG1NmAsw==
+  dependencies:
+    graphql-request "^7.2.0"
+
 "@base-org/account@2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@base-org/account/-/account-2.4.0.tgz#fb4ac1d1f7fed221de356a319d2eccf1c0a0cea4"

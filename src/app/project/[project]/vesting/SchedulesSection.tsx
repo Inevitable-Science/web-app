@@ -7,7 +7,7 @@ import {
   useSwitchChain,
   useWriteContract,
 } from "wagmi";
-import { JB_CHAINS } from "juice-sdk-core";
+import { JB_CHAINS } from "@bananapus/nana-sdk-core";
 import { useLegacyProjectStore } from "@/store/LegacyProjectContext";
 import { getViemPublicClient, ViemChainIdType } from "@/lib/wagmiConfig";
 import { ProcessedSchedule, Schedule } from "@/lib/vesting/types";

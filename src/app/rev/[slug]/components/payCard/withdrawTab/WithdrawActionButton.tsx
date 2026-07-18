@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Address } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { DEFAULT_METADATA, jbMultiTerminalAbi } from "juice-sdk-core";
-import { JBChainId, useJBContractContext } from "juice-sdk-react";
+import { DEFAULT_METADATA, jbMultiTerminalAbi } from "@bananapus/nana-sdk-core";
+import { JBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import { useJBTokenContext, useSuckersUserTokenBalance } from "juice-sdk-react";
+import { useJBTokenContext, useSuckersUserTokenBalance } from "@bananapus/nana-sdk-react";
 import { formatNumber, truncateNumber } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
 import { LoanChainSelector } from "./LoanChainSelector";
 import { useReadContract } from "wagmi";
-import { JB_TOKEN_DECIMALS, revLoansAbi } from "juice-sdk-core";
+import { JB_TOKEN_DECIMALS, revLoansAbi } from "@bananapus/nana-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { LoanActionButton } from "./LoanActionButton";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";

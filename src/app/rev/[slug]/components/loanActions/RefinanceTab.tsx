@@ -3,13 +3,13 @@ import { PayInput } from "@/components/PayInput";
 import { Button } from "@/components/ui/button";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { DialogClose, DialogTitle } from "@/components/ui/dialog";
-import { JB_TOKEN_DECIMALS, revLoansAbi } from "juice-sdk-core";
+import { JB_TOKEN_DECIMALS, revLoansAbi } from "@bananapus/nana-sdk-core";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
-} from "juice-sdk-react";
+} from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { useState } from "react";
 import { LoanType } from "./LoanDialog";
