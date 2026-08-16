@@ -939,20 +939,21 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
-"@bananapus/nana-sdk-core@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-core/-/nana-sdk-core-1.3.0.tgz#7e18db9111b05b0daafaae7b7eb4f4898357b543"
-  integrity sha512-rwnny4f2yFEk1q5fMz6U+ivlC7H7Utw87y3/jiBKI/BbWdRM1cVtcEbCzqkV68jE3mxuecXIaL/BK0AJesc8Zg==
+"@bananapus/nana-sdk-core@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-core/-/nana-sdk-core-2.0.0.tgz#7c30dbc4ddc2ba50b0089158a6941fc458e924c5"
+  integrity sha512-2PcVuIKjyMVysQp7uMP3zMTIQ9ufK3Y0iTZzXxUpY44ofZRJnjF9Ela4yd6h8ERbuOiR07GcnAjl43b8c1AOwA==
   dependencies:
     bs58 "^5.0.0"
     fpnum "^1.0.0"
 
-"@bananapus/nana-sdk-react@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-react/-/nana-sdk-react-4.0.0.tgz#40b5ed2d393c581f3dd4f4ebd89ed23d7f754151"
-  integrity sha512-r5lSdkxGqF86RRjpZyOsvl9Mg6q5x7l+qrFI2E32TocU8oMAeQVxdqR366TDkcIahCjIBXnuAWqy+wOG1NmAsw==
+"@bananapus/nana-sdk-react@^13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-react/-/nana-sdk-react-13.0.0.tgz#bb98e49de1c81425eb929781e2cb4b0e9697b7ac"
+  integrity sha512-38ub5L5+WbUmDzZqk21qIDlWRVHE+jNkDxUevRDuHo+5Q8ECxz8GxP+dcXC7X/ZoLgGqNQoMBLsNP80gtLQc+A==
   dependencies:
-    graphql-request "^7.2.0"
+    "@graphql-typed-document-node/core" "^3.2.0"
+    graphql-request "^7.4.0"
 
 "@base-org/account@2.4.0":
   version "2.4.0"
@@ -7859,7 +7860,7 @@ graphql-request@^6.0.0:
     "@graphql-typed-document-node/core" "^3.2.0"
     cross-fetch "^3.1.5"
 
-graphql-request@^7.2.0:
+graphql-request@^7.2.0, graphql-request@^7.4.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-7.4.0.tgz#97a1fc871e79f682d816963446ac6b7f99c963f9"
   integrity sha512-xfr+zFb/QYbs4l4ty0dltqiXIp07U6sl+tOKAb0t50/EnQek6CVVBLjETXi+FghElytvgaAWtIOt3EV7zLzIAQ==

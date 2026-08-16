@@ -63,7 +63,7 @@ export function LoanTab() {
 
   const estimatedBorrowString = estimatedBorrowFromInputOnly
     ? truncateNumber(
-        formatUnits(estimatedBorrowFromInputOnly ?? 0n, baseToken.decimals)
+        formatUnits(estimatedBorrowFromInputOnly[0] ?? 0n, baseToken.decimals) // v6 INTEGRATION 0x
       )
     : "";
 
@@ -174,7 +174,7 @@ export function LoanTab() {
       </div>
 
       <LoanActionButton
-        loanAmount={estimatedBorrowFromInputOnly}
+        loanAmount={estimatedBorrowFromInputOnly?.[0]} // v6 INTEGRATION 0x
         collateralAmount={collateralAmount}
         projectTokenBalance={currentChainBalBigInt}
         isLoanAmountLoading={isDebouncing || estimatedBorrowIsLoading}

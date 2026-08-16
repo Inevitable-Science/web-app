@@ -199,14 +199,16 @@ export function LoanActionButton({
           chainId: Number(activeChainId) as JBChainId,
           args: [
             activeProjectId,
-            {
+            /*{ v6 INTEGRATION
               token: baseTokenAddress,
               terminal: primaryNativeTerminal.data,
-            },
+            },*/
+            baseTokenAddress,
             0n,
             collateralBigInt,
-            address as `0x${string}`,
+            address,
             BigInt(feeBasisPoints),
+            address
           ],
         });
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Address } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { DEFAULT_METADATA, jbMultiTerminalAbi } from "@bananapus/nana-sdk-core";
+import { jbMultiTerminalAbi } from "@bananapus/nana-sdk-core";
 import { JBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
@@ -70,7 +70,7 @@ export function WithdrawActionButton({
           receiveTokenAddress, // token to reclaim (what you want to receive)
           minTokensReturned, // min tokens reclaimed
           address, // beneficiary
-          DEFAULT_METADATA, // metadata,
+          "0x" // metadata changed in v6 update idk y.. v6 INTEGRATION //DEFAULT_METADATA, - old import from core sdk - dep // metadata,
         ],
       });
 

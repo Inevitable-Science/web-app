@@ -138,7 +138,7 @@ export function useRulesetData({
       /* issuanceReductionRate: ruleset?.weightCutPercent ? `${ruleset.weightCutPercent.value / BigInt(1e7)}%` : '-', */
       ownerTokenMinting: metadata?.allowOwnerMinting ? "Enabled" : "Disabled",
       /* creditTransfers: metadata?.pauseCreditTransfers ? 'Enabled' : 'Disabled', */
-      cashoutsEnabled: metadata?.useTotalSurplusForCashOuts
+      cashoutsEnabled: metadata?.useDataHookForCashOut // v6 INTEGRATION useTotalSurplusForCashOuts
         ? "Enabled"
         : "Disabled",
     };

@@ -29,6 +29,8 @@ import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 import { useDebounce } from "use-debounce";
 
+// Only support loan actions with v6
+
 export function RefinanceTab({ loan }: { loan: LoanType }) {
   const [additionalCollateral, setAdditionalCollateral] = useState("");
   const [debounceAdditionalCollateral] = useDebounce(additionalCollateral, 600);
@@ -84,7 +86,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const collateralHeadroom =
     currentBorrowableOnSelectedCollateral !== undefined && loan
-      ? currentBorrowableOnSelectedCollateral - BigInt(loan.borrowAmount)
+      ? currentBorrowableOnSelectedCollateral[0] - BigInt(loan.borrowAmount) // v6 INTEGRATION 0x
       : 0n;
 
   // Calculate borrowable amount for just the new loan (headroom + additional collateral)
@@ -156,14 +158,14 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
 
   const newLoanFeeData = generateFeeData({
     grossBorrowedEth: newLoanBorrowableAmount
-      ? Number(formatUnits(newLoanBorrowableAmount, baseToken.decimals))
+      ? Number(formatUnits(newLoanBorrowableAmount[0], baseToken.decimals))
       : 0,
     prepaidPercent,
   });
 
   // Calculate total fixed fees from contract values (in basis points)
   const amountBorrowed = newLoanBorrowableAmount
-    ? Number(formatUnits(newLoanBorrowableAmount, projectTokenDecimals))
+    ? Number(formatUnits(newLoanBorrowableAmount[0], projectTokenDecimals))
     : 0;
   const totalFixedFees =
     (revDeployerFee ? Number(revDeployerFee) : 0) +
@@ -205,7 +207,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       ) / Number(formatUnits(chainBalanceBigInt, projectTokenDecimals))
     : 0;
   const estimatedRaw = borrowableAmountRaw
-    ? Number(formatUnits(borrowableAmountRaw, baseToken.decimals))
+    ? Number(formatUnits(borrowableAmountRaw[0], baseToken.decimals))
     : 0;
   const adjusted = estimatedRaw * percent;
 
@@ -227,7 +229,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       // Calculate the safe transfer amount to avoid under-collateralization
       const principalCover = BigInt(loan.borrowAmount);
       const maxRemovable = currentBorrowableOnSelectedCollateral
-        ? currentBorrowableOnSelectedCollateral - principalCover
+        ? currentBorrowableOnSelectedCollateral[0] - principalCover
         : 0n;
 
       // Only transfer the safe amount (or less)
@@ -246,7 +248,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
       // Validate that the reallocation won't result in a borrow amount less than the original
       if (
         selectedLoanReallocAmount !== undefined &&
-        selectedLoanReallocAmount < BigInt(loan.borrowAmount)
+        selectedLoanReallocAmount[0] < BigInt(loan.borrowAmount)
       ) {
         setBorrowStatus("error");
         toast({
@@ -273,10 +275,11 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
           args: [
             loan.id,
             collateralCountToTransfer,
-            {
+            /*{
               token: baseTokenAddress,
               terminal: primaryNativeTerminal.data,
-            },
+            },*/
+            baseTokenAddress, // v6 INTEGRATION
             minBorrowAmount,
             collateralCountToAdd,
             address,
@@ -438,7 +441,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 <div className="activeSkeleton mr-1 h-[17px] w-[32px] rounded-md opacity-30" />
               ) : newLoanBorrowableAmount ? (
                 formatNumber(
-                  formatUnits(newLoanBorrowableAmount, baseToken.decimals),
+                  formatUnits(newLoanBorrowableAmount[0], baseToken.decimals),
                   false
                 )
               ) : (
@@ -508,7 +511,7 @@ export function RefinanceTab({ loan }: { loan: LoanType }) {
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
               ) : newLoanBorrowableAmount ? (
                 formatNumber(
-                  formatUnits(newLoanBorrowableAmount, baseToken.decimals),
+                  formatUnits(newLoanBorrowableAmount[0], baseToken.decimals),
                   false
                 )
               ) : (

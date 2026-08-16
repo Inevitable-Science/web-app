@@ -9,7 +9,9 @@ import {
   JB_CHAINS,
   JBChainId,
   revDeployerAbi,
+  revDeployerV5Abi,
   RevnetCoreContracts,
+  revOwnerAbi,
   SuckerPair,
 } from "@bananapus/nana-sdk-core";
 import { useJBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
@@ -34,7 +36,7 @@ export function AutoIssuanceTable({
   const chainId = useJBChainId();
 
   const { toast } = useToast();
-  const { contractAddress } = useJBContractContext();
+  const { version, contractAddress } = useJBContractContext();
   const { writeContractAsync } = useWriteContract();
   const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({
     hash,
@@ -65,10 +67,15 @@ export function AutoIssuanceTable({
       if (!userAddress || !suckerChainId) return;
       setIsPending(true);
 
+      // v6 INTEGRATION
       const hash = await writeContractAsync({
-        abi: revDeployerAbi,
+        abi: version === 6
+              ? revOwnerAbi
+              : revDeployerV5Abi,
         functionName: "autoIssueFor",
-        address: contractAddress(RevnetCoreContracts.REVDeployer),
+        address: version === 6 
+              ? contractAddress(RevnetCoreContracts.REVOwner)
+              : contractAddress(RevnetCoreContracts.REVDeployer),
         chainId: suckerChainId,
         args: [BigInt(selectedSucker.projectId), stageId, beneficiary],
       });

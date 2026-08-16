@@ -5,6 +5,7 @@ import {
   JBCoreContracts,
   jbDirectoryAbi,
   jbMultiTerminalAbi,
+  jbMultiTerminalV5Abi,
 } from "@bananapus/nana-sdk-core";
 import {
   useJBChainId,
@@ -89,20 +90,39 @@ export function useSuckersTokenSurplus(
             client: config.getClient({ chainId: peerChainId }),
           });
 
-          const terminal = getContract({
-            address: await directory.read.primaryTerminalOf([projectId, token]),
-            abi: jbMultiTerminalAbi,
-            client: config.getClient({ chainId: peerChainId }),
-          });
 
           try {
-            const surplus = await terminal.read.currentSurplusOf([
-              projectId,
-              [{ token: token, decimals: decimals, currency: currency }],
-              BigInt(decimals),
-              BigInt(currency),
-            ]);
-            return { surplus, chainId: peerChainId, projectId };
+            if (version === 6) { 
+              const terminal = getContract({
+                address: await directory.read.primaryTerminalOf([projectId, token]),
+                abi: jbMultiTerminalAbi,
+                client: config.getClient({ chainId: peerChainId }),
+              });
+
+              // v6 INTEGRATION
+              const surplus = await terminal.read.currentSurplusOf([
+                projectId,
+                [token],
+                BigInt(decimals),
+                BigInt(currency),
+              ]);
+              return { surplus, chainId: peerChainId, projectId };
+            } else {
+              
+              const terminal = getContract({
+                address: await directory.read.primaryTerminalOf([projectId, token]),
+                abi: jbMultiTerminalV5Abi,
+                client: config.getClient({ chainId: peerChainId }),
+              });
+
+              const surplus = await terminal.read.currentSurplusOf([
+                projectId,
+                [{ token: token, decimals: decimals, currency: currency }],
+                BigInt(decimals),
+                BigInt(currency),
+              ]);
+              return { surplus, chainId: peerChainId, projectId };
+            }
           } catch (err) {
             Sentry.captureException(err);
             console.error(

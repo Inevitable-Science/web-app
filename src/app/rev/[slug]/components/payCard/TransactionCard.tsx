@@ -92,6 +92,7 @@ export function TransactionCard() {
   const paymentsPaused = rulesetMetadata?.pausePay && !showHasNotStartedBanner;
   
 
+  console.log(suckers, "suckers, top");
   if (!suckers) {
     return <PayCardSkeleton selectedToken={selectedToken} />;
   }
@@ -153,7 +154,8 @@ export function TransactionCard() {
             >
               Buy
             </Button>
-            {rulesetMetadata?.useTotalSurplusForCashOuts && hasStarted && (
+            {/** I am assuming that useDataHookForCashOut was replaced with useDataHookForCashOut v6 INTEGRATION */}
+            {rulesetMetadata?.useDataHookForCashOut  && hasStarted && (
               <Button
                 onClick={() => setActiveTab("withdraw")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
