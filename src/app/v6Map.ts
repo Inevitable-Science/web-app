@@ -6,3 +6,4 @@ export const JBMultiTerminalMap = {
   5: jbMultiTerminalV5Abi,
   6: jbMultiTerminalAbi
 };
+ 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Address } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { jbMultiTerminalAbi } from "@bananapus/nana-sdk-core";
+import { jbContractAddress, jbMultiTerminalAbi, NATIVE_TOKEN } from "@bananapus/nana-sdk-core";
 import { JBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
@@ -58,12 +58,26 @@ export function WithdrawActionButton({
     try {
       setIsLoading(true);
 
+      // v6 args
+      const args = [
+      address,                      // holder
+      selectedSucker.projectId,     // projectId
+      withdrawAmount,               // cashOutCount
+      // NATIVE_TOKEN,                 // token to reclaim
+      receiveTokenAddress,          // token to reclaim
+      //minTokensReturned,            // min tokens reclaimed
+      0n,
+      address,                      // beneficiary
+      '0x0',                        // metadata
+    ] as const
+
       const txHash = await writeContractAsync({
         abi: jbMultiTerminalAbi,
         functionName: "cashOutTokensOf",
         chainId: selectedSucker?.peerChainId,
-        address: primaryNativeTerminal.data,
-        args: [
+        address: jbContractAddress[6].JBMultiTerminal[1], // primaryNativeTerminal.data,
+        args
+        /*args: [
           address, // holder
           selectedSucker.projectId, // project id (use the correct project ID for the selected chain)
           withdrawAmount ?? 0n, // cash out count
@@ -71,14 +85,14 @@ export function WithdrawActionButton({
           minTokensReturned, // min tokens reclaimed
           address, // beneficiary
           "0x" // metadata changed in v6 update idk y.. v6 INTEGRATION //DEFAULT_METADATA, - old import from core sdk - dep // metadata,
-        ],
+        ],*/
       });
 
       const tx = await publicClient.waitForTransactionReceipt({ hash: txHash });
       if (tx.status !== "success") throw new Error();
 
       toast({
-        title: "Withdraw Successful!",
+        title: "Withdraw Successful",
         description: "You Successfully Withdrew Your Tokens.",
       });
     } catch (err) {

@@ -32,7 +32,7 @@ async function _fetchProjectData({
   } catch (err) {
     Sentry.captureException(err);
     console.error("Failed to fetch project:", err);
-    return null;
+    throw err;
   }
 }
 

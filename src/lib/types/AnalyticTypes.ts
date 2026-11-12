@@ -118,7 +118,7 @@ export const TokenResponseZ = z.object({
     .array(
       z.object({
         range: z.string().nullable(),
-        accounts: z.string().nullable(),
+        accounts: z.number().nullable(),
         amountTokensHeld: z.number().nullable(),
         percentTokensHeld: z.number().nullable(),
       })

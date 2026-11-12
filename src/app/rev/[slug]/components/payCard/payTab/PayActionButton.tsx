@@ -19,8 +19,13 @@ import {
 } from "@/components/ui/dialog";
 import { ConnectKitButton } from "connectkit";
 import {
+  getJBContractAddress,
   JB_TOKEN_DECIMALS,
+  JBCoreContracts,
+  jbDirectoryAbi,
   jbMultiTerminalAbi,
+  JBRouterTerminalContracts,
+  jbRouterTerminalRegistryAbi,
   NATIVE_TOKEN,
 } from "@bananapus/nana-sdk-core";
 import {
@@ -33,6 +38,7 @@ import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { PayStepper } from "./PayStepper";
+import { readContract } from "viem/actions";
 
 // Define shared styles for the main action button for consistency
 export const primaryPayButtonClass =
@@ -175,6 +181,81 @@ export function PayActionButton({
           description: `Your contribution of ${formatNumber(amountANum, false)} ${paymentToken.symbol} was successful.`,
         });
         setAgreedToTerms(false);
+      } else if (version === 6) {
+        // jbContractAddress["6"][JBCoreContracts.JBMultiTerminal][chainId]
+        const jbDirectory = await publicClient.readContract({
+          address: getJBContractAddress(JBCoreContracts.JBDirectory, 6, activeChainId),
+          abi: jbDirectoryAbi,
+          functionName: 'primaryTerminalOf',
+          args: [activeProjectId, NATIVE_TOKEN],
+        });
+
+        console.log(jbDirectory, "jb dir");
+        const contract = baseToken.isNative === paymentToken.isNative
+          ? {
+            address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, 6, activeChainId),
+            abi: jbMultiTerminalAbi
+          } : {
+            address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, 6, activeChainId),
+            abi: jbRouterTerminalRegistryAbi
+          };
+
+        if (!paymentToken.isNative) {
+          try {
+            await ensureAllowance(
+              paymentToken.address,
+              contract.address,
+              amountA
+            );
+            setUserHasApproved(true);
+            setCurrentStep("");
+          } catch (err) {
+            console.error(err);
+            setCurrentStep("rejected-approval");
+            return;
+          }
+        };
+
+        const minTokens = paymentToken.isNative
+          ? amountB
+          : (amountB * 95n) / 100n; 
+        
+          setCurrentStep('signing-pay');
+         
+        const txHash = await writeContractAsync({
+          abi: contract.abi,
+          functionName: "pay",
+          chainId: activeChainId,
+          address: contract.address,
+          args: [
+            activeProjectId,
+            paymentToken.address,
+            amountA,
+            address,
+            minTokens,
+            memo || "",
+            "0x0",
+          ],
+          value: paymentToken.isNative ? amountA : 0n,
+        });
+
+        const result = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        });
+        if (result.status !== "success") {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Transaction unsuccessful.",
+          });
+        }
+
+        setCurrentStep("success");
+        toast({
+          title: "Success",
+          description: `Your contribution of ${formatNumber(amountANum, false)} ${paymentToken.symbol} was successful.`,
+        });
+
       } else {
         const terminal = await getPaymentTerminal({
           client: publicClient,

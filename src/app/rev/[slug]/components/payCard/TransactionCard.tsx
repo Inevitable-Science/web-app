@@ -167,7 +167,7 @@ export function TransactionCard() {
                 Withdraw
               </Button>
             )}
-            {hasStarted && version === 5 && (
+            {hasStarted && version === 6 && (
               <Button
                 onClick={() => setActiveTab("loan")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${

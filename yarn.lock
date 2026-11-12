@@ -939,18 +939,18 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
-"@bananapus/nana-sdk-core@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-core/-/nana-sdk-core-2.0.0.tgz#7c30dbc4ddc2ba50b0089158a6941fc458e924c5"
-  integrity sha512-2PcVuIKjyMVysQp7uMP3zMTIQ9ufK3Y0iTZzXxUpY44ofZRJnjF9Ela4yd6h8ERbuOiR07GcnAjl43b8c1AOwA==
+"@bananapus/nana-sdk-core@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-core/-/nana-sdk-core-5.0.0.tgz#44fa2d81072f2dc6c3d6ecd713da0a6dc473840d"
+  integrity sha512-i7gAUXXblkOmbBhn5evl01ChyQzA5dDOjnIqYqADkknZo+L1Wqj7e3SS6H6+f8Ww1RCCSVQykKD08HuuVYndwg==
   dependencies:
     bs58 "^5.0.0"
     fpnum "^1.0.0"
 
-"@bananapus/nana-sdk-react@^13.0.0":
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-react/-/nana-sdk-react-13.0.0.tgz#bb98e49de1c81425eb929781e2cb4b0e9697b7ac"
-  integrity sha512-38ub5L5+WbUmDzZqk21qIDlWRVHE+jNkDxUevRDuHo+5Q8ECxz8GxP+dcXC7X/ZoLgGqNQoMBLsNP80gtLQc+A==
+"@bananapus/nana-sdk-react@^63.0.0":
+  version "63.0.0"
+  resolved "https://registry.yarnpkg.com/@bananapus/nana-sdk-react/-/nana-sdk-react-63.0.0.tgz#eac8fecca97ae822a8027faf2d9bf09af903b0e0"
+  integrity sha512-Ic9nsjd/A+VOkuzZ4IsJ5z6Da38QxHLL5FJR2YokPbkGmBsBiwFIIgbmwiAWot2jELxkEH0gMKplD3sL/QcQWw==
   dependencies:
     "@graphql-typed-document-node/core" "^3.2.0"
     graphql-request "^7.4.0"

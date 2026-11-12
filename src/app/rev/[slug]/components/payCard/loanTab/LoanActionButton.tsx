@@ -174,10 +174,20 @@ export function LoanActionButton({
               },
             ],
           });
-          await publicClient.waitForTransactionReceipt({ hash: txHash });
+          const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-          setBorrowStatus("");
-          setUserHasBorrowPerm(true);
+          if (receipt.status === "success") {
+            setBorrowStatus("");
+            setUserHasBorrowPerm(true);
+          } else {
+            setBorrowStatus("rejected-permission");
+            toast({
+              variant: "destructive",
+              title: "Transaction Reverted",
+              description: "Loan creation reverted on chain",
+            });
+            return;
+          }
         } catch (err) {
           setBorrowStatus("rejected-permission");
           toast({
@@ -192,7 +202,7 @@ export function LoanActionButton({
 
       try {
         setBorrowStatus("signing-borrow");
-        await writeContractAsync({
+        const txHash = await writeContractAsync({
           abi: revLoansAbi,
           functionName: "borrowFrom",
           address: revLoansContractAddress,
@@ -212,13 +222,23 @@ export function LoanActionButton({
           ],
         });
 
-        setBorrowStatus("success");
-        toast({
-          variant: "destructive",
-          title: "Loan Created",
-          description: "Loan was successfully created",
-        });
-        return;
+        const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
+        if (receipt.status === 'success') {
+          setBorrowStatus("success");
+          toast({
+            title: "Loan Created",
+            description: "Loan was successfully created",
+          });
+        } else {
+          setBorrowStatus("rejected-borrow");
+          toast({
+            variant: "destructive",
+            title: "Transaction Reverted",
+            description: "Loan creation reverted on chain",
+          });
+        }
+        
       } catch (err) {
         setBorrowStatus("rejected-borrow");
         toast({
@@ -398,7 +418,7 @@ export function LoanActionButton({
                 onClick={handleBorrow}
                 className={"bg-cerulean hover:bg-cerulean"}
                 loading={isBorrowing}
-                disabled={!collateralAmount}
+                disabled={!collateralAmount || borrowStatus === "success"}
               >
                 Open Loan
               </ButtonWithWallet>

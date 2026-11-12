@@ -37,7 +37,7 @@ export function LoansTable() {
     },
     {
       enabled: !!address,
-      pollInterval: 3000, // Refresh every 3 seconds
+      pollInterval: 9000, // Refresh every 9 seconds
     }
   );
 
@@ -115,7 +115,7 @@ export function LoansTable() {
                 )}{" "}
                 ${token.data?.symbol}
               </p>
-              <p>{formatSeconds(prepaidUntil)}</p>
+              <p className="pr-2">{formatSeconds(prepaidUntil)}</p>
               <div className="flex justify-end">
                 <LoanDialog loan={prepedLoan} />
               </div>

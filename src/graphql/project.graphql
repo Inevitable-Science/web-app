@@ -10,6 +10,16 @@ query Project($projectId: Float!, $chainId: Float!, $version: Float!) {
     paymentsCount
     tokenSupply
     name
+    suckerGroup {
+      projects {
+        items {
+          chainId
+          balance
+          tokenSupply
+          projectId
+        }
+      }
+    }
   }
 }
 

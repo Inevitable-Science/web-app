@@ -12,6 +12,7 @@ import {
   useBendystrawQuery,
   useJBChainId,
   useJBContractContext,
+  useJBTokenContext,
 } from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { useMemo, useState } from "react";
@@ -23,8 +24,9 @@ import { JB_CHAINS } from "@bananapus/nana-sdk-core";
 export function Header() {
   const project = useRevnetDataStore((state) => state.project);
   const dailyTotals = useRevnetDataStore((state) => state.dailyTotals);
-  const { metadata } = useJBProjectMetadataContext();
   const { projectId, version } = useJBContractContext();
+  const { metadata } = useJBProjectMetadataContext();
+  const { token } = useJBTokenContext();
   const chainId = useJBChainId();
 
   const { data: operator, isLoading } = useBendystrawQuery(
@@ -67,6 +69,7 @@ export function Header() {
     return `+${Math.abs(percentage).toFixed(2)}`;
   }, [dailyTotals, loadTimestamp]);
 
+  const symbol = token.data?.symbol;
   const {
     name: projectName,
     logoUri,
@@ -155,10 +158,10 @@ export function Header() {
 
         <div className="w-full">
           <div className="mb-6 flex flex-wrap items-baseline gap-2 text-sm">
-            {projectName ? (
-              <h1 className="text-2xl font-light sm:text-3xl">{projectName}</h1>
-            ) : (
+            {(metadata.isLoading || (!projectName && token.isLoading)) ? (
               <div className="activeSkeleton h-[36px] w-[130px] rounded-lg opacity-70" />
+            ) : (
+              <h1 className="text-2xl font-light sm:text-3xl">{projectName || token.data?.name || (symbol ? `$${symbol}` : "Unnamed Project")}</h1>
             )}
             {twitter && (
               <h5 className="text-cerulean text-base">
