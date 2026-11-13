@@ -1,100 +1,48 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { JBChainId, useJBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
-import { useAccount } from "wagmi";
+import { JBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
 import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { getTokensForChain, Token } from "@/lib/token";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
-import { PayTab } from "./payTab/PayTab";
-import { useRulesetData } from "@/hooks/useRulesetData";
+import { PayTab } from "./payV2/PayTab";
 import { formatSeconds } from "@/lib/utils";
 import { LoanTab } from "./loanTab/LoanTab";
+import {
+  selectHasStarted,
+  selectTimeUntilStart,
+  TransactionCardProvider,
+  useTransactionCardStore,
+} from "./TransactionCardStore";
 
 export function TransactionCard() {
-  const project = useRevnetDataStore((state) => state.project);
-  const suckers = useRevnetDataStore((state) => state.suckers);
-
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const setSelectedSucker = useRevnetDataStore(
-    (state) => state.setSelectedSucker
+  return (
+    <TransactionCardProvider>
+      <TransactionCardContent />
+    </TransactionCardProvider>
   );
+}
 
+function TransactionCardContent() {
+  const suckers = useRevnetDataStore((state) => state.suckers);
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
-  const ruleset = useRevnetDataStore((state) => state.ruleset);
-  const { allRulesets } = useRulesetData({
-    projectId: project.projectId,
-  });
-
-  const activeChain = useJBChainId();
-  const { chainId } = useAccount();
   const { version } = useJBContractContext();
 
-  const peerChainId = selectedSucker?.peerChainId;
-  const tokens = useMemo(
-    () => getTokensForChain(peerChainId, version),
-    [peerChainId, version]
-  );
-
-  const [activeTab, setActiveTab] = useState<"buy" | "withdraw" | "loan">(
-    "buy"
-  );
-  const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
-  const [selectedToken, setSelectedToken] = useState<Token>(tokens[0]);
-
-  useEffect(() => {
-    // only re-render component if the revnet has not started taking 
-    // payments and the start date is <24 hours from initial render
-    // allows for nice countdown effect
-    if (hasStarted || timeUntilStart > 24 * 60 * 60) return;
-
-    const id = setInterval(() => {
-      setNow(Math.floor(Date.now() / 1000));
-    }, 1000);
-
-    return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    // Only set default if context has no value and suckers have loaded
-    if (suckers && !selectedSucker && suckers.length > 0) {
-      if (chainId) {
-        const defaultSucker = activeChain
-          ? suckers.find((s) => s.peerChainId === chainId)
-          : undefined;
-        setSelectedSucker(defaultSucker || suckers[0]);
-        return;
-      }
-
-      const defaultSucker = activeChain
-        ? suckers.find((s) => s.peerChainId === activeChain)
-        : undefined;
-      setSelectedSucker(defaultSucker || suckers[0]);
-    }
-  }, [suckers, activeChain, selectedSucker, setSelectedSucker]);
-
-  /*const isIssuingTokens = useMemo(() => {
-    const weight = ruleset?.weight;
-    return Boolean(weight && weight.value > 0n)
-  }, [ruleset?.weight])
-
-  console.log(isIssuingTokens, "IS ISSUING TOKENS");*/
-
-  const startDate = allRulesets?.[0]?.start;
-  const timeUntilStart = startDate ? startDate - now : 0;
-  const hasStarted = timeUntilStart <= 0;
+  const activeTab = useTransactionCardStore((state) => state.activeTab);
+  const setActiveTab = useTransactionCardStore((state) => state.setActiveTab);
+  const tokens = useTransactionCardStore((state) => state.tokens);
+  const selectedToken = useTransactionCardStore((state) => state.selectedToken);
+  const startDate = useTransactionCardStore((state) => state.startDate);
+  const timeUntilStart = useTransactionCardStore(selectTimeUntilStart);
+  const hasStarted = useTransactionCardStore(selectHasStarted);
 
   // Logic to show payment notices
   const showDepreciationNotice = version === 4 || version === 5;
   const showHasNotStartedBanner = !hasStarted && startDate;
   const paymentsPaused = rulesetMetadata?.pausePay && !showHasNotStartedBanner;
   
-
-  console.log(suckers, "suckers, top");
-  if (!suckers) {
-    return <PayCardSkeleton selectedToken={selectedToken} />;
+  if (!suckers || !selectedToken) {
+    return <PayCardSkeleton selectedToken={selectedToken ?? tokens[0]} />;
   }
 
   return (
@@ -122,7 +70,7 @@ export function TransactionCard() {
       ) : (showHasNotStartedBanner || paymentsPaused || showDepreciationNotice) && (
         <div
           className={`flex rounded-t-xl px-4 pt-2 pb-6 
-          ${showDepreciationNotice 
+          ${showDepreciationNotice
             ? "bg-cerulean" 
             : "bg-orange-900"
           }`}
@@ -194,13 +142,7 @@ export function TransactionCard() {
         </div>
 
         <div className="my-4">
-          {activeTab === "buy" && (
-            <PayTab
-              tokens={tokens}
-              selectedToken={selectedToken}
-              setSelectedToken={setSelectedToken}
-            />
-          )}
+          {activeTab === "buy" && <PayTab />}
 
           {activeTab === "withdraw" && <WithdrawTab />}
 

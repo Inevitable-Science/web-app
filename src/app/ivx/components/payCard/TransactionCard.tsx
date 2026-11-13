@@ -190,7 +190,7 @@ export function TransactionCard() {
             <TokenAndChainSelector
               currentToken={selectedToken}
               tokenOptions={tokens}
-              selectedSucker={selectedSucker}
+              selectedChainId={selectedSucker.peerChainId}
               suckers={suckers}
               handleChainChange={handleChainChange}
               handleTokenChange={handleTokenChange}

@@ -17,7 +17,7 @@ import { ChevronDown } from "lucide-react";
 interface ChainSelectorProps {
   currentToken: Token;
   tokenOptions: Token[];
-  selectedSucker: SuckerPair;
+  selectedChainId: JBChainId;
   suckers: SuckerPair[] | undefined;
   handleChainChange: (selected: { chainId: JBChainId }) => void;
   handleTokenChange: (selected: { address: Address }) => void;
@@ -31,7 +31,7 @@ export interface TokenWithChain extends Token {
 export const TokenAndChainSelector = ({
   currentToken,
   tokenOptions,
-  selectedSucker,
+  selectedChainId,
   suckers,
   handleChainChange,
   handleTokenChange,
@@ -76,7 +76,7 @@ export const TokenAndChainSelector = ({
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
-                  chainId={Number(selectedSucker.peerChainId) as JBChainId}
+                  chainId={Number(selectedChainId ?? 1) as JBChainId}
                   height={16}
                   width={16}
                 />
@@ -100,7 +100,7 @@ export const TokenAndChainSelector = ({
                     chainId: sucker.peerChainId,
                   });
                 }}
-                className={`${selectedSucker.peerChainId === sucker.peerChainId && "bg-grey-500! border-(--grey-100)"} rounded-xl`}
+                className={`${selectedChainId === sucker.peerChainId && "bg-grey-500! border-(--grey-100)"} rounded-xl`}
                 variant={"outline"}
                 size="icon"
               >

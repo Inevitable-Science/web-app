@@ -37,6 +37,9 @@ export function useReclaimableSurplus(params: {
             BigInt(currencyId),
           ]
         : undefined,
+    query: {
+      refetchInterval: 40_000, // refetch every 40 seconds
+    }
   });
 
   const afterFees = raw ? applyNanaFee(raw) : undefined;

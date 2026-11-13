@@ -19,7 +19,7 @@ export function PayCardSkeleton({ selectedToken }: { selectedToken: Token }) {
             <TokenAndChainSelector
               currentToken={selectedToken}
               tokenOptions={[]}
-              selectedSucker={{ peerChainId: chainId!, projectId: 0n }}
+              selectedChainId={chainId!}
               suckers={[]}
               handleChainChange={() => null}
               handleTokenChange={() => null}
