@@ -8,7 +8,10 @@ import {
   JBCoreContracts,
   jbMultiTerminalAbi
 } from "@bananapus/nana-sdk-core";
-import { cashOutProtocolFee } from "@bananapus/nana-sdk-core/v6/cash-out";
+import {
+  cashOutProtocolFee,
+  slippageFloor
+} from "@bananapus/nana-sdk-core/v6/cash-out";
 import {
   useJBContractContext,
   useJBTokenContext,
@@ -110,10 +113,7 @@ export function WithdrawTab() {
     });
 
   // Account for slippage (1%)
-  const SLIPPAGE_BPS = 100n; // 1%
-  const BPS_DENOMINATOR = 10_000n;
-
-  const cashOutQuoteMinBigInt = (cashOutQuoteBigInt * (BPS_DENOMINATOR - SLIPPAGE_BPS)) / BPS_DENOMINATOR;
+  const cashOutQuoteMinBigInt = slippageFloor(cashOutQuoteBigInt);
   
   // Final quote: REV Fee + JB Protocol Fee + Slippage
   const cashOutQuoteString = truncateNumber(

@@ -14,6 +14,7 @@ import {
   TransactionCardProvider,
   useTransactionCardStore,
 } from "./TransactionCardStore";
+import { useCashOutDelay } from "@/hooks/useCashOutDelay";
 
 export function TransactionCard() {
   return (
@@ -27,6 +28,7 @@ function TransactionCardContent() {
   const suckers = useRevnetDataStore((state) => state.suckers);
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const { version } = useJBContractContext();
+  const { isLocked } = useCashOutDelay();
 
   const activeTab = useTransactionCardStore((state) => state.activeTab);
   const setActiveTab = useTransactionCardStore((state) => state.setActiveTab);
@@ -103,7 +105,7 @@ function TransactionCardContent() {
               Buy
             </Button>
             {/** I am assuming that useDataHookForCashOut was replaced with useDataHookForCashOut v6 INTEGRATION */}
-            {rulesetMetadata?.useDataHookForCashOut  && hasStarted && (
+            {rulesetMetadata?.useDataHookForCashOut  && hasStarted && !isLocked && (
               <Button
                 onClick={() => setActiveTab("withdraw")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
@@ -115,7 +117,7 @@ function TransactionCardContent() {
                 Withdraw
               </Button>
             )}
-            {hasStarted && version === 6 && (
+            {hasStarted && !isLocked && version === 6 && (
               <Button
                 onClick={() => setActiveTab("loan")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${

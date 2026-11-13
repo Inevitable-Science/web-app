@@ -18,7 +18,7 @@
     "format:check": "prettier --check \"**/*.{jsx,ts,tsx,css,scss}\""
   },
   "dependencies": {
-    "@bananapus/nana-sdk-core": "^5.0.0",
+    "@bananapus/nana-sdk-core": "^6.5.0",
     "@bananapus/nana-sdk-react": "^63.0.0",
     "@cowprotocol/widget-react": "^3.1.1",
     "@radix-ui/react-accordion": "^1.1.2",

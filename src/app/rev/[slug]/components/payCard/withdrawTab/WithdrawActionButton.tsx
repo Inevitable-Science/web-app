@@ -12,6 +12,8 @@ import {
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { formatSeconds } from "@/lib/utils";
+import { useCashOutDelay } from "@/hooks/useCashOutDelay";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { primaryPayButtonClass } from "../payTab/PayActionButton";
@@ -25,7 +27,10 @@ export function WithdrawActionButton({
   minTokensReturned: bigint | undefined;
   disabled?: boolean;
 }) {
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const { 
+    peerChainId: activeChainId,
+    projectId: activeProjectId
+  } = useRevnetDataStore((state) => state.selectedSucker);
   const withdrawAmountString = useTransactionCardStore(
     (state) => state.withdrawAmount
   );
@@ -33,14 +38,15 @@ export function WithdrawActionButton({
 
   const { token } = useJBTokenContext();
   const { version } = useJBContractContext();
+  const { checkLockNow } = useCashOutDelay();
 
   // Token to reclaim on the selected chain
   const baseToken = useProjectBaseToken();
-  const receiveTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
+  const receiveTokenAddress = baseToken.tokenMap[activeChainId].token;
 
   const {  data: balances } = useSuckersUserTokenBalance();
   const tokenBalance =
-    balances?.find((token) => token.chainId === selectedSucker.peerChainId)
+    balances?.find((token) => token.chainId === activeChainId)
       ?.balance?.value ?? 0n;
 
   const publicClient = usePublicClient();
@@ -73,9 +79,22 @@ export function WithdrawActionButton({
     try {
       setIsLoading(true);
 
+      // Re-read the lock onchain right before signing.
+      const { isLocked, secondsUntilUnlock } = await checkLockNow();
+
+      if (isLocked) {
+        setIsLoading(false);
+        toast({
+          variant: "destructive",
+          title: "Cashouts Unavailable",
+          description: `Cashouts unlock in ${formatSeconds(secondsUntilUnlock, 2, true)}`,
+        });
+        return;
+      }
+
       const args = [
         address,                      // holder
-        selectedSucker.projectId,     // projectId
+        activeProjectId,              // projectId
         withdrawAmount,               // cashOutCount
         receiveTokenAddress,          // token to reclaim
         minTokensReturned,            // min tokens reclaimed
@@ -86,8 +105,8 @@ export function WithdrawActionButton({
       const txHash = await writeContractAsync({
         abi: jbMultiTerminalAbi,
         functionName: "cashOutTokensOf",
-        chainId: selectedSucker?.peerChainId,
-        address: jbContractAddress[version].JBMultiTerminal[selectedSucker.peerChainId],
+        chainId: activeChainId,
+        address: jbContractAddress[version].JBMultiTerminal[activeChainId],
         args
       });
 
@@ -141,11 +160,11 @@ export function WithdrawActionButton({
 
   return (
     <ButtonWithWallet
-      targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
+      targetChainId={activeChainId as JBChainId | undefined}
       disabled={
         disabled ||
         !minTokensReturned ||
-        (!withdrawAmount && chainId === selectedSucker?.peerChainId)
+        (!withdrawAmount && chainId === activeChainId)
       }
       loading={isLoading}
       onClick={handleWithdraw}
