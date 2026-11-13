@@ -110,7 +110,10 @@ export function WithdrawTab() {
     });
 
   // Account for slippage (1%)
-  const cashOutQuoteMinBigInt = cashOutQuoteBigInt / 100n * 99n;
+  const SLIPPAGE_BPS = 100n; // 1%
+  const BPS_DENOMINATOR = 10_000n;
+
+  const cashOutQuoteMinBigInt = (cashOutQuoteBigInt * (BPS_DENOMINATOR - SLIPPAGE_BPS)) / BPS_DENOMINATOR;
   
   // Final quote: REV Fee + JB Protocol Fee + Slippage
   const cashOutQuoteString = truncateNumber(

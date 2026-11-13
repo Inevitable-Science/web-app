@@ -1,4 +1,23 @@
+// Digits with an optional single decimal point (no "e", "+", "-", ",")
+const NUMERIC_REGEX = /^\d*\.?\d*$/;
+const MAX_INPUT_LENGTH = 16;
+
+// Blocks pasting/dropping anything that isn't a plain number (e.g. "1e5", "-2", "abc")
+export const preventInvalidPaste = (
+  e: React.ClipboardEvent<HTMLInputElement> | React.DragEvent<HTMLInputElement>
+) => {
+  const data = "clipboardData" in e ? e.clipboardData : e.dataTransfer;
+  const text = data.getData("text").trim();
+
+  if (!NUMERIC_REGEX.test(text) || text.length > MAX_INPUT_LENGTH) {
+    e.preventDefault();
+  }
+};
+
 export const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  // Allow shortcuts: copy/paste/cut/select-all/undo
+  if (e.metaKey || e.ctrlKey) return;
+
   const invalidKeys = ["e", "E", "+", "-", "ArrowUp", "ArrowDown"];
   const key = e.key;
 
@@ -35,7 +54,7 @@ export const preventMinusKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
   const next = current + key;
 
   // Limit total length to 16
-  if (next.length > 16) {
+  if (next.length > MAX_INPUT_LENGTH) {
     e.preventDefault();
   }
 };
@@ -62,6 +81,8 @@ export function PayInput({
         }
       }}
       onKeyDown={preventMinusKey}
+      onPaste={preventInvalidPaste}
+      onDrop={preventInvalidPaste}
       disabled={disabled}
     />
   );

@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import Image from "next/image";
 import {
   JBChainId,
@@ -33,6 +32,7 @@ import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext
 import { useReadContract } from "wagmi";
 import { useDebounce } from "use-debounce";
 
+
 export function PayTab() {
   const suckers = useRevnetDataStore((state) => state.suckers);
   const { 
@@ -53,7 +53,6 @@ export function PayTab() {
   );
   const payAmount = useTransactionCardStore((state) => state.payAmount);
   const setPayAmount = useTransactionCardStore((state) => state.setPayAmount);
-  const setReceiveAmountBigInt = useTransactionCardStore((state) => state.setReceiveAmountBigInt);
   const memo = useTransactionCardStore((state) => state.memo);
   const setMemo = useTransactionCardStore((state) => state.setMemo);
   const hasStarted = useTransactionCardStore(selectHasStarted);
@@ -103,27 +102,22 @@ export function PayTab() {
     abi: contract.abi,
     chainId: selectedChainId,
     functionName: 'previewPayFor',
-    args: [
+    args: payAmount && !lessThanMinPayment
+    ? [
       chainProjectId,
       selectedToken.address,
       payAmountBigIntDB,
       zeroAddress, // review this fallback idk why you need an address for a pay preview
       "0x0"
-    ],
+    ] : undefined,
     query: {
       enabled: !!payAmount && !lessThanMinPayment,
       refetchInterval: 40_000, // refetch every 40 seconds
     }
   });
 
+  // outputs: [ruleset, beneficiaryTokenCount, reservedTokenCount, hookSpecifications]
   const receiveAmountBigInt = payPreviewData?.[1] ?? 0n;
-  useEffect(() => {
-    if (receiveAmountBigInt) {
-      setReceiveAmountBigInt(receiveAmountBigInt)
-    } else {
-      setReceiveAmountBigInt(0n);
-    }
-  }, [receiveAmountBigInt]);
 
   const receiveAmount = formatUnits(receiveAmountBigInt, JB_TOKEN_DECIMALS);
   const receiveAmountString = truncateNumber(receiveAmount);
@@ -139,56 +133,6 @@ export function PayTab() {
     )
   );
 
-  useEffect(() => {
-    if (!selectedToken || !payAmount) return;
-    handlePayAmountChange(payAmount);
-  }, [selectedToken]);
-
-  /*const { tokenAToBQuote, isLoading: isQuoteLoading } = usePaymentQuote(
-    selectedChainId
-  );
-  
-  useEffect(() => {
-    if (!isQuoteLoading && payAmount && selectedToken) {
-      handlePayAmountChange(payAmount);
-    }
-  }, [isQuoteLoading]);*/
-
-  const handlePayAmountChange = (value: string) => {
-    if (value.startsWith("-")) {
-      setPayAmount("0");
-      return;
-    }
-    setPayAmount(value);
-
-    /*if (version === 6) return;
-
-    if (version === 4 && ruleset && rulesetMetadata) {
-      const quote = getTokenAToBQuote(
-        new FixedInt(
-          parseUnits(value || "0", baseToken.decimals),
-          baseToken.decimals
-        ),
-        {
-          weight: ruleset.weight,
-          reservedPercent: rulesetMetadata.reservedPercent,
-        }
-      );
-      setReceiveAmount(formatUnits(quote.payerTokens, projectTokenDecimals));
-      return;
-    } else {
-      if (isQuoteLoading) return;
-      const { payerTokens, reservedTokens } = tokenAToBQuote(
-        value,
-        selectedToken
-      );
-
-      setReceiveAmount(truncateNumber(payerTokens));
-      return;
-    }*/
-  };
-
-  
   const handleChainChange = ({ chainId }: { chainId: JBChainId }) => {
     const newSelectedSucker = suckers?.find((s) => s.peerChainId === chainId);
     if (!newSelectedSucker) return;
@@ -217,7 +161,13 @@ export function PayTab() {
             <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
             <PayInput
               value={payAmount}
-              onChangeFunction={handlePayAmountChange}
+              onChangeFunction={(value) => {
+                if (value.startsWith("-")) {
+                  setPayAmount("0");
+                  return;
+                }
+                setPayAmount(value);
+              }}
               disabled={!hasStarted}
             />
           </div>
@@ -311,6 +261,7 @@ export function PayTab() {
         placeholder="Add a note... (optional)"
       />
       <PayActionButton
+        receiveAmountBigInt={receiveAmountBigInt}
         walletBalance={balances}
         disabled={
           !payAmount

@@ -71,10 +71,8 @@ interface TransactionCardStore {
 
   // --- Pay Form ---
   payAmount: string;
-  receiveAmountBigInt: bigint;
   memo: string;
   setPayAmount: (amount: string) => void;
-  setReceiveAmountBigInt: (amount: bigint) => void;
   setMemo: (memo: string) => void;
 
   // --- Pay Transaction ---
@@ -128,7 +126,6 @@ const initialLoanTransaction = {
 
 const initialForms = {
   payAmount: "",
-  receiveAmountBigInt: 0n,
   memo: "",
   withdrawAmount: "",
   collateralAmount: "",
@@ -209,11 +206,8 @@ export const TransactionCardProvider = ({
 
       // Pay Form
       payAmount: initialForms.payAmount,
-      receiveAmountBigInt: initialForms.receiveAmountBigInt,
       memo: initialForms.memo,
       setPayAmount: (amount) => set({ payAmount: sanitizeAmount(amount) }),
-      setReceiveAmountBigInt: (amount) =>
-        set({ receiveAmountBigInt: amount }),
       setMemo: (memo) => set({ memo }),
 
       // Pay Transaction

@@ -21,11 +21,9 @@ import {
   JB_CHAINS,
   JB_TOKEN_DECIMALS,
   JBCoreContracts,
-  jbDirectoryAbi,
   jbMultiTerminalAbi,
   JBRouterTerminalContracts,
   jbRouterTerminalRegistryAbi,
-  NATIVE_TOKEN,
 } from "@bananapus/nana-sdk-core";
 import {
   useJBContractContext,
@@ -41,17 +39,19 @@ import {
   selectHasStarted,
   useTransactionCardStore,
 } from "../TransactionCardStore";
-import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
 import EtherscanLink from "@/components/EtherscanLink";
 
 // Define shared styles for the main action button for consistency
 export const primaryPayButtonClass =
   "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-cerulean/80 focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
 
+
 export function PayActionButton({
+  receiveAmountBigInt,
   walletBalance,
   disabled,
 }: {
+  receiveAmountBigInt: bigint;
   walletBalance: Map<string, bigint>;
   disabled?: boolean;
 }) {
@@ -64,7 +64,6 @@ export function PayActionButton({
   // TransactionCard only renders the pay tab once a token is selected
   const paymentToken = useTransactionCardStore((state) => state.selectedToken)!;
   const payAmount = useTransactionCardStore((state) => state.payAmount);
-  const receiveAmountBigInt = useTransactionCardStore((state) => state.receiveAmountBigInt);
   const memo = useTransactionCardStore((state) => state.memo);
   const hasStarted = useTransactionCardStore(selectHasStarted);
 
@@ -88,10 +87,7 @@ export function PayActionButton({
 
   const { metadata } = useJBProjectMetadataContext();
   const { token } = useJBTokenContext();
-  const {
-    version,
-    contracts: { primaryNativeTerminal },
-  } = useJBContractContext();  
+  const { version } = useJBContractContext();  
 
   const baseToken = useProjectBaseToken();
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
@@ -142,6 +138,7 @@ export function PayActionButton({
         || !activeChainId 
         || !activeProjectId 
         || !publicClient
+        || version !== 6
       ) {
         toast({
           variant: "destructive",
@@ -153,76 +150,75 @@ export function PayActionButton({
 
       setPending(true);
 
-      if (version === 6) {
-        /*const jbDirectory = await publicClient.readContract({
-          address: getJBContractAddress(JBCoreContracts.JBDirectory, 6, activeChainId),
-          abi: jbDirectoryAbi,
-          functionName: 'primaryTerminalOf',
-          args: [activeProjectId, NATIVE_TOKEN],
-        });*/
+      /*const jbDirectory = await publicClient.readContract({
+        address: getJBContractAddress(JBCoreContracts.JBDirectory, 6, activeChainId),
+        abi: jbDirectoryAbi,
+        functionName: 'primaryTerminalOf',
+        args: [activeProjectId, NATIVE_TOKEN],
+      });*/
 
-        const contract = baseToken.isNative === paymentToken.isNative
-          ? {
-            address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, 6, activeChainId),
-            abi: jbMultiTerminalAbi
-          } : {
-            address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, 6, activeChainId),
-            abi: jbRouterTerminalRegistryAbi
-          };
-
-        if (!paymentToken.isNative) {
-          try {
-            await ensureAllowance(
-              paymentToken.address,
-              contract.address,
-              payAmountBigInt
-            );
-            setUserHasApproved(true);
-            setCurrentStep("");
-          } catch (err) {
-            console.error(err);
-            setCurrentStep("rejected-approval");
-            return;
-          }
+      const contract = baseToken.isNative === paymentToken.isNative
+        ? {
+          address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, 6, activeChainId),
+          abi: jbMultiTerminalAbi
+        } : {
+          address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, 6, activeChainId),
+          abi: jbRouterTerminalRegistryAbi
         };
-        
-        setCurrentStep('signing-pay');
-         
-        const txHash = await writeContractAsync({
-          abi: contract.abi,
-          functionName: "pay",
-          chainId: activeChainId,
-          address: contract.address,
-          args: [
-            activeProjectId,
+
+      if (!paymentToken.isNative) {
+        try {
+          await ensureAllowance(
             paymentToken.address,
-            payAmountBigInt,
-            address,
-            minReceiveAmountBigInt,
-            memo || "",
-            "0x0",
-          ],
-          value: paymentToken.isNative ? payAmountBigInt : 0n,
-        });
-
-        const txResult = await publicClient.waitForTransactionReceipt({
-          hash: txHash,
-        });
-        if (txResult.status === "reverted") {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Transaction reverted",
-          });
+            contract.address,
+            payAmountBigInt
+          );
+          setUserHasApproved(true);
+          setCurrentStep("");
+        } catch (err) {
+          console.error(err);
+          setCurrentStep("rejected-approval");
+          return;
         }
+      };
+      
+      setCurrentStep('signing-pay');
+        
+      const txHash = await writeContractAsync({
+        abi: contract.abi,
+        functionName: "pay",
+        chainId: activeChainId,
+        address: contract.address,
+        args: [
+          activeProjectId,
+          paymentToken.address,
+          payAmountBigInt,
+          address,
+          minReceiveAmountBigInt,
+          memo || "",
+          "0x0",
+        ],
+        value: paymentToken.isNative ? payAmountBigInt : 0n,
+      });
 
-        setPaymentTxHash(txHash);
-        setCurrentStep("success");
+      const txResult = await publicClient.waitForTransactionReceipt({
+        hash: txHash,
+      });
+      
+      if (txResult.status === "reverted") {
         toast({
-          title: "Success",
-          description: `Your contribution of ${formatNumber(payAmount, false)} ${paymentToken.symbol} was successful`,
+          variant: "destructive",
+          title: "Error",
+          description: "Transaction reverted",
         });
       }
+
+      setPaymentTxHash(txHash);
+      setCurrentStep("success");
+      toast({
+        title: "Success",
+        description: `Your contribution of ${formatNumber(payAmount, false)} ${paymentToken.symbol} was successful`,
+      });
     } catch (err) {
       console.error("Payment failed:", err);
       setCurrentStep("rejected-pay");
