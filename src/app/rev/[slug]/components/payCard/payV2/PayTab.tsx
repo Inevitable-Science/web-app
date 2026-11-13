@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import {
   JBChainId,
@@ -7,26 +7,20 @@ import {
   useJBProjectMetadataContext,
   useJBTokenContext,
 } from "@bananapus/nana-sdk-react";
-import { FixedInt } from "fpnum";
 import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
 import {
   getJBContractAddress,
-  getTokenAToBQuote,
-  getTokenBtoAQuote,
   JB_TOKEN_DECIMALS,
   JBCoreContracts,
-  jbDirectoryAbi,
   jbMultiTerminalAbi,
   JBRouterTerminalContracts,
   jbRouterTerminalRegistryAbi,
   NATIVE_TOKEN,
-  USDC_ADDRESSES,
 } from "@bananapus/nana-sdk-core";
-import { formatNumber, truncateNumber } from "@/lib/utils";
+import { truncateNumber } from "@/lib/utils";
 import { PayActionButton } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
-import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
 import {
   selectHasStarted,
   useTransactionCardStore,
@@ -34,15 +28,12 @@ import {
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
-import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
-import { useAccount, usePublicClient, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import { useDebounce } from "use-debounce";
 
 export function PayTab() {
-  // const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
-  // const ruleset = useRevnetDataStore((state) => state.ruleset);
   const suckers = useRevnetDataStore((state) => state.suckers);
   const { 
     peerChainId: selectedChainId, 
@@ -53,7 +44,6 @@ export function PayTab() {
   );
 
   const tokens = useTransactionCardStore((state) => state.tokens);
-  // TransactionCard only renders PayTab once a token is selected
   const selectedToken = useTransactionCardStore((state) => state.selectedToken)!;
   const setSelectedToken = useTransactionCardStore(
     (state) => state.setSelectedToken
@@ -98,12 +88,12 @@ export function PayTab() {
 
   const [debouncePayAmount] = useDebounce(payAmount, 600);
   const isPayAmountDebouncing = payAmount !== debouncePayAmount;
-  const payAmountBigInt = parseUnits(debouncePayAmount, selectedToken.decimals)
+  const payAmountBigIntDB = parseUnits(debouncePayAmount, selectedToken.decimals)
 
   const minPaymentAmount = selectedToken.isNative
     ? parseUnits("0.000001", selectedToken.decimals)
     : parseUnits("0.0001", selectedToken.decimals);
-  const lessThanMinPayment = payAmountBigInt < minPaymentAmount;
+  const lessThanMinPayment = payAmountBigIntDB < minPaymentAmount;
 
   const { 
     data: payPreviewData,
@@ -116,7 +106,7 @@ export function PayTab() {
     args: [
       chainProjectId,
       selectedToken.address,
-      payAmountBigInt,
+      payAmountBigIntDB,
       zeroAddress, // review this fallback idk why you need an address for a pay preview
       "0x0"
     ],
@@ -158,7 +148,6 @@ export function PayTab() {
     selectedChainId
   );
   
-
   useEffect(() => {
     if (!isQuoteLoading && payAmount && selectedToken) {
       handlePayAmountChange(payAmount);
@@ -267,10 +256,14 @@ export function PayTab() {
             <p className="text-muted-foreground text-sm font-light select-none">
               YOU RECEIVE
             </p>
-            {(isPayPreviewLoading || isPayAmountDebouncing) && Number(payAmount) ? ( // Prevents skeleton when withdrawAmount is falsy (0)
+            {(
+              isPayPreviewLoading 
+              || isPayAmountDebouncing
+            ) && Number(payAmount) // Prevents skeleton when withdrawAmount is falsy (0)
+              ? ( 
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
-              // show placeholder "0.00" when no withdraw amount is inputted
+              // force the placeholder "0.00" when no withdraw amount is inputted
               <PayInput
                 value={payAmount ? receiveAmountString : ""}
                 disabled

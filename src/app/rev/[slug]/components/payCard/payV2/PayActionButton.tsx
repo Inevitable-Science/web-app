@@ -146,7 +146,7 @@ export function PayActionButton({
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Required data was ",
+          description: "Required data is missing, refresh and try again",
         });
         return;
       }
@@ -154,14 +154,13 @@ export function PayActionButton({
       setPending(true);
 
       if (version === 6) {
-        const jbDirectory = await publicClient.readContract({
+        /*const jbDirectory = await publicClient.readContract({
           address: getJBContractAddress(JBCoreContracts.JBDirectory, 6, activeChainId),
           abi: jbDirectoryAbi,
           functionName: 'primaryTerminalOf',
           args: [activeProjectId, NATIVE_TOKEN],
-        });
+        });*/
 
-        console.log(jbDirectory, "jb dir");
         const contract = baseToken.isNative === paymentToken.isNative
           ? {
             address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, 6, activeChainId),
@@ -206,14 +205,14 @@ export function PayActionButton({
           value: paymentToken.isNative ? payAmountBigInt : 0n,
         });
 
-        const result = await publicClient.waitForTransactionReceipt({
+        const txResult = await publicClient.waitForTransactionReceipt({
           hash: txHash,
         });
-        if (result.status !== "success") {
+        if (txResult.status === "reverted") {
           toast({
             variant: "destructive",
             title: "Error",
-            description: "Transaction unsuccessful.",
+            description: "Transaction reverted",
           });
         }
 
@@ -221,7 +220,7 @@ export function PayActionButton({
         setCurrentStep("success");
         toast({
           title: "Success",
-          description: `Your contribution of ${formatNumber(payAmount, false)} ${paymentToken.symbol} was successful.`,
+          description: `Your contribution of ${formatNumber(payAmount, false)} ${paymentToken.symbol} was successful`,
         });
       }
     } catch (err) {
@@ -409,7 +408,7 @@ export function PayActionButton({
           </div>
 
           <div className="mt-6 flex justify-end space-x-2">
-            <DialogClose />
+            <DialogClose disabled={pending} />
             {paymentToken.isNative ? (
               <ButtonWithWallet
                 targetChainId={activeChainId}
@@ -444,7 +443,7 @@ export function PayActionButton({
 
             <div className="mt-6 flex justify-end space-x-2">
               <Button
-                variant="ghost"
+                className="background-color hover:background-color rounded-md"
                 onClick={() => setDialogStage("review")}
                 disabled={pending}
               >

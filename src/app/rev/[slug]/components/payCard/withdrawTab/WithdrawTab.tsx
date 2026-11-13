@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
-  useBendystrawQuery,
   useJBContractContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
@@ -12,49 +10,46 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { SuckerGroupDocument } from "@/generated/graphql";
-import { getProjectsReclaimableSurplus } from "@/lib/reclaimableSurplus";
 import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
 import { useReclaimableSurplus } from "@/hooks/useReclaimableSurplus";
 import { formatUnits, parseUnits } from "viem";
 import { JB_TOKEN_DECIMALS } from "@bananapus/nana-sdk-core";
 import { useDebounce } from "use-debounce";
-
-export interface Surplus {
-  projectId: number;
-  value: string;
-  currencyId: number;
-  decimals: number;
-  chainId: number;
-  version: number;
-  tokenDecimals: 18;
-}
+import {
+  selectSurplusForChain,
+  useTransactionCardStore,
+} from "../TransactionCardStore";
 
 export function WithdrawTab() {
-  const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const { peerChainId: selectedChain, projectId: activeProjectId } =
     selectedSucker;
 
-  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const withdrawAmount = useTransactionCardStore((state) => state.withdrawAmount);
+  const setWithdrawAmount = useTransactionCardStore(
+    (state) => state.setWithdrawAmount
+  );
   const [debouncedWithdrawAmount] = useDebounce(withdrawAmount, 600);
 
-  const [surpluses, setSurpluses] = useState<Surplus[] | null>(null);
+  // Surpluses are fetched once in TransactionCardProvider
+  const surplus = useTransactionCardStore(selectSurplusForChain(selectedChain));
 
   const { version } = useJBContractContext();
   const { token } = useJBTokenContext();
 
   // Project Base Token
   const baseToken = useProjectBaseToken();
-  const receiveTokenAddress = baseToken.tokenMap[selectedChain].token;
 
   // Token Balances
-  const balanceQuery = useSuckersUserTokenBalance();
-  const currentChainBalObj = balanceQuery?.data?.find(
-    (tkn) => tkn.chainId === selectedChain
+  const { 
+    data: balances, 
+    isLoading: isBalancesLoading
+  } = useSuckersUserTokenBalance();
+  const currentChainBalOBJ = balances?.find(
+    (token) => token.chainId === selectedChain
   )?.balance;
-  const currentChainBalanceBigInt = currentChainBalObj?.value ?? 0n;
+  const currentChainBalanceBigInt = currentChainBalOBJ?.value ?? 0n;
 
   const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
   const withdrawAmountBigInt = parseUnits(withdrawAmount, projectTokenDecimals); // preserve for instant UI changes
@@ -65,27 +60,9 @@ export function WithdrawTab() {
   ); // use only for state within hook
   const isDebouncing = debouncedWithdrawAmount !== withdrawAmount;
 
-  const surplus = surpluses?.find((s) => s.chainId === selectedChain) || null;
   const zeroSurplusValue = Number(surplus?.value ?? 0) == 0;
 
-  const { data: suckerGroupData } = useBendystrawQuery(
-    SuckerGroupDocument,
-    { id: project.suckerGroupId ?? "" },
-    { enabled: !!project.suckerGroupId }
-  );
-
-  useEffect(() => {
-    const fetchSurpluses = async () => {
-      const surpluses = await getProjectsReclaimableSurplus(
-        suckerGroupData?.suckerGroup?.projects?.items || []
-      );
-      setSurpluses(surpluses);
-    };
-
-    fetchSurpluses();
-  }, []);
-
-  const { data: reclaimableAmount, isLoading } = useReclaimableSurplus({
+  const { data: reclaimableAmount, isLoading: isReclaimableAmtLoading } = useReclaimableSurplus({
     chainId: selectedChain,
     projectId: activeProjectId,
     tokenAmount: withdrawAmountBigIntDB || undefined,
@@ -141,13 +118,13 @@ export function WithdrawTab() {
             />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <WithdrawSelector suckersBalance={balanceQuery.data} />
+            <WithdrawSelector suckersBalance={balances} />
             <div className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {balanceQuery.isLoading ? (
+              {isBalancesLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
               ) : (
-                truncateNumber(currentChainBalObj?.format() ?? 0, true)
+                truncateNumber(currentChainBalOBJ?.format() ?? 0, true)
               )}
             </div>
           </div>
@@ -160,7 +137,7 @@ export function WithdrawTab() {
               YOU RECEIVE{" "}
               {withdrawAmountBigInt > currentChainBalanceBigInt && "MAX"}
             </p>
-            {(isLoading || isDebouncing) && Number(withdrawAmount) ? ( // Prevents skeleton when withdrawAmount is falsy (0)
+            {(isReclaimableAmtLoading || isDebouncing) && Number(withdrawAmount) ? ( // Prevents skeleton when withdrawAmount is falsy (0)
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
               // show placeholder "0.00" when no withdraw amount is inputted
@@ -222,11 +199,8 @@ export function WithdrawTab() {
       </div>
 
       <WithdrawActionButton
-        withdrawAmount={withdrawAmountBigInt}
-        tokenBalance={currentChainBalanceBigInt}
         minTokensReturned={reclaimableAmount}
-        receiveTokenAddress={receiveTokenAddress}
-        isTokensReturnedLoading={isDebouncing || isLoading}
+        disabled={isDebouncing || isReclaimableAmtLoading}
       />
     </div>
   );

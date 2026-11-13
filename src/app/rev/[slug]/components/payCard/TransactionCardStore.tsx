@@ -1,22 +1,5 @@
-//  Transaction Card Store
 //  Follows the same Zustand + React Context pattern as RevnetDataContext
 //  READ MORE: https://tkdodo.eu/blog/zustand-and-react-context
-//
-//  What lives here (and why):
-//  - Shared card state: active tab, selected payment token + token list, start-time clock.
-//    These are computed in TransactionCard and re-computed / prop-drilled into PayTab,
-//    PayActionButton etc. One source of truth removes the duplicated `hasStarted` logic.
-//  - Form inputs per tab (pay / withdraw / loan). Tabs are conditionally rendered so
-//    local useState is wiped on every tab switch; in the store the inputs survive.
-//  - Transaction progress (step status, approvals) that is prop-drilled into the
-//    Pay/Loan steppers.
-//  - Reclaimable surpluses: fetched once per card rather than on every WithdrawTab mount.
-//
-//  What does NOT live here (intentionally):
-//  - Async/server data already cached by react-query/wagmi (balances, previewPayFor,
-//    borrowableAmountFrom, reclaimable amounts). Copying it into zustand just adds sync bugs.
-//  - Purely presentational, single-component state (dialog open/close, dialog stage,
-//    terms checkbox). Keep those local unless a second component needs them.
 
 "use client";
 import {
@@ -42,13 +25,11 @@ import {
 } from "@/lib/reclaimableSurplus";
 import { SuckerGroupDocument } from "@/generated/graphql";
 
-/* -------------------------------------------------------------------------- */
-/*                                    Types                                   */
-/* -------------------------------------------------------------------------- */
+
 
 export type TransactionTabType = "buy" | "withdraw" | "loan";
 
-// Source of truth for payV2 (PayActionButton / PayStepper)
+// Source of truth for PayActionButton/PayStepper
 export type PaymentStatusType =
   | ""
   | "signing-approval"
@@ -57,7 +38,7 @@ export type PaymentStatusType =
   | "rejected-pay"
   | "success";
 
-// Mirrors loanTab/LoanActionButton -> move the source of truth here when implementing
+// Used for loanTab/LoanActionButton
 export type BorrowStatus =
   | ""
   | "signing-permission"
@@ -74,9 +55,9 @@ interface TransactionCardStore {
   activeTab: TransactionTabType;
   setActiveTab: (tab: TransactionTabType) => void;
 
-  // Clock used for the "Token Sale Starts in" countdown + hasStarted checks
-  now: number; // unix seconds
-  startDate: number | undefined; // unix seconds, first ruleset start
+  // Clock used for the "Token Sale Starts in..." countdown + hasStarted checks
+  now: number;
+  startDate: number | undefined;
   setNow: (now: number) => void;
   setStartDate: (startDate: number | undefined) => void;
 
@@ -85,12 +66,12 @@ interface TransactionCardStore {
   selectedToken: Token | undefined;
   setSelectedToken: (token: Token) => void;
   // Recomputes token list for a chain and keeps the same "kind" of token
-  // selected (native -> native, USDC -> USDC). Replaces PayTab.handleChainChange token logic.
+  // PayTab.handleChainChange token logic depends on this
   syncTokensForChain: (chainId: JBChainId, version: JBVersion) => void;
 
   // --- Pay Form ---
-  payAmount: string; // amountA
-  receiveAmountBigInt: bigint; // amountB (v4/v5 local quote path)
+  payAmount: string;
+  receiveAmountBigInt: bigint;
   memo: string;
   setPayAmount: (amount: string) => void;
   setReceiveAmountBigInt: (amount: bigint) => void;
@@ -130,9 +111,7 @@ interface TransactionCardStore {
   resetForms: () => void; // e.g. on chain change
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                Initial State                               */
-/* -------------------------------------------------------------------------- */
+
 
 const initialPayTransaction = {
   paymentStatus: "" as PaymentStatusType,
@@ -159,9 +138,8 @@ const initialForms = {
 // Prevents negative input values, shared by every amount input in the card
 const sanitizeAmount = (value: string) => (value.startsWith("-") ? "0" : value);
 
-/* -------------------------------------------------------------------------- */
-/*                                   Context                                  */
-/* -------------------------------------------------------------------------- */
+
+
 
 const TransactionCardContext = createContext<
   StoreApi<TransactionCardStore> | undefined
@@ -172,14 +150,11 @@ interface ContextPropType {
   initialTab?: TransactionTabType;
 }
 
-// Must be rendered inside RevnetDataProvider + the JB contexts.
-// Tip: wrap BOTH <TransactionCard /> instances in layout.tsx (mobile + desktop)
-// with a single provider so inputs survive breakpoint changes.
+
 export const TransactionCardProvider = ({
   children,
   initialTab = "buy",
 }: ContextPropType) => {
-  // Foundational Hooks
   const project = useRevnetDataStore((state) => state.project);
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
   const peerChainId = selectedSucker?.peerChainId;

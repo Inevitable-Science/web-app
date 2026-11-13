@@ -1,48 +1,59 @@
 import { useState } from "react";
-import { Address } from "viem";
+import { parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { jbContractAddress, jbMultiTerminalAbi, NATIVE_TOKEN } from "@bananapus/nana-sdk-core";
-import { JBChainId, useJBContractContext } from "@bananapus/nana-sdk-react";
+import { jbContractAddress, jbMultiTerminalAbi, JB_TOKEN_DECIMALS, NATIVE_TOKEN } from "@bananapus/nana-sdk-core";
+import {
+  JBChainId,
+  useJBContractContext,
+  useJBTokenContext,
+  useSuckersUserTokenBalance,
+} from "@bananapus/nana-sdk-react";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useToast } from "@/components/ui/use-toast";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { Button } from "@/components/ui/button";
 import { ConnectKitButton } from "connectkit";
 import { primaryPayButtonClass } from "../payTab/PayActionButton";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { useTransactionCardStore } from "../TransactionCardStore";
 
 
 export function WithdrawActionButton({
-  withdrawAmount,
-  tokenBalance,
   minTokensReturned,
-  receiveTokenAddress,
-  isTokensReturnedLoading,
   disabled,
 }: {
-  withdrawAmount: bigint;
-  tokenBalance: bigint;
   minTokensReturned: bigint | undefined;
-  receiveTokenAddress: Address;
-  isTokensReturnedLoading: boolean;
   disabled?: boolean;
 }) {
   const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
+  const withdrawAmountString = useTransactionCardStore(
+    (state) => state.withdrawAmount
+  );
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    contracts: { primaryNativeTerminal },
-  } = useJBContractContext();
+  const { token } = useJBTokenContext();
 
   const publicClient = usePublicClient();
   const { address, isConnected, chainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
 
+  // Token to reclaim on the selected chain
+  const baseToken = useProjectBaseToken();
+  const receiveTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
+
+  const {  data: balances } = useSuckersUserTokenBalance();
+  const tokenBalance =
+    balances?.find((token) => token.chainId === selectedSucker.peerChainId)
+      ?.balance?.value ?? 0n;
+
+
+  const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
+  const withdrawAmount = parseUnits(withdrawAmountString, projectTokenDecimals);
   const insufficientFunds = withdrawAmount > tokenBalance;
 
   const handleWithdraw = async () => {
     if (
-      !primaryNativeTerminal?.data ||
       !address ||
       !publicClient ||
       !minTokensReturned
@@ -59,17 +70,17 @@ export function WithdrawActionButton({
       setIsLoading(true);
 
       // v6 args
-      const args = [
-      address,                      // holder
-      selectedSucker.projectId,     // projectId
-      withdrawAmount,               // cashOutCount
-      // NATIVE_TOKEN,                 // token to reclaim
-      receiveTokenAddress,          // token to reclaim
-      //minTokensReturned,            // min tokens reclaimed
-      0n,
-      address,                      // beneficiary
-      '0x0',                        // metadata
-    ] as const
+        const args = [
+        address,                      // holder
+        selectedSucker.projectId,     // projectId
+        withdrawAmount,               // cashOutCount
+        // NATIVE_TOKEN,                 // token to reclaim
+        receiveTokenAddress,          // token to reclaim
+        //minTokensReturned,            // min tokens reclaimed
+        0n,
+        address,                      // beneficiary
+        '0x0',                        // metadata
+      ] as const;
 
       const txHash = await writeContractAsync({
         abi: jbMultiTerminalAbi,
@@ -88,20 +99,25 @@ export function WithdrawActionButton({
         ],*/
       });
 
-      const tx = await publicClient.waitForTransactionReceipt({ hash: txHash });
-      if (tx.status !== "success") throw new Error();
+      const txResult = await publicClient.waitForTransactionReceipt({ hash: txHash });
+      if (txResult.status === "reverted") {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Transaction reverted",
+        });
+        return;
+      }
 
       toast({
         title: "Withdraw Successful",
-        description: "You Successfully Withdrew Your Tokens.",
+        description: "You Successfully Withdrew Your Tokens",
       });
+
     } catch (err) {
+      // only log error here, usually error gets 
+      // triggered by rejecting tx
       console.error(err);
-      toast({
-        variant: "destructive",
-        title: "Withdraw Failed",
-        description: "Couldn't Withdraw Your Tokens.",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -135,7 +151,6 @@ export function WithdrawActionButton({
       targetChainId={selectedSucker?.peerChainId as JBChainId | undefined}
       disabled={
         disabled ||
-        isTokensReturnedLoading ||
         !minTokensReturned ||
         (!withdrawAmount && chainId === selectedSucker?.peerChainId)
       }
