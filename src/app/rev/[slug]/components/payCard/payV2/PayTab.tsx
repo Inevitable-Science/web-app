@@ -1,12 +1,8 @@
 "use client";
 import Image from "next/image";
-import {
-  JBChainId,
-  useJBContractContext,
-  useJBProjectMetadataContext,
-  useJBTokenContext,
-} from "@bananapus/nana-sdk-react";
+import { useDebounce } from "use-debounce";
 import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
+import { useReadContract } from "wagmi";
 import {
   getJBContractAddress,
   JB_TOKEN_DECIMALS,
@@ -16,21 +12,25 @@ import {
   jbRouterTerminalRegistryAbi,
   NATIVE_TOKEN,
 } from "@bananapus/nana-sdk-core";
-import { truncateNumber } from "@/lib/utils";
-import { PayActionButton } from "./PayActionButton";
-import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import {
-  selectHasStarted,
-  useTransactionCardStore,
-} from "../TransactionCardStore";
-import { useTokenBalances } from "@/hooks/useTokenBalances";
+  JBChainId,
+  useJBContractContext,
+  useJBProjectMetadataContext,
+  useJBTokenContext,
+} from "@bananapus/nana-sdk-react";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { TokenAndChainSelector } from "@/components/TokenChainSelector";
 import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
-import { useReadContract } from "wagmi";
-import { useDebounce } from "use-debounce";
+import { useTokenBalances } from "@/hooks/useTokenBalances";
+import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
+import { truncateNumber } from "@/lib/utils";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { PayActionButton } from "./PayActionButton";
+import {
+  selectHasStarted,
+  useTransactionCardStore,
+} from "../TransactionCardStore";
 
 
 export function PayTab() {
@@ -65,11 +65,9 @@ export function PayTab() {
 
   const contract = (accountingContext?.project?.token === NATIVE_TOKEN.toLowerCase()) === (selectedToken.isNative)
   ? {
-    type: "multiTerminal",
     address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, version, selectedChainId),
     abi: jbMultiTerminalAbi
   } : {
-    type: "routerTerminal",
     address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, version, selectedChainId),
     abi: jbRouterTerminalRegistryAbi
   };
@@ -87,7 +85,7 @@ export function PayTab() {
 
   const [debouncePayAmount] = useDebounce(payAmount, 600);
   const isPayAmountDebouncing = payAmount !== debouncePayAmount;
-  const payAmountBigIntDB = parseUnits(debouncePayAmount, selectedToken.decimals)
+  const payAmountBigIntDB = parseUnits(debouncePayAmount, selectedToken.decimals);
 
   const minPaymentAmount = selectedToken.isNative
     ? parseUnits("0.000001", selectedToken.decimals)
@@ -102,7 +100,7 @@ export function PayTab() {
     abi: contract.abi,
     chainId: selectedChainId,
     functionName: 'previewPayFor',
-    args: payAmount && !lessThanMinPayment
+    args: !lessThanMinPayment
     ? [
       chainProjectId,
       selectedToken.address,
@@ -111,7 +109,7 @@ export function PayTab() {
       "0x0"
     ] : undefined,
     query: {
-      enabled: !!payAmount && !lessThanMinPayment,
+      enabled: !lessThanMinPayment,
       refetchInterval: 40_000, // refetch every 40 seconds
     }
   });
@@ -119,7 +117,10 @@ export function PayTab() {
   // outputs: [ruleset, beneficiaryTokenCount, reservedTokenCount, hookSpecifications]
   const receiveAmountBigInt = payPreviewData?.[1] ?? 0n;
 
-  const receiveAmount = formatUnits(receiveAmountBigInt, JB_TOKEN_DECIMALS);
+  const receiveAmount = formatUnits(
+    receiveAmountBigInt,
+    token.data?.decimals ?? JB_TOKEN_DECIMALS
+  );
   const receiveAmountString = truncateNumber(receiveAmount);
   
   const { balances, isLoading: isBalanceLoading } = useTokenBalances(
@@ -145,11 +146,7 @@ export function PayTab() {
 
   const handleTokenChange = ({ address }: { address: Address }) => {
     const token = tokens.find((t) => t.address === address);
-    if (token) {
-      setSelectedToken(token);
-    }
-
-    return;
+    if (token) setSelectedToken(token);
   };
 
 
@@ -161,13 +158,7 @@ export function PayTab() {
             <p className="text-muted-foreground text-sm font-light">YOU PAY</p>
             <PayInput
               value={payAmount}
-              onChangeFunction={(value) => {
-                if (value.startsWith("-")) {
-                  setPayAmount("0");
-                  return;
-                }
-                setPayAmount(value);
-              }}
+              onChangeFunction={setPayAmount}
               disabled={!hasStarted}
             />
           </div>
@@ -209,13 +200,13 @@ export function PayTab() {
             {(
               isPayPreviewLoading 
               || isPayAmountDebouncing
-            ) && Number(payAmount) // Prevents skeleton when withdrawAmount is falsy (0)
+            ) && Number(payAmount) // Prevents skeleton when payAmount is falsy (0)
               ? ( 
               <div className="activeSkeleton mt-[2px] h-[30px] w-[130px] rounded-lg opacity-30" />
             ) : (
-              // force the placeholder "0.00" when no withdraw amount is inputted
+              // force the placeholder "0.00" when no pay amount is inputted & valid payment amount
               <PayInput
-                value={payAmount ? receiveAmountString : ""}
+                value={Number(payAmount) && !lessThanMinPayment ? receiveAmountString : ""}
                 disabled
               />
             )}
@@ -241,7 +232,7 @@ export function PayTab() {
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
-                  chainId={Number(selectedChainId) as JBChainId}
+                  chainId={selectedChainId}
                   height={16}
                   width={16}
                 />
@@ -264,8 +255,7 @@ export function PayTab() {
         receiveAmountBigInt={receiveAmountBigInt}
         walletBalance={balances}
         disabled={
-          !payAmount
-          || parseFloat(payAmount) === 0
+          !Number(payAmount)
           || isPayPreviewLoading
           || isPayAmountDebouncing
         }

@@ -1,21 +1,9 @@
 "use client";
-import { ButtonWithWallet } from "@/components/ButtonWithWallet";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
-import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { formatNumber, truncateNumber } from "@/lib/utils";
-import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import * as Checkbox from "@radix-ui/react-checkbox";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
 import { ConnectKitButton } from "connectkit";
+import { Check, ExternalLink } from "lucide-react";
+import { formatUnits, parseUnits } from "viem";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import {
   getJBContractAddress,
   JB_CHAINS,
@@ -30,21 +18,35 @@ import {
   useJBProjectMetadataContext,
   useJBTokenContext,
 } from "@bananapus/nana-sdk-react";
-import { Check, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
-import { formatUnits, parseUnits } from "viem";
-import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import { ButtonWithWallet } from "@/components/ButtonWithWallet";
+import EtherscanLink from "@/components/EtherscanLink";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { formatNumber, truncateNumber } from "@/lib/utils";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { PayStepper } from "./PayStepper";
 import {
   selectHasStarted,
   useTransactionCardStore,
 } from "../TransactionCardStore";
-import EtherscanLink from "@/components/EtherscanLink";
 
 // Define shared styles for the main action button for consistency
 export const primaryPayButtonClass =
   "w-full rounded-full bg-cerulean px-5 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-cerulean/80 focus:outline-hidden focus:ring-4 focus:ring-blue-300 disabled:opacity-50";
 
+const SLIPPAGE_BPS = 100n; // 1%
+const BPS_DENOMINATOR = 10_000n;
 
 export function PayActionButton({
   receiveAmountBigInt,
@@ -83,7 +85,7 @@ export function PayActionButton({
   const payAmountBigInt = parseUnits(payAmount, paymentToken.decimals);
   // terms (only if disclosure) -> review -> sign (non-native only, shows PayStepper)
   const [dialogStage, setDialogStage] = useState<"terms" | "review" | "sign">("terms");
-  const [paymentTxHash, setPaymentTxHash] = useState<null | string>(null);
+  const [paymentTxHash, setPaymentTxHash] = useState<null | `0x${string}`>(null);
 
   const { metadata } = useJBProjectMetadataContext();
   const { token } = useJBTokenContext();
@@ -109,27 +111,24 @@ export function PayActionButton({
     : parseUnits("0.0001", paymentToken.decimals);
   const lessThanMinPayment = payAmountBigInt < minPaymentAmount;
 
-
-  const SLIPPAGE_BPS = 100n; // 1%
-  const BPS_DENOMINATOR = 10_000n;
-
   const minReceiveAmountBigInt = (receiveAmountBigInt * (BPS_DENOMINATOR - SLIPPAGE_BPS)) / BPS_DENOMINATOR;
-  const minReceiveAmount = formatUnits(minReceiveAmountBigInt, JB_TOKEN_DECIMALS);
+  const minReceiveAmount = formatUnits(minReceiveAmountBigInt, projectTokenDecimals);
 
-  // --- 3. DERIVED STATE & MEMOS ---
-  const actionButtonContent = pending
-    ? "Processing..."
-    : isApproving
-      ? "Approving..."
+  const payDisclosure = metadata.data?.payDisclosure;
+  const termsNotAgreed = !!payDisclosure && !agreedToTerms;
+
+  // isApproving first: pending is also true while approving
+  const actionButtonContent = isApproving
+    ? "Approving..."
+    : pending
+      ? "Processing..."
       : currentStep === "success"
         ? "Payment Successful"
         : "Pay";
 
   useEffect(() => {
-    if (isApproving) {
-      setCurrentStep("signing-approval");
-    }
-  }, [isApproving]);
+    if (isApproving) setCurrentStep("signing-approval");
+  }, [isApproving, setCurrentStep]);
 
   const handlePay = async () => {
     try {
@@ -174,15 +173,14 @@ export function PayActionButton({
             payAmountBigInt
           );
           setUserHasApproved(true);
-          setCurrentStep("");
         } catch (err) {
           console.error(err);
           setCurrentStep("rejected-approval");
           return;
         }
-      };
-      
-      setCurrentStep('signing-pay');
+      }
+
+      setCurrentStep("signing-pay");
         
       const txHash = await writeContractAsync({
         abi: contract.abi,
@@ -211,6 +209,8 @@ export function PayActionButton({
           title: "Error",
           description: "Transaction reverted",
         });
+        setCurrentStep("rejected-pay");
+        return;
       }
 
       setPaymentTxHash(txHash);
@@ -222,13 +222,12 @@ export function PayActionButton({
     } catch (err) {
       console.error("Payment failed:", err);
       setCurrentStep("rejected-pay");
-      return;
     } finally {
       setPending(false);
     }
   };
 
-  // --- 5. RENDER LOGIC ---
+  // --- RENDER LOGIC ---
   if (!hasStarted || paymentsPaused) {
     return (
       <Button className={primaryPayButtonClass} disabled>
@@ -257,7 +256,7 @@ export function PayActionButton({
   }
 
   // State 2: Contribution is less than min threshold
-  if (payAmount && lessThanMinPayment) {
+  if (Number(payAmount) && lessThanMinPayment) {
     return (
       <Button className={primaryPayButtonClass} disabled>
         Contribution Is Too Small
@@ -266,7 +265,7 @@ export function PayActionButton({
   }
 
   // State 3: User is connected however has inputted an amount greater than their balance
-  if (walletBalance && payAmountBigInt && insufficientFunds) {
+  if (insufficientFunds) {
     return (
       <Button className={primaryPayButtonClass} disabled>
         Insufficient Funds
@@ -274,7 +273,6 @@ export function PayActionButton({
     );
   }
 
-  const payDisclosure = metadata.data?.payDisclosure;
   const showDisclosureNotice =
     payDisclosure
     && dialogStage === "terms"
@@ -389,7 +387,7 @@ export function PayActionButton({
             </div>
             <div className="flex flex-row justify-between mt-1">
               <p className="text-xs text-muted-foreground">
-                Minimum Recieved
+                Minimum Received
                 <br/>
                 <span className="text-white">
                   {truncateNumber(minReceiveAmount, false)} {token.data?.symbol ?? "TOKENS"}
@@ -408,7 +406,7 @@ export function PayActionButton({
             {paymentToken.isNative ? (
               <ButtonWithWallet
                 targetChainId={activeChainId}
-                disabled={!!payDisclosure && !agreedToTerms}
+                disabled={termsNotAgreed}
                 loading={pending}
                 onClick={handlePay}
                 className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
@@ -419,7 +417,7 @@ export function PayActionButton({
               <Button
                 className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                 onClick={() => setDialogStage("sign")}
-                disabled={!!payDisclosure && !agreedToTerms}
+                disabled={termsNotAgreed}
               >
                 Continue
               </Button>
@@ -447,7 +445,7 @@ export function PayActionButton({
               </Button>
               <ButtonWithWallet
                 targetChainId={activeChainId}
-                disabled={!!payDisclosure && !agreedToTerms}
+                disabled={termsNotAgreed}
                 loading={pending}
                 onClick={handlePay}
                 className="bg-cerulean! disabled:bg-gunmetal! disabled:text-grey-100 inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

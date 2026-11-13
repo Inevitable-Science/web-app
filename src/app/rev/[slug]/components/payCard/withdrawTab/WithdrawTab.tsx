@@ -1,31 +1,31 @@
 import Image from "next/image";
+import { useDebounce } from "use-debounce";
+import { formatUnits, parseUnits } from "viem";
+import { useAccount, useReadContract } from "wagmi";
+import {
+  getJBContractAddress,
+  JB_TOKEN_DECIMALS,
+  JBCoreContracts,
+  jbMultiTerminalAbi
+} from "@bananapus/nana-sdk-core";
+import { cashOutProtocolFee } from "@bananapus/nana-sdk-core/v6/cash-out";
 import {
   useJBContractContext,
   useJBTokenContext,
   useSuckersUserTokenBalance,
 } from "@bananapus/nana-sdk-react";
-import { truncateNumber } from "@/lib/utils";
-import { WithdrawActionButton } from "./WithdrawActionButton";
-import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { WithdrawSelector } from "./WithdrawSelector";
 import { ChainLogo } from "@/components/ChainLogo";
-import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
-import { formatUnits, parseUnits } from "viem";
-import { 
-  getJBContractAddress, 
-  JB_TOKEN_DECIMALS, 
-  JBCoreContracts, 
-  jbMultiTerminalAbi 
-} from "@bananapus/nana-sdk-core";
-import { cashOutProtocolFee } from "@bananapus/nana-sdk-core/v6/cash-out";
-import { useDebounce } from "use-debounce";
+import { Button } from "@/components/ui/button";
+import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
+import { truncateNumber } from "@/lib/utils";
+import { useRevnetDataStore } from "@/store/RevnetDataContext";
+import { WithdrawActionButton } from "./WithdrawActionButton";
+import { WithdrawSelector } from "./WithdrawSelector";
 import {
   selectSurplusForChain,
   useTransactionCardStore,
 } from "../TransactionCardStore";
-import { useAccount, useReadContract } from "wagmi";
 
 
 export function WithdrawTab() {
@@ -131,15 +131,7 @@ export function WithdrawTab() {
             </p>
             <PayInput
               value={withdrawAmount}
-              onChangeFunction={(value) => {
-                if (value.startsWith("-")) {
-                  setWithdrawAmount("0");
-                  return;
-                }
-
-                setWithdrawAmount(value);
-                return;
-              }}
+              onChangeFunction={setWithdrawAmount}
               disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
             />
           </div>
