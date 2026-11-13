@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { jbContractAddress, jbMultiTerminalAbi, JB_TOKEN_DECIMALS, NATIVE_TOKEN } from "@bananapus/nana-sdk-core";
+import { jbContractAddress, jbMultiTerminalAbi, JB_TOKEN_DECIMALS } from "@bananapus/nana-sdk-core";
 import {
   JBChainId,
   useJBContractContext,
@@ -32,11 +32,7 @@ export function WithdrawActionButton({
   const [isLoading, setIsLoading] = useState(false);
 
   const { token } = useJBTokenContext();
-
-  const publicClient = usePublicClient();
-  const { address, isConnected, chainId } = useAccount();
-  const { writeContractAsync } = useWriteContract();
-  const { toast } = useToast();
+  const { version } = useJBContractContext();
 
   // Token to reclaim on the selected chain
   const baseToken = useProjectBaseToken();
@@ -47,6 +43,11 @@ export function WithdrawActionButton({
     balances?.find((token) => token.chainId === selectedSucker.peerChainId)
       ?.balance?.value ?? 0n;
 
+  const publicClient = usePublicClient();
+  const { address, isConnected, chainId } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+  const { toast } = useToast();
+
 
   const projectTokenDecimals = token?.data?.decimals || JB_TOKEN_DECIMALS;
   const withdrawAmount = parseUnits(withdrawAmountString, projectTokenDecimals);
@@ -56,7 +57,10 @@ export function WithdrawActionButton({
     if (
       !address ||
       !publicClient ||
-      !minTokensReturned
+      !minTokensReturned ||
+      !withdrawAmount ||
+      !receiveTokenAddress ||
+      insufficientFunds
     ) {
       toast({
         variant: "destructive",
@@ -69,15 +73,12 @@ export function WithdrawActionButton({
     try {
       setIsLoading(true);
 
-      // v6 args
-        const args = [
+      const args = [
         address,                      // holder
         selectedSucker.projectId,     // projectId
         withdrawAmount,               // cashOutCount
-        // NATIVE_TOKEN,                 // token to reclaim
         receiveTokenAddress,          // token to reclaim
-        //minTokensReturned,            // min tokens reclaimed
-        0n,
+        minTokensReturned,            // min tokens reclaimed
         address,                      // beneficiary
         '0x0',                        // metadata
       ] as const;
@@ -86,20 +87,12 @@ export function WithdrawActionButton({
         abi: jbMultiTerminalAbi,
         functionName: "cashOutTokensOf",
         chainId: selectedSucker?.peerChainId,
-        address: jbContractAddress[6].JBMultiTerminal[1], // primaryNativeTerminal.data,
+        address: jbContractAddress[version].JBMultiTerminal[selectedSucker.peerChainId],
         args
-        /*args: [
-          address, // holder
-          selectedSucker.projectId, // project id (use the correct project ID for the selected chain)
-          withdrawAmount ?? 0n, // cash out count
-          receiveTokenAddress, // token to reclaim (what you want to receive)
-          minTokensReturned, // min tokens reclaimed
-          address, // beneficiary
-          "0x" // metadata changed in v6 update idk y.. v6 INTEGRATION //DEFAULT_METADATA, - old import from core sdk - dep // metadata,
-        ],*/
       });
 
       const txResult = await publicClient.waitForTransactionReceipt({ hash: txHash });
+
       if (txResult.status === "reverted") {
         toast({
           variant: "destructive",
@@ -107,7 +100,7 @@ export function WithdrawActionButton({
           description: "Transaction reverted",
         });
         return;
-      }
+      };
 
       toast({
         title: "Withdraw Successful",
