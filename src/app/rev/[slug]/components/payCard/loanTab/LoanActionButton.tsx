@@ -12,6 +12,13 @@ import {
   jbPermissionsAbi,
   revLoansAbi,
 } from "@bananapus/nana-sdk-core";
+import {
+  getBorrowableAmount,
+  loanOpeningAmounts,
+  MAX_PREPAID_FEE_PERCENT,
+  MIN_PREPAID_FEE_PERCENT,
+  REVLOANS_BURN_PERMISSION_ID,
+} from "@bananapus/nana-sdk-core/v6";
 import { useJBContractContext, useJBTokenContext } from "@bananapus/nana-sdk-react";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
@@ -31,6 +38,9 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 import { ConnectKitButton } from "connectkit";
 import { primaryPayButtonClass } from "../payTab/PayActionButton";
+
+// Max drop from the quoted gross debt we accept before borrowFrom reverts (1%).
+const LOAN_SLIPPAGE_BPS = 100n;
 
 
 export type BorrowStatus =
@@ -72,7 +82,7 @@ export function LoanActionButton({
   const baseToken = useProjectBaseToken();
 
   // Client Hooks
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: selectedSucker.peerChainId });
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
@@ -82,13 +92,14 @@ export function LoanActionButton({
     selectedSucker;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
   const baseTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
+  // v6 currency ids differ per chain, so use the selected chain's token info.
+  const chainTokenDecimals =
+    baseToken.tokenMap[activeChainId]?.decimals ?? baseToken.decimals;
+  const chainTokenCurrency =
+    baseToken.tokenMap[activeChainId]?.currency ?? baseToken.currency;
 
-  const {
-    revLoansContractAddress,
-    revDeployerFee,
-    resolvedPermissionsAddress,
-    revPrepaidFeePercent,
-  } = useLoanFeeData(activeChainId);
+  const { revLoansContractAddress, resolvedPermissionsAddress } =
+    useLoanFeeData(activeChainId);
 
   const userHasPermission = useHasBorrowPermission({
     address: address as `0x${string}`,
@@ -106,29 +117,44 @@ export function LoanActionButton({
     }
   }, [userHasPermission]);
 
-  const feeData = generateFeeData({
-    grossBorrowedEth: loanAmount
-      ? Number(formatUnits(loanAmount, baseToken.decimals))
-      : 0,
-    prepaidPercent,
-  });
+  // Prepaid source fee, out of 1,000 (25 = 2.5% ... 500 = 50%)
+  const feeBasisPoints = Math.round(prepaidPercent * 10);
+  const prepaidFeePercent = BigInt(feeBasisPoints);
+  const prepaidFeeInRange =
+    prepaidFeePercent >= MIN_PREPAID_FEE_PERCENT &&
+    prepaidFeePercent <= MAX_PREPAID_FEE_PERCENT;
 
-  const totalFixedFees =
-    (revDeployerFee ? Number(revDeployerFee) : 0) +
-    (revPrepaidFeePercent ? Number(revPrepaidFeePercent) : 0);
+  // v6 opening fees, using the contracts' floor-rounded math: 2.5% protocol
+  // fee + 1% $REV fee + the prepaid source fee, all taken from the gross debt.
+  const openingAmounts = loanOpeningAmounts({
+    grossBorrowAmount: loanAmount ?? 0n,
+    prepaidSourceFeePercent: prepaidFeeInRange
+      ? prepaidFeePercent
+      : MIN_PREPAID_FEE_PERCENT,
+  });
+  const fixedFeeRatio = loanAmount
+    ? Number(openingAmounts.protocolFee + openingAmounts.revFee) /
+      Number(loanAmount)
+    : undefined;
+
   const loanAmountNum = loanAmount
-    ? Number(formatUnits(loanAmount, baseToken.decimals))
+    ? Number(formatUnits(loanAmount, chainTokenDecimals))
     : 0;
-  const protocolFees = loanAmountNum * (totalFixedFees / 1000);
-  const prepaidAmount = (prepaidPercent / 100) * loanAmountNum;
-  const amountToWallet = loanAmountNum - protocolFees - prepaidAmount;
+  const amountToWallet = Number(
+    formatUnits(openingAmounts.netBorrowAmount, chainTokenDecimals)
+  );
+
+  const feeData = generateFeeData({
+    grossBorrowedEth: loanAmountNum,
+    prepaidPercent,
+    fixedLoanFee: fixedFeeRatio,
+  });
 
   const amountToWalletFormatted =
     amountToWallet < 1
       ? truncateNumber(amountToWallet)
       : formatNumber(amountToWallet, false);
 
-  const feeBasisPoints = Math.round(prepaidPercent * 10);
   const collateralBigInt = parseUnits(collateralAmount, projectTokenDecimals);
   const lessThanMinCollateral =
     collateralBigInt < parseUnits("0.001", projectTokenDecimals);
@@ -145,7 +171,9 @@ export function LoanActionButton({
         !publicClient ||
         !primaryNativeTerminal?.data ||
         !address ||
-        !resolvedPermissionsAddress
+        !resolvedPermissionsAddress ||
+        !loanAmount ||
+        !prepaidFeeInRange
       ) {
         toast({
           variant: "destructive",
@@ -165,21 +193,21 @@ export function LoanActionButton({
             address: resolvedPermissionsAddress,
             abi: jbPermissionsAbi,
             functionName: "setPermissionsFor",
+            chainId: activeChainId,
             args: [
               address,
               {
                 operator: revLoansContractAddress,
                 projectId: activeProjectId,
-                permissionIds: [1],
+                // BURN_TOKENS only. Never ROOT (1): it gives REVLoans full
+                // operator power over the holder.
+                permissionIds: [REVLOANS_BURN_PERMISSION_ID],
               },
             ],
           });
-          const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+          const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-          if (receipt.status === "success") {
-            setBorrowStatus("");
-            setUserHasBorrowPerm(true);
-          } else {
+          if (txReceipt.status === "reverted") {
             setBorrowStatus("rejected-permission");
             toast({
               variant: "destructive",
@@ -188,16 +216,37 @@ export function LoanActionButton({
             });
             return;
           }
+
+          setBorrowStatus("");
+          setUserHasBorrowPerm(true);
         } catch (err) {
           setBorrowStatus("rejected-permission");
-          toast({
-            variant: "destructive",
-            title: "Permission Denied",
-            description:
-              "Permission was not granted. Please approve to proceed.",
-          });
           return;
         }
+      }
+
+      // Protect the quoted gross debt: borrowFrom reverts below this.
+      const minBorrowAmount =
+        (loanAmount * (10_000n - LOAN_SLIPPAGE_BPS)) / 10_000n;
+
+      // Re-read the borrowable amount onchain right before signing.
+      const { borrowableNow } = await getBorrowableAmount(publicClient, {
+        chainId: activeChainId,
+        revnetId: activeProjectId,
+        collateralCount: collateralBigInt,
+        decimals: BigInt(chainTokenDecimals),
+        currency: BigInt(chainTokenCurrency),
+      });
+
+      if (borrowableNow < minBorrowAmount) {
+        setBorrowStatus("rejected-borrow");
+        toast({
+          variant: "destructive",
+          title: "Quote Changed",
+          description:
+            "The amount you can borrow dropped since your quote. Please review the new amount and try again.",
+        });
+        return;
       }
 
       try {
@@ -209,28 +258,22 @@ export function LoanActionButton({
           chainId: Number(activeChainId) as JBChainId,
           args: [
             activeProjectId,
-            /*{ v6 INTEGRATION
+            /*{ v6 INTEGRATION remove
               token: baseTokenAddress,
               terminal: primaryNativeTerminal.data,
             },*/
             baseTokenAddress,
-            0n,
+            minBorrowAmount,
             collateralBigInt,
             address,
-            BigInt(feeBasisPoints),
+            prepaidFeePercent,
             address
           ],
         });
 
-        const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
+        const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-        if (receipt.status === 'success') {
-          setBorrowStatus("success");
-          toast({
-            title: "Loan Created",
-            description: "Loan was successfully created",
-          });
-        } else {
+        if (txReceipt.status === 'reverted') {
           setBorrowStatus("rejected-borrow");
           toast({
             variant: "destructive",
@@ -238,6 +281,13 @@ export function LoanActionButton({
             description: "Loan creation reverted on chain",
           });
         }
+
+        setBorrowStatus("success");
+        toast({
+          title: "Loan Created",
+          description: "Loan was successfully created",
+        });
+        return;
         
       } catch (err) {
         setBorrowStatus("rejected-borrow");
@@ -258,6 +308,19 @@ export function LoanActionButton({
       });
     } finally {
       setIsBorrowing(false);
+    }
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open && isBorrowing) return; // don't close mid-signature
+    setIsModalOpen(open);
+
+    if (borrowStatus === "success") {
+      setBorrowStatus("");
+    }
+
+    if (!open && dialogStage !== "acknowledgement") {
+      setDialogStage("feeStructure");
     }
   };
 
@@ -294,7 +357,7 @@ export function LoanActionButton({
   }
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           className={`shimmer ${primaryPayButtonClass}`}
@@ -318,7 +381,7 @@ export function LoanActionButton({
                   Your {formatNumber(collateralAmount, false)} $
                   {token.data?.symbol} tokens will be burned as collateral
                 </li>
-                <li>You will receive an NFT to reclaim them when repaying</li>
+                <li>You will receive an NFT to reclaim tokens when repaying</li>
                 <li>
                   After 10 years, loan is liquidated and collateral is lost
                 </li>
@@ -361,11 +424,8 @@ export function LoanActionButton({
                 prepaidPercent={prepaidPercent}
                 setPrepaidPercent={setPrepaidPercent}
                 feeData={feeData}
-                grossBorrowedNative={
-                  loanAmount
-                    ? Number(formatUnits(loanAmount, baseToken.decimals))
-                    : 0
-                }
+                grossBorrowedNative={loanAmountNum}
+                fixedFeeRatio={fixedFeeRatio}
                 collateralAmount={collateralAmount}
                 tokenSymbol={baseToken.symbol}
                 collateralTokenSymbol={token.data?.symbol}
@@ -390,9 +450,17 @@ export function LoanActionButton({
 
         {dialogStage === "transactions" && (
           <>
-            <DialogTitle>Sign Transactions</DialogTitle>
+            <DialogTitle>
+              {borrowStatus === "success"
+                ? "Loan Created"
+                : "Sign Transactions"
+              }
+            </DialogTitle>
             <DialogDescription>
-              Sign the following transactions to open a new loan.
+              {borrowStatus === "success"
+                ? "Loan will apear in the about tab shortly."
+                : "Sign the following transactions to open a new loan."
+              }
             </DialogDescription>
 
             <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
@@ -408,21 +476,30 @@ export function LoanActionButton({
 
             <LoanStepper
               currentStep={borrowStatus}
-              userHasPermission={userHasPermission ?? false}
+              userHasPermission={userHasBorrowPerm ?? false}
             />
 
-            <div className="mt-6 flex justify-end space-x-2">
-              <DialogClose>Cancel</DialogClose>
-              <ButtonWithWallet
-                targetChainId={activeChainId}
-                onClick={handleBorrow}
-                className={"bg-cerulean hover:bg-cerulean"}
-                loading={isBorrowing}
-                disabled={!collateralAmount || borrowStatus === "success"}
-              >
-                Open Loan
-              </ButtonWithWallet>
-            </div>
+            {borrowStatus === "success" ? (
+              <DialogClose className="!bg-cerulean w-full rounded-xl py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+                Done
+              </DialogClose>
+            ) : (
+              <div className="mt-6 flex justify-end space-x-2">
+                <DialogClose disabled={isBorrowing}>
+                  Cancel
+                </DialogClose>
+                <ButtonWithWallet
+                  targetChainId={activeChainId}
+                  onClick={handleBorrow}
+                  className={"bg-cerulean hover:bg-cerulean"}
+                  loading={isBorrowing}
+                  disabled={!collateralAmount}
+                >
+                  {userHasBorrowPerm ? "Open Loan" : "Grant Permissions"}
+                  {isBorrowing && "..."}
+                </ButtonWithWallet>
+              </div>
+            )}
           </>
         )}
       </DialogContent>

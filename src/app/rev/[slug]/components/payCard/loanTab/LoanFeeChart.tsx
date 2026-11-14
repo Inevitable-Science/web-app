@@ -18,6 +18,7 @@ export function LoanFeeChart({
   collateralTokenSymbol,
   displayYears,
   displayMonths,
+  fixedFeeRatio = 0.035,
 }: {
   prepaidPercent: number;
   setPrepaidPercent: (v: number) => void;
@@ -28,6 +29,8 @@ export function LoanFeeChart({
   collateralTokenSymbol?: string;
   displayYears: number;
   displayMonths: number;
+  /** Protocol + $REV fees as a fraction of the gross debt. */
+  fixedFeeRatio?: number;
 }) {
   // Ensure feeData is valid and has reasonable values
   const validFeeData =
@@ -43,7 +46,7 @@ export function LoanFeeChart({
   // Calculate max cost from original feeData to ensure proper domain
   const maxCost =
     feeData?.length > 0 ? Math.max(...feeData.map((d) => d.totalCost || 0)) : 0;
-  const minCost = grossBorrowedNative + grossBorrowedNative * 0.035; // borrowed amount + fixed fee
+  const minCost = grossBorrowedNative + grossBorrowedNative * fixedFeeRatio; // borrowed amount + fixed fee
 
   return (
     <div className="mt-2">

@@ -49,7 +49,7 @@ export function WithdrawActionButton({
     balances?.find((token) => token.chainId === activeChainId)
       ?.balance?.value ?? 0n;
 
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: activeChainId });
   const { address, isConnected, chainId } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
@@ -110,9 +110,9 @@ export function WithdrawActionButton({
         args
       });
 
-      const txResult = await publicClient.waitForTransactionReceipt({ hash: txHash });
+      const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
-      if (txResult.status === "reverted") {
+      if (txReceipt.status === "reverted") {
         toast({
           variant: "destructive",
           title: "Error",

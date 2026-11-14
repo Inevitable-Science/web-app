@@ -199,11 +199,11 @@ export function PayActionButton({
         value: paymentToken.isNative ? payAmountBigInt : 0n,
       });
 
-      const txResult = await publicClient.waitForTransactionReceipt({
+      const txReceipt = await publicClient.waitForTransactionReceipt({
         hash: txHash,
       });
       
-      if (txResult.status === "reverted") {
+      if (txReceipt.status === "reverted") {
         toast({
           variant: "destructive",
           title: "Error",

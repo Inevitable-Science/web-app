@@ -36,6 +36,12 @@ export function LoanTab() {
   const currentChainBalNum = currentChainBalanceObj?.format();
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
+  // v6 currency ids derive from the token address, so they differ per chain
+  // (e.g. USDC). Quote in the selected chain's token, not the project-wide one.
+  const chainToken = baseToken.tokenMap[activeChainId];
+  const chainTokenDecimals = chainToken?.decimals ?? baseToken.decimals;
+  const chainTokenCurrency = chainToken?.currency ?? baseToken.currency;
+
   const collateralAmountBigIntDB = parseUnits(
     debounceCollateralAmount,
     projectTokenDecimals
@@ -51,19 +57,22 @@ export function LoanTab() {
     address: revLoansContractAddress,
     chainId: activeChainId,
     args:
-      collateralAmountBigIntDB && baseToken
+      collateralAmountBigIntDB && chainToken
         ? [
             BigInt(activeProjectId),
             collateralAmountBigIntDB,
-            BigInt(baseToken.decimals),
-            BigInt(baseToken.currency),
+            BigInt(chainTokenDecimals),
+            BigInt(chainTokenCurrency),
           ]
         : undefined,
+    query: {
+      enabled: !!baseToken && !!collateralAmountBigIntDB
+    }
   });
 
   const estimatedBorrowString = estimatedBorrowFromInputOnly
     ? truncateNumber(
-        formatUnits(estimatedBorrowFromInputOnly[0] ?? 0n, baseToken.decimals) // v6 INTEGRATION 0x
+        formatUnits(estimatedBorrowFromInputOnly[0] ?? 0n, chainTokenDecimals) // v6 INTEGRATION 0x
       )
     : "";
 
