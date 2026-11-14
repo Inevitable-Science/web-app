@@ -168,10 +168,20 @@ export function LoanActionButton({
   const displayYears = Math.floor(prepaidMonths / 12);
   const displayMonths = Math.round(prepaidMonths % 12);
 
-  // Protect the quoted gross debt: borrowFrom reverts below this.
+  // 1% slippage
   const minBorrowAmount =
     ((loanAmount ?? 0n) * (10_000n - LOAN_SLIPPAGE_BPS)) / 10_000n;
-  const minBorrowAmountString = formatUnits(minBorrowAmount, chainTokenDecimals);
+
+  // Slippage does not account for fees. Account for them...
+  const minReceivedString = formatUnits(
+    loanOpeningAmounts({
+      grossBorrowAmount: minBorrowAmount,
+      prepaidSourceFeePercent: prepaidFeeInRange
+        ? prepaidFeePercent
+        : MIN_PREPAID_FEE_PERCENT,
+    }).netBorrowAmount,
+    chainTokenDecimals
+  );
 
   const handleBorrow = async () => {
     try {
@@ -509,7 +519,7 @@ export function LoanActionButton({
                   Minimum Received
                   <br/>
                   <span className="text-white">
-                    {truncateNumber(minBorrowAmountString, false)} {baseToken.symbol}
+                    {truncateNumber(minReceivedString, false)} {baseToken.symbol}
                   </span>
                 </p>
                 <p className="text-xs text-muted-foreground text-right sm:block hidden">
