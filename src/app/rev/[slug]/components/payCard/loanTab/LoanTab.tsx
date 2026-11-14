@@ -1,36 +1,45 @@
-import { useState } from "react";
 import Image from "next/image";
 import { useJBTokenContext, useSuckersUserTokenBalance } from "@bananapus/nana-sdk-react";
-import { formatNumber, truncateNumber } from "@/lib/utils";
+import { truncateNumber } from "@/lib/utils";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { Button } from "@/components/ui/button";
 import { PayInput } from "@/components/PayInput";
-import { LoanChainSelector } from "./LoanChainSelector";
 import { useReadContract } from "wagmi";
 import { JB_TOKEN_DECIMALS, revLoansAbi } from "@bananapus/nana-sdk-core";
 import { formatUnits, parseUnits } from "viem";
 import { LoanActionButton } from "./LoanActionButton";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 import { useDebounce } from "use-debounce";
+import { useTransactionCardStore } from "../TransactionCardStore";
+import { WithdrawSelector } from "../withdrawTab/WithdrawSelector";
 
 export function LoanTab() {
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const { peerChainId: activeChainId, projectId: activeProjectId } =
-    selectedSucker;
+  const {
+    peerChainId: activeChainId,
+    projectId: activeProjectId
+  } = useRevnetDataStore((state) => state.selectedSucker);
 
-  const [collateralAmount, setCollateralAmount] = useState("");
+  const collateralAmount = useTransactionCardStore(
+    (state) => state.collateralAmount
+  );
+  const setCollateralAmount = useTransactionCardStore(
+    (state) => state.setCollateralAmount
+  );
   const [debounceCollateralAmount] = useDebounce(collateralAmount, 600);
 
   const { revLoansContractAddress } = useLoanFeeData(activeChainId);
   const { token } = useJBTokenContext();
   const baseToken = useProjectBaseToken();
-  const balanceQuery = useSuckersUserTokenBalance();
+  const { 
+    data: balances,
+    isLoading: isBalancesLoading
+  } = useSuckersUserTokenBalance();
 
   // Token Balances
-  const currentChainBalanceObj = balanceQuery?.data?.find(
-    (tkn) => tkn.chainId === selectedSucker.peerChainId
+  const currentChainBalanceObj = balances?.find(
+    (token) => token.chainId === activeChainId
   )?.balance;
   const currentChainBalBigInt = currentChainBalanceObj?.value ?? 0n;
   const currentChainBalNum = currentChainBalanceObj?.format();
@@ -87,22 +96,15 @@ export function LoanTab() {
             </p>
             <PayInput
               value={collateralAmount}
-              onChangeFunction={(value) => {
-                if (value.startsWith("-")) {
-                  setCollateralAmount("0");
-                  return;
-                }
-
-                setCollateralAmount(value);
-                return;
-              }}
+              onChangeFunction={setCollateralAmount} // store setter clamps negatives to "0"
             />
           </div>
           <div className="flex flex-col items-end gap-1">
-            <LoanChainSelector suckersBalance={balanceQuery.data} />
+            {/*<LoanChainSelector suckersBalance={balanceQuery.data} />*/}
+            <WithdrawSelector suckersBalance={balances} />
             <div className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
-              {balanceQuery.isLoading ? (
+              {isBalancesLoading ? (
                 <div className="activeSkeleton h-[17px] w-[32px] rounded-md opacity-30" />
               ) : currentChainBalNum && Number(currentChainBalNum) > 0.00001 ? (
                 truncateNumber(currentChainBalNum ?? "0", true)
@@ -152,7 +154,7 @@ export function LoanTab() {
 
               <div className="border-grey-450 bg-grey-450 -mb-[4px] -ml-2.5 h-fit w-fit rounded-full border-[1.5px] shadow-md">
                 <ChainLogo
-                  chainId={selectedSucker.peerChainId}
+                  chainId={activeChainId}
                   height={16}
                   width={16}
                 />
@@ -184,7 +186,6 @@ export function LoanTab() {
 
       <LoanActionButton
         loanAmount={estimatedBorrowFromInputOnly?.[0]} // v6 INTEGRATION 0x
-        collateralAmount={collateralAmount}
         projectTokenBalance={currentChainBalBigInt}
         isLoanAmountLoading={isDebouncing || estimatedBorrowIsLoading}
       />

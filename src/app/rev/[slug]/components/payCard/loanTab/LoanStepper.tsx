@@ -1,15 +1,12 @@
 import { BookCheck, Check, Landmark, Loader2, X } from "lucide-react";
-import { BorrowStatus } from "./LoanActionButton";
+import { useTransactionCardStore } from "../TransactionCardStore";
 
-export function LoanStepper({
-  currentStep,
-  userHasPermission,
-}: {
-  currentStep: BorrowStatus;
-  userHasPermission: boolean;
-}) {
+export function LoanStepper() {
+  const currentStep = useTransactionCardStore((s) => s.borrowStatus);
+  const userHasPermission = useTransactionCardStore((s) => s.userHasBorrowPerm);
+
   return (
-    <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
+    <div className="background-color mt-4 overflow-y-auto rounded-xl p-4 text-sm">
       <ol className="text-body border-color relative mx-4 border-s-[1.5px]">
         <li className="ms-7 mb-10">
           {currentStep === "signing-permission" ? (

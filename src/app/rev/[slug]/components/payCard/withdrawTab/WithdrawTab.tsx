@@ -135,7 +135,7 @@ export function WithdrawTab() {
               disabled={zeroSurplusValue || currentChainBalanceBigInt === 0n}
             />
           </div>
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-end gap-0.5">
             <WithdrawSelector suckersBalance={balances} />
             <div className="text-muted-foreground flex w-[130px] items-center justify-end gap-1 text-right text-sm font-light text-nowrap select-none">
               Balance:{" "}
@@ -165,7 +165,7 @@ export function WithdrawTab() {
               />
             )}
           </div>
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-end">
             <div className="bg-grey-450 flex w-fit min-w-fit items-center justify-end gap-1 rounded-full py-1 pr-2 pl-1.5">
               <div className="flex items-end">
                 {baseToken.isNative ? (

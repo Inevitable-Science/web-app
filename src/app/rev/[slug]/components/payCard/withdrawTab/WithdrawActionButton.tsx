@@ -87,7 +87,7 @@ export function WithdrawActionButton({
         toast({
           variant: "destructive",
           title: "Cashouts Unavailable",
-          description: `Cashouts unlock in ${formatSeconds(secondsUntilUnlock, 2, true)}`,
+          description: `Cashouts unlock in ${formatSeconds(secondsUntilUnlock)}`,
         });
         return;
       }

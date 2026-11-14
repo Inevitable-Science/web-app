@@ -7,6 +7,7 @@ import { useHasBorrowPermission } from "@/hooks/useHasBorrowPermission";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import {
+  JB_CHAINS,
   JB_TOKEN_DECIMALS,
   JBChainId,
   jbPermissionsAbi,
@@ -38,37 +39,41 @@ import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 import { ConnectKitButton } from "connectkit";
 import { primaryPayButtonClass } from "../payTab/PayActionButton";
+import { useTransactionCardStore } from "../TransactionCardStore";
+import { ExternalLink } from "lucide-react";
+import EtherscanLink from "@/components/EtherscanLink";
 
 // Max drop from the quoted gross debt we accept before borrowFrom reverts (1%).
 const LOAN_SLIPPAGE_BPS = 100n;
 
 
-export type BorrowStatus =
-  | ""
-  | "signing-permission"
-  | "rejected-permission"
-  | "signing-borrow"
-  | "rejected-borrow"
-  | "success";
-
 export function LoanActionButton({
   loanAmount,
-  collateralAmount,
   projectTokenBalance,
   isLoanAmountLoading,
 }: {
   loanAmount: bigint | undefined;
-  collateralAmount: string;
   projectTokenBalance: bigint;
   isLoanAmountLoading: boolean;
 }) {
-  const selectedSucker = useRevnetDataStore((state) => state.selectedSucker);
-  const [prepaidPercent, setPrepaidPercent] = useState(2.5);
+  const {
+    peerChainId: activeChainId,
+    projectId: activeProjectId
+  } = useRevnetDataStore((state) => state.selectedSucker);
 
-  const [borrowStatus, setBorrowStatus] = useState<BorrowStatus>("");
-  const [isBorrowing, setIsBorrowing] = useState(false);
-  const [userHasBorrowPerm, setUserHasBorrowPerm] = useState(false);
+  const collateralAmount = useTransactionCardStore((s) => s.collateralAmount);
+  const prepaidPercent = useTransactionCardStore((s) => s.prepaidPercent);
+  const setPrepaidPercent = useTransactionCardStore((s) => s.setPrepaidPercent);
+  const borrowStatus = useTransactionCardStore((s) => s.borrowStatus);
+  const setBorrowStatus = useTransactionCardStore((s) => s.setBorrowStatus);
+  const isBorrowing = useTransactionCardStore((s) => s.isBorrowing);
+  const setIsBorrowing = useTransactionCardStore((s) => s.setIsBorrowing);
+  const userHasBorrowPerm = useTransactionCardStore((s) => s.userHasBorrowPerm);
+  const setUserHasBorrowPerm = useTransactionCardStore(
+    (s) => s.setUserHasBorrowPerm
+  );
 
+  const [loanTxHash, setLoanTxHash] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dialogStage, setDialogStage] = useState<
     "acknowledgement" | "feeStructure" | "transactions"
@@ -82,16 +87,14 @@ export function LoanActionButton({
   const baseToken = useProjectBaseToken();
 
   // Client Hooks
-  const publicClient = usePublicClient({ chainId: selectedSucker.peerChainId });
+  const publicClient = usePublicClient({ chainId: activeChainId });
   const { address, isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
 
   // Sucker Derived Values
-  const { peerChainId: activeChainId, projectId: activeProjectId } =
-    selectedSucker;
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
-  const baseTokenAddress = baseToken.tokenMap[selectedSucker.peerChainId].token;
+  const baseTokenAddress = baseToken.tokenMap[activeChainId].token;
   // v6 currency ids differ per chain, so use the selected chain's token info.
   const chainTokenDecimals =
     baseToken.tokenMap[activeChainId]?.decimals ?? baseToken.decimals;
@@ -165,6 +168,11 @@ export function LoanActionButton({
   const displayYears = Math.floor(prepaidMonths / 12);
   const displayMonths = Math.round(prepaidMonths % 12);
 
+  // Protect the quoted gross debt: borrowFrom reverts below this.
+  const minBorrowAmount =
+    ((loanAmount ?? 0n) * (10_000n - LOAN_SLIPPAGE_BPS)) / 10_000n;
+  const minBorrowAmountString = formatUnits(minBorrowAmount, chainTokenDecimals);
+
   const handleBorrow = async () => {
     try {
       if (
@@ -225,10 +233,6 @@ export function LoanActionButton({
         }
       }
 
-      // Protect the quoted gross debt: borrowFrom reverts below this.
-      const minBorrowAmount =
-        (loanAmount * (10_000n - LOAN_SLIPPAGE_BPS)) / 10_000n;
-
       // Re-read the borrowable amount onchain right before signing.
       const { borrowableNow } = await getBorrowableAmount(publicClient, {
         chainId: activeChainId,
@@ -282,6 +286,7 @@ export function LoanActionButton({
           });
         }
 
+        setLoanTxHash(txHash);
         setBorrowStatus("success");
         toast({
           title: "Loan Created",
@@ -318,6 +323,7 @@ export function LoanActionButton({
     if (open) {
       if (borrowStatus === "success") {
         setBorrowStatus("");
+        setLoanTxHash(null);
       }
 
       if (dialogStage !== "acknowledgement") {
@@ -382,8 +388,8 @@ export function LoanActionButton({
             <div className="background-color my-4 max-h-48 overflow-y-auto rounded-xl p-4 text-xs">
               <ul className="flex list-disc flex-col gap-0.5 pl-2">
                 <li>
-                  Your {formatNumber(collateralAmount, false)} $
-                  {token.data?.symbol} tokens will be burned as collateral
+                  Your {formatNumber(collateralAmount, false)}{" "}
+                  {token.data?.symbol} will be burned as collateral
                 </li>
                 <li>You will receive an NFT to reclaim tokens when repaying</li>
                 <li>
@@ -413,14 +419,24 @@ export function LoanActionButton({
               Please confirm the fee structure of the loan.
             </DialogDescription>
 
-            <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
-              <p>
-                Collateral Amount: {formatNumber(collateralAmount, false)} $
-                {token.data?.symbol}
-              </p>
-              <p>
-                You Receive: {amountToWalletFormatted} {baseToken.symbol}
-              </p>
+            <div className="background-color max-h-48 flex flex-col sm:flex-row sm:justify-between overflow-y-auto rounded-xl my-4 p-4 text-sm">
+              <div>
+                <p className="text-muted-foreground">
+                  Collateral:
+                </p>
+                <p className="text-lg">
+                  {formatNumber(collateralAmount, false)}{" "}
+                  {token.data?.symbol}
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground sm:text-right">
+                  Receive:
+                </p>
+                <p className="text-lg sm:text-right">
+                  ~{amountToWalletFormatted} {baseToken.symbol}
+                </p>
+              </div>
             </div>
 
             <div className="background-color my-4 overflow-y-auto rounded-xl px-4 py-2 text-xs">
@@ -467,24 +483,64 @@ export function LoanActionButton({
               }
             </DialogDescription>
 
-            <div className="background-color my-4 overflow-y-auto rounded-xl p-4 text-sm">
-              <p>
-                Collateral Amount: {formatNumber(collateralAmount, false)} $
-                {token.data?.symbol}
-              </p>
-              <p>Prepaid Percent: {prepaidPercent}%</p>
-              <p>
-                You Receive: {amountToWalletFormatted} {baseToken.symbol}
-              </p>
+
+            <div className="my-4">
+              <div className="background-color max-h-48 flex flex-col sm:flex-row sm:justify-between overflow-y-auto rounded-xl p-4 text-sm">
+                <div>
+                  <p className="text-muted-foreground">
+                    Collateral:
+                  </p>
+                  <p className="text-lg">
+                    {formatNumber(collateralAmount, false)}{" "}
+                    {token.data?.symbol}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground sm:text-right">
+                    Receive:
+                  </p>
+                  <p className="text-lg sm:text-right">
+                    ~{amountToWalletFormatted} {baseToken.symbol}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-row justify-between mt-1">
+                <p className="text-xs text-muted-foreground">
+                  Minimum Received
+                  <br/>
+                  <span className="text-white">
+                    {truncateNumber(minBorrowAmountString, false)} {baseToken.symbol}
+                  </span>
+                </p>
+                <p className="text-xs text-muted-foreground text-right sm:block hidden">
+                  Prepaid Percent
+                  <br/>
+                  <span className="text-white">
+                    {prepaidPercent}%
+                  </span>
+                </p>
+              </div>
             </div>
 
-            <LoanStepper
-              currentStep={borrowStatus}
-              userHasPermission={userHasBorrowPerm ?? false}
-            />
+            <LoanStepper />
+
+            {loanTxHash && borrowStatus === "success" && (
+              <div className="mt-1 flex flex-row items-center justify-between">
+                <p className="text-xs text-muted-foreground">Transaction</p>
+                <EtherscanLink
+                  className="text-xs text-muted-foreground flex items-center gap-1"
+                  value={loanTxHash}
+                  chain={JB_CHAINS[activeChainId].chain}
+                  type="tx"
+                >
+                  {loanTxHash.slice(0, 6)}…{loanTxHash.slice(-4)}
+                  <ExternalLink className="h-3 w-3" />
+                </EtherscanLink>
+              </div>
+            )}
 
             {borrowStatus === "success" ? (
-              <DialogClose className="!bg-cerulean w-full rounded-xl py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90">
+              <DialogClose className="!bg-cerulean w-full rounded-xl py-2.5 mt-2 text-sm font-semibold text-white transition-opacity hover:opacity-90">
                 Done
               </DialogClose>
             ) : (

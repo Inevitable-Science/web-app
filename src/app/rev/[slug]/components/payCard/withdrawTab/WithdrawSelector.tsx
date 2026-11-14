@@ -134,7 +134,7 @@ export const WithdrawSelector = ({
                       />
                     </div>
                   </div>
-                  <span className="grow">
+                  <span className="grow mr-2">
                     {JB_CHAINS[sucker.peerChainId].name}
                   </span>
 

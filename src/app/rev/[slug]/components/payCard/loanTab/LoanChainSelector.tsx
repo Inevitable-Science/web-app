@@ -1,4 +1,4 @@
-"use client";
+/*"use client";
 import Image from "next/image";
 import {
   JBChainId,
@@ -150,3 +150,4 @@ export const LoanChainSelector = ({
     </Select>
   );
 };
+*/

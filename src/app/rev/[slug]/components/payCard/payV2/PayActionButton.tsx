@@ -379,7 +379,7 @@ export function PayActionButton({
                 <p className="text-muted-foreground sm:text-right">
                   Receive
                 </p>
-                <p className="text-lg">
+                <p className="text-lg sm:text-right">
                   ~{truncateNumber(amountBNum, false)}{" "}
                   {token.data?.symbol ?? "TOKENS"}
                 </p>

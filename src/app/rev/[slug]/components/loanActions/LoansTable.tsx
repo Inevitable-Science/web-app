@@ -97,7 +97,7 @@ export function LoansTable() {
 
           return (
             <div
-              key={loan.id}
+              key={`${loan.id}-${loan.chainId}`}
               className="loanTableContainer border-grey-450 items-center border-b py-2"
             >
               <ChainLogo chainId={loan.chainId as JBChainId} />
