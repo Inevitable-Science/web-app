@@ -313,15 +313,19 @@ export function LoanActionButton({
 
   const handleOpenChange = (open: boolean) => {
     if (!open && isBorrowing) return; // don't close mid-signature
+
+    // Reset on open, not on close - resetting on close flashes the other stage.
+    if (open) {
+      if (borrowStatus === "success") {
+        setBorrowStatus("");
+      }
+
+      if (dialogStage !== "acknowledgement") {
+        setDialogStage("feeStructure");
+      }
+    }
+
     setIsModalOpen(open);
-
-    if (borrowStatus === "success") {
-      setBorrowStatus("");
-    }
-
-    if (!open && dialogStage !== "acknowledgement") {
-      setDialogStage("feeStructure");
-    }
   };
 
   if (!isConnected) {

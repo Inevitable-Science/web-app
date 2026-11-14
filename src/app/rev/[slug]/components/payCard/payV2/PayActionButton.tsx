@@ -290,7 +290,7 @@ export function PayActionButton({
     if (!open && pending) return; // don't close mid-signature
     setIsModalOpen(open);
 
-    if (!open) {
+    if (open) {
       setDialogStage("terms");
       setAgreedToTerms(false);
       setPaymentTxHash(null);
