@@ -9,7 +9,6 @@ import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
 import "./globals.css";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),

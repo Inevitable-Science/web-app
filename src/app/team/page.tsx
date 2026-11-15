@@ -4,6 +4,9 @@ import PartnersComponent from "@/components/home/PartnersComponent";
 import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
 
+
+export const revalidate = false;
+
 const url = new URL("/team", siteMetadata.siteUrl);
 
 export const metadata: Metadata = {

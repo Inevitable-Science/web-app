@@ -41,7 +41,7 @@ export const fetchProjectData = unstable_cache(
   _fetchProjectData,
   ["project-data"],
   {
-    revalidate: 900,        // revalidate every 15 mins
+    revalidate: 300,        // revalidate every 5 mins
     tags: ["project-data"], // allow for on-demand revalidation
   }
 );

@@ -9,7 +9,8 @@ import { fetchTreasuryData } from "@/lib/helpers/fetchTreasuryData";
 import { fetchTokenData } from "@/lib/helpers/fetchTokenData";
 import { fetchProjectData } from "@/lib/helpers/getProjectBendystraw";
 
-export const revalidate = 900; // Revalidate every 15 minutes
+// Set to 15 minutes but capped by bendystraw request @ 5 min
+export const revalidate = 900;
 
 const url = new URL("/ivx", siteMetadata.siteUrl);
 

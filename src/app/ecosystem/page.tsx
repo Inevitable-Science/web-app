@@ -7,6 +7,9 @@ import { metadata as siteMetadata } from "@/lib/metadata";
 import { formatNumber } from "@/lib/utils";
 import z from "zod";
 
+
+export const revalidate = 900;
+
 const url = new URL("/ecosystem", siteMetadata.siteUrl);
 
 export const metadata: Metadata = {

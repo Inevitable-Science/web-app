@@ -1,5 +1,5 @@
 
-const isProduction = process.env.NEXT_PUBLIC_NODE_ENV;
+const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_PUBLIC_URL ??

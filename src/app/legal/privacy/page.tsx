@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
 
+
+export const revalidate = false;
+
 const url = new URL("/legal/privacy", siteMetadata.siteUrl);
 
 export const metadata: Metadata = {

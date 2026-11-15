@@ -8,6 +8,9 @@ import {
   AllArticlesResponseZ,
 } from "@/lib/types/PublicArticleTypes";
 
+
+export const revalidate = 300;
+
 const fetchArticles = async (): Promise<AllArticlesResponse | null> => {
   try {
     const response = await fetch(

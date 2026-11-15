@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { Download } from "lucide-react";
 import { metadata as siteMetadata } from "@/lib/metadata";
 
+
+export const revalidate = false;
+
 const url = new URL("/whitepaper", siteMetadata.siteUrl);
 
 export const metadata: Metadata = {

@@ -18,6 +18,9 @@ interface ParamsProp {
   }>;
 }
 
+
+export const revalidate = 300;
+
 const fetchArticle = async (
   articleId: string
 ): Promise<SingleArticleResponse | null> => {
