@@ -34,13 +34,4 @@ export const chainIdToLogo = {
   [arbitrum.id]: "https://cdn.inevitable.science/static/img/logo/arbitrum.svg",
 };
 
-export const BACKED_BY_TOKENS = ["ETH", "USDC"] as const;
 export const USDC_DECIMALS = 6;
-
-export const JB_CURRENCY_ETH = 1;
-export const JB_CURRENCY_USD = 2;
-
-export const isProduction = process.env.NODE_ENV === "production";
-export const externalBaseUrl = isProduction
-  ? "https://inevitable.science/"
-  : "https://147585e1f72a.ngrok.app";

@@ -150,9 +150,11 @@ export function EditMetadataDialog() {
         );
         const args = [BigInt(projectId), metadataUri] as const;
 
-        const gasEstimate = await getPublicClient(wagmiConfig, {
-          chainId,
-        }).estimateContractGas({
+        const publicClient = getPublicClient(wagmiConfig, { chainId });
+        if (!publicClient)
+          throw new Error(`No public client configured for chainId: ${chainId}`);
+
+        const gasEstimate = await publicClient.estimateContractGas({
           address: controller,
           abi: jbControllerAbi,
           functionName: "setUriOf",

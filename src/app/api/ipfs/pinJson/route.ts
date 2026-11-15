@@ -17,7 +17,7 @@ const DEV_ORIGIN = "http://localhost:3000";
 const MAINNET_ORIGIN = "https://juicebox.money";
 
 const origin =
-  process.env.NODE_ENV === "development" ? DEV_ORIGIN : MAINNET_ORIGIN;
+  process.env.NEXT_PUBLIC_NODE_ENV === "development" ? DEV_ORIGIN : MAINNET_ORIGIN;
 
 /**
  * https://docs.infura.io/infura/networks/ipfs/http-api-methods/pin
