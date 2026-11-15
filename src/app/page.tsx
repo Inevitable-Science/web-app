@@ -8,51 +8,42 @@ import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
 
 import { Button } from "@/components/ui/button";
-import { headers } from "next/headers";
 import type { Metadata } from "next";
-import { metadata } from "@/lib/metadata";
+import { metadata as siteMetadata } from "@/lib/metadata";
 import { ArrowRight } from "lucide-react";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
+const url = new URL("/", siteMetadata.siteUrl);
 
-  const fullPath = "/";
-  const url = new URL(fullPath, origin);
-
-  return {
+export const metadata: Metadata = {
+  title: "Inevitable Science | Home",
+  description: siteMetadata.description,
+  alternates: {
+    canonical: url,
+  },
+  openGraph: {
     title: "Inevitable Science | Home",
-    description: metadata.description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Inevitable Science | Home",
-      description: metadata.description,
-      siteName: metadata.siteName,
-      images: [
-        {
-          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-          width: 700,
-          height: 370,
-          alt: "Inevitable preview image",
-        },
-      ],
-      url: url,
-      type: "website",
-    },
-    twitter: {
-      title: "Inevitable Science | Home",
-      description: metadata.description,
-      card: "summary_large_image",
-      images: [
-        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-      ],
-    },
-  };
-}
+    description: siteMetadata.description,
+    siteName: siteMetadata.siteName,
+    images: [
+      {
+        url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+        width: 700,
+        height: 370,
+        alt: "Inevitable preview image",
+      },
+    ],
+    url: url,
+    type: "website",
+  },
+  twitter: {
+    title: "Inevitable Science | Home",
+    description: siteMetadata.description,
+    card: "summary_large_image",
+    images: [
+      "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+    ],
+  },
+};
 
 export default function Page() {
   return (

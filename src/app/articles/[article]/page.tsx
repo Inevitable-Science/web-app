@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/nextjs";
 import { Metadata } from "next";
-import { headers } from "next/headers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { DynamicArticleCarousel } from "../ArticleCarousel";
@@ -64,10 +63,7 @@ const fetchLatestArticles = async (
 // Generate dynamic metadata based on the article
 export async function generateMetadata(props: ParamsProp): Promise<Metadata> {
   const params = await props.params;
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
+  const origin = metadata.siteUrl;
 
   // Find the article by slug
   const article = await fetchArticle(params.article);

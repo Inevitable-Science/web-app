@@ -2,7 +2,6 @@ import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
 import { RevnetDataProvider } from "@/store/RevnetDataContext";
-import { headers } from "next/headers";
 import { Metadata } from "next";
 import { parseSlug, resolveIpfsLogo } from "./ProjectHelpers";
 import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
@@ -23,10 +22,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
+  const origin = metadata.siteUrl;
 
   const fullPath = `/${decodeURIComponent(slug || "")}`;
   const url = new URL(fullPath, origin);

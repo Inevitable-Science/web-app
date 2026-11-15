@@ -5,10 +5,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { AppSpecificProviders } from "./AppSpecificProviders";
 import { geistSans, optima } from "@/components/fonts/fonts";
 import { twMerge } from "tailwind-merge";
+import type { Metadata } from "next";
+import { metadata as siteMetadata } from "@/lib/metadata";
 import "./globals.css";
-//import Script from "next/script";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteMetadata.siteUrl),
+};
 
 export default function RootLayout({
   children,

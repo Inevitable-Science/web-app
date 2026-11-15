@@ -1,6 +1,5 @@
 import { LegacyProjectProvider } from "@/store/LegacyProjectContext";
 
-import { headers } from "next/headers";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchDaoData } from "@/lib/helpers/fetchDaoData";
@@ -30,10 +29,7 @@ export async function generateMetadata({ params }: {
 }): Promise<Metadata> {
   const { project } = await params;
 
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
+  const origin = metadata.siteUrl;
 
   const fullPath = `/project/${project}`;
   const url = new URL(fullPath, origin);

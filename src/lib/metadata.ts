@@ -1,6 +1,14 @@
+
+const isProduction = process.env.NEXT_PUBLIC_NODE_ENV;
+
+const siteUrl =
+  process.env.NEXT_PUBLIC_PUBLIC_URL ??
+  (isProduction ? "https://inevitable.science" : "http://localhost:3000");
+
 export const metadata = {
   description: "Begin your journey. Build the future of life—together.",
   siteName: "Inevitable Science",
+  siteUrl,
 };
 
 export const notFoundMetadata = {

@@ -1,48 +1,39 @@
 import { Metadata } from "next";
-import { headers } from "next/headers";
 import { Download } from "lucide-react";
-import { metadata } from "@/lib/metadata";
+import { metadata as siteMetadata } from "@/lib/metadata";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const host = headersList.get("host");
-  const proto = headersList.get("x-forwarded-proto") || "http";
-  const origin = `${proto}://${host}`;
+const url = new URL("/whitepaper", siteMetadata.siteUrl);
 
-  const fullPath = "/";
-  const url = new URL(fullPath, origin);
-
-  return {
+export const metadata: Metadata = {
+  title: "Whitepaper | Inevitable Science",
+  description: siteMetadata.description,
+  alternates: {
+    canonical: url,
+  },
+  openGraph: {
     title: "Whitepaper | Inevitable Science",
-    description: metadata.description,
-    alternates: {
-      canonical: url,
-    },
-    openGraph: {
-      title: "Whitepaper | Inevitable Science",
-      description: metadata.description,
-      siteName: metadata.siteName,
-      images: [
-        {
-          url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-          width: 700,
-          height: 370,
-          alt: "Inevitable preview image",
-        },
-      ],
-      url: url,
-      type: "website",
-    },
-    twitter: {
-      title: "Whitepaper | Inevitable Science",
-      description: metadata.description,
-      card: "summary_large_image",
-      images: [
-        "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
-      ],
-    },
-  };
-}
+    description: siteMetadata.description,
+    siteName: siteMetadata.siteName,
+    images: [
+      {
+        url: "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+        width: 700,
+        height: 370,
+        alt: "Inevitable preview image",
+      },
+    ],
+    url: url,
+    type: "website",
+  },
+  twitter: {
+    title: "Whitepaper | Inevitable Science",
+    description: siteMetadata.description,
+    card: "summary_large_image",
+    images: [
+      "https://cdn.inevitable.science/static/img/branding/seo_banner.png",
+    ],
+  },
+};
 
 export default function WhitePaperPage() {
   return (
