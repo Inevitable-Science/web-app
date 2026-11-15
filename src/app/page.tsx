@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import ExploreButton from "@/components/home/ExploreButton";
+import HeroVideo from "@/components/home/HeroVideo";
 import ArticleCarousel from "@/components/home/ArticleCarousel";
 import DaosGrid from "@/components/home/DaosGrid";
 import AuctionComponent from "@/components/home/AuctionComponent";
@@ -66,20 +67,7 @@ export default function Page() {
         />
 
         {/* Background Video */}
-        <video
-          className="absolute inset-0 h-full w-full object-cover object-[calc(50%+80px)_center] sm:object-center"
-          preload="auto"
-          autoPlay
-          loop
-          muted
-          playsInline
-        >
-          <source
-            src="https://cdn.inevitable.science/static/img/layout/home_hero_main.mp4"
-            type="video/mp4"
-          />
-          Your browser does not support the video tag.
-        </video>
+        <HeroVideo />
 
         <div className="absolute bottom-[40px] z-10 flex w-full flex-col gap-38 sm:bottom-[25vh]">
           <div className="mx-auto flex max-w-full flex-col gap-4 px-[24px] sm:w-[1600px]">
