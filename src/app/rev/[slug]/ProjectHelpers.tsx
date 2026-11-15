@@ -41,14 +41,14 @@ export async function resolveIpfsLogo(
 
   try {
     const metadataRes = await fetch(
-      `https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${ipfsHash}`
+      `https://${process.env.NEXT_PUBLIC_IPFS_HOSTNAME}/ipfs/${ipfsHash}`
     );
     const metadata = await metadataRes.json();
 
     if (!metadata.logoUri) return fallbackUrl;
 
     return metadata.logoUri.startsWith("ipfs://")
-      ? `https://${process.env.NEXT_PUBLIC_INFURA_IPFS_HOSTNAME}/ipfs/${metadata.logoUri.replace(
+      ? `https://${process.env.NEXT_PUBLIC_IPFS_HOSTNAME}/ipfs/${metadata.logoUri.replace(
           "ipfs://",
           ""
         )}`

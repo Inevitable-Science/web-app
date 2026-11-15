@@ -59,7 +59,8 @@ export default function Page() {
     <div>
       {/*<div className="bg-[url('/assets/img/home_landing.webp')] bg-cover bg-position-[calc(50%+80px)_center] sm:bg-center relative h-[500px] sm:h-[110vh] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)]">*/}
       <div className="relative h-[500px] w-full overflow-hidden mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] sm:h-[110vh]">
-        {/* Fallback Image - optimal for slower networks */}
+        
+        {/* Fallback Image - optimal for slower networks - redundant */}
         <img
           src="https://cdn.inevitable.science/static/img/layout/vid_first_frame.webp"
           alt="Landing Video"
