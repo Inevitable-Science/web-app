@@ -8,55 +8,46 @@ import {
   useJBTokenContext,
 } from "@bananapus/nana-sdk-react";
 import { FixedInt } from "fpnum";
-import { Address, formatUnits, parseUnits, zeroAddress } from "viem";
+import { Address, formatUnits, parseUnits } from "viem";
 import {
-  getJBContractAddress,
   getTokenAToBQuote,
   getTokenBtoAQuote,
   JB_TOKEN_DECIMALS,
-  JBCoreContracts,
-  jbDirectoryAbi,
-  jbMultiTerminalAbi,
-  JBRouterTerminalContracts,
-  jbRouterTerminalRegistryAbi,
-  NATIVE_TOKEN,
   USDC_ADDRESSES,
 } from "@bananapus/nana-sdk-core";
 import { formatNumber, truncateNumber } from "@/lib/utils";
-import { PayActionButton } from "./PayActionButton";
+import { PayActionButtonV4V5 } from "./PayActionButton";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ipfsUriToGatewayUrl } from "@/lib/ipfs/ipfs";
 import { usePaymentQuote } from "@/hooks/PaymentTerminal/usePaymentQuote";
-import { getTokensForChain, Token } from "@/lib/token";
+import { getTokensForChain } from "@/lib/token";
 import { useTokenBalances } from "@/hooks/useTokenBalances";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayInput } from "@/components/PayInput";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRulesetData } from "@/hooks/useRulesetData";
 import { TokenAndChainSelector } from "@/components/TokenChainSelector";
-import { useProjectAccountingContext } from "@/hooks/useProjectAccountingContext";
-import { useAccount, usePublicClient, useReadContract } from "wagmi";
+import { useTransactionCardStore } from "../TransactionCardStore";
 
-export function PayTab({
-  tokens,
-  selectedToken,
-  setSelectedToken,
-}: {
-  tokens: Token[];
-  selectedToken: Token;
-  setSelectedToken: React.Dispatch<React.SetStateAction<Token>>;
-}) {
+export function PayTabV4V5() {
   const project = useRevnetDataStore((state) => state.project);
   const rulesetMetadata = useRevnetDataStore((state) => state.rulesetMetadata);
   const ruleset = useRevnetDataStore((state) => state.ruleset);
   const suckers = useRevnetDataStore((state) => state.suckers);
   const { 
     peerChainId: selectedChainId, 
-    projectId: chainProjectId
   } = useRevnetDataStore((state) => state.selectedSucker);
   const setSelectedSucker = useRevnetDataStore(
     (state) => state.setSelectedSucker
   );
+
+  const selectedToken = useTransactionCardStore((state) => state.selectedToken)!;
+  const setSelectedToken = useTransactionCardStore(
+    (state) => state.setSelectedToken
+  );
+  
+  const tokens = useTransactionCardStore((state) => state.tokens);
+  
   const [amountA, setAmountA] = useState("");
   const [amountB, setAmountB] = useState("");
   const [memo, setMemo] = useState("");
@@ -64,50 +55,6 @@ export function PayTab({
   const { metadata } = useJBProjectMetadataContext();
   const { version } = useJBContractContext();
   const { token } = useJBTokenContext();
-  const { data: accountingContext } = useProjectAccountingContext();
-
-  const { address: userAddress } = useAccount();
-
-  const contract = (accountingContext?.project?.token === NATIVE_TOKEN.toLowerCase()) === (selectedToken.isNative)
-  ? {
-    type: "multiTerminal",
-    address: getJBContractAddress(JBCoreContracts.JBMultiTerminal, version, selectedChainId),
-    abi: jbMultiTerminalAbi
-  } : {
-    type: "routerTerminal",
-    address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, version, selectedChainId),
-    abi: jbRouterTerminalRegistryAbi
-  };
-
-  // this returns the multiTerminal if the inputted address has a multiTerminal, otherwise it outputs a routerTerminal
-  // although routerTerminal is fixed, new routers can be deployed
-  /*const routerTerminalAddress = useReadContract({
-    address: getJBContractAddress(JBCoreContracts.JBDirectory, 6, selectedChainId),
-    abi: jbDirectoryAbi,
-    chainId: selectedChainId, // required
-    functionName: 'primaryTerminalOf',
-    //args: [chainProjectId, NATIVE_TOKEN], // change this to the token that uses jbRouterTerminal
-    args: [chainProjectId, USDC_ADDRESSES[selectedChainId]]
-  });*/
-
-  const { data, isLoading } = useReadContract({
-    address: getJBContractAddress(JBRouterTerminalContracts.JBRouterTerminalRegistry, version, selectedChainId),
-    abi: jbRouterTerminalRegistryAbi,
-    chainId: selectedChainId,
-    functionName: 'previewPayFor',
-    args: [
-      chainProjectId,
-      selectedToken.address,
-      parseUnits(amountA || "0", selectedToken.decimals),
-      zeroAddress, // review this fallback idk why you need an address for a pay preview
-      "0x0"
-    ],
-    query: {
-      enabled: contract.type === "routerTerminal",
-    }
-  });
-  console.log(data, isLoading, "previewPayFor", contract.type);
-  
   const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
   const baseToken = useProjectBaseToken();
@@ -160,8 +107,6 @@ export function PayTab({
       );
       setAmountB(formatUnits(quote.payerTokens, projectTokenDecimals));
       return;
-    } else if (version === 6 && contract.type === "routerTerminal") {
-
     } else {
       if (isQuoteLoading) return;
       const { payerTokens, reservedTokens } = tokenAToBQuote(
@@ -292,7 +237,7 @@ export function PayTab({
               value={amountB}
               onChangeFunction={handleReceiveAmountChange}
               disabled={
-                contract.type === "routerTerminal" || !hasStarted
+                baseToken.isNative !== selectedToken.isNative || !hasStarted
               }
             />
           </div>
@@ -336,7 +281,7 @@ export function PayTab({
         value={memo}
         placeholder="Add a note... (optional)"
       />
-      <PayActionButton
+      <PayActionButtonV4V5
         amountA={preparedAmountA}
         amountB={preparedAmountB}
         paymentToken={selectedToken}

@@ -5,7 +5,6 @@ import { WithdrawTab } from "./withdrawTab/WithdrawTab";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { ChainLogo } from "@/components/ChainLogo";
 import { PayCardSkeleton } from "./PayCardSkeleton";
-import { PayTab } from "./payV2/PayTab";
 import { formatSeconds } from "@/lib/utils";
 import { LoanTab } from "./loanTab/LoanTab";
 import {
@@ -15,6 +14,8 @@ import {
   useTransactionCardStore,
 } from "./TransactionCardStore";
 import { useCashOutDelay } from "@/hooks/useCashOutDelay";
+import { PayTab } from "./payV2/PayTab";
+import { PayTabV4V5 } from "./payTabV4V5/PayTab";
 
 export function TransactionCard() {
   return (
@@ -105,7 +106,7 @@ function TransactionCardContent() {
               Buy
             </Button>
             {/** I am assuming that useDataHookForCashOut was replaced with useDataHookForCashOut v6 INTEGRATION */}
-            {rulesetMetadata?.useDataHookForCashOut  && hasStarted && !isLocked && (
+            {rulesetMetadata?.useDataHookForCashOut  && hasStarted && !isLocked && version === 6 && (
               <Button
                 onClick={() => setActiveTab("withdraw")}
                 className={`h-[35px] rounded-none border-b-[1.5px] bg-transparent font-light hover:bg-transparent ${
@@ -144,7 +145,8 @@ function TransactionCardContent() {
         </div>
 
         <div className="my-4">
-          {activeTab === "buy" && <PayTab />}
+          {activeTab === "buy" && version === 6 && <PayTab />}
+          {activeTab === "buy" && version !== 6 && <PayTabV4V5 />}
 
           {activeTab === "withdraw" && <WithdrawTab />}
 

@@ -37,8 +37,7 @@ import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
-import { PayStepper } from "./PayStepper";
-import { readContract } from "viem/actions";
+import { PayStepperV4V5 } from "./PayStepper";
 
 // Define shared styles for the main action button for consistency
 export const primaryPayButtonClass =
@@ -52,7 +51,7 @@ export type PaymentStatusType =
   | "rejected-pay"
   | "success";
 
-export function PayActionButton({
+export function PayActionButtonV4V5({
   amountA,
   amountB,
   paymentToken,
@@ -472,7 +471,7 @@ export function PayActionButton({
             </DialogDescription>
 
             <div>
-              <PayStepper
+              <PayStepperV4V5
                 currentStep={currentStep}
                 userHasApproved={userHasApproved}
               />

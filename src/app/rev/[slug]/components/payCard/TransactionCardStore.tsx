@@ -282,7 +282,7 @@ export const TransactionCardProvider = ({
   // Fetch reclaimable surpluses once the sucker group has loaded
   useEffect(() => {
     const projects = suckerGroupData?.suckerGroup?.projects?.items;
-    if (!projects?.length) return;
+    if (!projects?.length || version !== 6) return;
 
     let cancelled = false;
     getProjectsReclaimableSurplus(projects).then((surpluses) => {

@@ -20,6 +20,8 @@ interface Props {
   params: Promise<{ slug?: string }>;
 }
 
+export type SlugConfig = ReturnType<typeof parseSlug>;
+
 export const revalidate = 300;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fullPath = `/${decodeURIComponent(slug || "")}`;
   const url = new URL(fullPath, origin);
 
-  let config;
+  let config: SlugConfig | null = null;
   let projectData: ProjectQuery["project"] | null = null;
   try {
     config = parseSlug(slug); // throws if invalid
@@ -81,7 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function RevnetPageLayout({ children, params }: Props) {
   const { slug } = await params;
 
-  let config: ReturnType<typeof parseSlug>;
+  let config: SlugConfig | null = null;
   try {
     config = parseSlug(slug);
 
