@@ -38,7 +38,7 @@ import { LoanStepper } from "./LoanStepper";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
 import { ConnectKitButton } from "connectkit";
-import { primaryPayButtonClass } from "../payV2/PayActionButton";
+import { primaryPayButtonClass } from "../payTab/PayActionButton";
 import { useTransactionCardStore } from "../TransactionCardStore";
 import { ExternalLink } from "lucide-react";
 import EtherscanLink from "@/components/EtherscanLink";

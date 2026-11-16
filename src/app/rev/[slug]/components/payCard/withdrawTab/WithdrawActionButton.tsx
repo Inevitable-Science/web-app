@@ -16,7 +16,7 @@ import { formatSeconds } from "@/lib/utils";
 import { useCashOutDelay } from "@/hooks/useCashOutDelay";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useRevnetDataStore } from "@/store/RevnetDataContext";
-import { primaryPayButtonClass } from "../payV2/PayActionButton";
+import { primaryPayButtonClass } from "../payTab/PayActionButton";
 import { useTransactionCardStore } from "../TransactionCardStore";
 
 

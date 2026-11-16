@@ -14,7 +14,7 @@ import {
   useTransactionCardStore,
 } from "./TransactionCardStore";
 import { useCashOutDelay } from "@/hooks/useCashOutDelay";
-import { PayTab } from "./payV2/PayTab";
+import { PayTab } from "./payTab/PayTab";
 import { PayTabV4V5 } from "./payTabV4V5/PayTab";
 
 export function TransactionCard() {
