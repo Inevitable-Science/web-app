@@ -3,6 +3,7 @@ import * as Sentry from "@sentry/nextjs";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { TOASTS } from "@/lib/toastMessages";
 import { useHasBorrowPermission } from "@/hooks/useHasBorrowPermission";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
@@ -193,12 +194,7 @@ export function LoanActionButton({
         !loanAmount ||
         !prepaidFeeInRange
       ) {
-        toast({
-          variant: "destructive",
-          title: "Client Error",
-          description:
-            "Couldn't start the borrow process, please refresh and try again.",
-        });
+        toast(TOASTS.loan.error.clientError);
         return;
       }
 
@@ -227,11 +223,7 @@ export function LoanActionButton({
 
           if (txReceipt.status === "reverted") {
             setBorrowStatus("rejected-permission");
-            toast({
-              variant: "destructive",
-              title: "Transaction Reverted",
-              description: "Loan creation reverted on chain",
-            });
+            toast(TOASTS.loan.error.permissionReverted);
             return;
           }
 
@@ -254,12 +246,7 @@ export function LoanActionButton({
 
       if (borrowableNow < minBorrowAmount) {
         setBorrowStatus("rejected-borrow");
-        toast({
-          variant: "destructive",
-          title: "Quote Changed",
-          description:
-            "The amount you can borrow dropped since your quote. Please review the new amount and try again.",
-        });
+        toast(TOASTS.loan.error.quoteChanged);
         return;
       }
 
@@ -289,38 +276,23 @@ export function LoanActionButton({
 
         if (txReceipt.status === 'reverted') {
           setBorrowStatus("rejected-borrow");
-          toast({
-            variant: "destructive",
-            title: "Transaction Reverted",
-            description: "Loan creation reverted on chain",
-          });
+          toast(TOASTS.loan.error.borrowReverted);
         }
 
         setLoanTxHash(txHash);
         setBorrowStatus("success");
-        toast({
-          title: "Loan Created",
-          description: "Loan was successfully created",
-        });
+        toast(TOASTS.loan.success.loanCreated);
         return;
         
       } catch (err) {
         setBorrowStatus("rejected-borrow");
-        toast({
-          variant: "destructive",
-          title: "Transaction Cancelled",
-          description: "Loan creation was cancelled by user",
-        });
+        toast(TOASTS.loan.error.borrowCancelled);
         return;
       }
     } catch (err) {
       Sentry.captureException(err);
       setBorrowStatus("rejected-borrow");
-      toast({
-        variant: "destructive",
-        title: "Borrow Failed",
-        description: formatWalletError(err),
-      });
+      toast(TOASTS.loan.error.borrowFailed(formatWalletError(err)));
     } finally {
       setIsBorrowing(false);
     }

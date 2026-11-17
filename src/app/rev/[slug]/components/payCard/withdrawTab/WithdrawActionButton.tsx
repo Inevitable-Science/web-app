@@ -12,6 +12,7 @@ import {
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { TOASTS } from "@/lib/toastMessages";
 import { formatSeconds } from "@/lib/utils";
 import { useCashOutDelay } from "@/hooks/useCashOutDelay";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
@@ -68,11 +69,7 @@ export function WithdrawActionButton({
       !receiveTokenAddress ||
       insufficientFunds
     ) {
-      toast({
-        variant: "destructive",
-        title: "Error Preparing Transaction",
-        description: "Couldn't Prepare Your Transaction.",
-      });
+      toast(TOASTS.withdraw.error.prepareFailed);
       return;
     }
 
@@ -84,11 +81,7 @@ export function WithdrawActionButton({
 
       if (isLocked) {
         setIsLoading(false);
-        toast({
-          variant: "destructive",
-          title: "Cashouts Unavailable",
-          description: `Cashouts unlock in ${formatSeconds(secondsUntilUnlock)}`,
-        });
+        toast(TOASTS.withdraw.error.cashoutsLocked(formatSeconds(secondsUntilUnlock)));
         return;
       }
 
@@ -113,18 +106,11 @@ export function WithdrawActionButton({
       const txReceipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
       if (txReceipt.status === "reverted") {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Transaction reverted",
-        });
+        toast(TOASTS.withdraw.error.transactionReverted);
         return;
       };
 
-      toast({
-        title: "Withdraw Successful",
-        description: "You Successfully Withdrew Your Tokens",
-      });
+      toast(TOASTS.withdraw.success.withdrawn);
 
     } catch (err) {
       // only log error here, usually error gets 

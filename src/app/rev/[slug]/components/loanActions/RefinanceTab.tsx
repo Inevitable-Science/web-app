@@ -32,6 +32,7 @@ import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
 import { generateFeeData } from "@/lib/feeHelpers";
 import { useToast } from "@/components/ui/use-toast";
+import { TOASTS } from "@/lib/toastMessages";
 import { LoanFeeChart } from "../payCard/loanTab/LoanFeeChart";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useLoanFeeData } from "@/hooks/useLoanFeeData";
@@ -277,12 +278,7 @@ export function RefinanceTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
       !newBorrowAmount ||
       !prepaidFeeInRange
     ) {
-      toast({
-        variant: "destructive",
-        title: "Client Error",
-        description:
-          "Couldn't start the refinance, please refresh and try again.",
-      });
+      toast(TOASTS.refinance.error.clientError);
       return;
     }
 
@@ -312,20 +308,12 @@ export function RefinanceTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
 
           if (txReceipt.status === "reverted") {
             setRefinanceStatus("rejected-permission");
-            toast({
-              variant: "destructive",
-              title: "Transaction Reverted",
-              description: "Permission grant reverted on chain",
-            });
+            toast(TOASTS.refinance.error.permissionReverted);
             return;
           }
         } catch {
           setRefinanceStatus("rejected-permission");
-          toast({
-            variant: "destructive",
-            title: "Transaction Cancelled",
-            description: "Permission grant was cancelled",
-          });
+          toast(TOASTS.refinance.error.permissionCancelled);
           return;
         }
       }
@@ -334,12 +322,7 @@ export function RefinanceTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
       const quote = await quoteRefinance(publicClient, quoteArgs);
       if (quote.newBorrowAmount < minBorrowAmount) {
         setRefinanceStatus("rejected-refinance");
-        toast({
-          variant: "destructive",
-          title: "Quote Changed",
-          description:
-            "The amount you can borrow dropped since your quote. Please review the new amount and try again.",
-        });
+        toast(TOASTS.refinance.error.quoteChanged);
         return;
       }
 
@@ -364,35 +347,20 @@ export function RefinanceTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
 
         if (txReceipt.status === "reverted") {
           setRefinanceStatus("rejected-refinance");
-          toast({
-            variant: "destructive",
-            title: "Transaction Reverted",
-            description: "Loan refinance reverted on chain",
-          });
+          toast(TOASTS.refinance.error.refinanceReverted);
           return;
         }
 
         setRefinanceStatus("success");
-        toast({
-          title: "Loan Refinanced",
-          description: "Successfully refinanced loan",
-        });
+        toast(TOASTS.refinance.success.loanRefinanced);
       } catch {
         setRefinanceStatus("rejected-refinance");
-        toast({
-          variant: "destructive",
-          title: "Transaction Cancelled",
-          description: "Loan refinance was cancelled",
-        });
+        toast(TOASTS.refinance.error.refinanceCancelled);
       }
     } catch (err) {
       Sentry.captureException(err);
       setRefinanceStatus("rejected-refinance");
-      toast({
-        variant: "destructive",
-        title: "Refinance Failed",
-        description: formatWalletError(err),
-      });
+      toast(TOASTS.refinance.error.refinanceFailed(formatWalletError(err)));
     } finally {
       setIsSigning(false);
     }

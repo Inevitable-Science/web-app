@@ -32,6 +32,7 @@ import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { useAccount, usePublicClient, useWriteContract } from "wagmi";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import { TOASTS } from "@/lib/toastMessages";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useDebounce } from "use-debounce";
 import { CornerDownRight } from "lucide-react";
@@ -202,12 +203,7 @@ export function RepayTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
 
   const handleRepay = async () => {
     if (!address || !publicClient || collateralCountToReturn === 0n) {
-      toast({
-        variant: "destructive",
-        title: "Client Error",
-        description:
-          "Couldn't start the repayment, please refresh and try again.",
-      });
+      toast(TOASTS.repay.error.clientError);
       return;
     }
 
@@ -217,12 +213,7 @@ export function RepayTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
       // Re-quote onchain right before signing, the source fee grows over time.
       const quote = await quoteRepay(publicClient, quoteArgs);
       if (quote.remainingExceedsLoan) {
-        toast({
-          variant: "destructive",
-          title: "Cannot Repay",
-          description:
-            "Your remaining collateral covers more than the loan. Unlock more collateral or refinance instead.",
-        });
+        toast(TOASTS.repay.error.remainingExceedsLoan);
         return;
       }
 
@@ -252,20 +243,12 @@ export function RepayTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
 
             if (approveReceipt.status === "reverted") {
               setRepayStatus("rejected-approval");
-              toast({
-                variant: "destructive",
-                title: "Transaction Reverted",
-                description: "Token approval reverted on chain",
-              });
+              toast(TOASTS.repay.error.approvalReverted);
               return;
             }
           } catch {
             setRepayStatus("rejected-approval");
-            toast({
-              variant: "destructive",
-              title: "Transaction Cancelled",
-              description: "Token approval was cancelled",
-            });
+            toast(TOASTS.repay.error.approvalCancelled);
             return;
           }
         }
@@ -290,35 +273,20 @@ export function RepayTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
 
         if (txReceipt.status === "reverted") {
           setRepayStatus("rejected-repay");
-          toast({
-            variant: "destructive",
-            title: "Transaction Reverted",
-            description: "Loan repayment reverted on chain",
-          });
+          toast(TOASTS.repay.error.repayReverted);
           return;
         }
 
         setRepayStatus("success");
-        toast({
-          title: "Loan Repaid",
-          description: "Successfully repaid loan and unlocked collateral",
-        });
+        toast(TOASTS.repay.success.loanRepaid);
       } catch {
         setRepayStatus("rejected-repay");
-        toast({
-          variant: "destructive",
-          title: "Transaction Cancelled",
-          description: "Loan repayment was cancelled",
-        });
+        toast(TOASTS.repay.error.repayCancelled);
       }
     } catch (err) {
       Sentry.captureException(err);
       setRepayStatus("rejected-repay");
-      toast({
-        variant: "destructive",
-        title: "Repayment Failed",
-        description: formatWalletError(err),
-      });
+      toast(TOASTS.repay.error.repayFailed(formatWalletError(err)));
     } finally {
       setIsSigning(false);
     }

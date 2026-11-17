@@ -31,6 +31,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import { TOASTS } from "@/lib/toastMessages";
 import { useAllowance } from "@/hooks/PaymentTerminal/useAllowance";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
 import { formatNumber, truncateNumber } from "@/lib/utils";
@@ -139,11 +140,7 @@ export function PayActionButton({
         || !publicClient
         || version !== 6
       ) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Required data is missing, refresh and try again",
-        });
+        toast(TOASTS.pay.error.missingData);
         return;
       }
 
@@ -204,21 +201,14 @@ export function PayActionButton({
       });
       
       if (txReceipt.status === "reverted") {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Transaction reverted",
-        });
+        toast(TOASTS.pay.error.transactionReverted);
         setCurrentStep("rejected-pay");
         return;
       }
 
       setPaymentTxHash(txHash);
       setCurrentStep("success");
-      toast({
-        title: "Success",
-        description: `Your contribution of ${formatNumber(payAmount, false)} ${paymentToken.symbol} was successful`,
-      });
+      toast(TOASTS.pay.success.contribution(formatNumber(payAmount, false), paymentToken.symbol));
     } catch (err) {
       console.error("Payment failed:", err);
       setCurrentStep("rejected-pay");
