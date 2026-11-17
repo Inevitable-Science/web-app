@@ -8,8 +8,10 @@ import { DialogClose, DialogTitle } from "@/components/ui/dialog";
 import {
   getRevnetLoanContract,
   JB_TOKEN_DECIMALS,
+  NATIVE_TOKEN,
   revLoansAbi,
 } from "@bananapus/nana-sdk-core";
+import { buildRepayLoanTx } from "@bananapus/nana-sdk-core/v6";
 import {
   useJBContractContext,
   useJBProjectMetadataContext,
@@ -17,267 +19,323 @@ import {
 } from "@bananapus/nana-sdk-react";
 import Image from "next/image";
 import { useState } from "react";
-import { LoanType } from "./LoanDialog";
-import { Address, erc20Abi, formatUnits, parseUnits } from "viem";
+import { LoanTabProps } from "./LoanDialog";
+import {
+  Address,
+  erc20Abi,
+  formatUnits,
+  parseUnits,
+  PublicClient,
+} from "viem";
 import { formatNumber, formatWalletError, truncateNumber } from "@/lib/utils";
 import { useProjectBaseToken } from "@/hooks/useProjectBaseToken";
-import {
-  useAccount,
-  usePublicClient,
-  useReadContract,
-  useSimulateContract,
-  useWriteContract,
-} from "wagmi";
+import { useAccount, usePublicClient, useWriteContract } from "wagmi";
+import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { ButtonWithWallet } from "@/components/ButtonWithWallet";
 import { useDebounce } from "use-debounce";
+import { CornerDownRight } from "lucide-react";
 
-const calculateCollateralAmount = (
-  input: string,
-  maxCollateral: bigint,
-  projectTokenDecimals: number
-): bigint => {
+// Headroom on top of the quoted repayment, excess is refunded by REVLoans (1%).
+const REPAY_HEADROOM_BPS = 100n;
+
+type RepayStatus =
+  | ""
+  | "signing-approval"
+  | "rejected-approval"
+  | "signing-repay"
+  | "rejected-repay"
+  | "success";
+
+interface RepayQuote {
+  repayBorrowAmount: bigint;
+  sourceFee: bigint;
+  totalRepay: bigint;
+  remainingBorrowAmount: bigint;
+  remainingExceedsLoan: boolean;
+}
+
+const parseCollateral = (input: string, decimals: number): bigint => {
   try {
-    const userInputWei = parseUnits(input, projectTokenDecimals);
-    return userInputWei >= maxCollateral ? maxCollateral : userInputWei;
-  } catch (err) {
-    console.error(`Error calculating collateral: ${err}`);
+    return parseUnits(input, decimals);
+  } catch {
     return 0n;
   }
 };
 
-export function RepayTab({ loan }: { loan: LoanType }) {
+const withHeadroom = (amount: bigint) =>
+  (amount * (10_000n + REPAY_HEADROOM_BPS)) / 10_000n;
+
+// Mirrors REVLoans.repayLoan: debt left = remaining collateral's capacity
+async function quoteRepay(
+  client: PublicClient,
+  {
+    revLoans,
+    loanId,
+    revnetId,
+    collateralCountToReturn,
+    decimals,
+    currency,
+  }: {
+    revLoans: Address;
+    loanId: bigint;
+    revnetId: bigint;
+    collateralCountToReturn: bigint;
+    decimals: bigint;
+    currency: bigint;
+  }
+): Promise<RepayQuote> {
+  const loan = await client.readContract({
+    address: revLoans,
+    abi: revLoansAbi,
+    functionName: "loanOf",
+    args: [loanId],
+  });
+
+  const remainingCollateral = loan.collateral - collateralCountToReturn;
+  const remainingBorrowAmount =
+    remainingCollateral > 0n
+      ? (
+          await client.readContract({
+            address: revLoans,
+            abi: revLoansAbi,
+            functionName: "borrowableAmountFrom",
+            args: [revnetId, remainingCollateral, decimals, currency],
+          })
+        )[1] // [borrowableNow, borrowableCapacity]
+      : 0n;
+
+  if (remainingBorrowAmount > loan.amount) {
+    return {
+      repayBorrowAmount: 0n,
+      sourceFee: 0n,
+      totalRepay: 0n,
+      remainingBorrowAmount,
+      remainingExceedsLoan: true,
+    };
+  }
+
+  const repayBorrowAmount = loan.amount - remainingBorrowAmount;
+  const sourceFee = await client.readContract({
+    address: revLoans,
+    abi: revLoansAbi,
+    functionName: "determineSourceFeeAmount",
+    args: [loan, repayBorrowAmount],
+  });
+
+  return {
+    repayBorrowAmount,
+    sourceFee,
+    totalRepay: repayBorrowAmount + sourceFee,
+    remainingBorrowAmount,
+    remainingExceedsLoan: false,
+  };
+}
+
+export function RepayTab({ loan, isSigning, setIsSigning }: LoanTabProps) {
   const [collateralToReturn, setCollateralToReturn] = useState("");
   const [debounceCollateralToReturn] = useDebounce(collateralToReturn, 600);
+  const [repayStatus, setRepayStatus] = useState<RepayStatus>("");
 
-  const [repayStatus, setRepayStatus] = useState<
-    | ""
-    | "signing-approval"
-    | "rejected-approval"
-    | "signing-repay"
-    | "rejected-repay"
-    | "success"
-  >("");
-  const [hasApproved, setHasApproved] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-
+  // JB Hooks
   const { token } = useJBTokenContext();
   const { metadata } = useJBProjectMetadataContext();
   const { version } = useJBContractContext();
   const baseToken = useProjectBaseToken();
-  const loanChainId = loan.chainId;
-  const baseTokenAddress = baseToken.tokenMap[loanChainId].token;
-  const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
 
-  const publicClient = usePublicClient();
+  // Client Hooks
+  const loanChainId = loan.chainId;
+  const publicClient = usePublicClient({ chainId: loanChainId });
   const { address } = useAccount();
   const { writeContractAsync } = useWriteContract();
   const { toast } = useToast();
 
-  const collateralToReturnBigInt = parseUnits(
+  // Loan Derived Values
+  const revLoansContractAddress = getRevnetLoanContract(version, loanChainId);
+  const projectTokenDecimals = token.data?.decimals ?? JB_TOKEN_DECIMALS;
+  const isNativeLoan = loan.token.toLowerCase() === NATIVE_TOKEN.toLowerCase();
+  // v6 currency ids differ per chain, so use the loan chain's token info.
+  const chainTokenDecimals =
+    baseToken.tokenMap[loanChainId]?.decimals ?? baseToken.decimals;
+  const chainTokenCurrency =
+    baseToken.tokenMap[loanChainId]?.currency ?? baseToken.currency;
+
+  const inputCollateral = parseCollateral(
     collateralToReturn,
-    baseToken.decimals
+    projectTokenDecimals
   );
+  const insufficientCollateral = inputCollateral > loan.collateral;
   const collateralToReturnPercent = loan.collateral
-    ? (collateralToReturnBigInt * 100n) / loan.collateral
+    ? (inputCollateral * 100n) / loan.collateral
     : 0n;
 
-  const insufficientCollateral = collateralToReturnBigInt > loan.collateral;
+  const debouncedCollateral = parseCollateral(
+    debounceCollateralToReturn,
+    projectTokenDecimals
+  );
+  const collateralCountToReturn =
+    debouncedCollateral > loan.collateral ? loan.collateral : debouncedCollateral;
+  const isDebouncing = debounceCollateralToReturn !== collateralToReturn;
 
-  const { data: loanData, isLoading: isLoadingLoan } = useReadContract({
-    abi: revLoansAbi,
-    functionName: "loanOf",
-    address: getRevnetLoanContract(version, loanChainId),
-    chainId: loanChainId,
-    args: [BigInt(loan.id)],
+  const quoteArgs = {
+    revLoans: revLoansContractAddress,
+    loanId: BigInt(loan.id),
+    revnetId: BigInt(loan.projectId),
+    collateralCountToReturn,
+    decimals: BigInt(chainTokenDecimals),
+    currency: BigInt(chainTokenCurrency),
+  };
+
+  const { data: repayQuote, isFetching: isQuoting } = useQuery({
+    queryKey: [
+      "repayQuote",
+      loanChainId,
+      String(loan.id),
+      collateralCountToReturn.toString(),
+    ],
+    queryFn: () => quoteRepay(publicClient!, quoteArgs),
+    enabled: !!publicClient && collateralCountToReturn > 0n,
   });
 
-  const isDebouncing = debounceCollateralToReturn !== collateralToReturn;
-  const simulationArgs = [
-    BigInt(loan.id),
-    loan.borrowAmount, // Always use full loan amount - contract will calculate exact amount needed
-    calculateCollateralAmount(
-      debounceCollateralToReturn,
-      loan.collateral,
-      baseToken.decimals
-    ),
-    address as Address,
-    {
-      sigDeadline: 0n,
-      amount: 0n,
-      expiration: 0,
-      nonce: 0,
-      signature:
-        "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
-    },
-  ];
-
-  const { data: simulationResult, isLoading: isSimulating } =
-    useSimulateContract({
-      abi: revLoansAbi,
-      functionName: "repayLoan",
-      address: getRevnetLoanContract(version, loanChainId),
-      chainId: loanChainId,
-      args: simulationArgs as unknown as readonly [
-        bigint,
-        bigint,
-        bigint,
-        `0x${string}`,
-        {
-          sigDeadline: bigint;
-          amount: bigint;
-          expiration: number;
-          nonce: number;
-          signature: `0x${string}`;
-        },
-      ],
-      value: baseToken.isNative ? loanData?.amount : 0n, // Only send ETH value for ETH-based projects
-    });
-
-  // Extract the exact amount from simulation result for display purposes only
-  const exactRepayAmount = (() => {
-    if (!simulationResult?.result) return undefined;
-
-    // Try to extract amount from simulation result
-    if (
-      Array.isArray(simulationResult.result) &&
-      simulationResult.result.length >= 2
-    ) {
-      const remainingLoanAmount = simulationResult.result[1]?.amount;
-
-      if (remainingLoanAmount !== undefined && loanData) {
-        // Calculate payment amount: original loan - remaining loan
-        const paymentAmount = loanData.amount - BigInt(remainingLoanAmount);
-        return paymentAmount;
-      }
-      return undefined;
-    }
-
-    // Try direct result if it's not an array
-    if (
-      simulationResult.result &&
-      typeof simulationResult.result === "object" &&
-      "amount" in simulationResult.result
-    ) {
-      const remainingLoanAmount = simulationResult.result.amount;
-      if (
-        remainingLoanAmount !== undefined &&
-        loanData &&
-        (typeof remainingLoanAmount === "string" ||
-          typeof remainingLoanAmount === "number" ||
-          typeof remainingLoanAmount === "bigint")
-      ) {
-        const paymentAmount = loanData.amount - BigInt(remainingLoanAmount);
-        return paymentAmount;
-      }
-    }
-
-    return undefined;
-  })();
+  const isQuoteLoading = (isDebouncing || isQuoting) && inputCollateral > 0n;
+  const remainingExceedsLoan = !!repayQuote?.remainingExceedsLoan;
 
   const handleRepay = async () => {
-    if (!loanData || !address || !publicClient || !loanChainId) {
+    if (!address || !publicClient || collateralCountToReturn === 0n) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Missing required data for repayment",
+        title: "Client Error",
+        description:
+          "Couldn't start the repayment, please refresh and try again.",
       });
       return;
     }
 
     try {
-      setIsPending(true);
-      const loanIdBigInt = BigInt(loan.id);
-      const maxRepayBorrowAmount = loanData.amount; // Use full loan amount as ceiling
-      const collateralCountToReturn = calculateCollateralAmount(
-        collateralToReturn,
-        loanData.collateral,
-        baseToken.decimals
-      );
+      setIsSigning(true);
 
-      // Check allowance for USDC-based projects
-      if (!baseToken.isNative) {
-        const revLoansContractAddress = getRevnetLoanContract(
-          version,
-          loanChainId
-        );
+      // Re-quote onchain right before signing, the source fee grows over time.
+      const quote = await quoteRepay(publicClient, quoteArgs);
+      if (quote.remainingExceedsLoan) {
+        toast({
+          variant: "destructive",
+          title: "Cannot Repay",
+          description:
+            "Your remaining collateral covers more than the loan. Unlock more collateral or refinance instead.",
+        });
+        return;
+      }
 
+      const maxRepayBorrowAmount = withHeadroom(quote.totalRepay);
+
+      if (!isNativeLoan) {
         const allowance = await publicClient.readContract({
-          address: baseTokenAddress,
+          address: loan.token,
           abi: erc20Abi,
           functionName: "allowance",
-          args: [address as Address, revLoansContractAddress as Address],
+          args: [address, revLoansContractAddress],
         });
 
         if (allowance < maxRepayBorrowAmount) {
+          setRepayStatus("signing-approval");
           try {
-            setRepayStatus("signing-approval");
-
             const approveHash = await writeContractAsync({
-              address: baseTokenAddress,
+              address: loan.token,
               abi: erc20Abi,
               functionName: "approve",
-              args: [revLoansContractAddress as Address, maxRepayBorrowAmount],
+              chainId: loanChainId,
+              args: [revLoansContractAddress, maxRepayBorrowAmount],
             });
+            const approveReceipt = await publicClient.waitForTransactionReceipt(
+              { hash: approveHash }
+            );
 
-            await publicClient.waitForTransactionReceipt({ hash: approveHash });
-            setHasApproved(true);
-          } catch (err) {
-            console.error(err);
+            if (approveReceipt.status === "reverted") {
+              setRepayStatus("rejected-approval");
+              toast({
+                variant: "destructive",
+                title: "Transaction Reverted",
+                description: "Token approval reverted on chain",
+              });
+              return;
+            }
+          } catch {
             setRepayStatus("rejected-approval");
+            toast({
+              variant: "destructive",
+              title: "Transaction Cancelled",
+              description: "Token approval was cancelled",
+            });
+            return;
           }
-        } else {
-          setHasApproved(true);
         }
       }
 
+      setRepayStatus("signing-repay");
       try {
-        setRepayStatus("signing-repay");
-
         const txHash = await writeContractAsync({
-          abi: revLoansAbi,
-          functionName: "repayLoan",
-          address: getRevnetLoanContract(version, loanChainId),
-          chainId: loanChainId,
-          args: [
-            loanIdBigInt,
+          ...buildRepayLoanTx({
+            chainId: loanChainId,
+            loanId: quoteArgs.loanId,
             maxRepayBorrowAmount,
             collateralCountToReturn,
-            address,
-            {
-              sigDeadline: 0n,
-              amount: 0n,
-              expiration: 0,
-              nonce: 0,
-              signature:
-                "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" as `0x${string}`,
-            },
-          ],
-          value: baseToken.isNative ? exactRepayAmount || loanData?.amount : 0n,
+            beneficiary: address,
+            value: isNativeLoan ? maxRepayBorrowAmount : 0n,
+          }),
+          address: revLoansContractAddress,
+        });
+        const txReceipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
         });
 
-        await publicClient.waitForTransactionReceipt({ hash: txHash });
+        if (txReceipt.status === "reverted") {
+          setRepayStatus("rejected-repay");
+          toast({
+            variant: "destructive",
+            title: "Transaction Reverted",
+            description: "Loan repayment reverted on chain",
+          });
+          return;
+        }
+
         setRepayStatus("success");
         toast({
-          title: "Success",
+          title: "Loan Repaid",
           description: "Successfully repaid loan and unlocked collateral",
         });
-      } catch (err) {
-        console.error(err);
+      } catch {
         setRepayStatus("rejected-repay");
+        toast({
+          variant: "destructive",
+          title: "Transaction Cancelled",
+          description: "Loan repayment was cancelled",
+        });
       }
     } catch (err) {
       Sentry.captureException(err);
-      console.error(err);
+      setRepayStatus("rejected-repay");
       toast({
         variant: "destructive",
         title: "Repayment Failed",
         description: formatWalletError(err),
       });
     } finally {
-      setIsPending(false);
+      setIsSigning(false);
     }
   };
+
+  const formatBaseAmount = (amount: bigint | undefined) =>
+    `${formatNumber(formatUnits(amount ?? 0n, chainTokenDecimals), false)} ${baseToken.symbol}`;
+
+  const actionLabel = insufficientCollateral
+    ? "Insufficient Collateral"
+    : remainingExceedsLoan
+      ? "Unlock More Collateral"
+      : repayStatus === "signing-approval"
+        ? "Approving..."
+        : repayStatus === "signing-repay"
+          ? "Repaying..."
+          : "Pay";
 
   return (
     <div className="flex flex-col gap-2">
@@ -335,8 +393,7 @@ export function RepayTab({ loan }: { loan: LoanType }) {
           <p className="text-muted-foreground text-right text-sm font-light text-nowrap select-none">
             Collateral:{" "}
             {truncateNumber(
-              formatUnits(loan.collateral, projectTokenDecimals),
-              true
+              formatUnits(loan.collateral, projectTokenDecimals)
             )}
           </p>
         </div>
@@ -348,9 +405,13 @@ export function RepayTab({ loan }: { loan: LoanType }) {
             className="h-[28px] rounded-xs"
             variant={"secondary"}
             key={percent}
+            disabled={isSigning}
             onClick={() => {
               const amount = (loan.collateral / 100n) * BigInt(percent);
-              const formattedAmount = formatUnits(amount, projectTokenDecimals);
+              const formattedAmount = formatUnits(
+                percent === 100 ? loan.collateral : amount,
+                projectTokenDecimals
+              );
               const formattedAmountString =
                 percent === 100
                   ? formattedAmount
@@ -364,68 +425,104 @@ export function RepayTab({ loan }: { loan: LoanType }) {
         ))}
       </div>
 
+      <div className="bg-grey-450 max-h-48 flex flex-col sm:flex-row sm:justify-between overflow-y-auto rounded-xl p-4 text-sm">
+        <div>
+          <p className="text-muted-foreground">
+            Borrow Amount:
+          </p>
+          <p className="text-lg">
+            {formatBaseAmount(loan.borrowAmount)}
+          </p>
+        </div>
+        <div>
+          <p className="text-muted-foreground sm:text-right">
+            Collateral To Unlock (
+            {Number(collateralToReturnPercent) > 100
+              ? ">100"
+              : Number(collateralToReturnPercent)}
+            %):
+          </p>
+          <p className="text-lg sm:text-right">
+            {formatNumber(collateralToReturn, false) || 0} {token.data?.symbol}
+          </p>
+        </div>
+      </div>
+
       <div className="bg-grey-450 [&>*:nth-child(odd)]:text-muted-foreground grid grid-cols-[60%_40%] rounded-lg p-3 text-sm [&>*:nth-child(even)]:text-right">
-        <p>Current Borrow Amount:</p>
-        <p>
-          {formatNumber(
-            formatUnits(loan.borrowAmount, projectTokenDecimals),
-            false
-          )}{" "}
-          {baseToken.symbol}
-        </p>
-        <p>
-          Collateral To Unlock (
-          {Number(collateralToReturnPercent) > 100
-            ? ">100"
-            : Number(collateralToReturnPercent)}
-          %):
-        </p>
-        <p>
-          {formatNumber(collateralToReturn, false) || 0} {token.data?.symbol}
-        </p>
-        <p>Amount To Pay Now:</p>
+        <div>
+          <p className="leading-none mb-1">
+            Amount To Pay Now:
+          </p>
+          <div className="text-white text-lg leading-none">
+            {isQuoteLoading ? (
+              <div className="activeSkeleton h-[22px] w-[64px] rounded-sm" />
+            ) : (
+              <p className="mb-[4px]">
+                {formatBaseAmount(repayQuote?.totalRepay)}
+              </p>
+            )}
+          </div>
+        </div>
+        <div />
+
+        <p>Maximum Repay Amount:</p>
         <div className="flex justify-end">
-          {(isDebouncing || isSimulating) && Number(collateralToReturn) ? (
+          {isQuoteLoading ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
-          ) : exactRepayAmount === undefined ? (
-            `0 ${baseToken.symbol}`
           ) : (
-            `${formatNumber(
-              formatUnits(exactRepayAmount, baseToken.decimals),
-              false
-            )} ${baseToken.symbol}`
+            formatBaseAmount(withHeadroom(repayQuote?.totalRepay ?? 0n))
           )}
         </div>
+
+        <p className="flex items-center gap-0.5">
+          <CornerDownRight className="pb-[2px]" size={16} />
+          Of That Fees:
+        </p>
+        <div className="flex justify-end">
+          {isQuoteLoading ? (
+            <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
+          ) : (
+            formatBaseAmount(repayQuote?.sourceFee)
+          )}
+        </div>
+
+        <div className="my-1 w-full border-color border-t" />
+        <div className="my-1 w-full border-color border-t" />
+
         <p>Amount Carried Into New Loan:</p>
         <div className="flex justify-end">
-          {(isDebouncing || isSimulating || isLoadingLoan) &&
-          Number(collateralToReturn) ? (
+          {isQuoteLoading ? (
             <div className="activeSkeleton h-[16px] w-[48px] rounded-sm" />
-          ) : exactRepayAmount === undefined || !loanData?.amount ? (
-            `0 ${baseToken.symbol}`
           ) : (
-            `${formatNumber(
-              formatUnits(
-                loanData.amount - exactRepayAmount,
-                baseToken.decimals
-              ),
-              false
-            )} 
-            ${baseToken.symbol}`
+            formatBaseAmount(
+              remainingExceedsLoan ? 0n : repayQuote?.remainingBorrowAmount
+            )
           )}
         </div>
       </div>
 
+      {remainingExceedsLoan && (
+        <p className="text-muted-foreground text-xs">
+          The remaining collateral is worth more than this loan. Unlock more
+          collateral, or use Refinance to borrow against the extra value.
+        </p>
+      )}
+
       <div className="mt-6 flex justify-end space-x-2">
-        <DialogClose className="bg-grey-450!" />
+        <DialogClose className="bg-grey-450!" disabled={isSigning} />
         <ButtonWithWallet
           targetChainId={loanChainId}
           onClick={handleRepay}
-          disabled={!collateralToReturn || insufficientCollateral}
-          loading={isPending}
+          disabled={
+            !collateralCountToReturn ||
+            insufficientCollateral ||
+            remainingExceedsLoan ||
+            isQuoteLoading
+          }
+          loading={isSigning}
           className="bg-cerulean!"
         >
-          {insufficientCollateral ? "Insufficient Collateral" : "Pay"}
+          {actionLabel}
         </ButtonWithWallet>
       </div>
     </div>

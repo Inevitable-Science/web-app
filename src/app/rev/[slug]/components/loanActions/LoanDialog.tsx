@@ -20,12 +20,26 @@ export interface LoanType {
   id: any;
 }
 
+export interface LoanTabProps {
+  loan: LoanType;
+  isSigning: boolean;
+  setIsSigning: (isSigning: boolean) => void;
+}
+
 export function LoanDialog({ loan }: { loan: LoanType }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"repay" | "refinance">("repay");
+  const [isSigning, setIsSigning] = useState(false);
+
+  const handleDialogToggle = (open: boolean) => {
+    if (!open && isSigning) return; // don't close mid-signature
+    setIsModalOpen(open);
+  };
+
+  const tabProps: LoanTabProps = { loan, isSigning, setIsSigning };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
         <Button
           className="flex h-[32px] items-center gap-2"
@@ -42,12 +56,14 @@ export function LoanDialog({ loan }: { loan: LoanType }) {
             <Button
               className={`${activeTab === "repay" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
               onClick={() => setActiveTab("repay")}
+              disabled={isSigning}
             >
               Repay
             </Button>
             <Button
               className={`${activeTab === "refinance" && "background-color"} rounded-t-lg rounded-b-none p-3 hover:bg-transparent hover:underline`}
               onClick={() => setActiveTab("refinance")}
+              disabled={isSigning}
             >
               Refinance
             </Button>
@@ -56,8 +72,8 @@ export function LoanDialog({ loan }: { loan: LoanType }) {
           <div
             className={`${activeTab === "refinance" ? "rounded-xl" : "rounded-[0_8px_8px_8px]"} background-color p-3 transition-all`}
           >
-            {activeTab === "repay" && <RepayTab loan={loan} />}
-            {activeTab === "refinance" && <RefinanceTab loan={loan} />}
+            {activeTab === "repay" && <RepayTab {...tabProps} />}
+            {activeTab === "refinance" && <RefinanceTab {...tabProps} />}
           </div>
         </div>
       </DialogContent>
