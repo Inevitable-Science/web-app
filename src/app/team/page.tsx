@@ -1,9 +1,9 @@
+import { preload } from "react-dom";
 import TeamComponent from "./TeamComponent";
 import PartnersComponent from "@/components/home/PartnersComponent";
 
 import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
-
 
 export const revalidate = false;
 
@@ -41,6 +41,11 @@ export const metadata: Metadata = {
 };
 
 export default function Team() {
+  preload("https://cdn.inevitable.science/static/img/team/team_bg_image.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   return (
     <div>
       <div className="absolute inset-0 -z-10 w-full bg-[url('https://cdn.inevitable.science/static/img/team/team_bg_image.webp')] bg-cover bg-center"></div>

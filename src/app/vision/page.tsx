@@ -1,6 +1,6 @@
+import { preload } from "react-dom";
 import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
-
 
 export const revalidate = false;
 
@@ -38,6 +38,11 @@ export const metadata: Metadata = {
 };
 
 export default function Vision() {
+  preload("https://cdn.inevitable.science/static/img/vision_hero_scene.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   return (
     <div>
       <div className="relative flex h-[500px] w-full items-center justify-center overflow-hidden bg-[url('https://cdn.inevitable.science/static/img/vision_hero_scene.webp')] mask-[linear-gradient(to_bottom,black_0%,black_90%,transparent_100%)] bg-cover bg-position-[calc(50%+80px)_center] sm:h-screen sm:min-h-[750px] sm:items-end sm:bg-center">

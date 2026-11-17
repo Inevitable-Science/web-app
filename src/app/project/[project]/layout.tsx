@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { LegacyProjectProvider } from "@/store/LegacyProjectContext";
 
 import { Metadata } from "next";
@@ -17,15 +18,17 @@ export const revalidate = 900; // Revalidate every 15 minutes
 
 export function truncateDescription(s: string): string {
   if (!s?.trim()) return "";
-  
+
   const words = s.trim().split(/\s+/); // handles all whitespace
   if (words.length <= 25) return s.trim();
-  
-  return `${words.slice(0, 25).join(" ")}...`;
-};
 
-export async function generateMetadata({ params }: {
-  params: Promise<{ project: string }>
+  return `${words.slice(0, 25).join(" ")}...`;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ project: string }>;
 }): Promise<Metadata> {
   const { project } = await params;
 
@@ -37,7 +40,7 @@ export async function generateMetadata({ params }: {
   const daoData = await fetchDaoData(project);
   if (!daoData) return notFoundMetadata;
 
-  const pageDescription = daoData.description 
+  const pageDescription = daoData.description
     ? truncateDescription(daoData.description)
     : metadata.description;
 
@@ -69,10 +72,18 @@ export async function generateMetadata({ params }: {
   };
 }
 
-export default async function ProjectLayout({ children, params }: {
+export default async function ProjectLayout({
+  children,
+  params,
+}: {
   children: ReactNode;
   params: Promise<{ project: string }>;
 }) {
+  preload("https://cdn.inevitable.science/static/img/dao_landing.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   const { project } = await params;
 
   const daoData = await fetchDaoData(project);

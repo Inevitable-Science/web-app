@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFoundMetadata } from "@/lib/metadata";
@@ -7,6 +8,11 @@ import { ArrowRight } from "lucide-react";
 export const metadata: Metadata = notFoundMetadata;
 
 export default function NotFound() {
+  preload("https://cdn.inevitable.science/static/img/layout/footer.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   return (
     <div className="bg-screen relative bg-[url('https://cdn.inevitable.science/static/img/layout/footer.webp')] mask-[linear-gradient(to_bottom,black_30%,black_90%,transparent_100%)] bg-cover">
       <section className="ctWrapper h-screen pt-12">

@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import * as Sentry from "@sentry/nextjs";
 import PlaceholderActivityGraph from "./DummyChart";
 import ClientTable from "./ClientTable";
@@ -6,7 +7,6 @@ import type { Metadata } from "next";
 import { metadata as siteMetadata } from "@/lib/metadata";
 import { formatNumber } from "@/lib/utils";
 import z from "zod";
-
 
 export const revalidate = 900;
 
@@ -71,6 +71,11 @@ const fetchEcosystemData = async (): Promise<EcosystemResponse | null> => {
 };
 
 export default async function Ecosystem() {
+  preload("https://cdn.inevitable.science/static/img/ecosystem_backdrop.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   const data = await fetchEcosystemData();
 
   return (

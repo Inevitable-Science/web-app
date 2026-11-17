@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { notFound } from "next/navigation";
 import { ProjectQuery } from "@/generated/graphql";
@@ -38,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     projectData = await fetchProjectData({
       projectId: Number(config.projectId),
       chainId: config.chainId,
-      version: config.version
+      version: config.version,
     });
   } catch (err) {
     console.error(err);
@@ -81,6 +82,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function RevnetPageLayout({ children, params }: Props) {
+  preload("https://cdn.inevitable.science/static/img/dao_landing.webp", {
+    as: "image",
+    fetchPriority: "high",
+  });
+
   const { slug } = await params;
 
   let config: SlugConfig | null = null;
@@ -96,7 +102,7 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   const project = await fetchProjectData({
     projectId: Number(config.projectId),
     chainId: config.chainId,
-    version: config.version
+    version: config.version,
   });
 
   if (!slug || !config || !project) {
@@ -106,9 +112,10 @@ export default async function RevnetPageLayout({ children, params }: Props) {
   const daoData = project.name ? await fetchDaoData(project.name) : null;
   const tokenName = daoData?.nativeToken.name;
 
-  const treasuryPromise = (daoData && project.name)
-    ? fetchTreasuryData(project.name)
-    : Promise.resolve(null);
+  const treasuryPromise =
+    daoData && project.name
+      ? fetchTreasuryData(project.name)
+      : Promise.resolve(null);
 
   const tokenPromise = tokenName
     ? fetchTokenData(tokenName)

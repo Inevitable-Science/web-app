@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import { JBProjectProviderRoot } from "@/store/JBProjectProviders";
 import { notFound } from "next/navigation";
 import MainIvxLayout from "./components/Main";
@@ -46,6 +47,14 @@ export const metadata: Metadata = {
 };
 
 export default async function IvxTokenPage() {
+  preload(
+    "https://cdn.inevitable.science/static/img/layout/ivx/ivx_backdrop.webp",
+    {
+      as: "image",
+      fetchPriority: "high",
+    }
+  );
+
   const [treasuryData, tokenData, projectData] = await Promise.all([
     fetchTreasuryData("hydradao"),
     fetchTokenData("hydra"),
