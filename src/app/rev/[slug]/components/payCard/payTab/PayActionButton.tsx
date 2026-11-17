@@ -286,7 +286,7 @@ export function PayActionButton({
     && !paymentToken.isNative
     && currentStep !== "success";
 
-  const handleOpenChange = (open: boolean) => {
+  const handleDialogToggle = (open: boolean) => {
     if (!open && pending) return; // don't close mid-signature
     setIsModalOpen(open);
 
@@ -300,7 +300,7 @@ export function PayActionButton({
 
   // State 4: User is connected and on the correct chain. Show the 'Buy' button.
   return (
-    <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isModalOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
         <ButtonWithWallet
           targetChainId={activeChainId}

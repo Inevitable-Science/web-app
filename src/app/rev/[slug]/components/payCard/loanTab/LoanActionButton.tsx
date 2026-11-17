@@ -326,7 +326,7 @@ export function LoanActionButton({
     }
   };
 
-  const handleOpenChange = (open: boolean) => {
+  const handleDialogToggle = (open: boolean) => {
     if (!open && isBorrowing) return; // don't close mid-signature
 
     // Reset on open, not on close - resetting on close flashes the other stage.
@@ -377,7 +377,7 @@ export function LoanActionButton({
   }
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={isModalOpen} onOpenChange={handleDialogToggle}>
       <DialogTrigger asChild>
         <Button
           className={`shimmer ${primaryPayButtonClass}`}

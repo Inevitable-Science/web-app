@@ -240,7 +240,7 @@ export function NetworkDetailsTable() {
                 Cycle{" "}
                 {(selectedStageIdx !== null && allRulesets) 
                   ? `${selectedStageIdx + 1}/${allRulesets.length}`
-                  : <div className="activeSkeleton h-4 w-8 rounded-sm" /> 
+                  : <span className="activeSkeleton h-4 w-8 rounded-sm" /> 
                 }
               </p>
               <h3 className="text-xl">
