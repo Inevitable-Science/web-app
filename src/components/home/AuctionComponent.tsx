@@ -10,7 +10,12 @@ export const revalidate = 900;
 export default async function AuctionComponent() {
   const suckerGroupId = "a93b9ffae5b616880a64953c0515081a"; // mainnet - Stasis Suckers Group ID
   const chainId = 1;
-  const suckerGroupData = await fetchSuckerGroupData(suckerGroupId, chainId);
+
+  let suckerGroupData: Awaited<ReturnType<typeof fetchSuckerGroupData>> | undefined;
+  try {
+    const data = await fetchSuckerGroupData(suckerGroupId, chainId);
+    suckerGroupData = data;
+  } catch {}
 
   return (
     <section className="bg-[url('https://cdn.inevitable.science/static/img/auction_bg.webp')] bg-cover bg-center px-4 py-10 md:rounded-2xl md:py-4">
@@ -93,7 +98,7 @@ export default async function AuctionComponent() {
         <div className="grid gap-3 items-center grid-cols-1 sm:grid-cols-2 rounded-2xl bg-grey-450 p-[12px] sm:h-[120px]">
             <div className="flex flex-col items-center justify-center h-full py-1.5 text-center rounded-2xl bg-gunmetal">
               <h4 className="flex items-center gap-2 text-xl font-semibold sm:text-3xl">
-                {suckerGroupData?.decimals === 18 ? "Ξ" : "$"}
+                {suckerGroupData && (suckerGroupData.decimals === 18 ? "Ξ" : "$")}
                 {suckerGroupData
                   ? Number(
                       formatNumber(
@@ -111,7 +116,10 @@ export default async function AuctionComponent() {
 
             <div className="flex flex-col items-center justify-center h-full py-1.5 text-center rounded-2xl bg-gunmetal">
               <h4 className="flex items-center text-xl font-semibold sm:text-3xl">
-                {suckerGroupData && formatNumber(suckerGroupData.paymentsCount)}
+                {suckerGroupData
+                  ? formatNumber(suckerGroupData.paymentsCount)
+                  : "—"
+                }
               </h4>
               <h5>PAYMENTS</h5>
             </div>

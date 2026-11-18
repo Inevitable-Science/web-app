@@ -17,7 +17,7 @@ interface FetchSuckerGroupData {
 async function _fetchSuckerGroupData(
   suckerGroupId: string,
   chainId: JBChainId
-): Promise<FetchSuckerGroupData | null> {
+): Promise<FetchSuckerGroupData> {
   try {
     const client = getBendystrawClient(chainId);
     const result = await client.request<
@@ -26,7 +26,7 @@ async function _fetchSuckerGroupData(
     >(SuckerGroupDocument, { id: suckerGroupId });
 
     const volume = result.suckerGroup?.volume;
-    const decimals = result.suckerGroup?.projects?.items[0].decimals ?? 18;
+    const decimals = result.suckerGroup?.projects?.items?.[0]?.decimals ?? 18;
     if (!volume) throw new Error("Failed to fetch volume for suckers");
 
     return {
@@ -37,7 +37,7 @@ async function _fetchSuckerGroupData(
   } catch (err) {
     Sentry.captureException(err);
     console.error("Failed to fetch SuckerGroup:", err);
-    return null;
+    throw new Error("Failed to fetch SuckerGroup:");
   }
 }
 
