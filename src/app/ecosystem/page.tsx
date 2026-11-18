@@ -106,7 +106,7 @@ export default async function Ecosystem() {
             <div className="bg-grey-450 flex w-full flex-col gap-[12px] rounded-2xl p-[12px] uppercase">
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {data?.marketCap ? `$${formatNumber(data.marketCap)}` : "--"}
+                  {data?.marketCap ? `$${formatNumber(data.marketCap)}` : "—"}
                 </h3>
                 <p className="text-muted-foreground font-light">
                   Token Marketcap
@@ -117,7 +117,7 @@ export default async function Ecosystem() {
                 <h3 className="text-xl">
                   {data?.projectFunding
                     ? `$${formatNumber(data.projectFunding)}`
-                    : "--"}
+                    : "—"}
                 </h3>
                 <p className="text-muted-foreground font-light">
                   Total Project Funding
@@ -126,7 +126,7 @@ export default async function Ecosystem() {
 
               <div className="background-color rounded-xl p-[16px]">
                 <h3 className="text-xl">
-                  {data?.tokenHolders ? formatNumber(data.tokenHolders) : "--"}
+                  {data?.tokenHolders ? formatNumber(data.tokenHolders) : "—"}
                 </h3>
                 <p className="text-muted-foreground font-light">
                   Ecosystem Token Holders
@@ -137,7 +137,7 @@ export default async function Ecosystem() {
                 <h3 className="text-xl">
                   {data?.communitySize
                     ? formatNumber(data.communitySize)
-                    : "--"}
+                    : "—"}
                 </h3>
                 <p className="text-muted-foreground font-light">
                   Community Size

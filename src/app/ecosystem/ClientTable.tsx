@@ -1,17 +1,15 @@
 "use client";
-import * as Sentry from "@sentry/nextjs";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useAccount, usePublicClient } from "wagmi";
-import { Address, erc20Abi, formatUnits } from "viem";
+import { useAccount } from "wagmi";
+import { Address, formatUnits } from "viem";
 import { formatNumber } from "@/lib/utils";
 import { ArrowRightIcon } from "lucide-react";
 import { getViemPublicClient } from "@/lib/wagmiConfig";
 import { useFetchTokenPrices } from "@/hooks/queries/useFetchTokenPrices";
-
-type BalanceMap = Record<string, string>;
+import { useEcosystemBalances } from "./useEcosystemBal";
+import { useEcosystemSuckersBal } from "./useEcosystemSuckersBal";
 
 interface ProjectType {
   name: string;
@@ -21,21 +19,15 @@ interface ProjectType {
   vestingContract?: Address;
 }
 
-interface v4ProjectInterface {
+interface SuckersProjectInterface {
   name: string;
   logo: string;
   href: string;
-  projectID: number;
+  suckersGroupId: string;
   vestingContract?: Address;
 }
 
-interface Participant {
-  balance: string;
-  erc20Balance: string;
-  creditBalance: string;
-}
-
-const PROJECTS: ProjectType[] = [
+export const PROJECTS: ProjectType[] = [
   {
     name: "HydraDAO",
     href: "hydradao",
@@ -66,172 +58,51 @@ const PROJECTS: ProjectType[] = [
   },
 ];
 
-const v4ProjectVars: v4ProjectInterface[] = [
+const ProjectSuckers: SuckersProjectInterface[] = [
   {
     name: "Stasis",
     href: "stasis",
     logo: "https://cdn.inevitable.science/static/img/daos/tokenLogos/stasis.webp",
-    projectID: 64,
-  },
+    suckersGroupId: "a93b9ffae5b616880a64953c0515081a", // mainnet - Stasis Suckers Group ID
+  }
 ];
 
-export default function ClientTable() {
-  const { data: tokenPriceData, isLoading: isTokenPriceLoading } = useFetchTokenPrices(PROJECTS.map(p => p.href));
+const TOKEN_DECIMALS = 18;
 
-  const client = getViemPublicClient(1);  // default to mainnet
+export default function ClientTable() {
+  const publicClient = getViemPublicClient(1);  // default to mainnet
   const { address, isConnected } = useAccount();
 
-  const [balances, setBalances] = useState<BalanceMap | null>(null);
-  const [v4Balances, setV4Balances] = useState<BalanceMap | null>(null);
+  const { data: tokenPriceData, isLoading: isTokenPriceLoading } = useFetchTokenPrices(PROJECTS.map(p => p.href));
 
-  const fetchBalances = async () => {
-    try {
-      const contracts = PROJECTS.flatMap(
-        ({ tokenAddress, vestingContract }) => {
-          const entries = [
-            {
-              address: tokenAddress,
-              abi: erc20Abi,
-              functionName: "balanceOf" as const,
-              args: [address] as [Address],
-            },
-          ];
+  const {
+    data: suckersBalances,
+    isLoading: isSuckersBalancesLoading
+  } = useEcosystemSuckersBal(
+    address,
+    ProjectSuckers.map((p) => p.suckersGroupId),
+    isConnected,
+  );
 
-          if (vestingContract) {
-            entries.push({
-              address: vestingContract,
-              abi: erc20Abi,
-              functionName: "balanceOf" as const,
-              args: [address] as [Address],
-            });
-          }
+  const {
+    data: erc20Balances,
+    isLoading: isErc20BalancesLoading
+  } = useEcosystemBalances(address, publicClient, isConnected);
 
-          return entries;
-        }
-      );
+  const isErc20Loading = isConnected && isErc20BalancesLoading;
+  const isSuckersLoading = isConnected && isSuckersBalancesLoading;
 
-      if (!isConnected) {
-        const fallback: BalanceMap = {};
-        for (const c of contracts) {
-          fallback[c.address] = "0";
-        }
-
-        setBalances(fallback);
-        return;
-      }
-
-      const result = await client.multicall({ contracts });
-
-      const balances: BalanceMap = {};
-      let index = 0;
-
-      for (const bal of result) {
-        if (bal.status !== "success") continue;
-
-        const formattedBalance = formatUnits(bal.result, 18);
-        const tokenAddress = contracts[index++].address;
-        balances[tokenAddress] = formattedBalance;
-      }
-
-      setBalances(balances);
-    } catch (err) {
-      console.error(err);
-      Sentry.captureException(err);
-    }
+  // Returns a formatted decimal string, "0" when disconnected, or null when unavailable
+  const getErc20Balance = (tokenAddress: Address): string | null => {
+    if (!isConnected) return "0";
+    const balance = erc20Balances?.get(tokenAddress);
+    return balance === undefined ? null : formatUnits(balance, TOKEN_DECIMALS);
   };
 
-  const fetchGraphQLQuery = async () => {
-    try {
-      if (!isConnected) {
-        const fallback: Record<string, string> = {};
-
-        v4ProjectVars.forEach((project) => {
-          fallback[project.projectID.toString()] = "0";
-          if (project.vestingContract) {
-            fallback[project.vestingContract] = "0";
-          }
-        });
-
-        setV4Balances(fallback);
-        return;
-      }
-
-      const chainIds = [1, 10, 42161, 8453];
-      const endpoint = "https://bendystraw.xyz/schema";
-
-      const query = `
-        query MyQuery($chainId: Float!, $projectId: Float!, $address: String!, $version: Float!) {
-          participant(
-            projectId: $projectId,
-            address: $address,
-            chainId: $chainId,
-            version: $version
-          ) {
-            balance
-            erc20Balance
-            creditBalance
-          }
-        }
-      `;
-
-      const balances: BalanceMap = {};
-
-      await Promise.all(
-        v4ProjectVars.map(async ({ projectID }) => {
-          const chainResults = await Promise.all(
-            chainIds.map(async (chainId) => {
-              const res = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  query,
-                  variables: {
-                    chainId,
-                    projectId: projectID,
-                    address,
-                    version: 4,
-                  },
-                }),
-              });
-
-              const json = await res.json();
-              console.log(json);
-              const participant: Participant | null = json.data.participant;
-
-              if (!participant) return BigInt(0);
-
-              const balance = BigInt(participant.balance || "0");
-              const erc20Balance = BigInt(participant.erc20Balance || "0");
-              const creditBalance = BigInt(participant.creditBalance || "0");
-
-              return balance;
-            })
-          );
-
-          // Sum across all chains for this project
-          const totalBalance = chainResults.reduce(
-            (sum, val) => sum + val,
-            BigInt(0)
-          );
-
-          const formattedBalance = formatUnits(totalBalance, 18);
-
-          balances[projectID.toString()] = formattedBalance;
-        })
-      );
-
-      setV4Balances(balances);
-      return;
-    } catch (err) {
-      console.error(err);
-      Sentry.captureException(err);
-    }
+  const getSuckersBalance = (suckersGroupId: string): string => {
+    if (!isConnected) return "0";
+    return formatUnits(suckersBalances?.get(suckersGroupId) ?? 0n, TOKEN_DECIMALS);
   };
-
-  useEffect(() => {
-    fetchBalances();
-    fetchGraphQLQuery();
-  }, [isConnected]);
 
   return (
     <div className="bg-grey-450 flex flex-col gap-[12px] rounded-2xl p-[12px]">
@@ -256,23 +127,23 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {balances === null ? (
+                {isErc20Loading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(balances[project.tokenAddress], true)}
+                    {formatNumber(getErc20Balance(project.tokenAddress), true)}
                   </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {balances === null ? (
+                {isErc20Loading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? formatNumber(balances[project.vestingContract], true)
+                      ? formatNumber(getErc20Balance(project.vestingContract), true)
                       : "—"}
                   </span>
                 )}
@@ -280,24 +151,28 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">PRICE</span>
-                $
-                {isTokenPriceLoading ?
-                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
-                  tokenPrice ? 
-                    formatNumber(tokenPrice) :
-                    "0"
-                }
+                <div className="flex items-center">
+                  <span>$</span>
+                  {isTokenPriceLoading
+                    ? <div className="activeSkeleton h-[24px] w-[80px] ml-1 rounded-md" />
+                    : tokenPrice 
+                      ? formatNumber(tokenPrice)
+                      : "0"
+                  }
+                </div>
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">LIQUID VALUE</span>
-                $
-                {isTokenPriceLoading || balances === null ?
-                  <div className="activeSkeleton h-[24px] w-[80px] rounded-md" /> :
-                  tokenPrice && balances ? 
-                    formatNumber(tokenPrice * Number(balances[project.tokenAddress])) :
-                    "0"
-                }
+                <div className="flex items-center">
+                  <span>$</span>
+                  {isTokenPriceLoading || isErc20Loading
+                    ? <div className="activeSkeleton h-[24px] w-[80px] ml-1 rounded-md" />
+                    : tokenPrice 
+                      ? formatNumber(tokenPrice * Number(getErc20Balance(project.tokenAddress) ?? 0))
+                      : "0"
+                  }
+                </div>
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
@@ -314,37 +189,48 @@ export default function ClientTable() {
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {balances === null ? (
+                {isErc20Loading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(balances[project.tokenAddress], true)}
+                    {formatNumber(getErc20Balance(project.tokenAddress), true)}
                   </span>
                 )}
               </div>
 
               <div className="flex flex-col gap-1">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {balances === null ? (
+                {isErc20Loading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? formatNumber(balances[project.vestingContract], true)
+                      ? formatNumber(getErc20Balance(project.vestingContract), true)
                       : "—"}
                   </span>
                 )}
               </div>
 
+              {/** Small Viewport */}
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>
+                <div className="flex items-center">
+                  <span>$</span>
+                  {isTokenPriceLoading || isErc20Loading
+                    ? <div className="activeSkeleton h-[24px] w-[80px] ml-1 rounded-md" />
+                    : tokenPrice 
+                      ? formatNumber(tokenPrice * Number(getErc20Balance(project.tokenAddress) ?? 0))
+                      : "0"
+                  }
+                </div>
               </div>
+
             </div>
           </div>
           )
         })}
 
-        {v4ProjectVars.map((project, index) => (
+        {ProjectSuckers.map((project, index) => (
           <div key={index} className="border-grey-500 border-b">
             <div className="flex items-center justify-between gap-4 py-2 md:grid md:grid-cols-[auto_3fr_3fr_2fr_4fr_auto]">
               <div className="flex w-[170px] items-center gap-2 py-2 lg:w-[225px]">
@@ -359,23 +245,23 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {v4Balances === null ? (
+                {isSuckersLoading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(v4Balances[project.projectID], true)}
+                    {formatNumber(getSuckersBalance(project.suckersGroupId), true)}
                   </span>
                 )}
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {v4Balances === null ? (
+                {isSuckersLoading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? v4Balances[project.vestingContract]
+                      ? formatNumber(getErc20Balance(project.vestingContract), true)
                       : "—"}
                   </span>
                 )}
@@ -383,12 +269,12 @@ export default function ClientTable() {
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">PRICE</span>
-                $0
+                $—
               </div>
 
               <div className="hidden flex-col gap-1 md:flex">
                 <span className="text-grey-50 text-sm">LIQUID VALUE</span>
-                $0
+                $—
               </div>
 
               <button className="bg-gunmetal rounded-full px-[12px] py-[6px] font-normal focus:outline-hidden">
@@ -405,30 +291,31 @@ export default function ClientTable() {
             <div className="mb-3 grid grid-cols-[2fr_2fr_3fr] items-center gap-4 md:hidden">
               <div className="flex flex-col gap-1">
                 <span className="text-grey-50 text-sm">AMOUNT</span>
-                {v4Balances === null ? (
+                {isSuckersLoading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
-                    {formatNumber(v4Balances[project.projectID], true)}
+                    {formatNumber(getSuckersBalance(project.suckersGroupId), true)}
                   </span>
                 )}
               </div>
 
               <div className="flex flex-col gap-1">
                 <span className="text-grey-50 text-sm">vAMOUNT</span>
-                {v4Balances === null ? (
+                {isSuckersLoading ? (
                   <div className="activeSkeleton h-[24px] w-[80px] rounded-md" />
                 ) : (
                   <span>
                     {project.vestingContract
-                      ? v4Balances[project.vestingContract]
+                      ? formatNumber(getErc20Balance(project.vestingContract), true)
                       : "—"}
                   </span>
                 )}
               </div>
 
+              {/** Small Viewport */}
               <div className="flex flex-col gap-1">
-                <span className="text-grey-50 text-sm">LIQUID VALUE</span>0
+                <span className="text-grey-50 text-sm">LIQUID VALUE</span>—
               </div>
             </div>
           </div>

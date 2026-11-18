@@ -1,0 +1,14 @@
+query SuckerGroupsParticipant($suckerGroupIds: [String]!, $address: String!) {
+  participants(where: { suckerGroupId_in: $suckerGroupIds, address: $address }) {
+    totalCount
+    items {
+      suckerGroupId
+      chainId
+      projectId
+      version
+      balance
+      erc20Balance
+      creditBalance
+    }
+  }
+}
