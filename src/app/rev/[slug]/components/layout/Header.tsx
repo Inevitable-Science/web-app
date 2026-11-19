@@ -116,7 +116,7 @@ export function Header() {
                 <Image
                   src="https://cdn.inevitable.science/static/img/branding/logo.svg"
                   alt="placeholder header image"
-                  className="h-16 w-auto"
+                  className="h-12 sm:h-16 w-auto"
                   width={1800}
                   height={1200}
                 />
@@ -128,24 +128,15 @@ export function Header() {
       <div className="ctWrapper mb-4 flex flex-col items-start gap-2 sm:mb-6">
         <div className="mx-4">
           {logoUri ? (
-            <>
-              <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="border-background block overflow-hidden rounded-xl border-[3px] sm:hidden"
-                alt={"Project Logo"}
-                width={120}
-                height={120}
-              />
-              <Image
-                src={ipfsUriToGatewayUrl(logoUri)}
-                className="border-background block hidden overflow-hidden rounded-2xl border-4 sm:block"
-                alt={"Project Logo"}
-                width={144}
-                height={144}
-              />
-            </>
+            <Image
+              src={ipfsUriToGatewayUrl(logoUri)}
+              className="border-background size-[120px] sm:size-[144px] overflow-hidden rounded-2xl border-4"
+              alt={"Project Logo"}
+              width={144}
+              height={144}
+            />
           ) : (
-            <div className="flex h-36 w-36 items-center justify-center rounded bg-(--card)">
+            <div className="flex size-[120px] sm:size-[144px] items-center justify-center rounded bg-(--card)">
               <Image
                 src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}

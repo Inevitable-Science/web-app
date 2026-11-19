@@ -16,9 +16,9 @@ export function Header() {
       <div className="ctWrapper">
         <div className="relative h-[235px] sm:h-[215px]">
           <div className="absolute top-0 z-[-1] mt-[90px] h-[238px] w-full overflow-hidden rounded">
-            {daoData?.logo ? (
+            {daoData?.backdrop ? (
               <Image
-                src={daoData?.backdrop}
+                src={daoData.backdrop}
                 alt={"Project Logo"}
                 className="inset-0 h-full w-full rounded object-cover"
                 width={600}
@@ -29,7 +29,7 @@ export function Header() {
                 <Image
                   src="https://cdn.inevitable.science/static/img/branding/logo.svg"
                   alt="placeholder header image"
-                  className="h-16 w-auto"
+                  className="h-12 sm:h-16 w-auto"
                   width={1800}
                   height={1200}
                 />
@@ -41,28 +41,15 @@ export function Header() {
       <div className="ctWrapper mb-4 flex flex-col items-start gap-2 sm:mb-6">
         <div className="mx-4">
           {daoData?.logo ? (
-            <>
-              <div className="sm:hidden">
-                <Image
-                  src={daoData?.logo}
-                  className="border-background block overflow-hidden rounded-xl border-[3px] bg-(--card)"
-                  alt={"Project Logo"}
-                  width={120}
-                  height={10}
-                />
-              </div>
-              <div className="hidden sm:block">
-                <Image
-                  src={daoData?.logo}
-                  className="border-background block overflow-hidden rounded-2xl border-4 bg-(--card)"
-                  alt={"Project Logo"}
-                  width={144}
-                  height={144}
-                />
-              </div>
-            </>
+            <Image
+              src={daoData?.logo}
+              className="size-[120px] sm:size-[144px] border-background block overflow-hidden rounded-2xl border-4 bg-(--card)"
+              alt={"Project Logo"}
+              width={144}
+              height={144}
+            />
           ) : (
-            <div className="flex h-36 w-36 items-center justify-center rounded bg-(--card)">
+            <div className="flex size-[120px] sm:size-[144px] items-center justify-center rounded bg-(--card)">
               <Image
                 src="https://cdn.inevitable.science/static/img/branding/icon.svg"
                 alt={"Inevitable Logo"}

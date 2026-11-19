@@ -35,6 +35,7 @@ const testnetTransports = {
     http(
       `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${sepolia.id}`),
   ]),
   [optimismSepolia.id]: fallback([
     http(
@@ -43,6 +44,7 @@ const testnetTransports = {
     http(
       `https://opt-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${optimismSepolia.id}`),
   ]),
   [baseSepolia.id]: fallback([
     http(
@@ -51,6 +53,7 @@ const testnetTransports = {
     http(
       `https://base-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${baseSepolia.id}`),
   ]),
   [arbitrumSepolia.id]: fallback([
     http(
@@ -59,6 +62,7 @@ const testnetTransports = {
     http(
       `https://arb-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${arbitrumSepolia.id}`),
   ]),
 };
 
@@ -68,6 +72,7 @@ const mainnetTransports = {
     http(
       `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${mainnet.id}`),
   ]),
   [optimism.id]: fallback([
     http(
@@ -76,6 +81,7 @@ const mainnetTransports = {
     http(
       `https://opt-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${optimism.id}`),
   ]),
   [base.id]: fallback([
     http(
@@ -84,6 +90,7 @@ const mainnetTransports = {
     http(
       `https://base-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${base.id}`),
   ]),
   [arbitrum.id]: fallback([
     http(
@@ -92,6 +99,7 @@ const mainnetTransports = {
     http(
       `https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_RPC_KEY}`
     ),
+    http(`https://juicebox.center/v1/rpc/${arbitrum.id}`),
   ]),
 };
 
